@@ -352,6 +352,12 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 #printreport, #printreport *{color:#000}
 #printreport .prcode{color:#000}
 .prfoot{font-size:.78rem;margin-top:18px;color:#444}
+.prtopic{border:2px solid #000;border-radius:6px;padding:12px 16px;margin:10px 0;page-break-inside:avoid;break-inside:avoid}
+.prtopic h3{margin:0 0 4px;font-size:1rem}
+.prtopic .prstat{font-size:.84rem;font-style:italic;margin:0 0 8px;color:#333}
+.prtopic svg{max-width:340px;width:100%;height:auto;display:block;margin:10px auto 2px}
+.prgoodbox{border:1.5px solid #777;border-radius:6px;padding:9px 14px;margin:8px 0;page-break-inside:avoid;break-inside:avoid}
+.prcongrats{font-size:1.02rem;font-weight:700;margin:14px 0 4px;border:3px double #000;padding:10px 16px;page-break-inside:avoid}
 
 .pdfbtn{display:inline-block;background:var(--ac,#5B67E0);color:#fff;font-weight:800;font-size:.9rem;padding:9px 18px;border-radius:10px;text-decoration:none}
 .pdfbtn:hover{filter:brightness(1.1)}
@@ -1399,6 +1405,9 @@ function startPretest(id){
     if(st.i >= u.pretest.length){
       store.set('pre_'+id, {score:st.score, total:u.pretest.length});
       asnRecord('pr', id, {score:st.score, total:u.pretest.length});
+      asnLogAttempt('pr', id, st.score, u.pretest.length,
+        st.missed.flatMap(n=>STD_TAGS[`${id}:L${n-1}`]||[]),
+        u.pretest.flatMap(q=>STD_TAGS[`${id}:L${q.lesson-1}`]||[]));
       const focus = [...new Set(st.missed)].sort((a,b)=>a-b);
       box.innerHTML = `<h3>🧭 Pretest result: ${st.score} / ${u.pretest.length}</h3>` + (focus.length
         ? `<p style="margin:6px 0">Focus your studying on these lessons (tap to jump):</p>` +
@@ -1469,7 +1478,7 @@ function buildVideos(id,u){
    ========================================================= */
 const quizState = {};
 function startQuiz(id){
-  quizState[id] = {i:0, score:0, order:shuffle([...UNITS[id].quiz.keys()])};
+  quizState[id] = {i:0, score:0, missed:[], order:shuffle([...UNITS[id].quiz.keys()])};
   renderQ(id);
 }
 function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
@@ -1480,6 +1489,7 @@ function renderQ(id){
     const best = store.get('quiz_'+id);
     if(!best || st.score > best.score) store.set('quiz_'+id, {score:st.score, total:st.order.length});
     asnRecord('q', id, {score:st.score, total:st.order.length});
+    asnLogAttempt('q', id, st.score, st.order.length, (st.missed||[]).map(qi=>QUIZ_TAGS[id][qi]).filter(Boolean), QUIZ_TAGS[id]||[]);
     awardCheck();
     const pct = Math.round(100*st.score/st.order.length);
     const msg = pct===100? "Perfect score! You own this unit. 🏆" : pct>=80? "Strong work — review the ones you missed and go for 100%." : pct>=60? "Solid start. Hit the study guide on your misses and run it back." : "Good warm-up. Read the study guide, flip the flashcards, then try again — you'll climb fast.";
@@ -1504,7 +1514,7 @@ function renderQ(id){
     const fb = document.getElementById(id+'-fb');
     fb.className = 'feedback '+(right?'good':'bad');
     fb.innerHTML = (right? '✅ <b>Correct!</b> ' : '❌ <b>Not quite.</b> ') + q.why;
-    if(right) st.score++;
+    if(right) st.score++; else st.missed.push(st.order[st.i]);
     document.getElementById(id+'-next').style.display='inline-block';
     document.getElementById(id+'-next').onclick = ()=>{ st.i++; renderQ(id); };
   }));
@@ -2900,6 +2910,16 @@ const STD_TAGS = {
  "u5:V4":["S8P5.a"], "u5:V5":["S8P5.b"], "u5:V6":["S8P5.a","S8P5.c"], "u5:V7":["S8P5.b","S8P5.c"]
 };
 
+/* ---------- per-question sub-standard tags for the 5 practice quizzes
+   (index-aligned with each unit's quiz array — used for report feedback) ---------- */
+const QUIZ_TAGS = {
+ u1:["S8P1.a","S8P1.a","S8P1.d","S8P1.b","S8P1.e","S8P1.e","S8P1.e","S8P1.f","S8P1.d","S8P1.e"],
+ u2:["S8P2.c","S8P2.a","S8P2.a","S8P2.c","S8P2.c","S8P2.d","S8P2.d","S8P2.d","S8P2.d","S8P2.c"],
+ u3:["S8P3.a","S8P3.a","S8P3.a","S8P3.a","S8P3.a","S8P3.b","S8P3.c","S8P3.c","S8P3.c","S8P3.b"],
+ u4:["S8P4.a","S8P4.a","S8P4.a","S8P4.f","S8P4.f","S8P4.e","S8P4.b","S8P4.f","S8P4.d","S8P4.d"],
+ u5:["S8P5.a","S8P5.a","S8P5.b","S8P5.b","S8P5.b","S8P5.b","S8P5.a","S8P5.c","S8P5.c","S8P5.b"]
+};
+
 /* ---------- Resolver: selected sub-standards → concrete content ---------- */
 function resolveStandards(selected){ // selected: ["S8P1.a","S8P1.b",...]
   const sel = new Set(selected);
@@ -3116,12 +3136,24 @@ function asnStatus(it){ // → {done, meta}
   return {done:true, meta:'opened'};
 }
 
+/* ---------- attempt log: EVERY attempt with topic detail (feeds report feedback) ---------- */
+function asnLogAttempt(type, id, score, total, miss, asked){
+  if(!ASN) return;
+  if(!((ASN.cfg.it||{})[type]||[]).includes(id)) return;
+  const k = `asn_${ASN.cfg.id}_${ASN.key}_log`;
+  const log = store.get(k) || [];
+  log.push({t:type, id, ts:Date.now(), s:score, tot:total, miss:miss||[], asked:asked||[]});
+  if(log.length>300) log.splice(0, log.length-300);
+  store.set(k, log);
+}
+
 /* ---------- recording (hooked from quizzes, pretests, games) ---------- */
 function asnRecord(type, id, val){
   if(!ASN) return;
   if(!((ASN.cfg.it||{})[type]||[]).includes(id)) return;
   const k = `asn_${ASN.cfg.id}_${ASN.key}_${type}:${id}`;
-  if(type==='m'){ const prev=store.get(k); if(prev===null || val>prev) store.set(k,val); }
+  if(type==='m'){ const prev=store.get(k); if(prev===null || val>prev) store.set(k,val);
+    asnLogAttempt('m', id, val, GAME_TARGETS[id]||100, [], STD_TAGS[id]||[]); }
   else if(type==='q'){ const prev=store.get(k); if(!prev || val.score>prev.score) store.set(k,val); }
   else store.set(k, val);
   if(document.getElementById('page-assign').classList.contains('show')) renderAssign();
@@ -3369,6 +3401,9 @@ function renderPosttest(){
     const attempts = (prev?.attempts || 0) + 1;
     const best = (!prev || result.score > prev.score) ? result : prev;
     store.set(k, {score:best.score, total:best.total, attempts});
+    asnLogAttempt('po', uid, result.score, qs.length,
+      qs.filter((q,n)=>PT.picks[n]!==q.a).map(q=>q.std),
+      qs.map(q=>q.std));
     const pct = Math.round(100*result.score/qs.length);
     box.innerHTML = `<div style="text-align:center;padding:18px 6px">
       <div style="font-size:2.2rem">🏁</div>
@@ -3456,6 +3491,135 @@ function asnVerifyCode(asnId, nameK, pct, dateStr){
   return x.toString(36).toUpperCase().padStart(7,'0').slice(-7);
 }
 
+/* =========================================================
+   PERSONALIZED FEEDBACK — built from the attempt log
+   ========================================================= */
+/* plain-language re-teach text + figure for every sub-standard */
+const STD_TEACH = {
+ "S8P1.a":{fig:'classify', teach:"All matter sorts into pure substances and mixtures. A pure substance is one ingredient only — either a single element (gold, oxygen) or a compound, where elements are chemically bonded in a fixed recipe (H<sub>2</sub>O). A mixture is just ingredients stirred together (saltwater, air) — no bonds form, so it can be separated by physical means like filtering or evaporating."},
+ "S8P1.b":{fig:'states', teach:"Everything is made of particles in constant motion. In a solid they vibrate in fixed spots; in a liquid they slide past each other; in a gas they fly freely; in plasma they are so hot that electrons get stripped away. Adding heat speeds particles up — and during melting or boiling the temperature pauses (the flat line on a heating curve) while the energy breaks particle attractions instead."},
+ "S8P1.c":{fig:null, teach:"A physical property is something you can observe without changing the substance — color, density, melting point, shininess. A chemical property describes how a substance reacts and becomes something new — like flammability or rusting. Ask yourself: do I have to change the substance to see this property? If yes, it is chemical."},
+ "S8P1.d":{fig:null, teach:"A physical change alters form or appearance but keeps the same substance — melting, cutting, dissolving. A chemical change creates a brand-new substance. The evidence: an unexpected color change, gas bubbles from a reaction, light or heat given off, or a new solid forming — and chemical changes are hard to undo."},
+ "S8P1.e":{fig:'atom', teach:"Atoms have a tiny nucleus of protons (+) and neutrons (0), with electrons (−) zipping around it. The number of protons — the atomic number — decides which element an atom is. On the periodic table, rows are periods and columns are groups (families): elements in a group behave alike, with metals on the left and nonmetals on the right."},
+ "S8P1.f":{fig:null, teach:"The law of conservation of matter: atoms are never created or destroyed in a chemical reaction — they only rearrange. The reactants (left of the arrow) and the products (right of the arrow) must contain exactly the same count of every atom, so the total mass never changes. Check any reaction by counting each element on both sides."},
+ "S8P2.a":{fig:'keramp', teach:"Kinetic energy is motion energy: KE = ½mv². More mass means more KE, but speed matters even more — doubling the speed quadruples the KE, because speed is squared. Gravitational potential energy is stored height energy: PE = mgh, so more mass or more height means more stored energy."},
+ "S8P2.b":{fig:'keramp', teach:"Kinetic and potential energy constantly trade places. At the top of a hill, swing, or coaster, energy is mostly PE; at the lowest, fastest point it is mostly KE. The total stays the same the whole way down — energy converts, it never disappears."},
+ "S8P2.c":{fig:null, teach:"Energy changes costume constantly — follow the chain. A flashlight goes chemical (battery) → electrical → light. Your body goes chemical (food) → mechanical + thermal. Energy is never created or destroyed along these chains; some always leaks out as heat, which is why devices get warm."},
+ "S8P2.d":{fig:'heattransfer', teach:"Heat moves three ways. Conduction = contact: heat flows between touching objects, like a metal spoon in hot soup. Convection = currents: warm liquid or gas rises while cool sinks, making loops (a boiling pot, a sea breeze). Radiation = rays: energy travels as electromagnetic waves and needs no matter at all — it is how the Sun heats Earth across empty space."},
+ "S8P3.a":{fig:'motiongraphs', teach:"Speed = distance ÷ time. Velocity is speed plus a direction, and acceleration is ANY change in velocity — speeding up, slowing down, or turning. On a distance–time graph the slope is the speed: flat means stopped, a straight slant means constant speed, and a steepening curve means speeding up."},
+ "S8P3.b":{fig:'netforce', teach:"Balanced forces cancel to zero net force, so motion does not change — that is Newton's 1st Law, objects keep doing what they were doing. Unbalanced forces change motion. Find the net force by subtracting opposing forces. And Newton's 3rd Law: every action has an equal and opposite reaction, acting on the OTHER object."},
+ "S8P3.c":{fig:'netforce', teach:"Newton's 2nd Law: F = ma. The acceleration you get depends on the force applied AND the mass being moved — the same push accelerates a soccer ball far more than a bowling ball. Mass is inertia: resistance to changes in motion. You can solve for any piece: F = m × a, m = F ÷ a, a = F ÷ m."},
+ "S8P4.a":{fig:'wavetypes', teach:"Mechanical waves (sound, water, seismic) must travel through matter — they are particles passing along a vibration. Electromagnetic waves (light, radio, X-rays) need no medium and cross empty space. That is why astronauts on the Moon can see each other but cannot hear each other without radios."},
+ "S8P4.b":{fig:'spectrum', teach:"The electromagnetic spectrum runs from radio waves (longest wavelength, lowest energy) through microwaves, infrared, visible light, and ultraviolet, up to X-rays and gamma rays (shortest wavelength, highest energy). Shorter wavelength always means higher frequency and more energy."},
+ "S8P4.c":{fig:'spectrum', teach:"Each part of the EM spectrum has a job matched to its energy: radio carries broadcasts, microwaves cook and carry phone signals, infrared is felt as heat, UV disinfects (and sunburns), X-rays image bones and luggage, and gamma rays treat cancer. Pick the wave whose energy and penetrating power fit the task."},
+ "S8P4.d":{fig:null, teach:"When a wave meets a new material it can reflect (bounce off, like a mirror), refract (bend as it changes speed, like a straw in water), be absorbed (its energy soaked up as heat — dark surfaces), be transmitted (pass straight through, like a window), or diffract (spread out through openings and around corners). Which one happens depends on the material."},
+ "S8P4.e":{fig:null, teach:"Wave speed depends on the medium. Sound travels fastest through solids, slower through liquids, slowest through gases — tightly packed particles pass vibrations along faster — and not at all through a vacuum. Light does the opposite: fastest in empty space, slowing down in denser materials (that slowdown is what causes refraction)."},
+ "S8P4.f":{fig:'wave', teach:"Know a wave's anatomy. Amplitude is the height from the rest position — it sets the energy (louder sound, brighter light). Wavelength is the distance from crest to crest. Frequency is how many waves pass per second — it sets the pitch of a sound. Frequency and wavelength trade off (v = f × λ): more waves per second means each wave is shorter."},
+ "S8P4.g":{fig:null, teach:"Lenses work by refraction. A convex lens bulges outward and bends light rays together to form images — it is the magnifying glass, the camera, and your own eye. A concave lens curves inward and spreads rays apart. Where the rays meet (the focal point) determines whether the image looks bigger, smaller, or flipped."},
+ "S8P5.a":{fig:'gravity', teach:"Gravity, magnetism, and electric charge all act through fields — invisible regions of force that work without touching, even across empty space. Field forces grow with mass (for gravity) or charge and magnet strength, and they always weaken with distance. That is how Earth holds the Moon from 384,000 km away."},
+ "S8P5.b":{fig:'charges', teach:"Only electrons move when objects charge up — rubbing transfers them, building static charge. Like charges repel; opposites attract. In a conductor (metals like copper) charge flows freely and spreads out; in an insulator (rubber, plastic, glass) charge stays right where it was put. That is why wires are copper on the inside and plastic on the outside."},
+ "S8P5.c":{fig:'electromagnet', teach:"Electric and magnetic forces have control dials. An electromagnet gets stronger with more wire coils, more current (more battery cells), and an iron core. A generator makes more voltage by spinning faster, using more coils, and using a stronger magnet. And every field force weakens as distance grows."}
+};
+function stdDisplayName(std){
+  const [parent, letter] = std.split('.');
+  const sub = STD_LIST[parent]?.subs[letter];
+  return sub? `${std} — ${sub}` : std;
+}
+function stdStudyItems(std){
+  const out = {lessons:[], games:[]};
+  Object.entries(STD_TAGS).forEach(([k, arr])=>{
+    if(!arr.includes(std)) return;
+    if(k.includes(':L')){ const [uid, Li] = k.split(':L'); const L = UNITS[uid]?.lessons[+Li];
+      if(L) out.lessons.push(`${UNITS[uid].num}.${+Li+1} ${L.t}`); }
+    else if(!k.includes(':V') && GAMES[k]) out.games.push(GAMES[k].title);
+  });
+  return out;
+}
+/* aggregate the attempt log into per-topic stats */
+function asnFeedback(){
+  const log = store.get(`asn_${ASN.cfg.id}_${ASN.key}_log`) || [];
+  if(!log.length) return null;
+  const T = {};
+  const bucket = std=>T[std] || (T[std]={asked:0, miss:0, gN:0, gBest:0});
+  log.forEach(e=>{
+    if(e.t==='m'){
+      (e.asked||[]).forEach(std=>{ const t=bucket(std); t.gN++; t.gBest=Math.max(t.gBest, Math.min(e.s/(e.tot||100),1)); });
+    } else {
+      (e.asked||[]).forEach(std=>bucket(std).asked++);
+      (e.miss||[]).forEach(std=>bucket(std).miss++);
+    }
+  });
+  const rows = Object.entries(T).map(([std,t])=>{
+    const acc = t.asked? (t.asked-t.miss)/t.asked : null;
+    const overall = (acc!==null && t.gN)? (acc+t.gBest)/2 : (acc!==null? acc : (t.gN? t.gBest : null));
+    return {std, ...t, acc, overall};
+  }).filter(r=>r.overall!==null);
+  const weak = rows.filter(r=>r.overall<0.75 && (r.miss>=1 || (r.gN>=1 && r.gBest<0.6)))
+                   .sort((a,b)=>a.overall-b.overall).slice(0,3);
+  const strong = rows.filter(r=>r.overall>=0.85 && (r.asked>=2 || r.gN>=1))
+                     .sort((a,b)=>b.overall-a.overall).slice(0,4);
+  return {rows:[...rows].sort((a,b)=>a.std<b.std?-1:1), weak, strong, attempts:log.length};
+}
+/* print-safe horizontal bar chart (inline SVG — prints reliably) */
+function prBars(rows){
+  const rh=26, w=640, lw=310, bwMax=w-lw-58;
+  const h = rows.length*rh+8;
+  return `<svg viewBox="0 0 ${w} ${h}" style="width:100%;max-width:680px" role="img" aria-label="Bar chart">${rows.map((r,i)=>{
+    const y=i*rh+5, bw=Math.max(2, Math.round(bwMax*Math.min(r.pct,100)/100));
+    const label = r.label.length>48? r.label.slice(0,46)+'…' : r.label;
+    return `<text x="${lw-8}" y="${y+13}" text-anchor="end" font-size="11" font-family="Georgia,serif" fill="#000">${label}</text>
+      <rect x="${lw}" y="${y}" width="${bwMax}" height="16" fill="#fff" stroke="#999"/>
+      <rect x="${lw}" y="${y}" width="${bw}" height="16" fill="#333"/>
+      <text x="${lw+bwMax+6}" y="${y+13}" font-size="11" font-family="Georgia,serif" fill="#000">${r.pct}%</text>`;
+  }).join('')}</svg>`;
+}
+/* build the personalized feedback HTML for the report */
+function asnFeedbackHtml(){
+  const fb = asnFeedback();
+  if(!fb) return `<h2>Personalized feedback</h2><p style="font-size:.9rem">Topic-by-topic coaching appears here automatically once quizzes, pretests, posttests, or games have been completed in this assignment.</p>`;
+  let html = '';
+  const statLine = r=>{
+    const bits=[];
+    if(r.asked) bits.push(`answered ${r.asked-r.miss} of ${r.asked} questions correctly across every attempt`);
+    if(r.gN) bits.push(`best game run reached ${Math.round(r.gBest*100)}% of the target score in ${r.gN} tr${r.gN>1?'ies':'y'}`);
+    return bits.join(' · ');
+  };
+  /* chart */
+  html += `<h2>Performance by topic (every attempt counted)</h2>
+    ${prBars(fb.rows.map(r=>({label:stdDisplayName(r.std), pct:Math.round(100*r.overall)})))}
+    <p style="font-size:.78rem;margin:2px 0 0;color:#444">Based on ${fb.attempts} recorded attempt${fb.attempts>1?'s':''} — quizzes, pretests, posttests, and games, not just the best ones.</p>`;
+  /* coach's corner */
+  if(fb.weak.length){
+    html += `<h2>Coach's Corner — what to study next</h2>`;
+    fb.weak.forEach(r=>{
+      const info = STD_TEACH[r.std]||{};
+      const study = stdStudyItems(r.std);
+      html += `<div class="prtopic">
+        <h3>📌 ${stdDisplayName(r.std)}</h3>
+        <p class="prstat">${statLine(r)}</p>
+        <p style="font-size:.92rem;margin:0">${info.teach||''}</p>
+        ${info.fig && FIG[info.fig]? FIG[info.fig]('#444') : ''}
+        <p style="font-size:.85rem;margin:8px 0 0"><b>Where to practice on the site:</b>
+          ${study.lessons.length? `Reread lesson${study.lessons.length>1?'s':''} ${study.lessons.slice(0,3).join(' · ')}.` : ''}
+          ${study.games.length? ` Play ${study.games.join(' and ')}.` : ''}
+          Then retake the quiz — best score always counts.</p>
+      </div>`;
+    });
+  } else {
+    html += `<h2>Coach's Corner</h2><p style="font-size:.9rem">No major trouble spots found in the attempt data — keep doing what you're doing!</p>`;
+  }
+  /* celebration */
+  html += `<h2>What you mastered 🌟</h2>`;
+  if(fb.strong.length){
+    html += fb.strong.map(r=>`<div class="prgoodbox"><b>✔ ${stdDisplayName(r.std)}</b><br>
+      <span style="font-size:.88rem">${statLine(r)} — this topic is yours now.</span></div>`).join('');
+    html += `<p class="prcongrats">🎉 Congratulations, ${ASN.name}! You showed real mastery of ${fb.strong.length} topic${fb.strong.length>1?'s':''} on this assignment. That mastery came from your effort — every retake and every game run made you stronger. Keep it up!</p>`;
+  } else {
+    html += `<p style="font-size:.9rem">Mastered topics land here once a topic hits 85% or better across attempts. You're building toward it — pick one topic from Coach's Corner, study it, and retake the quiz. The next printout will look even better.</p>`;
+  }
+  return html;
+}
+
 /* ---------- printable report ---------- */
 function asnPrintReport(){
   const s = asnScore();
@@ -3485,6 +3649,7 @@ function asnPrintReport(){
       <tr><th>Category</th><th>Weight</th><th>Earned</th><th>Detail</th></tr>
       ${s.parts.map(p=>`<tr><td>${p.name}</td><td>${Math.round(100*p.w/s.wsum)}%</td><td>${Math.round(p.earned*100)}%</td><td>${p.detail}</td></tr>`).join('')}
     </table>
+    ${prBars(s.parts.map(p=>({label:p.name, pct:Math.round(p.earned*100)})))}
     <h2>Item-by-item</h2>
     <table class="prtable">
       <tr><th></th><th>Type</th><th>Item</th><th>Result</th></tr>
@@ -3494,6 +3659,7 @@ function asnPrintReport(){
           : (st.done? (st.meta||'completed') : 'not completed');
         return `<tr><td>${st.done||x.type==='po'&&store.get(asnItemKey(x))?'✔':'✗'}</td><td>${typeName[x.type]}</td><td>U${UNITS[x.uid].num} · ${x.label}</td><td>${res}</td></tr>`;}).join('')}
     </table>
+    ${asnFeedbackHtml()}
     <p class="prfoot">Pretest scores never count against the student — completion only. Generated by Physical Science Hub · ${location.host || 'local'} · Teachers can verify this report's code in Educator Mode.</p>`;
   document.body.classList.add('printing');
   const done = ()=>{ document.body.classList.remove('printing'); window.removeEventListener('afterprint', done); };
