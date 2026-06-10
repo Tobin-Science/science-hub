@@ -889,7 +889,8 @@ u1:{
    {t:"Physical vs. Chemical Properties & Changes", fig:"", body:`A <b>physical property</b> can be observed without changing the substance: color, density, melting point, boiling point. A <b>chemical property</b> describes how a substance reacts: flammability, reactivity with acid. Likewise, a <b>physical change</b> changes form only (melting, cutting, dissolving) while a <b>chemical change</b> makes a <em>new substance</em> (burning, rusting, digestion).`,
     callout:["Signs of a Chemical Change","Color change, gas produced (bubbles), energy released or absorbed (heat/light), a precipitate forms, or the change is hard to undo. One sign alone isn't proof — boiling makes bubbles but is physical!"],
     formula:"D = m ÷ V"},
-   {t:"States of Matter", fig:"states", body:`<b>Solids</b> hold a definite shape and volume — particles vibrate in place. <b>Liquids</b> keep their volume but take their container's shape — particles slide past each other. <b>Gases</b> fill whatever space they're given — particles fly around freely. <b>Plasma</b> is superheated, charged gas (stars, lightning). Adding energy speeds particles up; removing energy slows them down.`},
+   {t:"States of Matter", fig:"states", body:`<b>Solids</b> hold a definite shape and volume — particles vibrate in place. <b>Liquids</b> keep their volume but take their container's shape — particles slide past each other. <b>Gases</b> fill whatever space they're given — particles fly around freely. <b>Plasma</b> is the fourth state: a gas heated so extremely that electrons are ripped right off the atoms, leaving a glowing soup of charged particles. Because its particles are charged, plasma conducts electricity and responds to magnets — things ordinary gas can't do. Adding energy speeds particles up; removing energy slows them down.`,
+    callout:["Plasma Is Everywhere (Just Not Here)","Lightning bolts, neon signs, and welding arcs are plasma. So is the entire Sun — and every star you can see. More than 99% of the visible universe is plasma; Earth is the weird place where it's rare."]},
    {t:"Heating & Cooling Curves", fig:"heatcurve", body:`As you heat a substance, temperature rises — <em>except during a phase change</em>. While ice melts or water boils, the temperature graph goes <b>flat</b>, because all the added energy is busy breaking particle bonds instead of raising temperature. Those flat plateaus are the melting point and boiling point.`,
     callout:["The #1 Exam Question","“Why is the line flat?” Answer: energy is being used to change the phase (break attractions between particles), not to raise the temperature."]},
    {t:"Inside the Atom", fig:"atom", body:`Atoms have a dense central <b>nucleus</b> containing <b>protons</b> (+) and <b>neutrons</b> (no charge), with tiny <b>electrons</b> (−) moving around it. Protons and neutrons each count as 1 unit of mass; electrons are nearly massless. In a neutral atom, protons = electrons.`,
@@ -1110,7 +1111,9 @@ u4:{
    {q:"Which EM wave has MORE energy than visible light?", o:["Radio","Microwave","Infrared","Ultraviolet"], a:3, why:"Energy increases toward shorter wavelengths: UV, X-ray, and gamma all out-energize visible light. That's why UV causes sunburn."},
    {q:"The pitch of a sound is determined by its…", o:["Amplitude","Frequency","Speed","Medium"], a:1, why:"Higher frequency = higher pitch. Amplitude controls loudness instead."},
    {q:"A straw looks bent where it enters a glass of water because of…", o:["Reflection","Refraction","Diffraction","Absorption"], a:1, why:"Light bends (refracts) as it changes speed moving between water and air."},
-   {q:"A leaf looks green because it…", o:["Absorbs green light","Reflects green light","Creates green light","Refracts green light"], a:1, why:"Objects show the colors they reflect; the leaf absorbs the other wavelengths."}
+   {q:"A leaf looks green because it…", o:["Absorbs green light","Reflects green light","Creates green light","Refracts green light"], a:1, why:"Objects show the colors they reflect; the leaf absorbs the other wavelengths."},
+   {q:"Read the data: sound travels 343 m/s in air, 1,480 m/s in water, and 5,960 m/s in steel. What pattern do the data show?", o:["Sound moves fastest where particles are most tightly packed","Sound moves fastest in gases","Sound speed is the same in every medium","Sound speeds up as the medium gets less dense"], a:0, why:"Gas → liquid → solid, the speed climbs. Tightly packed particles pass vibrations along faster, so solids carry sound quickest."},
+   {q:"Earthquake waves travel about 8 km/s through solid rock but slow to about 1.5 km/s in loose soil. Why?", o:["Waves move faster through rigid, tightly packed material","Soil is more tightly packed than rock","Waves gain energy underground","The soil heats the waves up"], a:0, why:"Same rule as sound in steel: the stiffer and more tightly packed the medium, the faster a mechanical wave travels through it."}
   ],
   vocab:[
    ["Wave","A disturbance that transfers energy without transferring matter."],
@@ -1137,7 +1140,8 @@ u4:{
    {t:"Wave properties: amplitude, wavelength, frequency", ch:"Curated search", url:"https://www.youtube.com/results?search_query=amplitude+wavelength+frequency+wave+properties+middle+school", kind:"search", note:""},
    {t:"How sound travels", ch:"Curated search", url:"https://www.youtube.com/results?search_query=how+sound+travels+middle+school+science", kind:"search", note:"Look for the bell-in-a-vacuum-jar demo."},
    {t:"Wave on a String", ch:"PhET Interactive Simulations", url:"https://phet.colorado.edu/en/simulations/wave-on-a-string", kind:"phet", note:"Wiggle a virtual rope — see amplitude, frequency & damping live. Perfect for lessons 4–5."},
-   {t:"Waves Intro", ch:"PhET Interactive Simulations", url:"https://phet.colorado.edu/en/simulations/waves-intro", kind:"phet", note:"Water, sound, and light waves side by side from one faucet/speaker/laser."}
+   {t:"Waves Intro", ch:"PhET Interactive Simulations", url:"https://phet.colorado.edu/en/simulations/waves-intro", kind:"phet", note:"Water, sound, and light waves side by side from one faucet/speaker/laser."},
+   {t:"Geometric Optics: Basics", ch:"PhET Interactive Simulations", url:"https://phet.colorado.edu/en/simulations/geometric-optics-basics", kind:"phet", note:"Drag a lens and watch the rays bend to form images — pairs with the Light, Lenses & Color lesson."}
   ],
   pretest:[
    {q:"Waves transfer ____ from place to place.", o:["Matter","Energy","Air","Water"], a:1, lesson:1, why:"The medium wiggles in place — only the energy travels."},
@@ -2905,6 +2909,7 @@ const STD_TAGS = {
  /* --- Unit 4 videos & sims --- */
  "u4:V0":["S8P4.b","S8P4.c"], "u4:V1":["S8P4.b","S8P4.c"], "u4:V2":["S8P4.a"],
  "u4:V3":["S8P4.f"], "u4:V4":["S8P4.a","S8P4.e"], "u4:V5":["S8P4.f"], "u4:V6":["S8P4.a","S8P4.f"],
+ "u4:V7":["S8P4.g"],
  /* --- Unit 5 videos & sims --- */
  "u5:V0":["S8P5.b"], "u5:V1":["S8P5.a"], "u5:V2":["S8P5.c"], "u5:V3":["S8P5.c"],
  "u5:V4":["S8P5.a"], "u5:V5":["S8P5.b"], "u5:V6":["S8P5.a","S8P5.c"], "u5:V7":["S8P5.b","S8P5.c"]
@@ -2916,7 +2921,7 @@ const QUIZ_TAGS = {
  u1:["S8P1.a","S8P1.a","S8P1.d","S8P1.b","S8P1.e","S8P1.e","S8P1.e","S8P1.f","S8P1.d","S8P1.e"],
  u2:["S8P2.c","S8P2.a","S8P2.a","S8P2.c","S8P2.c","S8P2.d","S8P2.d","S8P2.d","S8P2.d","S8P2.c"],
  u3:["S8P3.a","S8P3.a","S8P3.a","S8P3.a","S8P3.a","S8P3.b","S8P3.c","S8P3.c","S8P3.c","S8P3.b"],
- u4:["S8P4.a","S8P4.a","S8P4.a","S8P4.f","S8P4.f","S8P4.e","S8P4.b","S8P4.f","S8P4.d","S8P4.d"],
+ u4:["S8P4.a","S8P4.a","S8P4.a","S8P4.f","S8P4.f","S8P4.e","S8P4.b","S8P4.f","S8P4.d","S8P4.d","S8P4.e","S8P4.e"],
  u5:["S8P5.a","S8P5.a","S8P5.b","S8P5.b","S8P5.b","S8P5.b","S8P5.a","S8P5.c","S8P5.c","S8P5.b"]
 };
 
@@ -3353,7 +3358,8 @@ u4:[
  {std:"S8P4.d", q:"You can hear someone around a corner before you see them because sound waves…", o:["Travel faster than light","Diffract (bend) around obstacles more than light does","Reflect off the ground only","Are absorbed by air"], a:1, why:"Long wavelengths diffract around corners easily. Light's tiny wavelengths barely bend, so you can't see around the wall."},
  {std:"S8P4.e", q:"Sound travels FASTEST through…", o:["A vacuum","Cold air","Warm air","Steel"], a:3, why:"Tightly packed particles pass vibrations quickly — solids beat liquids beat gases. In a vacuum, sound doesn't travel at all."},
  {std:"S8P4.f", q:"A wave's amplitude is doubled. The wave now carries…", o:["Less energy","The same energy","More energy","No energy"], a:2, why:"Amplitude is the energy dial — bigger waves (louder sound, brighter light) carry more energy."},
- {std:"S8P4.g", q:"A magnifying glass makes text look larger because its convex lens…", o:["Reflects light back to your eye","Refracts light rays so they appear to come from a larger image","Absorbs the smallest light rays","Slows light permanently"], a:1, why:"Convex lenses bend (refract) light to form a magnified image — the basis of magnifiers, cameras, and your own eye."}
+ {std:"S8P4.g", q:"A magnifying glass makes text look larger because its convex lens…", o:["Reflects light back to your eye","Refracts light rays so they appear to come from a larger image","Absorbs the smallest light rays","Slows light permanently"], a:1, why:"Convex lenses bend (refract) light to form a magnified image — the basis of magnifiers, cameras, and your own eye."},
+ {std:"S8P4.e", q:"A student measures sound speeds: 343 m/s in air, 1,480 m/s in water, 5,960 m/s in steel. She concludes mechanical waves travel fastest where particles are most tightly packed. Her conclusion is…", o:["Wrong — sound is always fastest in air","Supported — the data climb from gas to liquid to solid","Wrong — speed depends only on loudness","Supported — but only for light waves"], a:1, why:"The data rise gas → liquid → solid because tightly packed particles hand vibrations to their neighbors faster. (Light is the opposite — it's fastest in empty space.)"}
 ],
 u5:[
  {std:"S8P5.a", q:"Earth pulls on the Moon across 384,000 km of empty space. This is possible because…", o:["Invisible air connects them","Gravitational fields exert force without contact","The Moon touches Earth's atmosphere","Magnetism holds them together"], a:1, why:"Fields — gravitational, magnetic, electric — act at a distance. No touching required."},
