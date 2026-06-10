@@ -322,6 +322,36 @@ body.onstart nav{display:none}
 .asnfoot{margin-top:22px;border-top:2px dashed #e3e7f2;padding-top:16px}
 @media(max-width:560px){.asnrow2{flex-wrap:wrap}.asngo{margin-left:auto}}
 
+
+/* ---------- PHASE 4: POSTTEST + REPORT ---------- */
+.ptopts{display:grid;gap:10px}
+.ptopt{background:#fff;color:#1B2440;border:2px solid #d9def0;border-radius:12px;padding:14px 16px;font:inherit;font-size:1rem;font-weight:600;text-align:left;cursor:pointer}
+.ptopt:hover{border-color:#5B67E0;background:#eef0fd}
+.ptrev{background:#fff;border:2px solid #e8ebf4;border-radius:10px;padding:10px 14px;margin:8px 0;font-size:.92rem}
+.ptrev.ok{border-color:#bfe8cf}.ptrev.bad{border-color:#f3c0c0}
+.asnscoreline{margin:4px 0 0;font-size:.95rem}
+.asnscoreline b{font-size:1.1rem}
+/* print report */
+#printreport{display:none}
+body.printing #printreport{display:block;background:#fff;color:#000;font-family:Georgia,serif;padding:30px}
+@media print{
+  body.printing > *:not(#printreport){display:none !important}
+  body.printing #asnbanner{display:none !important}
+  body.printing{background:#fff}
+}
+#printreport h1{font-size:1.5rem;margin:0 0 10px;border-bottom:3px solid #000;padding-bottom:8px}
+#printreport h2{font-size:1.05rem;margin:18px 0 6px}
+.prmeta{width:100%;font-size:.92rem;border-collapse:collapse}
+.prmeta td{padding:3px 8px 3px 0}
+.prcode{font-family:monospace;font-weight:800;font-size:1.05rem;border:2px solid #000;padding:2px 8px;letter-spacing:2px}
+.prscore{font-size:1.6rem;margin:16px 0;border:3px solid #000;display:inline-block;padding:10px 26px}
+.prtable{width:100%;border-collapse:collapse;font-size:.86rem}
+.prtable th,.prtable td{border:1px solid #888;padding:5px 8px;text-align:left}
+.prtable th{background:#eee;color:#000}
+#printreport, #printreport *{color:#000}
+#printreport .prcode{color:#000}
+.prfoot{font-size:.78rem;margin-top:18px;color:#444}
+
 </style>
 </head>
 <body>
@@ -421,6 +451,21 @@ body.onstart nav{display:none}
         <textarea id="gensummary" readonly></textarea>
       </div>
     </div>
+  </div>
+
+
+  <div class="teachstep" style="margin-top:30px">
+    <h3>🔍 Verify a student's score report</h3>
+    <p class="stepsub">Enter the five values exactly as printed on the report. A valid code proves the name, score, and date weren't edited after printing.</p>
+    <div class="asnrow">
+      <input id="vf-id" placeholder="Assignment ID (e.g., k3x9w2)" style="max-width:180px">
+      <input id="vf-name" placeholder="Student name as printed">
+      <input id="vf-pct" placeholder="Score % (number only)" type="number" min="0" max="100" style="max-width:160px">
+      <input id="vf-date" placeholder="Date (YYYY-MM-DD)" style="max-width:160px">
+      <input id="vf-code" placeholder="Verification code" style="max-width:170px">
+    </div>
+    <button class="genbtn" style="padding:11px 24px;font-size:.95rem" onclick="teachVerify()">Check code</button>
+    <p id="vf-out" style="margin:10px 0 0"></p>
   </div>
 
   <p style="margin-top:8px"><a href="#" onclick="go('start');return false" style="font-size:.9rem">← Back to start</a></p>
@@ -2739,7 +2784,8 @@ function asnItems(cfg){
 }
 const asnItemKey = it => `asn_${ASN.cfg.id}_${ASN.key}_${it.type}:${it.id}`;
 function asnStatus(it){ // → {done, meta}
-  if(it.type==='po') return {done:false, meta:'🔒 arrives in a future update — not counted yet'};
+  if(it.type==='po'){ const r=store.get(asnItemKey(it));
+    return r? {done:true, meta:`best ${r.score}/${r.total}${r.attempts>1? ' ('+r.attempts+' attempts)':''}`} : {done:false, meta:'scored — counts most toward your grade'}; }
   const v = store.get(asnItemKey(it));
   if(v===null || v===undefined) return {done:false, meta:''};
   if(it.type==='m')  return {done:true, meta:`best score ${v}`};
@@ -2840,18 +2886,18 @@ function renderAssign(){
   if(!ASN){ box.innerHTML = `<p>No assignment is open. If your teacher gave you a link, open that link.</p><p><button class="gbtn" onclick="go('start')">← Back to start</button></p>`; return; }
   const cfg = ASN.cfg;
   const items = asnItems(cfg);
-  const countable = items.filter(x=>x.type!=='po');
+  const countable = items;
   const done = countable.filter(x=>asnStatus(x).done).length;
   const pct = countable.length? Math.round(100*done/countable.length) : 0;
   const groups = ASN_TYPES.map(T=>{
     const rows = items.filter(x=>x.type===T.k);
     if(!rows.length) return '';
     return `<div class="asngroup">
-      <h3>${T.icon} ${T.name} <span class="asncount">${T.k==='po'? rows.length : rows.filter(x=>asnStatus(x).done).length+'/'+rows.length}</span></h3>
+      <h3>${T.icon} ${T.name} <span class="asncount">${rows.filter(x=>asnStatus(x).done).length+'/'+rows.length}</span></h3>
       ${rows.map(x=>{
         const s = asnStatus(x);
         const btn = x.type==='po'
-          ? `<button class="asngo" disabled style="opacity:.5;cursor:not-allowed">${T.verb}</button>`
+          ? `<button class="asngo" style="background:#1B2440" onclick="asnStartPosttest('${x.id}')">${s.done? 'Retake' : T.verb}</button>`
           : `<button class="asngo" onclick="asnOpen('${x.type}','${x.id}')">${s.done? (x.type==='g'?'Reread':x.type==='m'?'Play again':x.type==='q'?'Retake':'Reopen') : T.verb}</button>`;
         return `<div class="asnrow2 ${s.done?'done':''}">
           <span class="asnchk">${s.done?'✅':'⬜'}</span>
@@ -2873,11 +2919,12 @@ function renderAssign(){
     <div class="asnprog">
       <div class="asnbar"><i style="width:${pct}%"></i></div>
       <p><b>${done} of ${countable.length}</b> complete · ${pct}%${pct===100? ' — 🎉 everything done!':''}</p>
+      <p class="asnscoreline">📊 Current weighted score: <b>${asnScore().pct}%</b> <span style="opacity:.65;font-size:.82rem">(posttest counts most — see your printed report for the breakdown)</span></p>
     </div>
     ${groups}
     <div class="asnfoot">
-      <button class="gbtn" disabled style="opacity:.55;cursor:not-allowed">🖨 Print Score Report — final scoring arrives in the next update</button>
-      <p style="font-size:.82rem;opacity:.7;margin-top:8px">Your work is saved in this browser under your name. The progress bar shows completion; your weighted score and printable report are coming in the next phase.</p>
+      <button class="gbtn" onclick="asnPrintReport()">🖨 Print Score Report</button>
+      <p style="font-size:.82rem;opacity:.7;margin-top:8px">When you're done, print your report and <b>save it as a PDF</b> (choose "Save as PDF" as the printer), then upload it to your teacher's assignment page. Your work stays saved in this browser under your name, so you can keep improving and print again.</p>
     </div>`;
 }
 
@@ -2890,11 +2937,260 @@ function updateAsnBanner(){
     const nav = document.querySelector('nav');
     nav.parentNode.insertBefore(bar, nav.nextSibling);
   }
-  const items = asnItems(ASN.cfg).filter(x=>x.type!=='po');
+  const items = asnItems(ASN.cfg);
   const done = items.filter(x=>asnStatus(x).done).length;
   bar.innerHTML = `📋 <b>${ASN.cfg.t||'Assignment'}</b> · ${ASN.name} · ${done}/${items.length} done
     <button onclick="renderAssign();go('assign')">My checklist →</button>`;
   bar.style.display = document.getElementById('page-assign').classList.contains('show')? 'none':'flex';
+}
+
+
+/* =========================================================
+   PHASE 4a — POSTTEST QUESTION BANKS
+   10 per unit · tagged by sub-standard · distinct from
+   the practice quizzes and pretests
+   ========================================================= */
+const POSTTESTS = {
+u1:[
+ {std:"S8P1.a", q:"A scientist has a sample that can be separated into two different substances using only a filter. The sample must be…", o:["An element","A compound","A mixture","An atom"], a:2, why:"Filtering is a physical method — only mixtures separate physically. Compounds need a chemical reaction to break apart."},
+ {std:"S8P1.a", q:"Carbon dioxide (CO<sub>2</sub>) is a compound and NOT a mixture because…", o:["It contains two elements","Its atoms are chemically bonded in a fixed ratio","It is a gas at room temperature","It can dissolve in water"], a:1, why:"Compounds are elements chemically bonded in fixed ratios. Just containing two elements isn't enough — a mix of loose carbon and oxygen would be a mixture."},
+ {std:"S8P1.b", q:"As thermal energy is removed from a liquid, its particles…", o:["Move faster and spread apart","Move slower and settle into fixed positions","Break into smaller atoms","Lose their mass"], a:1, why:"Cooling slows particle motion; at the freezing point, particles lock into the fixed, vibrating positions of a solid."},
+ {std:"S8P1.b", q:"In which state do particles have enough energy to completely overcome attraction and even lose electrons?", o:["Solid","Liquid","Gas","Plasma"], a:3, why:"Plasma is a superheated state where electrons are stripped from atoms — found in stars, lightning, and neon signs."},
+ {std:"S8P1.c", q:"Which is a CHEMICAL property of magnesium?", o:["It is shiny and silver","It melts at 650°C","It burns with a bright white flame","Its density is 1.74 g/cm³"], a:2, why:"How a substance reacts (combustibility) is chemical. Shine, melting point, and density can be observed without changing the substance — those are physical."},
+ {std:"S8P1.d", q:"You leave a glass of soda out and it goes flat as bubbles escape. This is a physical change because…", o:["A gas was produced by a reaction","The dissolved CO₂ left the mixture but nothing new formed","The soda changed color","The soda's atoms rearranged"], a:1, why:"The CO₂ was already there, dissolved. It escaping is a mixture separating — no new substance was created."},
+ {std:"S8P1.d", q:"Which observation is the STRONGEST evidence of a chemical change?", o:["The substance changed shape","The substance dissolved in water","An unexpected color change that can't be undone","The substance melted"], a:2, why:"Irreversible color change signals a new substance. Shape change, dissolving, and melting are all physical."},
+ {std:"S8P1.e", q:"An atom has 11 protons, 12 neutrons, and 11 electrons. Its atomic number is…", o:["11","12","22","23"], a:0, why:"Atomic number = protons, period. (Mass number would be 11+12 = 23.)"},
+ {std:"S8P1.e", q:"Elements in the same COLUMN of the periodic table tend to…", o:["Have the same mass","Have similar chemical behavior","Be the same state of matter","Have the same number of neutrons"], a:1, why:"Columns (groups/families) share valence electron counts, which drives similar reactivity."},
+ {std:"S8P1.f", q:"In a sealed container, 10 g of substance A reacts completely with 6 g of substance B. The products must have a total mass of…", o:["4 g","6 g","10 g","16 g"], a:3, why:"Conservation of matter: atoms are rearranged, never created or destroyed — reactant mass (10+6) equals product mass."}
+],
+u2:[
+ {std:"S8P2.a", q:"Two carts roll at the same speed, but cart B has twice the mass of cart A. Cart B's kinetic energy is…", o:["Half of A's","The same as A's","Twice A's","Four times A's"], a:2, why:"KE = ½mv². Doubling mass (at the same speed) doubles KE. Doubling SPEED would quadruple it."},
+ {std:"S8P2.a", q:"Which change increases a shelf book's gravitational potential energy the most?", o:["Moving it to a shelf twice as high","Dusting it off","Sliding it sideways on the same shelf","Opening the book"], a:0, why:"PE = mgh — height is the lever here. Sideways motion doesn't change h at all."},
+ {std:"S8P2.b", q:"A pendulum swings. At which point is its kinetic energy greatest?", o:["At the top of its swing","At the bottom of its swing","Halfway up","KE is constant"], a:1, why:"At the bottom, all the height (PE) has converted to speed (KE). At the top it's the reverse."},
+ {std:"S8P2.b", q:"A roller coaster car at the top of the first hill has 50,000 J of PE. Ignoring friction, at the bottom it has…", o:["50,000 J of PE","50,000 J of KE","25,000 J of KE","0 J of energy"], a:1, why:"Energy transforms, never disappears — all the potential energy becomes kinetic energy at the bottom."},
+ {std:"S8P2.c", q:"In a hand-crank flashlight, the energy chain is…", o:["Chemical → electrical → light","Mechanical → electrical → light","Electrical → mechanical → light","Light → electrical → mechanical"], a:1, why:"Your cranking (mechanical) spins a generator (electrical) that powers the bulb (light)."},
+ {std:"S8P2.c", q:"A match being struck transforms chemical energy mainly into…", o:["Electrical and sound energy","Light and thermal energy","Nuclear and light energy","Mechanical energy only"], a:1, why:"Combustion releases the match head's chemical energy as heat and light."},
+ {std:"S8P2.d", q:"A metal railing and a wooden bench sit in the same shade at the same temperature, yet the railing feels colder. Why?", o:["Metal is actually colder","Metal conducts heat away from your hand faster","Wood radiates more heat","Your hand warms the wood by convection"], a:1, why:"Both are the same temperature — metal is just a better conductor, so it pulls heat from your skin faster, which feels cold."},
+ {std:"S8P2.d", q:"Which heat transfer works even through the vacuum of space?", o:["Conduction","Convection","Radiation","All three"], a:2, why:"Conduction needs contact and convection needs a fluid. Radiation is EM waves — no matter required."},
+ {std:"S8P2.d", q:"Why are the heating elements (baseboard heaters) in a room placed near the FLOOR?", o:["Hot air sinks","Hot air rises, creating a convection current that warms the room","Radiation works better near the floor","Conduction through carpet is efficient"], a:1, why:"Heated air expands, rises, cools at the ceiling, sinks — a loop. Starting low drives the whole room's circulation."},
+ {std:"S8P2.b", q:"A stretched rubber band launches a paper wad. Just before release, the energy is stored as…", o:["Kinetic energy","Elastic potential energy","Thermal energy","Chemical energy"], a:1, why:"Stretching stores elastic PE; release converts it into the wad's kinetic energy."}
+],
+u3:[
+ {std:"S8P3.a", q:"A runner covers 400 m in 80 s. Her average speed is…", o:["0.2 m/s","5 m/s","320 m/s","480 m/s"], a:1, why:"s = d ÷ t = 400 ÷ 80 = 5 m/s."},
+ {std:"S8P3.a", q:"Velocity differs from speed because velocity includes…", o:["Acceleration","Mass","Direction","Distance"], a:2, why:"Velocity is speed WITH direction — 5 m/s east. That's why a car turning at constant speed still changes velocity."},
+ {std:"S8P3.a", q:"A car goes from 10 m/s to 22 m/s in 4 s. Its acceleration is…", o:["3 m/s²","4 m/s²","8 m/s²","12 m/s²"], a:0, why:"a = (v₂ − v₁) ÷ t = (22−10) ÷ 4 = 3 m/s²."},
+ {std:"S8P3.a", q:"On a distance-time graph, a line that curves upward, getting steeper and steeper, shows an object that is…", o:["Stopped","Moving at constant speed","Speeding up","Moving backward"], a:2, why:"Slope = speed on a d-t graph. A steepening curve means the speed itself is increasing — acceleration."},
+ {std:"S8P3.b", q:"A book sits motionless on a table. The forces on it are…", o:["Zero — no forces act on it","Unbalanced, which is why it doesn't move","Balanced: gravity down, the table pushing up","Only gravity"], a:2, why:"Gravity pulls down and the table's normal force pushes up equally — balanced forces, zero net force, no change in motion."},
+ {std:"S8P3.b", q:"A soccer ball rolling across grass slows and stops. Newton's first law says this happens because…", o:["Objects naturally stop","An unbalanced force (friction) acts on it","Its inertia ran out","Gravity pulls it backward"], a:1, why:"Moving objects keep moving UNLESS an unbalanced force acts. Friction is that force — inertia never 'runs out.'"},
+ {std:"S8P3.b", q:"Tug-of-war: the left team pulls with 500 N, the right with 470 N. The net force is…", o:["970 N toward the left","30 N toward the left","30 N toward the right","Zero"], a:1, why:"Opposite forces subtract: 500 − 470 = 30 N in the stronger team's direction."},
+ {std:"S8P3.c", q:"The same force is applied to a tennis ball and a bowling ball. The tennis ball accelerates more because…", o:["It has less inertia (mass)","It has more inertia","Gravity is weaker on it","Force multiplies on small objects"], a:0, why:"a = F ÷ m. Less mass means less inertia resisting the force, so more acceleration."},
+ {std:"S8P3.c", q:"A 1,200 kg car needs to accelerate at 2.5 m/s². The net force required is…", o:["480 N","1,202.5 N","3,000 N","30,000 N"], a:2, why:"F = m × a = 1,200 × 2.5 = 3,000 N."},
+ {std:"S8P3.c", q:"Why do trucks have much longer stopping distances than cars at the same speed?", o:["Their brakes are weaker","Their greater mass means more inertia to overcome","They have more wheels","Air resistance helps cars more"], a:1, why:"Stopping is acceleration in reverse — the same braking force changes a massive object's motion more slowly (F = ma)."}
+],
+u4:[
+ {std:"S8P4.a", q:"Astronauts on the Moon can see each other but can't hear each other without radios because…", o:["It's too cold for sound","Light is an EM wave but sound needs a medium, and the Moon has no air","Sound moves too slowly there","Their helmets block all waves"], a:1, why:"Sound is mechanical — it must travel through matter. Light is electromagnetic and crosses empty space fine."},
+ {std:"S8P4.a", q:"In a longitudinal wave (like sound), the particles of the medium move…", o:["In circles","Perpendicular to the wave's direction","Back and forth parallel to the wave's direction","They don't move at all"], a:2, why:"Longitudinal = compressions and rarefactions along the travel direction. Transverse waves move particles perpendicular."},
+ {std:"S8P4.b", q:"Arrange by energy, lowest to highest:", o:["Gamma → visible → radio","Radio → visible → gamma","Visible → radio → gamma","Radio → gamma → visible"], a:1, why:"Radio waves have the longest wavelength and lowest energy; gamma rays the shortest and highest."},
+ {std:"S8P4.b", q:"Compared to red light, blue light has…", o:["A longer wavelength and less energy","A shorter wavelength and more energy","The same wavelength","No frequency"], a:1, why:"Within visible light, blue/violet sit at the short-wavelength, high-frequency, high-energy end; red is the opposite."},
+ {std:"S8P4.c", q:"A doctor wants to image a broken bone AND a security officer wants to scan luggage. Both reach for…", o:["Radio waves","Microwaves","X-rays","Gamma rays"], a:2, why:"X-rays penetrate soft materials but are absorbed by dense ones (bone, metal) — perfect for both jobs."},
+ {std:"S8P4.d", q:"A straw in a glass of water looks bent at the surface because light…", o:["Reflects off the straw","Refracts — changes speed and bends as it passes between water and air","Is absorbed by the water","Diffracts around the glass"], a:1, why:"Light slows in water; the speed change at the boundary bends the rays, shifting the straw's apparent position."},
+ {std:"S8P4.d", q:"You can hear someone around a corner before you see them because sound waves…", o:["Travel faster than light","Diffract (bend) around obstacles more than light does","Reflect off the ground only","Are absorbed by air"], a:1, why:"Long wavelengths diffract around corners easily. Light's tiny wavelengths barely bend, so you can't see around the wall."},
+ {std:"S8P4.e", q:"Sound travels FASTEST through…", o:["A vacuum","Cold air","Warm air","Steel"], a:3, why:"Tightly packed particles pass vibrations quickly — solids beat liquids beat gases. In a vacuum, sound doesn't travel at all."},
+ {std:"S8P4.f", q:"A wave's amplitude is doubled. The wave now carries…", o:["Less energy","The same energy","More energy","No energy"], a:2, why:"Amplitude is the energy dial — bigger waves (louder sound, brighter light) carry more energy."},
+ {std:"S8P4.g", q:"A magnifying glass makes text look larger because its convex lens…", o:["Reflects light back to your eye","Refracts light rays so they appear to come from a larger image","Absorbs the smallest light rays","Slows light permanently"], a:1, why:"Convex lenses bend (refract) light to form a magnified image — the basis of magnifiers, cameras, and your own eye."}
+],
+u5:[
+ {std:"S8P5.a", q:"Earth pulls on the Moon across 384,000 km of empty space. This is possible because…", o:["Invisible air connects them","Gravitational fields exert force without contact","The Moon touches Earth's atmosphere","Magnetism holds them together"], a:1, why:"Fields — gravitational, magnetic, electric — act at a distance. No touching required."},
+ {std:"S8P5.a", q:"As a spacecraft travels farther from Earth, the gravitational force on it…", o:["Increases","Stays the same","Decreases","Becomes magnetic"], a:2, why:"Field strength weakens with distance — that's true of gravity, magnetism, and electric force alike."},
+ {std:"S8P5.a", q:"A compass needle moves when brought near a wire carrying current, without touching it. This shows…", o:["The wire is magnetic metal","Electric current creates a magnetic field around the wire","The needle is electrically charged","Gravity from the wire"], a:1, why:"Moving charge creates a magnetic field — the discovery that links electricity and magnetism."},
+ {std:"S8P5.b", q:"You shuffle across carpet and shock a doorknob. Just before the shock, your body had…", o:["A balanced charge","A buildup of static charge from transferred electrons","No electrons","Magnetic poles"], a:1, why:"Friction transfers electrons, building static charge that discharges (zap!) to the conductor."},
+ {std:"S8P5.b", q:"Electrical wires are copper wrapped in plastic because…", o:["Both materials conduct","Copper conducts the current; plastic insulates so charge stays in the wire","Plastic conducts better than copper","Copper is an insulator"], a:1, why:"Conductors let charge flow freely; insulators hold it in place. The pairing puts each material where it belongs."},
+ {std:"S8P5.b", q:"In a conductor, extra charge spreads across the whole surface. In an insulator, extra charge…", o:["Also spreads evenly","Stays where it was placed","Disappears instantly","Turns into magnetism"], a:1, why:"Insulators don't let charge move — it sits where it's deposited. That's why rubbing one SPOT of a balloon charges that spot."},
+ {std:"S8P5.c", q:"Which change makes an electromagnet STRONGER?", o:["Fewer wire coils","Removing the iron core","Adding more wire coils around the core","Using a wooden core"], a:2, why:"More coils, more current (more/bigger cells), and an iron core all strengthen an electromagnet."},
+ {std:"S8P5.c", q:"Two magnets attract with a certain force. Moving them twice as far apart makes the force…", o:["Stronger","Unchanged","Weaker","Reverse direction"], a:2, why:"Distance weakens field forces dramatically — closer is stronger, farther is weaker."},
+ {std:"S8P5.c", q:"A generator's voltage can be increased by…", o:["Spinning the magnet slower","Using fewer coils","Spinning faster and using a stronger magnet","Removing the magnet"], a:2, why:"Induced voltage rises with spin speed, coil turns, and magnet strength — the Turbine Hall recipe."},
+ {std:"S8P5.c", q:"Adding a second battery (in series) to a circuit with an electromagnet will…", o:["Weaken the magnet","Strengthen the magnet by increasing current","Have no effect","Reverse gravity"], a:1, why:"More cells push more current through the coils, strengthening the magnetic field."}
+]
+};
+
+/* =========================================================
+   PHASE 4b — POSTTEST RUNNER, SCORING ENGINE,
+   PRINTABLE REPORT + VERIFICATION
+   ========================================================= */
+
+/* ---------- posttest: filtered to the assignment's standards ---------- */
+function asnPosttestQs(uid){
+  const bank = POSTTESTS[uid] || [];
+  const sel = new Set(ASN.cfg.std || []);
+  let qs = bank.filter(q => sel.has(q.std));
+  if(qs.length < 5){ // pad with the rest of the unit bank so the test isn't trivial
+    const extra = bank.filter(q => !sel.has(q.std));
+    qs = qs.concat(extra.slice(0, 5 - qs.length));
+  }
+  return qs;
+}
+let PT = null; // live posttest state
+function asnStartPosttest(uid){
+  const qs = shuffle([...asnPosttestQs(uid)]);
+  PT = {uid, qs, i:0, score:0, picks:[]};
+  renderPosttest();
+}
+function renderPosttest(){
+  const box = document.getElementById('assigninfo');
+  const {uid, qs, i} = PT;
+  if(i >= qs.length){ // finished
+    const result = {score:PT.score, total:qs.length};
+    const k = `asn_${ASN.cfg.id}_${ASN.key}_po:${uid}`;
+    const prev = store.get(k);
+    const attempts = (prev?.attempts || 0) + 1;
+    const best = (!prev || result.score > prev.score) ? result : prev;
+    store.set(k, {score:best.score, total:best.total, attempts});
+    const pct = Math.round(100*result.score/qs.length);
+    box.innerHTML = `<div style="text-align:center;padding:18px 6px">
+      <div style="font-size:2.2rem">🏁</div>
+      <h2 style="margin:6px 0">Posttest complete: ${result.score}/${qs.length} (${pct}%)</h2>
+      ${prev && prev.score>result.score? `<p style="opacity:.8">Your best is still ${prev.score}/${prev.total} — that's what counts.</p>`:''}
+      <div style="text-align:left;max-width:680px;margin:18px auto">
+        ${qs.map((q,n)=>{ const ok = PT.picks[n]===q.a;
+          return `<div class="ptrev ${ok?'ok':'bad'}"><b>${ok?'✅':'❌'} Q${n+1}.</b> ${q.q}<br>
+            ${ok? '' : `<span style="color:#a33">Your answer: ${q.o[PT.picks[n]]}</span><br>`}
+            <span style="color:#2f7a4d">Correct: ${q.o[q.a]}</span> — <span class="why">${q.why}</span></div>`;}).join('')}
+      </div>
+      <button class="gbtn" onclick="PT=null;renderAssign()">← Back to my checklist</button>
+      <button class="gbtn" style="margin-left:8px;background:#fff;color:#1B2440;border:2px solid #1B2440" onclick="asnStartPosttest('${uid}')">↻ Retake (best score counts)</button>
+    </div>`;
+    return;
+  }
+  const q = qs[i];
+  const opts = shuffle(q.o.map((t,idx)=>({t,idx})));
+  box.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 style="margin:0">🏁 Unit ${UNITS[uid].num} posttest</h3>
+      <span style="font-family:var(--mono);font-size:.85rem">QUESTION ${i+1} / ${qs.length}</span>
+    </div>
+    <p style="font-size:.82rem;opacity:.7;margin:4px 0 14px">This one is scored — no feedback until the end. Take your time.</p>
+    <div style="font-size:1.15rem;margin-bottom:14px">${q.q}</div>
+    <div class="ptopts">${opts.map(o=>`<button class="ptopt" onclick="ptAnswer(${o.idx})">${o.t}</button>`).join('')}</div>
+    <p style="font-size:.8rem;opacity:.6;margin-top:14px"><button class="ghostlink" onclick="if(confirm('Leave the posttest? This attempt won\\'t be saved.')){PT=null;renderAssign();}">exit without finishing</button></p>`;
+}
+function ptAnswer(idx){
+  PT.picks.push(idx);
+  if(idx === PT.qs[PT.i].a) PT.score++;
+  PT.i++;
+  renderPosttest();
+}
+
+/* ---------- weighted scoring engine ---------- */
+const GAME_TARGETS = {u1:120,u1b:80,u1c:110,u2:100,u2b:110,u3:100,u3b:90,u3c:90,u4:100,u4b:70,u5:100,u5b:60};
+const SCORE_WEIGHTS = [
+  {k:'po',     w:40, name:'Posttest'},
+  {k:'q',      w:20, name:'Practice quizzes'},
+  {k:'m',      w:15, name:'Minigames'},
+  {k:'opened', w:20, name:'Readings, videos & labs'},
+  {k:'pr',     w:5,  name:'Pretest (completion)'}
+];
+function asnScore(){
+  const it = ASN.cfg.it || {};
+  const get = (type,id)=>store.get(`asn_${ASN.cfg.id}_${ASN.key}_${type}:${id}`);
+  const parts = [];
+  SCORE_WEIGHTS.forEach(W=>{
+    let earned=null, detail='';
+    if(W.k==='opened'){
+      const ids=[...(it.g||[]).map(i=>['g',i]), ...(it.v||[]).map(i=>['v',i]), ...(it.p||[]).map(i=>['p',i])];
+      if(ids.length){ const done=ids.filter(([t,i])=>get(t,i)!=null).length;
+        earned=done/ids.length; detail=`${done} of ${ids.length} opened`; }
+    } else if(W.k==='m'){
+      if((it.m||[]).length){
+        const ratios=it.m.map(g=>{ const b=get('m',g); return b==null? 0 : Math.min(b/(GAME_TARGETS[g]||100),1); });
+        earned=ratios.reduce((a,b)=>a+b,0)/ratios.length;
+        detail=it.m.map(g=>{ const b=get('m',g); return `${GAMES[g].title}: ${b==null?'—':b}`; }).join(' · ');
+      }
+    } else if(W.k==='q' || W.k==='po'){
+      if((it[W.k]||[]).length){
+        const ratios=it[W.k].map(u=>{ const r=get(W.k,u); return r? r.score/r.total : 0; });
+        earned=ratios.reduce((a,b)=>a+b,0)/ratios.length;
+        detail=it[W.k].map(u=>{ const r=get(W.k,u); return `Unit ${UNITS[u].num}: ${r? r.score+'/'+r.total : 'not taken'}`; }).join(' · ');
+      }
+    } else if(W.k==='pr'){
+      if((it.pr||[]).length){
+        const done=it.pr.filter(u=>get('pr',u)).length;
+        earned=done/it.pr.length; detail=`${done} of ${it.pr.length} completed`;
+      }
+    }
+    if(earned!==null) parts.push({name:W.name, w:W.w, earned, detail});
+  });
+  const wsum = parts.reduce((a,p)=>a+p.w,0);
+  const pct = wsum? Math.round(100 * parts.reduce((a,p)=>a + p.earned*p.w, 0) / wsum) : 0;
+  return {pct, parts, wsum};
+}
+
+/* ---------- verification code ---------- */
+function asnVerifyCode(asnId, nameK, pct, dateStr){
+  let x = 5381;
+  const s = `${asnId}|${nameK}|${pct}|${dateStr}|psh`;
+  for(let i=0;i<s.length;i++){ x = ((x*33) ^ s.charCodeAt(i)) >>> 0; }
+  return x.toString(36).toUpperCase().padStart(7,'0').slice(-7);
+}
+
+/* ---------- printable report ---------- */
+function asnPrintReport(){
+  const s = asnScore();
+  const items = asnItems(ASN.cfg);
+  const today = new Date();
+  const dateStr = today.toISOString().slice(0,10);
+  const code = asnVerifyCode(ASN.cfg.id, ASN.key, s.pct, dateStr);
+  const typeName = {g:'Study guide', m:'Minigame', v:'Video', p:'PhET lab', q:'Practice quiz', pr:'Pretest', po:'Posttest'};
+  let rep = document.getElementById('printreport');
+  if(!rep){ rep = document.createElement('div'); rep.id='printreport'; document.body.appendChild(rep); }
+  rep.innerHTML = `
+    <div class="prhead">
+      <h1>Score Report — ${ASN.cfg.t || 'Class Assignment'}</h1>
+      <table class="prmeta"><tr>
+        <td><b>Student:</b> ${ASN.name}</td>
+        <td><b>Teacher:</b> ${ASN.cfg.by || '—'}</td>
+        <td><b>Date:</b> ${dateStr}</td>
+      </tr><tr>
+        <td><b>Standards:</b> ${(ASN.cfg.std||[]).join(', ')}</td>
+        <td><b>Assignment ID:</b> ${ASN.cfg.id}</td>
+        <td><b>Verification:</b> <span class="prcode">${code}</span></td>
+      </tr></table>
+    </div>
+    <div class="prscore">FINAL SCORE: <b>${s.pct}%</b></div>
+    <h2>Category breakdown</h2>
+    <table class="prtable">
+      <tr><th>Category</th><th>Weight</th><th>Earned</th><th>Detail</th></tr>
+      ${s.parts.map(p=>`<tr><td>${p.name}</td><td>${Math.round(100*p.w/s.wsum)}%</td><td>${Math.round(p.earned*100)}%</td><td>${p.detail}</td></tr>`).join('')}
+    </table>
+    <h2>Item-by-item</h2>
+    <table class="prtable">
+      <tr><th></th><th>Type</th><th>Item</th><th>Result</th></tr>
+      ${items.map(x=>{ const st=asnStatus(x);
+        const res = x.type==='po'
+          ? (()=>{ const r=store.get(asnItemKey(x)); return r? `${r.score}/${r.total}${r.attempts>1? ` (best of ${r.attempts} attempts)`:''}` : 'not taken'; })()
+          : (st.done? (st.meta||'completed') : 'not completed');
+        return `<tr><td>${st.done||x.type==='po'&&store.get(asnItemKey(x))?'✔':'✗'}</td><td>${typeName[x.type]}</td><td>U${UNITS[x.uid].num} · ${x.label}</td><td>${res}</td></tr>`;}).join('')}
+    </table>
+    <p class="prfoot">Pretest scores never count against the student — completion only. Generated by Physical Science Hub · ${location.host || 'local'} · Teachers can verify this report's code in Educator Mode.</p>`;
+  document.body.classList.add('printing');
+  const done = ()=>{ document.body.classList.remove('printing'); window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  setTimeout(()=>window.print(), 60);
+  setTimeout(done, 4000); // safety: some mobile browsers skip afterprint
+}
+
+/* ---------- teacher-side verification checker ---------- */
+function teachVerify(){
+  const id = document.getElementById('vf-id').value.trim();
+  const nm = document.getElementById('vf-name').value.trim();
+  const pc = parseInt(document.getElementById('vf-pct').value,10);
+  const dt = document.getElementById('vf-date').value.trim();
+  const cd = document.getElementById('vf-code').value.trim().toUpperCase();
+  const out = document.getElementById('vf-out');
+  if(!id || !nm || isNaN(pc) || !dt || !cd){ out.innerHTML='<span style="color:#c0392b">Fill in all five fields exactly as they appear on the report.</span>'; return; }
+  const expect = asnVerifyCode(id, nameKey(nm), pc, dt);
+  out.innerHTML = expect===cd
+    ? '<span style="color:#2f7a4d;font-weight:800">✅ VALID — the name, score, and date match this code.</span>'
+    : '<span style="color:#c0392b;font-weight:800">❌ MISMATCH — this code does not match the entered name/score/date. The report may have been edited.</span>';
 }
 
 /* =========================================================
