@@ -412,12 +412,12 @@ body.onstart nav{display:none}
     <p id="genhostwarn" hidden style="background:#fff7e0;border:2px solid #e8c558;border-radius:10px;padding:10px 14px;font-size:.88rem;color:#7a5d00"><b>⚠️ Heads up:</b> you're viewing this site as a local file, so this link only works on this computer. Host <code>physical_science_hub.html</code> on the web (GitHub Pages, your school server, etc.), open it from that web address, and generate from there — links will then work on any student device.</p>
     <div class="genlinkrow">
       <input id="genlink" readonly onclick="this.select()">
-      <button class="copybtn" onclick="copyText('genlink',this)">📋 Copy link</button>
+      <button class="copybtn" onclick="copyText('genlink',this)">🔗 Copy link only</button>
     </div>
     <div class="genflex">
       <div class="genqrbox"><div id="genqr"></div><p>QR code — project it or print it</p></div>
       <div style="flex:1;min-width:260px">
-        <p style="font-weight:800;margin:0 0 6px">Paste-ready LMS instructions <button class="copybtn" style="padding:6px 13px;font-size:.8rem;margin-left:8px" onclick="copyText('gensummary',this)">📋 Copy</button></p>
+        <p style="font-weight:800;margin:0 0 6px">Paste-ready LMS instructions <button class="copybtn" style="padding:6px 13px;font-size:.8rem;margin-left:8px;background:#3e7a55" onclick="copyText('gensummary',this)">📋 Copy full instructions</button></p>
         <textarea id="gensummary" readonly></textarea>
       </div>
     </div>
