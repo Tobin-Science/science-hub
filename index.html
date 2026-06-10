@@ -358,6 +358,22 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 .prtopic svg{max-width:340px;width:100%;height:auto;display:block;margin:10px auto 2px}
 .prgoodbox{border:1.5px solid #777;border-radius:6px;padding:9px 14px;margin:8px 0;page-break-inside:avoid;break-inside:avoid}
 .prcongrats{font-size:1.02rem;font-weight:700;margin:14px 0 4px;border:3px double #000;padding:10px 16px;page-break-inside:avoid}
+/* ---------- TEACHER PREVIEW MODAL + ITEM PICKER ---------- */
+#pvmodal{position:fixed;inset:0;background:rgba(15,20,40,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:18px}
+#pvmodal[hidden]{display:none}
+.pvbox{background:var(--bg,#F4F6FB);border-radius:16px;max-width:860px;width:100%;max-height:88vh;overflow:auto;padding:18px 22px;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.pvtop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;position:sticky;top:-18px;background:inherit;padding:6px 0;z-index:5}
+.pvclose{background:var(--ink);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-weight:700;cursor:pointer}
+.pvitem{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:.92rem}
+.pvitem input{flex:none}
+.pvitem .pvlabel{flex:1;min-width:0}
+.pvitem.off .pvlabel{opacity:.42;text-decoration:line-through}
+.pveye{flex:none;background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:3px 10px;font-size:.8rem;font-weight:700;cursor:pointer}
+.pveye:hover{border-color:var(--ac);color:var(--ac)}
+.pvq{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0;font-size:.92rem}
+.pvq .pvopt{display:block;padding:2px 0 2px 10px}
+.pvq .pvopt.right{font-weight:800;color:#2f7a4d}
+.pvq .pvwhy{font-size:.85rem;opacity:.8;margin-top:4px;font-style:italic}
 
 .pdfbtn{display:inline-block;background:var(--ac,#5B67E0);color:#fff;font-weight:800;font-size:.9rem;padding:9px 18px;border-radius:10px;text-decoration:none}
 .pdfbtn:hover{filter:brightness(1.1)}
@@ -674,6 +690,14 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
   <h2>🖨 Printing tips</h2>
   <div class="card"><p>PDFs open in a new tab — use your browser's print button (or Ctrl+P) and choose "Save as PDF" to keep a copy. Documents are formatted for standard letter paper. <b>These files only open when the site is viewed on the web</b> (they live alongside the hosted site, not inside this page).</p></div>
 </section>
+
+<!-- teacher preview modal -->
+<div id="pvmodal" hidden>
+  <div class="pvbox">
+    <div class="pvtop"><span id="pvtitle" style="font-weight:800"></span><button class="pvclose" onclick="pvClose()">✕ Close preview</button></div>
+    <div id="pvbody"></div>
+  </div>
+</div>
 
 <div class="footer">Physical Science Hub · Aligned to Georgia Standards of Excellence S8P1–S8P5 · Study guides, games &amp; practice for the classroom</div>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -2983,20 +3007,77 @@ function buildTeach(){
 function teachSelection(){
   return [...document.querySelectorAll('#stdtree input[data-sub]:checked')].map(c=>c.dataset.sub);
 }
+/* unchecked individual items (keys like "g:u1:L3", "m:u1d", "q:u1") — cleared when standards change */
+const TEACH_EXCLUDE = new Set();
+function teachToggleItem(key, on){
+  if(on) TEACH_EXCLUDE.delete(key); else TEACH_EXCLUDE.add(key);
+  const row = document.querySelector(`.pvitem[data-key="${key}"]`);
+  if(row) row.classList.toggle('off', !on);
+  updateResourceCounts();
+}
 function renderTeachPreview(){
   const sel = teachSelection();
   const box = document.getElementById('teachpreview');
+  TEACH_EXCLUDE.clear();
   if(!sel.length){ box.innerHTML = `<p style="opacity:.7">Check the standards your unit covers and a live preview of every matching resource will appear here.</p>`; return; }
   const r = resolveStandards(sel);
-  const li = (arr,fmt)=> arr.length? `<ul>${arr.map(fmt).join('')}</ul>` : `<p style="opacity:.6;margin:4px 0">— none mapped yet —</p>`;
+  const row = (key, label, pv)=>`<div class="pvitem" data-key="${key}">
+      <input type="checkbox" checked onchange="teachToggleItem('${key}', this.checked)" title="Include in the assignment">
+      <span class="pvlabel">${label}</span>
+      <button class="pveye" onclick="${pv}">👁 Preview</button>
+    </div>`;
+  const li = (arr,fmt)=> arr.length? arr.map(fmt).join('') : `<p style="opacity:.6;margin:4px 0">— none mapped yet —</p>`;
   box.innerHTML = `
-    <div class="tprev"><h4>📝 Study guides <span>${r.lessons.length}</span></h4>${li(r.lessons, x=>`<li>U${UNITS[x.uid].num} · ${x.t}</li>`)}</div>
-    <div class="tprev"><h4>🎮 Minigames <span>${r.games.length}</span></h4>${li(r.games, x=>`<li>U${UNITS[x.uid].num} · ${x.t}</li>`)}</div>
-    <div class="tprev"><h4>▶ Videos <span>${r.videos.length}</span></h4>${li(r.videos, x=>`<li>U${UNITS[x.uid].num} · ${x.t}${x.kind==='search'?' <em>(curated search)</em>':''}</li>`)}</div>
-    <div class="tprev"><h4>⚛ PhET labs <span>${r.phet.length}</span></h4>${li(r.phet, x=>`<li>U${UNITS[x.uid].num} · ${x.t}</li>`)}</div>
-    <div class="tprev"><h4>✅ Practice, pretest & posttest <span>${r.quizzes.length} unit(s)</span></h4>
-      <p style="font-size:.9rem;opacity:.85;margin:4px 0">${r.units.map(u=>'Unit '+UNITS[u].num).join(' · ')} — practice quiz & pretest ready now; posttest question banks arrive in Phase 4.</p></div>
+    <p style="font-size:.85rem;opacity:.8;margin:0 0 8px">Every box starts checked — <b>uncheck anything you don't want</b>, and hit 👁 to see exactly what students will get.</p>
+    <div class="tprev"><h4>📝 Study guides <span>${r.lessons.length}</span></h4>${li(r.lessons, x=>row(`g:${x.uid}:L${x.i}`, `U${UNITS[x.uid].num} · ${x.t}`, `pvLesson('${x.uid}',${x.i})`))}</div>
+    <div class="tprev"><h4>🎮 Minigames <span>${r.games.length}</span></h4>${li(r.games, x=>row(`m:${x.gid}`, `U${UNITS[x.uid].num} · ${x.t}`, `pvGame('${x.gid}')`))}</div>
+    <div class="tprev"><h4>▶ Videos <span>${r.videos.length}</span></h4>${li(r.videos, x=>row(`v:${x.uid}:V${x.i}`, `U${UNITS[x.uid].num} · ${x.t}${x.kind==='search'?' <em>(curated search)</em>':''}`, `pvUrl('${x.uid}',${x.i})`))}</div>
+    <div class="tprev"><h4>⚛ PhET labs <span>${r.phet.length}</span></h4>${li(r.phet, x=>row(`p:${x.uid}:V${x.i}`, `U${UNITS[x.uid].num} · ${x.t}`, `pvUrl('${x.uid}',${x.i})`))}</div>
+    <div class="tprev"><h4>✅ Practice quiz <span>${r.quizzes.length}</span></h4>${li(r.quizzes, u=>row(`q:${u}`, `Unit ${UNITS[u].num} practice quiz (${UNITS[u].quiz.length} questions)`, `pvQuiz('${u}')`))}</div>
+    <div class="tprev"><h4>🩺 Pretest <span>${r.pretests.length}</span></h4>${li(r.pretests, u=>row(`pr:${u}`, `Unit ${UNITS[u].num} pretest (5 questions, completion only)`, `pvPretest('${u}')`))}</div>
+    <div class="tprev"><h4>🏁 Posttest <span>${r.units.length}</span></h4>${li(r.units, u=>row(`po:${u}`, `Unit ${UNITS[u].num} posttest (adapts to your selected standards)`, `pvPosttest('${u}')`))}</div>
     <p style="font-size:.85rem;opacity:.75;margin-top:10px">👇 Now scroll down: pick the resource types in <b>Step 2</b>, name it in <b>Step 3</b>, and hit <b>Generate</b>.</p>`;
+}
+
+/* ---------- teacher preview modal ---------- */
+function pvOpen(title, html){
+  document.getElementById('pvtitle').innerHTML = title;
+  document.getElementById('pvbody').innerHTML = html;
+  document.getElementById('pvmodal').hidden = false;
+}
+function pvClose(){
+  document.getElementById('pvmodal').hidden = true;
+  document.getElementById('pvbody').innerHTML = '';   // stops any game running inside
+}
+function pvLesson(uid, i){
+  const u = UNITS[uid], L = u.lessons[i];
+  const fig = L.fig && FIG[L.fig]? `<figure style="margin:14px 0;text-align:center">${FIG[L.fig](u.hex)}</figure>` : '';
+  const co = L.callout? `<div class="callout" style="--ac:${u.hex}"><b>${L.callout[0]}.</b> ${L.callout[1]}</div>` : '';
+  const fm = L.formula? `<div class="formula">${L.formula}</div>` : '';
+  pvOpen(`📝 Study guide — U${u.num} · ${L.t}`, `<div class="card lessoncard"><h3><span class="secnum" style="--ac:${u.hex};background:${u.hex}">${u.num}.${i+1}</span>${L.t}</h3><p>${L.body}</p>${fm}${fig}${co}</div>`);
+}
+function pvGame(gid){
+  const g = GAMES[gid];
+  pvOpen(`🎮 Minigame — ${g.title} <span style="font-weight:400;font-size:.85rem;opacity:.75">(play it yourself — scores here don't affect students)</span>`, `<div id="pv-gamearea"></div>`);
+  GAMES[gid].start('pv-gamearea');
+}
+function pvUrl(uid, i){
+  const v = UNITS[uid].videos[i];
+  window.open(v.url, '_blank');
+}
+function pvQList(qs, note){
+  return (note? `<p style="font-size:.88rem;opacity:.8">${note}</p>` : '') + qs.map((q,n)=>`<div class="pvq"><b>Q${n+1}.</b> ${q.q}
+    ${q.o.map((o,j)=>`<span class="pvopt ${j===q.a?'right':''}">${j===q.a?'✓':'·'} ${o}</span>`).join('')}
+    <div class="pvwhy">${q.why}</div></div>`).join('');
+}
+function pvQuiz(uid){
+  pvOpen(`✅ Unit ${UNITS[uid].num} practice quiz — answer key view`, pvQList(UNITS[uid].quiz, 'Students see these one at a time, shuffled, with instant feedback. Correct answers are marked ✓ here.'));
+}
+function pvPretest(uid){
+  pvOpen(`🩺 Unit ${UNITS[uid].num} pretest — answer key view`, pvQList(UNITS[uid].pretest, 'Diagnostic only — completion counts, the score never hurts the student.'));
+}
+function pvPosttest(uid){
+  pvOpen(`🏁 Unit ${UNITS[uid].num} posttest — answer key view`, pvQList(asnPosttestQs(uid, teachSelection()), 'Adaptive: these are the exact questions served for YOUR current Step 1 selection (minimum 5; retakes shuffle the order, best score kept).'));
 }
 
 /* ---------- Assignment-link stub (full Assignment Mode = Phase 3) ---------- */
@@ -3021,7 +3102,7 @@ function updateResourceCounts(){
   RESOURCE_TYPES.forEach(rt=>{
     const cb = document.getElementById(rt.box);
     if(!cb) return;
-    const n = r? rt.from(r).length : 0;
+    const n = r? rt.from(r).filter(id=>!TEACH_EXCLUDE.has(rt.k+':'+id)).length : 0;
     const cnt = document.getElementById(rt.box+'-n');
     cnt.textContent = n;
     cb.disabled = n===0;
@@ -3040,11 +3121,11 @@ function generateAssignment(){
   RESOURCE_TYPES.forEach(rt=>{
     const cb = document.getElementById(rt.box);
     if(cb.checked && !cb.disabled){
-      const ids = rt.from(r);
+      const ids = rt.from(r).filter(id=>!TEACH_EXCLUDE.has(rt.k+':'+id));
       if(ids.length){ items[rt.k] = ids; any = true; }
     }
   });
-  if(!any){ msg.textContent = '⚠️ Pick at least one resource type (Step 2).'; return; }
+  if(!any){ msg.textContent = '⚠️ Pick at least one resource type (Step 2) — and make sure you haven’t unchecked everything in the preview list.'; return; }
   msg.textContent = '';
   const cfg = {
     v:1,
@@ -3381,9 +3462,9 @@ u5:[
    ========================================================= */
 
 /* ---------- posttest: filtered to the assignment's standards ---------- */
-function asnPosttestQs(uid){
+function asnPosttestQs(uid, stds){
   const bank = POSTTESTS[uid] || [];
-  const sel = new Set(ASN.cfg.std || []);
+  const sel = new Set(stds || (ASN? ASN.cfg.std : []) || []);
   let qs = bank.filter(q => sel.has(q.std));
   if(qs.length < 5){ // pad with the rest of the unit bank so the test isn't trivial
     const extra = bank.filter(q => !sel.has(q.std));
