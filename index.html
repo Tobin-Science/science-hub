@@ -374,6 +374,11 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 .lbc.no{animation:kshake .4s}
 .lbc.no .lbline{stroke:#e06a6a}
 .lbc.no .lbhead{fill:#e06a6a}
+/* ---------- ASSIGNMENT PRINT BUTTON ---------- */
+.asnprintbtn{display:inline-block;background:#2f7a4d;color:#fff;border:none;border-radius:12px;padding:14px 28px;font-weight:800;font-size:1.05rem;cursor:pointer;box-shadow:0 4px 14px rgba(47,122,77,.35)}
+.asnprintbtn:hover{filter:brightness(1.12)}
+.asnprintbtn.ready{animation:asnpulse 1.6s infinite}
+@keyframes asnpulse{0%,100%{box-shadow:0 4px 14px rgba(47,122,77,.35);transform:scale(1)}50%{box-shadow:0 6px 28px rgba(47,122,77,.7);transform:scale(1.035)}}
 </style>
 </head>
 <body>
@@ -3235,10 +3240,12 @@ function renderAssign(){
       <div class="asnbar"><i style="width:${pct}%"></i></div>
       <p><b>${done} of ${countable.length}</b> complete · ${pct}%${pct===100? ' — 🎉 everything done!':''}</p>
       <p class="asnscoreline">📊 Current weighted score: <b>${asnScore().pct}%</b> <span style="opacity:.65;font-size:.82rem">(posttest counts most — see your printed report for the breakdown)</span></p>
+      <p style="margin:12px 0 0"><button class="asnprintbtn ${pct===100?'ready':''}" onclick="asnPrintReport()">🖨 Print Score Report</button></p>
+      <p style="font-size:.82rem;opacity:.7;margin:7px 0 0">${pct===100? '<b>All done!</b> Print your report, choose <b>"Save as PDF"</b>, and upload it to the class assignment page.' : 'Turn in your work any time: print → <b>Save as PDF</b> → upload to your teacher. You can keep improving and print again.'}</p>
     </div>
     ${groups}
     <div class="asnfoot">
-      <button class="gbtn" onclick="asnPrintReport()">🖨 Print Score Report</button>
+      <button class="asnprintbtn ${pct===100?'ready':''}" onclick="asnPrintReport()">🖨 Print Score Report</button>
       <p style="font-size:.82rem;opacity:.7;margin-top:8px">When you're done, print your report and <b>save it as a PDF</b> (choose "Save as PDF" as the printer), then upload it to your teacher's assignment page. Your work stays saved in this browser under your name, so you can keep improving and print again.</p>
     </div>`;
 }
