@@ -352,6 +352,28 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 #printreport .prcode{color:#000}
 .prfoot{font-size:.78rem;margin-top:18px;color:#444}
 
+.pdfbtn{display:inline-block;background:var(--ac,#5B67E0);color:#fff;font-weight:800;font-size:.9rem;padding:9px 18px;border-radius:10px;text-decoration:none}
+.pdfbtn:hover{filter:brightness(1.1)}
+/* ---------- BALANCE THE REACTION ---------- */
+.bxeq{font-size:1.15rem;font-weight:800;text-align:center;background:rgba(255,255,255,.08);border-radius:12px;padding:12px;margin-bottom:10px}
+.bxtally{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;font-family:var(--mono);font-size:.82rem;margin-bottom:10px}
+.bxtally span{padding:4px 10px;border-radius:8px;background:rgba(255,255,255,.1);font-weight:700}
+.bxtally span.ok{background:rgba(60,180,110,.4)}
+.bxtally span.over{background:rgba(220,80,80,.45)}
+.bxpan{min-height:70px;border:2px dashed rgba(255,255,255,.45);border-radius:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:10px;transition:all .15s}
+.bxpan.hot{background:rgba(255,255,255,.15);border-style:solid;transform:scale(1.02)}
+.bxchip{background:#FFD166;color:#1B2440;border-radius:10px;padding:8px 13px;font-weight:800;cursor:pointer;border:none;font-size:.95rem}
+.bxtray{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:14px}
+.bxtile{background:#fff;color:#1B2440;border-radius:12px;padding:11px 16px;font-weight:800;cursor:grab;touch-action:none;box-shadow:0 6px 16px rgba(0,0,0,.35);font-size:1rem;position:relative;z-index:5}
+.bxtile.dragging{cursor:grabbing;box-shadow:0 14px 30px rgba(0,0,0,.5)}
+/* ---------- LIGHT BENDER ---------- */
+.lbc{cursor:pointer}
+.lbc:hover .lbline{stroke:#cdd6ea}
+.lbc.yes .lbline{stroke:#FFD166;stroke-dasharray:none;stroke-width:4.5}
+.lbc.yes .lbhead{fill:#FFD166}
+.lbc.no{animation:kshake .4s}
+.lbc.no .lbline{stroke:#e06a6a}
+.lbc.no .lbhead{fill:#e06a6a}
 </style>
 </head>
 <body>
@@ -370,6 +392,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <button class="navbtn" data-go="arcade">🎮 Arcade</button>
     <button class="navbtn" data-go="vocab">Vocabulary</button>
     <button class="navbtn" data-go="tools">Study Tools</button>
+    <button class="navbtn" data-go="print">🖨 Printables</button>
   </div>
 </nav>
 <div class="wrap">
@@ -570,6 +593,35 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <div class="card"><h3>Volume</h3><p>Liquids: <b>graduated cylinder</b>, read at the bottom of the <b>meniscus</b>, in mL. Regular solids: L × W × H in cm³. Irregular solids: <b>water displacement</b>.</p></div>
     <div class="card"><h3>Temperature</h3><p>Measured with a thermometer in <b>°C</b> for science class. Water freezes at 0 °C and boils at 100 °C at sea level.</p></div>
   </div>
+</section>
+
+<!-- ================= PRINTABLES ================= -->
+<section class="page" id="page-print">
+  <p class="eyebrow">Printable Library · Free for classroom use</p>
+  <h1>Print it, copy it, teach with it.</h1>
+  <p class="lead">Every document below is a print-ready PDF aligned to the Georgia Standards of Excellence (S8P1–S8P5). Teachers: print classroom sets, post them to your LMS, or send them home — no permission needed. Students: these make great offline study packets.</p>
+
+  <h2>📖 Textbook chapters</h2>
+  <div class="cardgrid">
+    <div class="card"><h3>Chapter 1 · Matter, Atoms &amp; the Periodic Table</h3><p>Unit 1 · S8P1 — elements, compounds &amp; mixtures, states of matter, physical vs. chemical changes, atomic structure, the periodic table.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_1_Matter_Atoms_Periodic_Table.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 2 · Energy</h3><p>Unit 2 · S8P2 — kinetic &amp; potential energy, energy transformations, conduction, convection &amp; radiation.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_2_Energy.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 3 · Force, Mass &amp; Motion</h3><p>Unit 3 · S8P3 — speed, velocity &amp; acceleration, motion graphs, Newton's laws, F&nbsp;=&nbsp;ma.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_3_Force_Mass_Motion.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 4 · Waves</h3><p>Unit 4 · S8P4 — mechanical vs. electromagnetic waves, the EM spectrum, wave behaviors, lenses &amp; light.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_4_Waves.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 5 · Forces in Nature</h3><p>Unit 5 · S8P5 — gravity, electricity &amp; magnetism, fields, conductors &amp; insulators, electromagnets.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_5_Forces_in_Nature.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Vocabulary — all five units</h3><p>The complete 8th-grade physical science vocabulary list, ready to print as a study reference or word wall.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Science_Vocabulary.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+  </div>
+
+  <h2>📝 Unit review sheets</h2>
+  <div class="cardgrid">
+    <div class="card"><h3>Chemistry Review</h3><p>Unit 1 · S8P1 — one-stop review of matter for the unit test.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Chemistry_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Energy Review</h3><p>Unit 2 · S8P2 — energy forms, transformations &amp; heat transfer.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Energy_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Motion &amp; Newton's Laws Review</h3><p>Unit 3 · S8P3 — motion math, graphs &amp; the three laws.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Motion_Newtons_Laws_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Waves Review</h3><p>Unit 4 · S8P4 — wave anatomy, the spectrum &amp; wave behaviors.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Waves_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Gravity, Electricity &amp; Magnetism Review</h3><p>Unit 5 · S8P5 — fields, charge, circuits &amp; electromagnets.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Gravity_Electricity_Magnetism_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+  </div>
+
+  <h2>🖨 Printing tips</h2>
+  <div class="card"><p>PDFs open in a new tab — use your browser's print button (or Ctrl+P) and choose "Save as PDF" to keep a copy. Documents are formatted for standard letter paper. <b>These files only open when the site is viewed on the web</b> (they live alongside the hosted site, not inside this page).</p></div>
 </section>
 
 <div class="footer">Physical Science Hub · Aligned to Georgia Standards of Excellence S8P1–S8P5 · Study guides, games &amp; practice for the classroom</div>
@@ -796,7 +848,7 @@ u1:{
    {t:"Patterns in the Periodic Table", fig:"", body:`Columns are <b>groups (families)</b> — elements in a group behave alike. Rows are <b>periods</b>. <b>Metals</b> live on the left (shiny, conduct electricity, malleable), <b>nonmetals</b> on the right (dull, brittle, poor conductors), and <b>metalloids</b> straddle the staircase line with a mix of both.`,
     callout:["Why It's Genius","The table predicts behavior. Sodium (group 1) reacts violently with water — and so does every other group 1 metal. Find one element's family and you know its personality."]},
    {t:"Counting Atoms in Formulas", fig:"", body:`<b>Subscripts</b> count atoms of the element right before them: H<sub>2</sub>O has 2 hydrogens and 1 oxygen. A <b>coefficient</b> in front multiplies the whole formula: 3H<sub>2</sub>O means 6 H and 3 O. Parentheses with a subscript multiply everything inside: Ca(OH)<sub>2</sub> has 1 Ca, 2 O, 2 H.`},
-   {t:"Balanced Chemical Equations", fig:"", body:`The <b>law of conservation of mass</b> says atoms are never created or destroyed in a reaction — just rearranged. A balanced equation has the <em>same count of each element</em> on both sides. Check by counting every atom type on the left and on the right.`,
+   {t:"Balanced Chemical Equations", fig:"", body:`The <b>law of conservation of matter</b> (also called conservation of mass) says atoms are never created or destroyed in a chemical reaction — just rearranged. The starting substances are the <b>reactants</b> (left of the arrow) and the new substances formed are the <b>products</b> (right of the arrow). A balanced equation has the <em>same count of each element</em> in the reactants and in the products, so the total mass stays the same. Check by counting every atom type on both sides.`,
     callout:["Worked Example","2H<sub>2</sub> + O<sub>2</sub> → 2H<sub>2</sub>O. Left: 4 H, 2 O. Right: 4 H, 2 O. Balanced ✓"]}
   ],
   quiz:[
@@ -2342,6 +2394,223 @@ GAMES.u5b = { title:"Turbine Hall", icon:"⚙️", id:"u5b", unit:"u5",
  }};
 
 /* =========================================================
+   U1d · BALANCE THE REACTION — drag products until every atom
+   is conserved (S8P1.f conservation of matter)
+   ========================================================= */
+const BR_EL = {H:'Hydrogen',O:'Oxygen',C:'Carbon',N:'Nitrogen',Na:'Sodium',Cl:'Chlorine',Fe:'Iron',S:'Sulfur',Mg:'Magnesium'};
+const BR_MOLS = {
+  H2:{f:'H<sub>2</sub>',a:{H:2}}, O2:{f:'O<sub>2</sub>',a:{O:2}}, N2:{f:'N<sub>2</sub>',a:{N:2}}, Cl2:{f:'Cl<sub>2</sub>',a:{Cl:2}},
+  H2O:{f:'H<sub>2</sub>O',a:{H:2,O:1}}, CO2:{f:'CO<sub>2</sub>',a:{C:1,O:2}}, CO:{f:'CO',a:{C:1,O:1}},
+  NH3:{f:'NH<sub>3</sub>',a:{N:1,H:3}}, NaCl:{f:'NaCl',a:{Na:1,Cl:1}}, MgO:{f:'MgO',a:{Mg:1,O:1}},
+  FeS:{f:'FeS',a:{Fe:1,S:1}}, Fe:{f:'Fe',a:{Fe:1}}, S:{f:'S',a:{S:1}}, Mg:{f:'Mg',a:{Mg:1}}, Na:{f:'Na',a:{Na:1}}
+};
+const BR_ROUNDS = [
+ {re:'2H<sub>2</sub> + O<sub>2</sub>', atoms:{H:4,O:2}, tray:['H2O','H2','O2'],
+  why:'4 hydrogen atoms and 2 oxygen atoms went into the reactants, so exactly 4 H and 2 O must come out in the products — two H<sub>2</sub>O.'},
+ {re:'C + O<sub>2</sub>', atoms:{C:1,O:2}, tray:['CO2','CO','O2'],
+  why:'1 carbon + 2 oxygens in the reactants → one CO<sub>2</sub> in the products. Every atom accounted for.'},
+ {re:'Fe + S', atoms:{Fe:1,S:1}, tray:['FeS','Fe','S'],
+  why:'Iron and sulfur combine 1-for-1 into FeS — nothing gained, nothing lost.'},
+ {re:'2Mg + O<sub>2</sub>', atoms:{Mg:2,O:2}, tray:['MgO','Mg','O2'],
+  why:'2 magnesiums + 2 oxygens → two MgO. The mass of the reactants equals the mass of the products.'},
+ {re:'N<sub>2</sub> + 3H<sub>2</sub>', atoms:{N:2,H:6}, tray:['NH3','N2','H2'],
+  why:'2 nitrogens and 6 hydrogens in → two NH<sub>3</sub> out (each one holds 1 N + 3 H).'},
+ {re:'2Na + Cl<sub>2</sub>', atoms:{Na:2,Cl:2}, tray:['NaCl','Na','Cl2'],
+  why:'2 sodiums + 2 chlorines → two NaCl. Atoms only rearrange in a reaction — they never vanish.'},
+ {re:'CH<sub>4</sub> + 2O<sub>2</sub>', atoms:{C:1,H:4,O:4}, tray:['CO2','H2O','CO','O2'],
+  why:'Burning methane: the 1 carbon becomes CO<sub>2</sub>, the 4 hydrogens become two H<sub>2</sub>O, and all 4 oxygens get used. Conservation of matter!'},
+ {re:'2H<sub>2</sub>O<sub>2</sub>', atoms:{H:4,O:4}, tray:['H2O','O2','H2'],
+  why:'Hydrogen peroxide decomposes: 4 H and 4 O in the reactants → two H<sub>2</sub>O + one O<sub>2</sub> in the products.'}
+];
+GAMES.u1d = { title:"Balance the Reaction", icon:"⚗️", id:"u1d", unit:"u1",
+ desc:"Atoms in = atoms out. DRAG product molecules onto the reaction pan until every reactant atom is accounted for, then hit REACT!",
+ start(areaId){
+  kineShell(areaId,'u1d',this.title,this.desc,`<span>REACTION <b id="${areaId}-r">1</b>/8</span>`);
+  const stage = document.getElementById(areaId+'-stage');
+  let i=0, score=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=BR_ROUNDS.length){ kineDone(areaId,'u1d',score,'<div class="why">⚗️ Conservation of matter: in every chemical reaction, the atoms in the reactants are exactly the atoms in the products — matter is never created or destroyed.</div>'); return; }
+    document.getElementById(areaId+'-r').textContent=i+1;
+    kineMsg(areaId,'Drag products onto the pan. Tap a placed product to remove it.');
+    const R = BR_ROUNDS[i];
+    let placed = {}, misses = 0;
+    stage.innerHTML = `
+      <div class="bxeq">${R.re} &nbsp;→&nbsp; <span style="opacity:.75">your products</span></div>
+      <div class="bxtally" id="${areaId}-tally"></div>
+      <div class="bxpan" id="${areaId}-pan"></div>
+      <div class="bxtray">${R.tray.map(k=>`<div class="bxtile" data-k="${k}">${BR_MOLS[k].f}</div>`).join('')}</div>
+      <div style="text-align:center;margin-top:14px"><button class="gbtn" id="${areaId}-go">⚡ REACT!</button></div>`;
+    const pan = document.getElementById(areaId+'-pan');
+    const prodAtoms = ()=>{ const out={}; Object.entries(placed).forEach(([k,n])=>{ Object.entries(BR_MOLS[k].a).forEach(([el,c])=>{ out[el]=(out[el]||0)+c*n; }); }); return out; };
+    function tally(){
+      const p = prodAtoms();
+      const els = [...new Set([...Object.keys(R.atoms),...Object.keys(p)])];
+      document.getElementById(areaId+'-tally').innerHTML = els.map(el=>{
+        const need=R.atoms[el]||0, have=p[el]||0;
+        return `<span class="${have===need?'ok':(have>need?'over':'')}">${el}: ${have}/${need}</span>`;
+      }).join('');
+    }
+    function renderPan(){
+      const chips = Object.entries(placed).filter(([k,n])=>n>0)
+        .map(([k,n])=>Array.from({length:n},()=>`<button class="bxchip" data-k="${k}">${BR_MOLS[k].f}</button>`).join('')).join('');
+      pan.innerHTML = chips || `<span style="opacity:.55;font-weight:400;font-size:.9rem">drop products here</span>`;
+      pan.querySelectorAll('.bxchip').forEach(ch=>ch.addEventListener('click',()=>{ placed[ch.dataset.k]--; renderPan(); }));
+      tally();
+    }
+    renderPan();
+    stage.querySelectorAll('.bxtile').forEach(tile=>{
+      dragify(tile,{
+        onStart(){ tile.classList.add('dragging'); },
+        onMove(e,ctx){
+          tile.style.transform=`translate(${ctx.dx}px,${ctx.dy}px)`;
+          const r=pan.getBoundingClientRect();
+          pan.classList.toggle('hot', ctx.x>=r.left&&ctx.x<=r.right&&ctx.y>=r.top&&ctx.y<=r.bottom);
+        },
+        onEnd(e,ctx){
+          tile.classList.remove('dragging'); pan.classList.remove('hot');
+          const r=pan.getBoundingClientRect();
+          const over = ctx.x>=r.left&&ctx.x<=r.right&&ctx.y>=r.top&&ctx.y<=r.bottom;
+          tile.style.transition='transform .2s'; tile.style.transform=''; setTimeout(()=>tile.style.transition='',210);
+          if(over){ const k=tile.dataset.k; placed[k]=(placed[k]||0)+1; renderPan(); }
+        }
+      });
+    });
+    document.getElementById(areaId+'-go').addEventListener('click',function(){
+      const p = prodAtoms();
+      const els = [...new Set([...Object.keys(R.atoms),...Object.keys(p)])];
+      const bad = els.find(el=>(p[el]||0)!==(R.atoms[el]||0));
+      if(!bad){
+        this.disabled = true;
+        const pts = Math.max(5, 15-misses*5); score+=pts; kineScore(areaId,score);
+        kineMsg(areaId,`✅ <b>BALANCED!</b> <span class="why">${R.why}</span> +${pts}`);
+        i++; setTimeout(draw, 2400);
+      } else {
+        misses++;
+        const need=R.atoms[bad]||0, have=p[bad]||0, nm=BR_EL[bad], lo=nm.toLowerCase();
+        kineMsg(areaId, need===0
+          ? `❌ <b>${nm} appeared from nowhere!</b> <span class="why">The reactants contain no ${lo} — atoms can't be created in a reaction.</span>`
+          : (have<need
+            ? `❌ <b>Missing ${lo}!</b> <span class="why">The reactants have ${need} ${lo} atom${need>1?'s':''} but your products only have ${have} — atoms can't be destroyed.</span>`
+            : `❌ <b>Too much ${lo}!</b> <span class="why">Your products have ${have} ${lo} atoms but the reactants only supply ${need} — atoms can't be created.</span>`));
+      }
+    });
+  }
+  draw();
+ }};
+
+/* =========================================================
+   U4c · LIGHT BENDER — tap the true path of the beam
+   (S8P4.d reflect / refract / absorb / diffract / transmit)
+   ========================================================= */
+const LB_SCENES = {
+  mirror:    `<rect x="60" y="150" width="340" height="12" rx="3" fill="#cdd6ea"/><g stroke="#8b95b3" stroke-width="2">${[80,120,160,200,240,280,320,360].map(x=>`<line x1="${x}" y1="162" x2="${x-12}" y2="176"/>`).join('')}</g><text x="230" y="196" fill="#aab3cc" font-size="12" text-anchor="middle">FLAT MIRROR</text>`,
+  water:     `<rect x="0" y="150" width="460" height="150" fill="#2e6ca3" opacity=".5"/><line x1="0" y1="150" x2="460" y2="150" stroke="#7fb6e0" stroke-width="2"/><text x="36" y="138" fill="#aab3cc" font-size="12">AIR</text><text x="36" y="174" fill="#bcd9f2" font-size="12">WATER</text>`,
+  asphalt:   `<rect x="0" y="150" width="460" height="150" fill="#1d1d22"/><text x="230" y="200" fill="#888" font-size="12" text-anchor="middle">BLACK ASPHALT (hot summer day)</text>`,
+  shirt:     `<rect x="0" y="150" width="460" height="150" fill="#16161e"/><text x="230" y="200" fill="#888" font-size="12" text-anchor="middle">BLACK T-SHIRT IN THE SUN</text>`,
+  window:    `<rect x="60" y="146" width="340" height="16" fill="rgba(170,225,255,.28)" stroke="#bfe7ff" stroke-width="1.5" rx="3"/><text x="230" y="196" fill="#aab3cc" font-size="12" text-anchor="middle">CLEAR GLASS WINDOW</text>`,
+  slit:      `<rect x="222" y="0" width="16" height="130" fill="#5a627a"/><rect x="222" y="170" width="16" height="130" fill="#5a627a"/><text x="230" y="292" fill="#aab3cc" font-size="12" text-anchor="middle">WALL WITH A NARROW GAP</text>`,
+  underwater:`<rect x="0" y="150" width="460" height="150" fill="#2e6ca3" opacity=".5"/><line x1="0" y1="150" x2="460" y2="150" stroke="#7fb6e0" stroke-width="2"/><text x="36" y="138" fill="#aab3cc" font-size="12">AIR</text><text x="36" y="174" fill="#bcd9f2" font-size="12">WATER</text>`,
+  lake:      `<rect x="0" y="150" width="460" height="150" fill="#2e6ca3" opacity=".5"/><line x1="0" y1="150" x2="460" y2="150" stroke="#7fb6e0" stroke-width="2"/><text x="404" y="36" font-size="22">🌅</text><text x="230" y="200" fill="#bcd9f2" font-size="12" text-anchor="middle">CALM, GLASSY LAKE</text>`
+};
+function lbRayParts(x1,y1,x2,y2){
+  const ang=Math.atan2(y2-y1,x2-x1), L=13;
+  const ax=x2-L*Math.cos(ang-0.42), ay=y2-L*Math.sin(ang-0.42);
+  const bx=x2-L*Math.cos(ang+0.42), by=y2-L*Math.sin(ang+0.42);
+  return `<line class="lbline" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#9aa7c8" stroke-width="3.5" stroke-dasharray="8 7"/>
+    <polygon class="lbhead" points="${x2},${y2} ${ax.toFixed(1)},${ay.toFixed(1)} ${bx.toFixed(1)},${by.toFixed(1)}" fill="#9aa7c8"/>
+    <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="transparent" stroke-width="30"/>`;
+}
+function lbCand(c){
+  if(c.type==='stub') return `<g class="lbc" data-k="${c.k}">${lbRayParts(230,150,252,168)}<text x="262" y="186" font-size="17">🔥</text><text x="294" y="190" fill="#9aa7c8" font-size="11">heat</text><circle cx="258" cy="172" r="32" fill="transparent"/></g>`;
+  if(c.type==='fan')  return `<g class="lbc" data-k="${c.k}">${lbRayParts(238,150,c.pts[0][0],c.pts[0][1])}${lbRayParts(238,150,c.pts[1][0],c.pts[1][1])}</g>`;
+  return `<g class="lbc" data-k="${c.k}">${lbRayParts(c.from?c.from[0]:230, c.from?c.from[1]:150, c.x, c.y)}</g>`;
+}
+const LB_ROUNDS = [
+ {scene:'mirror', inc:[70,30], prompt:'The beam hits a flat <b>mirror</b>. TAP the path the light takes.',
+  correct:'reflect', term:'REFLECTION', why:'Smooth shiny surfaces bounce light away at the same angle it arrived — angle in = angle out.',
+  hint:'Mirrors bounce light back UP, at the SAME angle it came in.',
+  cands:[{k:'reflect',type:'ray',x:390,y:30},{k:'transmit',type:'ray',x:390,y:270},{k:'absorb',type:'stub'}]},
+ {scene:'water', inc:[70,30], prompt:'The beam passes from air <b>into water</b>. TAP the path it takes below the surface.',
+  correct:'refract', term:'REFRACTION', why:'Light SLOWS DOWN entering the denser water, so it bends from its straight-line path.',
+  hint:'It keeps going down into the water — but BENT, not in a straight line.',
+  cands:[{k:'refract',type:'ray',x:300,y:282},{k:'transmit',type:'ray',x:390,y:270},{k:'reflect',type:'ray',x:390,y:30}]},
+ {scene:'asphalt', inc:[70,30], prompt:'The beam hits <b>black asphalt</b>. TAP what happens to the light.',
+  correct:'absorb', term:'ABSORPTION', why:'Dark surfaces ABSORB light energy and turn it into heat — this is why blacktop burns bare feet in summer.',
+  hint:'Black surfaces never bounce light or let it through — the energy STOPS there and becomes heat.',
+  cands:[{k:'absorb',type:'stub'},{k:'reflect',type:'ray',x:390,y:30},{k:'transmit',type:'ray',x:390,y:270}]},
+ {scene:'window', inc:[70,30], prompt:'The beam hits a <b>clear glass window</b>. TAP the path most of the light takes.',
+  correct:'transmit', term:'TRANSMISSION', why:'Transparent materials TRANSMIT light — it passes through nearly unchanged. This is the whole point of a window.',
+  hint:'You can see through a window because the light goes THROUGH it.',
+  cands:[{k:'transmit',type:'ray',x:390,y:270},{k:'reflect',type:'ray',x:390,y:30},{k:'absorb',type:'stub'}]},
+ {scene:'slit', inc:[40,150], incTo:[222,150], prompt:'The wave squeezes through a <b>narrow gap</b> in a wall. TAP what it does on the far side.',
+  correct:'diffract', term:'DIFFRACTION', why:'Waves SPREAD OUT after passing through a narrow opening — diffraction is why you can hear someone through a doorway.',
+  hint:'After a narrow gap, waves never stay in one tight line — they FAN OUT.',
+  cands:[{k:'diffract',type:'fan',pts:[[385,70],[385,230]]},{k:'transmit',type:'ray',from:[238,150],x:395,y:150},{k:'reflect',type:'ray',from:[222,150],x:60,y:250}]},
+ {scene:'lake', inc:[70,30], prompt:'Sunset light skims onto a <b>calm, glassy lake</b>. TAP the path that paints the sunset on the water.',
+  correct:'reflect', term:'REFLECTION', why:'Still water acts like a mirror — light bounces off at the matching angle, so you see the sky on the surface.',
+  hint:'A glassy lake works exactly like a MIRROR.',
+  cands:[{k:'reflect',type:'ray',x:390,y:30},{k:'refract',type:'ray',x:300,y:282},{k:'absorb',type:'stub'}]},
+ {scene:'underwater', inc:[70,272], prompt:'A flashlight shines from <b>under the water up into the air</b>. TAP its path above the surface.',
+  correct:'refract', term:'REFRACTION', why:'Leaving the denser water, light SPEEDS UP and bends — this is why a pool always looks shallower than it really is.',
+  hint:'It escapes upward — but BENT, not the straight continuation of the beam.',
+  cands:[{k:'refract',type:'ray',x:395,y:85},{k:'transmit',type:'ray',x:390,y:28},{k:'reflect',type:'ray',x:390,y:272}]},
+ {scene:'shirt', inc:[70,30], prompt:'Sunlight lands on a <b>black T-shirt</b>. TAP what happens to the light.',
+  correct:'absorb', term:'ABSORPTION', why:'Black fabric absorbs almost all the light that hits it and converts it to heat — black shirts feel hotter in the sun.',
+  hint:'Dark colors soak the light IN instead of bouncing it away.',
+  cands:[{k:'absorb',type:'stub'},{k:'reflect',type:'ray',x:390,y:30},{k:'transmit',type:'ray',x:390,y:270}]}
+];
+GAMES.u4c = { title:"Light Bender", icon:"🔦", id:"u4c", unit:"u4",
+ desc:"Reflect, refract, absorb, transmit, diffract — don't just name it, TAP the actual path the beam takes through each scene.",
+ start(areaId){
+  kineShell(areaId,'u4c',this.title,this.desc,`<span>BEAM <b id="${areaId}-r">1</b>/8</span>`);
+  const stage = document.getElementById(areaId+'-stage');
+  const order = shuffle([...LB_ROUNDS]);
+  let i=0, score=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=order.length){ kineDone(areaId,'u4c',score,'<div class="why">🔦 When light meets a new material it can REFLECT, REFRACT, be ABSORBED, be TRANSMITTED, or DIFFRACT — which one depends entirely on the material and the opening.</div>'); return; }
+    document.getElementById(areaId+'-r').textContent=i+1;
+    const R = order[i];
+    let tries=0, locked=false;
+    const incEnd = R.incTo || [230,150];
+    kineMsg(areaId,'');
+    stage.innerHTML = `<div style="font-size:1.02rem;margin-bottom:8px">${R.prompt}</div>
+      <svg viewBox="0 0 460 300" style="max-width:520px;width:100%;display:block;margin:0 auto;touch-action:manipulation">
+        ${LB_SCENES[R.scene]}
+        <text x="${R.inc[0]-26}" y="${R.inc[1]+7}" font-size="19">🔦</text>
+        <line x1="${R.inc[0]}" y1="${R.inc[1]}" x2="${incEnd[0]}" y2="${incEnd[1]}" stroke="#FFE9A8" stroke-width="4" stroke-linecap="round"/>
+        ${shuffle([...R.cands]).map(lbCand).join('')}
+      </svg>`;
+    stage.querySelectorAll('.lbc').forEach(g=>{
+      g.addEventListener('click',()=>{
+        if(locked) return;
+        if(g.dataset.k===R.correct){
+          locked=true;
+          g.classList.add('yes');
+          const pts = tries===0?10:5; score+=pts; kineScore(areaId,score);
+          kineMsg(areaId,`✅ <b>${R.term}!</b> <span class="why">${R.why}</span> +${pts}`);
+          i++; setTimeout(draw,2500);
+        } else {
+          tries++;
+          g.classList.add('no'); setTimeout(()=>g.classList.remove('no'),450);
+          if(tries>=2){
+            locked=true;
+            const right = stage.querySelector(`.lbc[data-k="${R.correct}"]`);
+            if(right) right.classList.add('yes');
+            kineMsg(areaId,`👀 <b>Here's the real path — ${R.term}.</b> <span class="why">${R.why}</span>`);
+            i++; setTimeout(draw,2800);
+          } else {
+            kineMsg(areaId,`❌ <b>Not that way.</b> <span class="why">${R.hint}</span>`);
+          }
+        }
+      });
+    });
+  }
+  draw();
+ }};
+
+/* =========================================================
    ARCADE PAGE
    ========================================================= */
 function buildArcade(){
@@ -2556,10 +2825,10 @@ const STD_TAGS = {
  "u5:L6":["S8P5.a","S8P5.b"],   "u5:L7":["S8P5.a"],
  "u5:L8":["S8P5.c"],            "u5:L9":["S8P5.c"],
  /* --- Games --- */
- "u1":["S8P1.a"],  "u1b":["S8P1.b"], "u1c":["S8P1.d"],
+ "u1":["S8P1.a"],  "u1b":["S8P1.b"], "u1c":["S8P1.d"], "u1d":["S8P1.f"],
  "u2":["S8P2.c"],  "u2b":["S8P2.d"],
  "u3":["S8P3.b"],  "u3b":["S8P3.c"], "u3c":["S8P3.a"],
- "u4":["S8P4.f"],  "u4b":["S8P4.b","S8P4.c"],
+ "u4":["S8P4.f"],  "u4b":["S8P4.b","S8P4.c"], "u4c":["S8P4.d"],
  "u5":["S8P5.b"],  "u5b":["S8P5.c"],
  /* --- Unit 1 videos & sims --- */
  "u1:V0":["S8P1.e"], "u1:V1":["S8P1.b"], "u1:V2":["S8P1.d"], "u1:V3":["S8P1.e"],
@@ -3081,7 +3350,7 @@ function ptAnswer(idx){
 }
 
 /* ---------- weighted scoring engine ---------- */
-const GAME_TARGETS = {u1:120,u1b:80,u1c:110,u2:100,u2b:110,u3:100,u3b:90,u3c:90,u4:100,u4b:70,u5:100,u5b:60};
+const GAME_TARGETS = {u1:120,u1b:80,u1c:110,u1d:100,u2:100,u2b:110,u3:100,u3b:90,u3c:90,u4:100,u4b:70,u4c:70,u5:100,u5b:60};
 const SCORE_WEIGHTS = [
   {k:'po',     w:40, name:'Posttest'},
   {k:'q',      w:20, name:'Practice quizzes'},
