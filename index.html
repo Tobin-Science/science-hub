@@ -4115,9 +4115,17 @@ function handleAssignmentHash(){
   ASN = null; store.set('asn_current', null);
   renderAssign(); go('assign');
 }
-function asnChooseName(name){
+function asnStart(){
+  const f = (document.getElementById('asn-fname-in')?.value||'').trim().slice(0,20);
+  const l = (document.getElementById('asn-lname-in')?.value||'').trim().slice(0,20);
+  const mark = el=>{ if(el){ el.style.outline='3px solid #E25555'; el.focus(); } };
+  if(!f){ mark(document.getElementById('asn-fname-in')); return; }
+  if(!l){ mark(document.getElementById('asn-lname-in')); return; }
+  asnChooseName(`${f} ${l}`, l);
+}
+function asnChooseName(name, lastName){
   name = (name||'').trim().slice(0,40);
-  if(!name){ const el=document.getElementById('asn-name-in'); if(el){ el.focus(); el.placeholder='Type your name first!'; } return; }
+  if(!name) return;
   const {cfg, code} = ASN_PENDING;
   const key = nameKey(name);
   const perKey = `asn_${cfg.id}_${key}_period`;
@@ -4128,6 +4136,7 @@ function asnChooseName(name){
     if(sel){ sel.style.outline='3px solid #E25555'; sel.focus(); }
     return;
   }
+  if(lastName) store.set(`asn_${cfg.id}_${key}_ln`, lastName);
   ASN = {cfg, code, name, key};
   ASN_PENDING = null;
   const roster = store.get('asnroster_'+cfg.id) || [];
@@ -4392,7 +4401,9 @@ function asnResultsCode(){
   const dateStr = new Date().toISOString().slice(0,10);
   const po = (ASN.cfg.it.po||[]).map(u=>{ const r=store.get(`asn_${ASN.cfg.id}_${ASN.key}_po:${u}`); return r? `${r.score}/${r.total}×${r.attempts}` : '—'; }).join(' ');
   const fb = asnFeedback();
-  const payload = {v:1, a:ASN.cfg.id, t:(ASN.cfg.t||'').slice(0,40), n:ASN.name, p:asnPeriod(), s:s.pct, c:comp, d:dateStr, po,
+  const payload = {v:1, a:ASN.cfg.id, t:(ASN.cfg.t||'').slice(0,40), n:ASN.name,
+    ln: store.get(`asn_${ASN.cfg.id}_${ASN.key}_ln`) || ASN.name.split(' ').slice(-1)[0],
+    p:asnPeriod(), s:s.pct, c:comp, d:dateStr, po,
     w:(fb? fb.weak.map(r=>r.std) : []), k:asnVerifyCode(ASN.cfg.id, ASN.key, s.pct, dateStr)};
   return 'PSH1.' + encodeAssignment(payload);
 }
@@ -4420,14 +4431,15 @@ function renderAssign(){
         <h3>👋 Who's working today?</h3>
         ${roster.length? `<p style="margin:6px 0 4px;font-size:.9rem;opacity:.8">Pick your name to continue where you left off:</p>
           <div class="asnroster">${roster.map(n=>`<button class="rosterbtn" onclick="asnChooseName('${n.replace(/'/g,"\\'")}')">${n}</button>`).join('')}</div>
-          <p style="margin:12px 0 4px;font-size:.9rem;opacity:.8">Or add yourself:</p>` : `<p style="margin:6px 0 4px;font-size:.9rem;opacity:.8">Enter your first and last name — it goes on your score report:</p>`}
+          <p style="margin:12px 0 4px;font-size:.9rem;opacity:.8">Or add yourself:</p>` : `<p style="margin:6px 0 4px;font-size:.9rem;opacity:.8">Enter your name — it goes on your score report:</p>`}
         <div class="asnnamerow">
-          <input id="asn-name-in" maxlength="40" placeholder="e.g., Jordan Smith" onkeydown="if(event.key==='Enter')asnChooseName(this.value)">
+          <input id="asn-fname-in" maxlength="20" placeholder="First name" onkeydown="if(event.key==='Enter')asnStart()">
+          <input id="asn-lname-in" maxlength="20" placeholder="Last name" onkeydown="if(event.key==='Enter')asnStart()">
           <select id="asn-period-in" class="asnlangsel" style="margin:0">
             <option value="">Class period…</option>
             ${[1,2,3,4,5,6,7,8,9,10].map(p=>`<option value="${p}">Period ${p}</option>`).join('')}
           </select>
-          <button class="gbtn" onclick="asnChooseName(document.getElementById('asn-name-in').value)">Start →</button>
+          <button class="gbtn" onclick="asnStart()">Start →</button>
         </div>
       </div>`;
     return;
@@ -4956,7 +4968,9 @@ function buildGradebook(){
     const b = best[key];
     if(!b || (r.valid && !b.valid) || (r.valid===b.valid && (r.d > b.d || (r.d===b.d && r.s > b.s)))) best[key] = r;
   });
-  GB_ROWS = Object.values(best).sort((a,b)=> (+a.p||99)-(+b.p||99) || a.n.localeCompare(b.n));
+  const lastN = r => (r.ln || r.n.split(' ').slice(-1)[0] || '').toLowerCase();
+  GB_ROWS = Object.values(best).sort((a,b)=> (+a.p||99)-(+b.p||99) || lastN(a).localeCompare(lastN(b)) || a.n.localeCompare(b.n));
+  GB_ROWS.forEach(r=>{ const ln = r.ln || r.n.split(' ').slice(-1)[0]; const first = r.n.endsWith(' '+ln)? r.n.slice(0, r.n.length-ln.length-1) : r.n.replace(ln,'').trim(); r.disp = first? `${ln}, ${first}` : r.n; });
   /* class insights: tally weak topics */
   const tally = {};
   GB_ROWS.forEach(r=>(r.w||[]).forEach(s=>tally[s]=(tally[s]||0)+1));
@@ -4966,7 +4980,7 @@ function buildGradebook(){
     <table>
       <tr><th>Period</th><th>Student</th><th>Score</th><th>Completed</th><th>Posttest (best × tries)</th><th>Assignment</th><th>Date</th><th>Check</th></tr>
       ${GB_ROWS.map(r=>`<tr>
-        <td>${r.p||'—'}</td><td><b>${r.n}</b></td><td><b>${r.s}%</b></td><td>${r.c}%</td><td>${r.po||'—'}</td>
+        <td>${r.p||'—'}</td><td><b>${r.disp}</b></td><td><b>${r.s}%</b></td><td>${r.c}%</td><td>${r.po||'—'}</td>
         <td style="font-size:.8rem">${r.t||r.a}</td><td style="font-family:var(--mono);font-size:.78rem">${r.d}</td>
         <td>${r.valid? '✅' : '<span style="color:#c0392b;font-weight:800">⚠️ edited?</span>'}</td></tr>`).join('')}
     </table>
@@ -4976,8 +4990,9 @@ function buildGradebook(){
 }
 function gradebookCSV(){
   const esc = v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`;
-  const csv = ['Period,Student,Score %,Completed %,Posttest,Assignment,Date,Verified',
-    ...GB_ROWS.map(r=>[r.p||'',r.n,r.s,r.c,r.po||'',r.t||r.a,r.d,r.valid?'yes':'CHECK'].map(esc).join(','))].join('\n');
+  const csv = ['Period,Last name,First name,Score %,Completed %,Posttest,Assignment,Date,Verified',
+    ...GB_ROWS.map(r=>{ const ln = r.ln || r.n.split(' ').slice(-1)[0]; const first = r.n.endsWith(' '+ln)? r.n.slice(0, r.n.length-ln.length-1) : r.n;
+      return [r.p||'',ln,first,r.s,r.c,r.po||'',r.t||r.a,r.d,r.valid?'yes':'CHECK'].map(esc).join(','); })].join('\n');
   const done = ()=>{ document.getElementById('gb-msg').textContent = '✅ CSV copied — paste into Excel or Google Sheets.'; };
   if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(csv).then(done).catch(()=>prompt('Copy this CSV:', csv));
   else prompt('Copy this CSV:', csv);
