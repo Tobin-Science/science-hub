@@ -1530,7 +1530,7 @@ function renderGamePicker(uid, startKey){
       `<button class="subtab ${k===key?'active':''}" style="--ac:${u.hex}" onclick="renderGamePicker('${uid}','${k}')">${g.icon} ${g.title}</button>`).join('')}
     </div>
     <div id="${uid}-gamearea"></div>
-    <p style="font-size:.88rem;color:var(--ink2);margin-top:14px">🗺️ <b>Want the full adventure versions?</b> In <b>Science Quest</b>, head to ${SQ_SIGNPOSTS[uid]}. <a href="#" onclick="go('arcade');return false">Launch it from the Arcade →</a></p>`;
+    <p style="font-size:.88rem;color:var(--ink2);margin-top:14px">🎮 <b>Beat your high score!</b> Every game tracks your best — and you can earn badges in the <a href="#" onclick="go('arcade');return false">Arcade</a> by playing a game from each unit.</p>`;
   GAMES[key].start(uid+'-gamearea');
 }
 

@@ -1546,7 +1546,7 @@ function renderGamePicker(uid, startKey){
       `<button class="subtab ${k===key?'active':''}" style="--ac:${u.hex}" onclick="renderGamePicker('${uid}','${k}')">${g.icon} ${g.title}</button>`).join('')}
     </div>
     <div id="${uid}-gamearea"></div>
-    <p style="font-size:.88rem;color:var(--ink2);margin-top:14px">🗺️ <b>Want the full adventure versions?</b> In <b>Science Quest</b>, head to ${SQ_SIGNPOSTS[uid]}. <a href="#" onclick="go('arcade');return false">Launch it from the Arcade →</a></p>`;
+    <p style="font-size:.88rem;color:var(--ink2);margin-top:14px">🎮 <b>Beat your high score!</b> Every game tracks your best — and you can earn badges in the <a href="#" onclick="go('arcade');return false">Arcade</a> by playing a game from each unit.</p>`;
   GAMES[key].start(uid+'-gamearea');
 }
 
@@ -1781,6 +1781,353 @@ function gameRunner(areaId, id, rounds, nextRound){
 const pick = a => a[Math.floor(Math.random()*a.length)];
 
 const GAMES = {};
+
+/* =========================================================
+   LIFE SCIENCE — 10 KINESTHETIC MINIGAMES (2 per unit)
+   Reuse the shared kine* helpers + dragify + svgXY.
+   Mechanics: swipe, drag-to-bin, reorder, tap-the-scene.
+   ========================================================= */
+
+/* ---------- reusable mechanic: binary SWIPE ----------
+   deck = [ [label, 'L'|'R', why], ... ]   L/R = {emoji,label}  */
+function swipeGame(areaId,id,title,desc,deck,L,R){
+  kineShell(areaId,id,title,desc,`<span>CARD <b id="${areaId}-r">1</b>/${deck.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const cards=shuffle([...deck]); let i=0,score=0,streak=0,maxStreak=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=cards.length){ if(maxStreak>(store.get('streak_'+id)||0)) store.set('streak_'+id,maxStreak); kineDone(areaId,id,score); return; }
+    document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    const [label,side,why]=cards[i];
+    stage.innerHTML=`<div class="kswipewrap">
+      <div class="kzone left" id="${areaId}-zl"><span class="big">${L.emoji}</span>${L.label}</div>
+      <div class="kzone right" id="${areaId}-zr"><span class="big">${R.emoji}</span>${R.label}</div>
+      <div class="kcard" id="${areaId}-card">${label}</div>
+    </div><p style="text-align:center;font-size:.82rem;opacity:.7;margin:0">drag the card left or right</p>`;
+    const card=document.getElementById(areaId+'-card');
+    const zl=document.getElementById(areaId+'-zl'), zr=document.getElementById(areaId+'-zr');
+    dragify(card,{
+      onMove(e,ctx){ card.style.transform=`translateX(calc(-50% + ${ctx.dx}px)) rotate(${ctx.dx/14}deg)`;
+        zl.classList.toggle('hot',ctx.dx<-50); zr.classList.toggle('hot',ctx.dx>50); },
+      onEnd(e,ctx){
+        zl.classList.remove('hot'); zr.classList.remove('hot');
+        if(Math.abs(ctx.dx)<85){ card.style.transition='transform .25s'; card.style.transform='translateX(-50%)'; setTimeout(()=>card.style.transition='',260); return; }
+        const said=ctx.dx>0?'R':'L'; card.classList.add('flying');
+        card.style.transform=`translateX(calc(-50% + ${ctx.dx>0?420:-420}px)) rotate(${ctx.dx>0?28:-28}deg)`;
+        const right=said===side;
+        if(right){ streak++; maxStreak=Math.max(maxStreak,streak); const pts=10+Math.min(streak-1,5)*2; score+=pts; kineScore(areaId,score);
+          kineMsg(areaId,`✅ <b>Yes!</b> <span class="why">${why}</span> +${pts}`); }
+        else { streak=0; kineMsg(areaId,`❌ <b>That's ${side==='R'?R.label:L.label}.</b> <span class="why">${why}</span>`); }
+        i++; setTimeout(draw,right?1050:2300);
+      }
+    });
+  }
+  draw();
+}
+
+/* ---------- reusable mechanic: DRAG ticket into a bin ----------
+   deck = [ [label, type, why], ... ]   bins = [ {t,label,emoji,sub} ] */
+function binGame(areaId,id,title,desc,deck,bins){
+  kineShell(areaId,id,title,desc,`<span>ITEM <b id="${areaId}-r">1</b>/${deck.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const cards=shuffle([...deck]); let i=0,score=0,streak=0,maxStreak=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=cards.length){ if(maxStreak>(store.get('streak_'+id)||0)) store.set('streak_'+id,maxStreak); kineDone(areaId,id,score); return; }
+    document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    const [label,type,why]=cards[i];
+    stage.innerHTML=`<div class="kticket" id="${areaId}-tk">🏷️ ${label}</div>
+      <div class="kpots">${bins.map(b=>`<div class="kpot" data-t="${b.t}"><span class="big">${b.emoji}</span>${b.label}${b.sub?`<br><span style="opacity:.7;font-weight:400">${b.sub}</span>`:''}</div>`).join('')}</div>`;
+    const tk=document.getElementById(areaId+'-tk');
+    const pots=[...stage.querySelectorAll('.kpot')];
+    const potAt=(x,y)=>pots.find(p=>{const r=p.getBoundingClientRect();return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;});
+    dragify(tk,{
+      onStart(){ tk.classList.add('dragging'); },
+      onMove(e,ctx){ tk.style.transform=`translate(${ctx.dx}px,${ctx.dy}px)`; pots.forEach(p=>p.classList.toggle('hot',p===potAt(ctx.x,ctx.y))); },
+      onEnd(e,ctx){
+        tk.classList.remove('dragging'); pots.forEach(p=>p.classList.remove('hot'));
+        const p=potAt(ctx.x,ctx.y);
+        if(!p){ tk.style.transition='transform .25s'; tk.style.transform=''; setTimeout(()=>tk.style.transition='',260); return; }
+        const right=p.dataset.t===type;
+        if(right){ streak++; maxStreak=Math.max(maxStreak,streak); const pts=10+Math.min(streak-1,5)*2; score+=pts; kineScore(areaId,score);
+          p.classList.add('yes'); tk.style.opacity='0'; kineMsg(areaId,`✅ <b>Nice!</b> <span class="why">${why}</span> +${pts}`); }
+        else { streak=0; p.classList.add('no'); pots.find(x=>x.dataset.t===type).classList.add('yes'); kineMsg(areaId,`❌ <span class="why">${why}</span>`); }
+        i++; setTimeout(draw,right?1100:2400);
+      }
+    });
+  }
+  draw();
+}
+
+/* ---------- reusable mechanic: DRAG-TO-ORDER ----------
+   items in CORRECT order = [ [emoji,label], ... ] ; play `rounds` shuffles */
+function orderGame(areaId,id,title,desc,items,instr,winWhy,rounds){
+  rounds=rounds||3;
+  kineShell(areaId,id,title,desc,`<span>ROUND <b id="${areaId}-r">1</b>/${rounds}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  let round=0, score=0, order, checks;
+  function newRound(){
+    do{ order=shuffle(items.map((_,k)=>k)); } while(order.every((b,p)=>b===p));
+    checks=0; document.getElementById(areaId+'-r').textContent=round+1; drawOrder();
+  }
+  function drawOrder(locked){
+    if(!document.getElementById(areaId+'-stage')) return;
+    locked=locked||[];
+    stage.innerHTML=`<div style="font-size:1rem;margin-bottom:6px">${instr}</div>
+      <div class="kord" id="${areaId}-ord">${order.map((b,pos)=>`<div class="kordrow ${locked.includes(pos)?'lock':''}" data-i="${b}"><span class="grip">⠿</span> ${items[b][0]} ${items[b][1]}</div>`).join('')}</div>
+      <div style="text-align:center"><button class="gbtn" id="${areaId}-chk">⚖️ Check my order</button></div>`;
+    const wrap=document.getElementById(areaId+'-ord'); const rows=[...wrap.querySelectorAll('.kordrow')];
+    const rowH=()=>rows[0].offsetHeight+7;
+    rows.forEach((row,startPos)=>{
+      if(row.classList.contains('lock')) return;
+      dragify(row,{ onStart(){row.classList.add('dragging');},
+        onMove(e,ctx){ row.style.transform=`translateY(${ctx.dy}px)`; const shift=Math.round(ctx.dy/rowH());
+          rows.forEach((r,p)=>{ if(r===row||r.classList.contains('lock'))return; const from=startPos,to=Math.max(0,Math.min(rows.length-1,startPos+shift));
+            if(from<to&&p>from&&p<=to) r.style.transform=`translateY(${-rowH()}px)`; else if(from>to&&p>=to&&p<from) r.style.transform=`translateY(${rowH()}px)`; else r.style.transform=''; }); },
+        onEnd(e,ctx){ row.classList.remove('dragging'); const shift=Math.round(ctx.dy/rowH()); const to=Math.max(0,Math.min(order.length-1,startPos+shift));
+          const moved=order.splice(startPos,1)[0]; order.splice(to,0,moved); drawOrder(locked); } });
+    });
+    document.getElementById(areaId+'-chk').onclick=()=>{ checks++; const lockedNow=[]; let allRight=true;
+      rows.forEach((r,pos)=>{ if(order[pos]===pos) lockedNow.push(pos); else {allRight=false; r.classList.add('bad');} });
+      if(allRight){ const pts=Math.max(10,30-(checks-1)*6); score+=pts; kineScore(areaId,score);
+        kineMsg(areaId,`✅ <b>ORDERED!</b> <span class="why">${winWhy}</span> +${pts}`);
+        round++; setTimeout(()=>{ if(round>=rounds) kineDone(areaId,id,score); else newRound(); },1800); }
+      else { kineMsg(areaId,`🔁 <span class="why">Green rows are already in the right spot — keep dragging the rest.</span>`); setTimeout(()=>drawOrder(lockedNow),600); }
+    };
+  }
+  newRound();
+}
+
+/* ============ UNIT 1 · DIVERSITY & CLASSIFICATION ============ */
+/* u1 · LIVING OR NOT? — characteristics of life (S7L1.a) */
+GAMES.u1={title:"Living or Not?",icon:"🦠",id:"u1",unit:"u1",
+ desc:"Every living thing is made of cells, uses energy, grows, and reproduces. SWIPE each thing — left if it's alive, right if it's not.",
+ start(areaId){ swipeGame(areaId,'u1',this.title,this.desc,[
+  ["A maple tree","L","Made of cells, uses energy, grows, and reproduces — alive."],
+  ["A campfire flame","R","It grows and 'eats' fuel, but it has no cells and can't reproduce — not alive."],
+  ["A rushing river","R","It moves, but no cells and no reproduction — nonliving."],
+  ["A mushroom","L","Fungi are living — made of cells, they grow and reproduce."],
+  ["A single bacterium","L","One living cell that uses energy and reproduces."],
+  ["A salt crystal","R","Crystals can 'grow,' but they aren't cells and don't reproduce."],
+  ["A honeybee","L","An animal — definitely alive."],
+  ["A robot vacuum","R","It moves and senses, but no cells and can't reproduce — not alive."],
+  ["A virus","R","Most scientists say NOT alive: no cells, and it can't reproduce without hijacking a living cell."],
+  ["A blade of grass","L","A living plant — cells, growth, reproduction."],
+  ["A cloud","R","Just water droplets — no cells, not alive."],
+  ["An oak seedling","L","A young, living plant."]
+ ],{emoji:"🌿",label:"LIVING"},{emoji:"🪨",label:"NONLIVING"}); }};
+
+/* u1b · KINGDOM COURT — plant / fungus / animal (S7L1.b) */
+GAMES.u1b={title:"Kingdom Court",icon:"👑",id:"u1b",unit:"u1",
+ desc:"Three eukaryote kingdoms, often confused. DRAG each organism onto plant, fungus, or animal.",
+ start(areaId){ binGame(areaId,'u1b',this.title,this.desc,[
+  ["An oak tree","P","Plants are multicellular autotrophs — they make food with chloroplasts."],
+  ["A button mushroom","F","Fungi absorb nutrients from decaying material — they can't make their own food."],
+  ["A grizzly bear","A","Animals are multicellular heterotrophs that eat other organisms."],
+  ["A fern","P","A plant that makes its own food by photosynthesis."],
+  ["Bread mold","F","Mold is a fungus — one of nature's decomposers."],
+  ["A jellyfish","A","An animal, even without a backbone."],
+  ["A blade of grass","P","A green, photosynthesizing plant."],
+  ["Yeast","F","Yeast is a single-celled fungus."],
+  ["A honeybee","A","An animal — a heterotroph that eats."],
+  ["A cactus","P","A desert plant — still an autotroph with chloroplasts."],
+  ["A toadstool","F","A toadstool is a fungus, not a plant."],
+  ["An earthworm","A","An animal that eats decaying matter in the soil."]
+ ],[
+  {t:"P",label:"PLANT",emoji:"🌳",sub:"makes food"},
+  {t:"F",label:"FUNGUS",emoji:"🍄",sub:"absorbs food"},
+  {t:"A",label:"ANIMAL",emoji:"🐾",sub:"eats food"}
+ ]); }};
+
+/* ============ UNIT 2 · CELLS & BODY SYSTEMS ============ */
+/* u2 · CELL INSPECTOR — plant vs animal cell (S7L2.a) */
+GAMES.u2={title:"Cell Inspector",icon:"🔬",id:"u2",unit:"u2",
+ desc:"Plant and animal cells share a lot — but two features give plants away. SWIPE each clue to the cell it points to.",
+ start(areaId){ swipeGame(areaId,'u2',this.title,this.desc,[
+  ["Has a stiff cell wall for support","L","Cell walls are found in plant cells, not animal cells."],
+  ["Has green chloroplasts that capture sunlight","L","Chloroplasts are plant-only — they make the plant's food."],
+  ["Has only a flexible membrane, no wall","R","Animal cells have no cell wall — just a membrane."],
+  ["The organism must EAT because the cell can't make food","R","No chloroplasts means the animal has to eat its food."],
+  ["Boxy, rigid shape held by a wall","L","The cell wall gives plant cells their boxy shape."],
+  ["Round or irregular, flexible shape","R","Without a wall, animal cells stay flexible."],
+  ["Captures sunlight to make its own food","L","Only plant cells photosynthesize."],
+  ["Found in a maple leaf","L","Leaf cells are plant cells, packed with chloroplasts."],
+  ["Found in your skin","R","Skin cells are animal cells — no wall, no chloroplasts."],
+  ["Found in a muscle","R","Muscle cells are animal cells."]
+ ],{emoji:"🌿",label:"PLANT CELL"},{emoji:"🐾",label:"ANIMAL CELL"}); }};
+
+/* u2b · BUILD A BODY — levels of organization (S7L2.b) */
+GAMES.u2b={title:"Build a Body",icon:"🧍",id:"u2b",unit:"u2",
+ desc:"From one cell to a whole organism. Drag the five levels of organization into order, smallest at the top.",
+ start(areaId){ orderGame(areaId,'u2b',this.title,this.desc,
+  [["🔬","Cell — the smallest unit of life"],
+   ["🧵","Tissue — similar cells working together"],
+   ["❤️","Organ — different tissues teamed up"],
+   ["🫀","Organ system — organs sharing one job"],
+   ["🧍","Organism — the whole living thing"]],
+  "Drag from the <b>SMALLEST building block (top)</b> down to the <b>whole organism (bottom)</b>:",
+  "Cells build tissues, tissues build organs, organs build systems, and the systems together build the whole organism."); }};
+
+/* ============ UNIT 3 · REPRODUCTION & HEREDITY ============ */
+/* u3 · CLONE OR MIX? — asexual vs sexual reproduction (S7L3.b) */
+GAMES.u3={title:"Clone or Mix?",icon:"🧬",id:"u3",unit:"u3",
+ desc:"One parent makes clones; two parents make a new mix. SWIPE each example — left for asexual, right for sexual.",
+ start(areaId){ swipeGame(areaId,'u3',this.title,this.desc,[
+  ["A bacterium splits into two identical cells","L","Binary fission — one parent, identical clones. Asexual."],
+  ["Two parent dogs have a litter of varied puppies","R","Two parents, mixed genes, variation — sexual."],
+  ["A strawberry plant sends out runners that sprout copies","L","Runners make clones of the parent — asexual."],
+  ["A flower is pollinated and forms seeds","R","Two parents' genes combine in the seed — sexual."],
+  ["A yeast cell grows a bud that pinches off","L","Budding — one parent, identical offspring."],
+  ["A fish releases eggs that a mate fertilizes","R","Two parents — sexual reproduction."],
+  ["Offspring are exact genetic copies of one parent","L","Identical copies = asexual."],
+  ["Offspring get a brand-new mix of genes from two parents","R","A new combination every time = sexual."],
+  ["A hydra grows a small copy of itself on its side","L","Budding again — asexual cloning."],
+  ["Variation shows up in every new generation","R","Variation is the hallmark of sexual reproduction."]
+ ],{emoji:"👯",label:"ASEXUAL"},{emoji:"🧬",label:"SEXUAL"}); }};
+
+/* u3b · ZOOM IN — DNA nesting order (S7L3.a) */
+GAMES.u3b={title:"Zoom In",icon:"🔎",id:"u3b",unit:"u3",
+ desc:"Genes live inside a set of nested structures. Drag them from the BIGGEST down to the smallest part inside it.",
+ start(areaId){ orderGame(areaId,'u3b',this.title,this.desc,
+  [["🔬","Cell — the whole living unit"],
+   ["⭕","Nucleus — the control center inside the cell"],
+   ["🧶","Chromosome — a bundle of genes inside the nucleus"],
+   ["📃","Gene — one instruction along the chromosome"],
+   ["🧬","DNA — the molecule a gene is made of"]],
+  "Drag from the <b>BIGGEST (the whole cell)</b> down to the <b>smallest part inside it</b>:",
+  "Each fits inside the one above it: a cell holds a nucleus, which holds chromosomes, which carry genes, which are made of DNA."); }};
+
+/* ============ UNIT 4 · ECOLOGY & INTERDEPENDENCE ============ */
+/* u4 · ENERGY PYRAMID — build the trophic levels (S7L4.b) */
+GAMES.u4={title:"Energy Pyramid",icon:"🔺",id:"u4",unit:"u4",
+ desc:"Only about 10% of energy passes up each level. Stack the food chain with the producer on top and the top predator at the bottom.",
+ start(areaId){ orderGame(areaId,'u4',this.title,this.desc,
+  [["🌱","Grass — producer (captures sunlight)"],
+   ["🦗","Grasshopper — eats the grass"],
+   ["🐸","Frog — eats grasshoppers"],
+   ["🦅","Hawk — top predator, eats frogs"]],
+  "Build the energy pyramid: the <b>PRODUCER (most energy) on top</b>, the <b>TOP PREDATOR (least energy) at the bottom</b>:",
+  "Energy flows grass → grasshopper → frog → hawk, and only about 10% passes up at each step — so there's room for many fewer predators than plants."); }};
+
+/* u4b · SYMBIOSIS SORT — mutualism / commensalism / parasitism (S7L4.a) */
+GAMES.u4b={title:"Symbiosis Sort",icon:"🤝",id:"u4b",unit:"u4",
+ desc:"Two species, one close relationship — but who benefits? DRAG each pair onto mutualism, commensalism, or parasitism.",
+ start(areaId){ binGame(areaId,'u4b',this.title,this.desc,[
+  ["A bee sips nectar while pollinating a flower","M","Both win — the bee eats, the flower gets pollinated. Mutualism (+/+)."],
+  ["A tick sucks blood from a deer","P","The tick wins, the deer is harmed. Parasitism (+/−)."],
+  ["A barnacle rides a whale, catching food; the whale is unaffected","C","The barnacle benefits, the whale isn't affected. Commensalism (+/0)."],
+  ["A tapeworm lives in a dog's intestine","P","The worm gains at the dog's expense. Parasitism (+/−)."],
+  ["A clownfish is sheltered by an anemone it cleans and guards","M","Both benefit. Mutualism (+/+)."],
+  ["A bird nests in a tree, which is unharmed","C","The bird benefits, the tree is unaffected. Commensalism (+/0)."],
+  ["Fleas live on a cat and bite it","P","Fleas gain, the cat suffers. Parasitism (+/−)."],
+  ["Oxpecker birds eat ticks off a rhino's back","M","The bird eats and the rhino gets cleaned. Mutualism (+/+)."],
+  ["A remora hitches a ride on a shark for scraps; the shark is unaffected","C","The remora benefits, the shark isn't affected. Commensalism (+/0)."]
+ ],[
+  {t:"M",label:"MUTUALISM",emoji:"🤝",sub:"+ / +"},
+  {t:"C",label:"COMMENSALISM",emoji:"➕",sub:"+ / 0"},
+  {t:"P",label:"PARASITISM",emoji:"🩸",sub:"+ / −"}
+ ]); }};
+
+/* ============ UNIT 5 · EVOLUTION ============ */
+/* u5 · PREDATOR'S EYE — tap the prey camouflage won't save (S7L5.b) */
+GAMES.u5={title:"Predator's Eye",icon:"🦅",id:"u5",unit:"u5",
+ desc:"You're a hungry bird. In each scene, TAP the animal that stands out most — the one camouflage can't hide. Watch natural selection happen.",
+ start(areaId){
+  const SCENES=[
+   {bg:"#3a2a1a",bgName:"sooty dark bark",prey:[["#2e2113","moth"],["#1a1a1a","moth"],["#e8d8a0","moth"],["#5a4a32","moth"]],
+    why:"On soot-darkened bark the PALE moth stands out — birds catch it, so dark moths survive and spread. That's natural selection."},
+   {bg:"#cdbb94",bgName:"pale tree bark",prey:[["#cdbb94","moth"],["#b8a878","moth"],["#161616","moth"],["#9a8a60","moth"]],
+    why:"On pale bark the DARK moth is obvious and gets eaten — so light, camouflaged moths are favored here."},
+   {bg:"#3f7d3f",bgName:"green leaf",prey:[["#3f7d3f","bug"],["#4f8d2f","bug"],["#d63333","bug"],["#2f6d2f","bug"]],
+    why:"A RED insect on a green leaf is a beacon — predators pick it off, selecting for green camouflage."},
+   {bg:"#d9c18a",bgName:"desert sand",prey:[["#d9c18a","lizard"],["#c9b07a","lizard"],["#2f2012","lizard"],["#e0cda0","lizard"]],
+    why:"DARK skin on pale sand makes an easy target — sandy colors blend in and survive in the desert."},
+   {bg:"#eef3fb",bgName:"fresh snow",prey:[["#ffffff","hare"],["#e6ecf6","hare"],["#333333","hare"],["#d8e0ee","hare"]],
+    why:"On snow a DARK animal is easy to spot — white fur hides, which is why so many Arctic animals are white."}
+  ];
+  kineShell(areaId,'u5',this.title,this.desc,`<span>HUNT <b id="${areaId}-r">1</b>/${SCENES.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const scenes=shuffle([...SCENES]); let i=0,score=0,tries=0;
+  const W=320,H=220, slots=[[70,70],[235,62],[150,120],[64,168],[250,170],[160,40]];
+  const rgb=h=>{h=h.replace('#','');return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];};
+  const dist=(a,b)=>{const x=rgb(a),y=rgb(b);return Math.hypot(x[0]-y[0],x[1]-y[1],x[2]-y[2]);};
+  let placed=[], target=-1;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage'))return;
+    if(i>=scenes.length){ kineDone(areaId,'u5',score); return; }
+    tries=0; document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    const sc=scenes[i];
+    target=0; let best=-1; sc.prey.forEach((p,k)=>{const d=dist(p[0],sc.bg); if(d>best){best=d;target=k;}});
+    const pos=shuffle(slots.slice()).slice(0,sc.prey.length);
+    placed=sc.prey.map((p,k)=>({c:p[0],x:pos[k][0],y:pos[k][1],k}));
+    stage.innerHTML=`<div style="font-size:1.02rem;margin-bottom:4px">🐦 Background: <b>${sc.bgName}</b> — tap the animal a predator would spot first.</div>
+      <svg id="${areaId}-svg" viewBox="0 0 ${W} ${H}" style="max-width:340px;width:100%;cursor:crosshair;touch-action:none;display:block;margin:4px auto;border-radius:12px">
+        <rect x="0" y="0" width="${W}" height="${H}" fill="${sc.bg}"/>
+        ${placed.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="15" fill="${p.c}" stroke="rgba(0,0,0,.25)" stroke-width="1"/>`).join('')}
+        <g id="${areaId}-mk"></g>
+      </svg>`;
+    const svg=document.getElementById(areaId+'-svg');
+    svg.addEventListener('pointerdown',e=>{
+      const [px,py]=svgXY(svg,e,W,H);
+      let hitK=-1,bestD=1e9; placed.forEach(p=>{const d=Math.hypot(px-p.x,py-p.y); if(d<bestD){bestD=d;hitK=p.k;}});
+      if(bestD>30) return;
+      tries++;
+      const mk=document.getElementById(areaId+'-mk'); const tp=placed.find(p=>p.k===target);
+      if(hitK===target){ const pts=tries===1?12:tries===2?7:4; score+=pts; kineScore(areaId,score);
+        mk.innerHTML=`<circle cx="${tp.x}" cy="${tp.y}" r="20" fill="none" stroke="#5ad08a" stroke-width="4"/>`;
+        kineMsg(areaId,`✅ <b>Caught!</b> <span class="why">${sc.why}</span> +${pts}`); i++; setTimeout(draw,2200);
+      } else { kineMsg(areaId,`❌ <b>That one's well camouflaged — the bird's eye slides right past it.</b> <span class="why">Look for the animal that does NOT match the ${sc.bgName}.</span>`); }
+    });
+  }
+  draw();
+ }};
+
+/* u5b · FOSSIL DIG — tap the fossil by its age in the rock layers (S7L5.c) */
+GAMES.u5b={title:"Fossil Dig",icon:"⛏️",id:"u5b",unit:"u5",
+ desc:"Read the rock like a history book — deeper layers are older. TAP the fossil each clue asks for.",
+ start(areaId){
+  const PR=[
+   ['b',"Tap the <b>OLDEST</b> fossil.","In undisturbed rock the deepest layer formed first — oldest is on the bottom."],
+   ['t',"Tap the <b>NEWEST</b> fossil.","The top layer was laid down most recently — newest is on top."],
+   ['b',"Tap the fossil that has been buried the <b>LONGEST</b>.","Longest buried = deepest = oldest."],
+   ['t',"Tap the <b>YOUNGEST</b> fossil in the cliff.","Youngest = most recent = the top layer."],
+   ['m',"Tap a fossil <b>younger than the bottom</b> layer but <b>older than the top</b>.","Any middle layer works — age increases as you go down."],
+   ['b',"A flood buried these in order. Tap the creature that lived <b>FIRST</b>.","First to live = first buried = the bottom layer."]
+  ];
+  kineShell(areaId,'u5b',this.title,this.desc,`<span>DIG <b id="${areaId}-r">1</b>/${PR.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const order=shuffle([...PR]); let i=0,score=0,tries=0;
+  const W=300,H=250,N=5, fos=['🐚','🦴','🐟','🦕','🌿','🦂'], bandH=H/N, cols=['#caa472','#b98e5a','#a87c48','#946a3a','#7e5930'];
+  stage.innerHTML=`<div id="${areaId}-q" style="font-size:1.04rem;margin-bottom:6px"></div>
+    <svg id="${areaId}-svg" viewBox="0 0 ${W} ${H}" style="max-width:320px;width:100%;cursor:crosshair;touch-action:none;display:block;margin:4px auto;border-radius:10px">
+      ${Array.from({length:N},(_,k)=>`<rect x="0" y="${k*bandH}" width="${W}" height="${bandH}" fill="${cols[k]}"/><line x1="0" y1="${k*bandH}" x2="${W}" y2="${k*bandH}" stroke="rgba(0,0,0,.18)"/>`).join('')}
+      <g id="${areaId}-fg"></g>
+      <g id="${areaId}-mk"></g>
+    </svg>
+    <div style="display:flex;justify-content:space-between;font-size:.78rem;opacity:.7;max-width:320px;margin:0 auto"><span>⬆ newer (top)</span><span>older (bottom) ⬇</span></div>`;
+  const svg=document.getElementById(areaId+'-svg'), qEl=document.getElementById(areaId+'-q'), fg=document.getElementById(areaId+'-fg'), mk=document.getElementById(areaId+'-mk');
+  function bandOf(py){ return Math.max(0,Math.min(N-1,Math.floor(py/bandH))); }
+  function draw(){
+    if(!document.getElementById(areaId+'-stage'))return;
+    if(i>=order.length){ kineDone(areaId,'u5b',score); return; }
+    tries=0; qEl.innerHTML=`<b>${i+1} of ${order.length}:</b> ${order[i][1]}`;
+    document.getElementById(areaId+'-r').textContent=i+1; mk.innerHTML='';
+    const icons=shuffle([...fos]).slice(0,N);
+    fg.innerHTML=icons.map((ic,k)=>`<text x="${W/2}" y="${k*bandH+bandH/2+9}" text-anchor="middle" font-size="26">${ic}</text>`).join('');
+    kineMsg(areaId,'');
+  }
+  svg.addEventListener('pointerdown',e=>{
+    if(i>=order.length)return;
+    const [px,py]=svgXY(svg,e,W,H); const band=bandOf(py); const tgt=order[i][0];
+    const ok = tgt==='b'? band===N-1 : tgt==='t'? band===0 : (band!==0 && band!==N-1);
+    tries++;
+    mk.innerHTML+=`<rect x="2" y="${band*bandH+2}" width="${W-4}" height="${bandH-4}" fill="none" stroke="${ok?'#5ad08a':'#f08c8c'}" stroke-width="3"/>`;
+    if(ok){ const pts=tries===1?12:tries===2?7:4; score+=pts; kineScore(areaId,score);
+      kineMsg(areaId,`✅ <b>Dug it up!</b> <span class="why">${order[i][2]}</span> +${pts}`); i++; setTimeout(draw,1700);
+    } else { kineMsg(areaId,`❌ <b>Not that layer.</b> <span class="why">${tries>=2? order[i][2]:'Remember: deeper = older, higher = younger. Try again.'}</span>`); }
+  });
+  draw();
+ }};
 
 /* ---------- shared kinesthetic helpers ---------- */
 function kineShell(areaId,id,title,desc,hud){
@@ -2363,7 +2710,13 @@ const STD_TAGS = {
  "u5:L0":["S7L5.a"], "u5:L1":["S7L5.a"], "u5:L2":["S7L5.b"], "u5:L3":["S7L5.b"],
  "u5:L4":["S7L5.c"], "u5:L5":["S7L5.c"],
  /* --- Unit 5 videos --- */
- "u5:V0":["S7L5.a"], "u5:V1":["S7L5.a"], "u5:V2":["S7L5.b"], "u5:V3":["S7L5.c"], "u5:V4":["S7L5.a","S7L5.b"]
+ "u5:V0":["S7L5.a"], "u5:V1":["S7L5.a"], "u5:V2":["S7L5.b"], "u5:V3":["S7L5.c"], "u5:V4":["S7L5.a","S7L5.b"],
+ /* --- Minigames (keyed by game id) --- */
+ "u1":["S7L1.a"], "u1b":["S7L1.b"],
+ "u2":["S7L2.a"], "u2b":["S7L2.b"],
+ "u3":["S7L3.b"], "u3b":["S7L3.a"],
+ "u4":["S7L4.b"], "u4b":["S7L4.a"],
+ "u5":["S7L5.b"], "u5b":["S7L5.c"]
 };
 const QUIZ_TAGS = {
  u1:["S7L1.a","S7L1.a","S7L1.a","S7L1.a","S7L1.a","S7L1.b","S7L1.b","S7L1.b","S7L1.b","S7L1.b"],
