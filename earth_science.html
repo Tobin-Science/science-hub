@@ -1226,9 +1226,72 @@ u4:{ sym:"🌪️", num:4, name:"Weather & Climate", std:"S6E4", color:"var(--u4
    {q:"Hurricanes form over…", o:["Deserts","Warm ocean water","Mountains","Ice caps"], a:1, lesson:7, why:"Warm water evaporating is the storm's fuel supply."}
   ]
 },
-u5:{ sym:"🌋", num:5, name:"Earth's Surface", std:"S6E5", color:"var(--u5)", soft:"var(--u5soft)", hex:"#8B5A2B", soon:true,
-  blurb:"Layers, rocks and minerals, the rock cycle, plate tectonics, fossils, and soil — the planet's biography written in stone.",
-  lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
+u5:{ sym:"🌋", num:5, name:"Earth's Surface", std:"S6E5", color:"var(--u5)", soft:"var(--u5soft)", hex:"#8B5A2B",
+  blurb:"The ground under your feet has a biography: layers, minerals, recycling rocks, drifting plates, buried fossils, and slow-built soil. Time to read it.",
+  lessons:[
+   {t:"Journey to the Center of the Earth", body:`Four main layers, and every one gets <b>hotter and denser</b> as you go down. The <b>crust</b>: thin, rocky, where we live (thinnest under oceans). The <b>mantle</b>: the THICKEST layer — hot rock that flows very slowly. The <b>outer core</b>: <em>liquid</em> iron and nickel (its churning creates Earth's magnetic field). The <b>inner core</b>: solid iron and nickel — hottest of all, kept solid by crushing pressure.`,
+    callout:["Scale Check","If Earth were an apple, the crust would be thinner than the peel. Everything we've ever dug barely scratches it."]},
+   {t:"Minerals: Nature's Building Blocks", body:`A <b>mineral</b> is naturally occurring, solid, inorganic (never alive), with a definite chemical makeup and a <b>crystal structure</b>. We identify minerals by their properties: <b>hardness</b> (the Mohs scale — talc 1, diamond 10), <b>luster</b> (shiny or dull), <b>streak</b> (the color of its powder), <b>cleavage</b> (how it breaks), and color (the least reliable clue!). Why care? <b>Rocks are made of minerals</b> — granite is just quartz + feldspar + mica baked together.`},
+   {t:"The Rock Cycle: Three Families", body:`Classify rocks by HOW THEY FORMED. <b>Igneous</b>: cooled from melted rock — magma underground (large crystals, like granite) or lava at the surface (small crystals, like basalt). <b>Sedimentary</b>: sediments compacted and cemented in layers — sandstone, limestone — the family that holds <b>fossils</b>. <b>Metamorphic</b>: any rock transformed by <b>heat and pressure</b> — limestone becomes marble, shale becomes slate. The <b>rock cycle</b>: any rock can melt, weather, or transform into any other, forever.`,
+    callout:["Recycled Planet","The atoms in your driveway gravel have probably been magma, sand, and mountain root at different points in Earth's history."]},
+   {t:"Weathering: Breaking It Down", body:`<b>Weathering</b> breaks rock apart in place. <b>Mechanical (physical) weathering</b> breaks rock into smaller pieces of the SAME stuff: <b>ice wedging</b> (water freezes in cracks and pries them open), plant roots, and abrasion. <b>Chemical weathering</b> changes the rock into NEW substances: acid rain dissolving limestone, oxidation rusting iron-rich rock red, water slowly dissolving minerals. Caves? Chemical weathering's masterpiece.`},
+   {t:"Erosion & Deposition", body:`After weathering breaks rock down, <b>erosion</b> carries the pieces away — by <b>water</b> (the #1 agent), <b>wind</b>, <b>glaciers</b>, and <b>gravity</b> (landslides). Eventually the transport runs out of energy and drops its load: <b>deposition</b>. Each agent builds signature environments: rivers build <b>deltas</b>, wind builds <b>dunes</b>, glaciers dump <b>moraines</b>, and beaches grow from deposited sand.`,
+    callout:["W-E-D","Weathering breaks it, Erosion takes it, Deposition drops it."]},
+   {t:"Reshaping the Surface: Nature & Us", body:`Natural processes never stop editing the surface — rivers carve canyons, glaciers bulldoze valleys, storms rebuild coastlines. <b>Human activity</b> edits it too, often faster: <b>mining</b> removes whole hillsides, <b>construction and deforestation</b> strip protective plants and speed erosion, dams trap sediment that once rebuilt beaches, and farming can wear away topsoil. Smart practices — replanting, terracing, silt fences — slow the damage.`},
+   {t:"Plate Tectonics", body:`Earth's outer shell is cracked into <b>lithospheric plates</b> that ride slowly (fingernail-growth speed) on the soft mantle below. The action is at the <b>boundaries</b>: <b>divergent</b> (plates pull apart — mid-ocean ridges, new crust), <b>convergent</b> (plates collide — mountains like the Himalayas, deep trenches, and volcanoes), and <b>transform</b> (plates grind sideways — earthquake factories like the San Andreas Fault). This explains why <b>earthquakes and volcanic eruptions</b> cluster along plate edges — like the Pacific's famous <b>Ring of Fire</b>.`},
+   {t:"Fossils: Earth's History Book", body:`<b>Fossils</b> — preserved remains or traces of ancient life — form mostly in <b>sedimentary rock layers</b>, with the oldest layers on the bottom. They're evidence the surface and climate CHANGED: <b>marine fossils on mountaintops</b> mean that rock was once a sea floor (then plates pushed it up). <b>Tropical plant fossils in Antarctica</b> mean that land was once warm. Scientists use fossil maps and data to argue exactly how Earth has rearranged itself.`},
+   {t:"Soil: More Than Dirt", body:`<b>Soil</b> is a layered mixture of <b>weathered rock + decomposed organic material</b> (called <b>humus</b>) — plus water and air. Dig down through the <b>horizons</b>: <b>O</b> (organic litter and humus), <b>A</b> (topsoil — minerals + humus, where roots live), <b>B</b> (subsoil — minerals, little organic matter), <b>C</b> (chunks of weathered parent rock), then solid <b>bedrock</b>. Good topsoil takes <em>centuries</em> to form — which is why soil conservation matters.`,
+    callout:["Dig the Proof","A simple soil pit or even a clear jar of shaken yard soil shows the layers settle out — sand, silt, clay, and floating organic bits. That IS the standard's investigation."]}
+  ],
+  quiz:[
+   {q:"Earth's THICKEST layer is the…", o:["Crust","Mantle","Outer core","Inner core"], a:1, why:"The mantle makes up most of Earth's volume — hot rock that flows incredibly slowly."},
+   {q:"Mineral hardness is measured using the…", o:["Richter scale","Mohs scale","Fujita scale","pH scale"], a:1, why:"Mohs runs 1 (talc) to 10 (diamond) — scratch tests place a mineral on the ladder."},
+   {q:"Rock formed when melted rock cools and hardens is…", o:["Sedimentary","Metamorphic","Igneous","Organic"], a:2, why:"Igneous = born of fire: magma cooling slowly underground or lava cooling fast at the surface."},
+   {q:"Fossils are almost always found in which rock family?", o:["Igneous","Sedimentary","Metamorphic","Volcanic"], a:1, why:"Layers of sediment bury remains gently — melting (igneous) or baking (metamorphic) destroys them."},
+   {q:"Water freezing in a crack and splitting the rock apart is…", o:["Chemical weathering","Mechanical weathering (ice wedging)","Erosion","Deposition"], a:1, why:"The rock breaks into smaller pieces of the same material — classic mechanical weathering."},
+   {q:"Which human activity speeds up erosion the most?", o:["Planting cover crops","Clearing forests from a hillside","Building terraces","Watching the rain"], a:1, why:"Plant roots hold soil; strip the plants and rain strips the slope."},
+   {q:"Most earthquakes and volcanoes happen…", o:["Randomly everywhere","Along the boundaries of lithospheric plates","Only at the equator","In the middle of plates"], a:1, why:"Plate edges are where crust grinds, collides, and melts — map the quakes and you've mapped the plates."},
+   {q:"At a divergent boundary, plates are…", o:["Colliding","Sliding past each other","Moving apart, making new crust","Stacking up"], a:2, why:"Divergent = pulling apart — magma rises to fill the gap at mid-ocean ridges."},
+   {q:"Seashell fossils found high on a mountain are evidence that…", o:["Shells fall from the sky","That rock was once under the sea and was uplifted","Mountains create shells","The ocean was higher than Everest"], a:1, why:"The sediment formed on a sea floor; plate collisions later pushed it skyward. Surfaces change!"},
+   {q:"Soil is made of…", o:["Pure crushed rock","Weathered rock plus decomposed organic material","Only dead leaves","Clay and water only"], a:1, why:"Both ingredients matter: mineral bits from weathered rock + humus from decayed life."}
+  ],
+  vocab:[
+   ["Crust","Earth's thin, rocky outer layer."],
+   ["Mantle","The thickest layer — hot, slowly flowing rock."],
+   ["Core","Earth's center: liquid outer, solid inner — iron and nickel."],
+   ["Mineral","Natural, inorganic solid with a crystal structure."],
+   ["Mohs scale","Mineral hardness ladder, talc (1) to diamond (10)."],
+   ["Igneous rock","Formed from cooled magma or lava."],
+   ["Sedimentary rock","Layers of compacted, cemented sediments — fossil country."],
+   ["Metamorphic rock","Rock transformed by heat and pressure."],
+   ["Rock cycle","Rocks endlessly changing from one family to another."],
+   ["Weathering","Breaking rock down in place — mechanical or chemical."],
+   ["Erosion","Moving weathered material — by water, wind, ice, gravity."],
+   ["Deposition","Dropping sediment in a new place — deltas, dunes, beaches."],
+   ["Plate tectonics","Earth's shell of moving lithospheric plates."],
+   ["Fault","A crack where blocks of crust move — earthquake territory."],
+   ["Earthquake","Shaking from plates slipping suddenly."],
+   ["Volcano","An opening where magma erupts — common at plate boundaries."],
+   ["Fossil","Preserved remains or traces of ancient life."],
+   ["Soil","Weathered rock + decomposed organic material, in layers."],
+   ["Humus","The dark, decomposed organic part of soil."]
+  ],
+  videos:[
+   {t:"Layers of the Earth", ch:"Curated search", url:"https://www.youtube.com/results?search_query=layers+of+the+earth+crust+mantle+core+middle+school", kind:"search", note:""},
+   {t:"Identifying minerals (hardness, streak, luster)", ch:"Curated search", url:"https://www.youtube.com/results?search_query=identifying+minerals+hardness+streak+luster+middle+school", kind:"search", note:""},
+   {t:"The rock cycle", ch:"Curated search", url:"https://www.youtube.com/results?search_query=rock+cycle+igneous+sedimentary+metamorphic+middle+school", kind:"search", note:""},
+   {t:"Weathering, erosion & deposition", ch:"Curated search", url:"https://www.youtube.com/results?search_query=weathering+erosion+deposition+middle+school", kind:"search", note:""},
+   {t:"Fossils & what they tell us", ch:"Curated search", url:"https://www.youtube.com/results?search_query=fossils+evidence+earth+history+middle+school", kind:"search", note:""},
+   {t:"Plate Tectonics", ch:"PhET Interactive Simulations", url:"https://phet.colorado.edu/en/simulations/plate-tectonics", kind:"phet", note:"Drag plates together and apart — build mountains, trenches, and volcanoes yourself."}
+  ],
+  pretest:[
+   {q:"Earth's center is called the…", o:["Crust","Mantle","Core","Shell"], a:2, lesson:1, why:"Liquid outer core, solid inner core — iron and nickel."},
+   {q:"Rocks are sorted into three families based on…", o:["Color","How they formed","Size","Where they're found"], a:1, lesson:3, why:"Igneous (cooled), sedimentary (layered sediments), metamorphic (heat + pressure)."},
+   {q:"Breaking rock into smaller pieces is called…", o:["Weathering","Deposition","Melting","Mining"], a:0, lesson:4, why:"Weathering breaks it down; erosion carries it away; deposition drops it."},
+   {q:"Earthquakes and volcanoes are caused by the movement of…", o:["The moon","Lithospheric plates","Ocean tides","Wind"], a:1, lesson:7, why:"Plate boundaries are where the crust grinds, collides, and erupts."},
+   {q:"Soil contains weathered rock plus…", o:["Plastic","Decomposed organic material","Pure sand","Lava"], a:1, lesson:9, why:"The organic half — humus — is what makes soil alive and fertile."}
+  ]
+},
 u6:{ sym:"♻️", num:6, name:"Natural Resources", std:"S6E6", color:"var(--u1)", soft:"var(--u1soft)", hex:"#2f7a4d", soon:true,
   blurb:"Renewable vs. nonrenewable energy, protecting water, soil, and air, and the evidence behind rising global temperatures.",
   lessons:[], quiz:[], vocab:[], videos:[], pretest:[] }
@@ -1759,7 +1822,31 @@ const ACTIVITIES = {
  sort:{b:["Cold front","Warm front"],items:[["Brief, violent thunderstorms",0],["Temperature drops afterward",0],["Sky clears quickly behind it",0],["Steep boundary — air shoved up fast",0],["Hours of steady, gentle rain",1],["Temperature rises afterward",1],["Gentle, gradual slope of air",1],["Drizzle ahead of the boundary",1]]}},
 "S6E4.e":{match:[["Hurricane fuel","Moisture evaporating from warm ocean water"],["The eye","Calm, low-pressure center of the storm"],["Landfall","When the storm crosses onto land — and starts to weaken"],["Hurricane season","Late summer, when the ocean is warmest"],["Storm surge","Ocean water pushed ashore by the storm"]],
  blank:[{s:"Hurricanes need ocean water warmer than about ___°F.",w:["80","40","32"],a:0},{s:"Over land, hurricanes ___ because their fuel is cut off.",w:["weaken","strengthen","freeze"],a:0},{s:"Moisture evaporating from the ___ powers weather patterns and hurricanes.",w:["ocean","desert","moon"],a:0},{s:"The calm center of a hurricane is the ___.",w:["eye","ear","edge"],a:0}],
- sort:{b:["Makes a hurricane STRONGER","Makes a hurricane WEAKER"],items:[["Very warm ocean water",0],["Lots of evaporation",0],["Staying over the open tropical sea",0],["Late-summer ocean heat",0],["Crossing onto land",1],["Moving over cold water",1],["Running out of moisture",1],["Reaching cool northern seas",1]]}}
+ sort:{b:["Makes a hurricane STRONGER","Makes a hurricane WEAKER"],items:[["Very warm ocean water",0],["Lots of evaporation",0],["Staying over the open tropical sea",0],["Late-summer ocean heat",0],["Crossing onto land",1],["Moving over cold water",1],["Running out of moisture",1],["Reaching cool northern seas",1]]}},
+"S6E5.a":{match:[["Crust","Thin rocky layer we live on"],["Mantle","Thickest layer — slowly flowing hot rock"],["Outer core","LIQUID iron & nickel"],["Inner core","Solid, hottest — crushed by pressure"],["Going deeper","Temperature and density increase"]],
+ blank:[{s:"Earth's thickest layer is the ___.",w:["mantle","crust","core"],a:0},{s:"The outer core is ___ iron and nickel.",w:["liquid","solid","frozen"],a:0},{s:"The deeper you go, the ___ it gets.",w:["hotter","colder","quieter"],a:0},{s:"The crust is thinnest under the ___.",w:["oceans","mountains","deserts"],a:0}],
+ sort:{b:["Crust","Mantle","Core"],items:[["Where we live",0],["Thinnest layer",0],["Thickest layer",1],["Slowly flowing rock",1],["Liquid outer part",2],["Solid iron center",2]]}},
+"S6E5.b":{match:[["Mineral","Natural, inorganic, crystal structure"],["Hardness","Tested by scratching — Mohs scale"],["Streak","The color of a mineral's powder"],["Luster","How shiny a surface looks"],["Rocks","Made of one or more minerals"]],
+ blank:[{s:"Diamond is a ___ on the Mohs scale.",w:["10","1","5"],a:0},{s:"A mineral's ___ is the color of its powder.",w:["streak","luster","cleavage"],a:0},{s:"Granite is a rock made of several ___.",w:["minerals","fossils","soils"],a:0},{s:"The LEAST reliable mineral clue is ___.",w:["color","hardness","streak"],a:0}],
+ sort:{b:["Is a mineral","Is NOT a mineral"],items:[["Quartz",0],["Diamond",0],["Talc",0],["Halite (rock salt)",0],["Wood",1],["Plastic",1],["A seashell (once living)",1],["Glass (no crystal structure)",1]]}},
+"S6E5.c":{match:[["Igneous","Cooled from magma or lava"],["Sedimentary","Compacted, cemented layers — holds fossils"],["Metamorphic","Transformed by heat and pressure"],["Granite","Igneous rock cooled slowly underground"],["Marble","Metamorphic rock made from limestone"]],
+ blank:[{s:"Rocks are classified by how they ___.",w:["formed","look","taste"],a:0},{s:"Fossils are found in ___ rock.",w:["sedimentary","igneous","metamorphic"],a:0},{s:"Heat and pressure create ___ rock.",w:["metamorphic","sedimentary","liquid"],a:0},{s:"Lava cooling quickly makes ___ crystals.",w:["small","huge","no"],a:0}],
+ sort:{b:["Igneous","Sedimentary","Metamorphic"],items:[["Cooled lava (basalt)",0],["Granite",0],["Sandstone",1],["Limestone with shell bits",1],["Marble",2],["Slate (squeezed shale)",2]]}},
+"S6E5.d":{match:[["Mechanical weathering","Breaking rock into smaller pieces of the same stuff"],["Chemical weathering","Changing rock into new substances"],["Ice wedging","Freezing water prying cracks open"],["Oxidation","Iron-rich rock rusting red"],["Erosion","Carrying the broken pieces away"]],
+ blank:[{s:"Water freezing in cracks is ___ wedging.",w:["ice","root","sand"],a:0},{s:"Acid rain dissolving limestone is ___ weathering.",w:["chemical","mechanical","gentle"],a:0},{s:"The #1 agent of erosion is moving ___.",w:["water","air","lava"],a:0},{s:"Deposition is when sediment gets ___.",w:["dropped","created","melted"],a:0}],
+ sort:{b:["Mechanical weathering","Chemical weathering","Erosion or deposition"],items:[["Ice wedging a boulder apart",0],["Tree roots cracking a sidewalk",0],["Rust turning rocks red",1],["Acid rain pitting a statue",1],["A river carrying sand away",2],["A delta forming at a river mouth",2]]}},
+"S6E5.e":{match:[["Deforestation","Removing trees — erosion speeds up"],["Mining","Removing rock and soil on a huge scale"],["Dam","Traps sediment rivers once delivered"],["Terracing","Farming steps that SLOW hillside erosion"],["Glaciers & rivers","Nature's own surface re-shapers"]],
+ blank:[{s:"Plant roots ___ soil in place.",w:["hold","push","melt"],a:0},{s:"Clearing a hillside of plants makes erosion ___.",w:["faster","slower","impossible"],a:0},{s:"Rivers naturally carve ___ over long ages.",w:["canyons","clouds","minerals"],a:0},{s:"Cover crops and silt fences help ___ soil.",w:["protect","remove","burn"],a:0}],
+ sort:{b:["Speeds up surface change","Slows or prevents erosion"],items:[["Clear-cutting a forest",0],["Strip mining",0],["Construction on bare soil",0],["Overgrazing a field",0],["Replanting trees",1],["Terracing a slope",1],["Planting cover crops",1],["Silt fences at a build site",1]]}},
+"S6E5.f":{match:[["Divergent boundary","Plates pull apart — new crust forms"],["Convergent boundary","Plates collide — mountains, trenches, volcanoes"],["Transform boundary","Plates grind sideways — earthquakes"],["Ring of Fire","Volcano-and-quake zone circling the Pacific"],["Lithospheric plates","Slabs of Earth's shell riding the mantle"]],
+ blank:[{s:"Plates move about as fast as your ___ grow.",w:["fingernails","cars","rivers"],a:0},{s:"Most earthquakes happen at plate ___.",w:["boundaries","centers","beaches"],a:0},{s:"Colliding plates can crumple crust into ___.",w:["mountains","oceans","sand"],a:0},{s:"The San Andreas Fault is a ___ boundary.",w:["transform","divergent","quiet"],a:0}],
+ sort:{b:["Divergent (apart)","Convergent (collide)","Transform (slide past)"],items:[["Mid-ocean ridge forming",0],["New sea floor created",0],["The Himalayas rising",1],["A deep ocean trench",1],["San Andreas Fault",2],["Plates grinding sideways",2]]}},
+"S6E5.g":{match:[["Fossil","Preserved remains or traces of ancient life"],["Sedimentary layers","Where fossils form — oldest on the bottom"],["Marine fossils on mountains","Evidence the land was once sea floor"],["Tropical fossils in cold places","Evidence climate (and position) changed"],["Fossil maps & data","How scientists argue Earth changed"]],
+ blank:[{s:"In undisturbed layers, the ___ fossils are on the bottom.",w:["oldest","newest","biggest"],a:0},{s:"Seashells on Everest prove the rock was once a ___ floor.",w:["sea","forest","desert"],a:0},{s:"Fossils form best in ___ rock.",w:["sedimentary","igneous","melted"],a:0},{s:"Fossils give evidence that Earth's surface and ___ change.",w:["climate","name","moon"],a:0}],
+ sort:{b:["Good evidence Earth changed","Not fossil evidence"],items:[["Fish fossils in a desert",0],["Ferns fossilized in Antarctica",0],["Shells in mountain rock",0],["Coral fossils far from any ocean",0],["A rock that looks cool",1],["A shiny mineral",1],["Yesterday's footprints in mud",1],["A plastic toy in the yard",1]]}},
+"S6E5.h":{match:[["Soil","Weathered rock + decomposed organic material"],["Humus","The dark, decayed organic part"],["Topsoil (A horizon)","Where roots and most life live"],["C horizon","Chunks of weathered parent rock"],["Bedrock","The solid rock below it all"]],
+ blank:[{s:"The organic part of soil is called ___.",w:["humus","lava","clay"],a:0},{s:"Good topsoil takes ___ to form.",w:["centuries","minutes","one storm"],a:0},{s:"Soil forms as rock ___ and life decays.",w:["weathers","freezes","votes"],a:0},{s:"The deepest soil layer sits on solid ___.",w:["bedrock","sand","water"],a:0}],
+ sort:{b:["Near the TOP of a soil profile","Near the BOTTOM"],items:[["Fallen leaves and humus",0],["Dark topsoil",0],["Earthworms and roots",0],["Chunks of weathered rock",1],["The C horizon",1],["Solid bedrock",1]]}}
 };
 function stdUnit(std){ return STD_LIST[std.split('.')[0]].unit; }
 function unitActs(uid){ return Object.keys(ACTIVITIES).filter(s=>stdUnit(s)===uid); }
@@ -2245,7 +2332,12 @@ const STD_TAGS = {
  "u4:L0":["S6E4.a"], "u4:L1":["S6E4.a"], "u4:L2":["S6E4.b"], "u4:L3":["S6E4.c"],
  "u4:L4":["S6E4.d"], "u4:L5":["S6E4.d"], "u4:L6":["S6E4.e"],
  /* --- Unit 4 videos --- */
- "u4:V0":["S6E4.a"], "u4:V1":["S6E4.b"], "u4:V2":["S6E4.c"], "u4:V3":["S6E4.d"], "u4:V4":["S6E4.e"]
+ "u4:V0":["S6E4.a"], "u4:V1":["S6E4.b"], "u4:V2":["S6E4.c"], "u4:V3":["S6E4.d"], "u4:V4":["S6E4.e"],
+ /* --- Unit 5 lessons --- */
+ "u5:L0":["S6E5.a"], "u5:L1":["S6E5.b"], "u5:L2":["S6E5.c"], "u5:L3":["S6E5.d"],
+ "u5:L4":["S6E5.d"], "u5:L5":["S6E5.e"], "u5:L6":["S6E5.f"], "u5:L7":["S6E5.g"], "u5:L8":["S6E5.h"],
+ /* --- Unit 5 videos --- */
+ "u5:V0":["S6E5.a"], "u5:V1":["S6E5.b"], "u5:V2":["S6E5.c"], "u5:V3":["S6E5.d","S6E5.e"], "u5:V4":["S6E5.g"], "u5:V5":["S6E5.f"]
 };
 
 /* ---------- per-question sub-standard tags for the practice quizzes
@@ -2255,7 +2347,8 @@ const QUIZ_TAGS = {
  u2:["S6E2.a","S6E2.a","S6E2.a","S6E2.b","S6E2.b","S6E2.b","S6E2.c","S6E2.c","S6E2.c","S6E2.c"],
  u3:["S6E3.a","S6E3.a","S6E3.a","S6E3.b","S6E3.b","S6E3.c","S6E3.c","S6E3.d","S6E3.d","S6E3.d"],
  u4:["S6E4.a","S6E4.a","S6E4.a","S6E4.b","S6E4.b","S6E4.c","S6E4.c","S6E4.d","S6E4.d","S6E4.e"],
- u5:[], u6:[]
+ u5:["S6E5.a","S6E5.b","S6E5.c","S6E5.c","S6E5.d","S6E5.e","S6E5.f","S6E5.f","S6E5.g","S6E5.h"],
+ u6:[]
 };
 
 /* ---------- Resolver: selected sub-standards → concrete content ---------- */
@@ -2361,7 +2454,39 @@ const WARMUPS = {
 "S6E4.e":[
  {q:"Why do hurricanes form in late summer instead of spring?", a:"The ocean needs months of solar heating to pass ~80°F — warm water is the fuel."},
  {q:"A hurricane is a 'heat engine.' Explain the engine's fuel, fire, and exhaust.", a:"Fuel: warm ocean moisture. Fire: condensation releasing heat, driving updrafts. Exhaust: outflow aloft, rain bands."},
- {q:"Why does a hurricane die within days of moving inland, while a thunderstorm can form anywhere?", a:"Hurricanes need continuous warm-ocean evaporation; storms just need one good updraft of humid air."}]
+ {q:"Why does a hurricane die within days of moving inland, while a thunderstorm can form anywhere?", a:"Hurricanes need continuous warm-ocean evaporation; storms just need one good updraft of humid air."}],
+"S6E5.a":[
+ {q:"Nobody has ever drilled through the crust. So how do we know what's inside Earth?", a:"Earthquake waves change speed/direction through different materials — plus magnetism, density math, and lava samples."},
+ {q:"Compare Earth's layers to a piece of food. How far does your comparison hold up?", a:"Apple/peach/egg all work: thin skin (crust), thick flesh (mantle), pit (core). Listen for temperature/density increasing inward."},
+ {q:"Why is the inner core SOLID even though it's the hottest layer?", a:"Crushing pressure forces the iron solid despite the heat."}],
+"S6E5.b":[
+ {q:"You find a shiny crystal on a hike. What tests would tell you what mineral it is?", a:"Scratch test (hardness), streak plate, luster, cleavage — color last, it lies."},
+ {q:"Why is color the WORST way to identify a mineral?", a:"Many minerals share colors and one mineral can come in many colors (quartz!). Streak and hardness are more reliable."},
+ {q:"Rocks are like cookies. Explain why minerals are the ingredients.", a:"Granite = quartz + feldspar + mica, like a cookie = flour + sugar + chips. Different recipes, different rocks."}],
+"S6E5.c":[
+ {q:"A granite countertop, a limestone wall, and a marble statue: tell each rock's origin story.", a:"Granite: magma cooled slowly. Limestone: sediment/shells compacted. Marble: limestone baked and squeezed."},
+ {q:"Why are there no dinosaur fossils in igneous rock?", a:"Igneous rock starts as melted rock — anything in it burns. Fossils survive only gentle sediment burial."},
+ {q:"Explain how one boulder could be ALL THREE rock types over a billion years.", a:"Cooled lava (igneous) → weathered to sand → sandstone (sedimentary) → buried and squeezed (metamorphic) → melted again…"}],
+"S6E5.d":[
+ {q:"Why do potholes explode across roads every winter?", a:"Ice wedging: water seeps in cracks, freezes, expands, pries the pavement apart — mechanical weathering on a schedule."},
+ {q:"A 100-year-old marble gravestone is hard to read, but a granite one nearby is sharp. Why?", a:"Marble (calcite) dissolves in acid rain — chemical weathering; granite resists it."},
+ {q:"Name every weathering attack a mountain boulder faces in one year.", a:"Freeze-thaw, roots, windblown grit, acid rain, oxidation, dissolving — listen for mechanical AND chemical."}],
+"S6E5.e":[
+ {q:"After a hillside neighborhood was built, the creek below turned muddy after every rain. What happened?", a:"Construction stripped plants; rain now erodes bare soil into the creek. Human activity sped up erosion."},
+ {q:"How does the Grand Canyon prove that water beats rock?", a:"The Colorado River weathered and eroded a mile of rock over millions of years — tiny force, endless time."},
+ {q:"Design a farm on a steep hill that DOESN'T lose its soil.", a:"Terraces, contour plowing, cover crops, windbreaks — listen for slowing water and holding soil."}],
+"S6E5.f":[
+ {q:"Why do earthquake maps basically draw the outlines of the plates?", a:"Quakes cluster where plates touch and grind — the boundaries ARE the action zones."},
+ {q:"The Himalayas are still growing a few millimeters a year. What's pushing them up?", a:"The Indian plate is still colliding with Asia — a convergent boundary in slow motion."},
+ {q:"The Atlantic Ocean gets wider every year. Explain who's responsible.", a:"The Mid-Atlantic Ridge — a divergent boundary making new sea floor between the spreading plates."}],
+"S6E5.g":[
+ {q:"You find a fossil seashell in a rock at 8,000 feet elevation. Build the argument for how it got there.", a:"Sediment buried the shell on a sea floor → rock formed → plate collision uplifted it. Fossil + elevation = surface change."},
+ {q:"What could fossils tell us about Georgia's deep past?", a:"Marine fossils across south Georgia show it was sea floor; coal and plant fossils show ancient swamps — climate and coastlines moved."},
+ {q:"Why are sedimentary layers like the pages of a history book?", a:"Deposited in order, oldest at the bottom — each layer records its environment, with fossils as the illustrations."}],
+"S6E5.h":[
+ {q:"Why can't we just manufacture new topsoil when we wear it out?", a:"Real soil needs centuries of weathering rock + generations of decomposing life. Listen for BOTH ingredients."},
+ {q:"Shake garden soil in a jar of water and let it settle overnight. Predict the layers.", a:"Sand at the bottom, silt, then clay, with organic bits floating — soil is layered weathered rock + organic matter."},
+ {q:"Describe everything a shovelful of forest soil contains.", a:"Mineral grains (weathered rock), humus, roots, fungi, insects, water, air — a living mixture in layers."}]
 };
 
 /* "many right answers" — any well-defended choice counts */
@@ -2433,7 +2558,39 @@ const WARMUPS_MULTI = {
 "S6E4.e":[
  {q:"Hurricanes are getting names — should tornadoes get names too? Argue it.", a:"Hurricanes: days of warning, big areas. Tornadoes: minutes, local — naming impractical? Either side with storm-behavior facts."},
  {q:"Which hurricane defense would you fund first: better forecasts, stronger buildings, or wetland restoration?", a:"All defensible — listen for how each interrupts the storm's impact chain."},
- {q:"Could a hurricane ever hit Atlanta at full strength? Defend your answer.", a:"No — 250+ miles inland cuts the warm-water fuel; storms weaken to remnants (still dangerous rain). Reward fuel reasoning."}]
+ {q:"Could a hurricane ever hit Atlanta at full strength? Defend your answer.", a:"No — 250+ miles inland cuts the warm-water fuel; storms weaken to remnants (still dangerous rain). Reward fuel reasoning."}],
+"S6E5.a":[
+ {q:"You can dig a tunnel to any ONE layer of Earth (safely). Which do you visit and why?", a:"Any defended pick: mantle (flowing rock!), outer core (liquid metal ocean making our magnetic field), inner core (solid mystery)."},
+ {q:"Which layer matters most to your daily life? Argue it.", a:"Crust (we live on it), mantle (drives plates), outer core (magnetic shield from solar wind!). All championable."},
+ {q:"Invent a better food analogy for Earth's layers than the apple. Defend yours.", a:"Peach, egg, jawbreaker, lava cake — grade on matching thin crust, thick middle, distinct center."}],
+"S6E5.b":[
+ {q:"Diamond (hardness 10) or gold (hardness 2.5): which mineral is more useful? Defend it.", a:"Diamond: cutting/drilling. Gold: conducts, never tarnishes, money. Any property-based argument."},
+ {q:"You can have a mountain of any one mineral. Which do you choose and why?", a:"Quartz (glass/electronics), halite (salt!), diamond (value), iron ore — reward use-based reasoning."},
+ {q:"Why do geologists carry a porcelain tile and a steel knife?", a:"Streak plate and scratch tester — field tools for identifying minerals by streak and hardness."}],
+"S6E5.c":[
+ {q:"Which rock family tells the best stories? Defend your pick.", a:"Sedimentary (fossils, layers), igneous (eruptions), metamorphic (buried journeys) — any defended family."},
+ {q:"Design a building using all three rock families. What goes where, and why?", a:"Granite foundation (igneous, tough), limestone/sandstone walls (workable), marble/slate finishes (metamorphic beauty). Use-based reasoning wins."},
+ {q:"If rocks could talk, which would have the wildest autobiography: granite, sandstone, or marble?", a:"Any! Trace its rock-cycle journey — melting, layering, baking. Reward correct family origins."}],
+"S6E5.d":[
+ {q:"Which is the mightier destroyer: ice or acid? Defend your answer.", a:"Ice wedging shatters mountains; chemical weathering dissolves caves and statues. Either side with examples."},
+ {q:"Where in our town would you find the best examples of weathering? Defend your spots.", a:"Old gravestones, cracked sidewalks, potholes, rusty bridges, statue faces — match each to mechanical or chemical."},
+ {q:"Could a statue survive 1,000 years outdoors? Choose its material and location to maximize survival.", a:"Granite in a cold DRY place (or indoors!) — minimize acid rain, freeze-thaw, and abrasion. Reward weathering logic."}],
+"S6E5.e":[
+ {q:"Humans now move more rock and soil per year than all rivers combined. Should that worry us? Argue it.", a:"Either side: speed of change vs engineering benefits — listen for erosion, habitat, and soil-loss consequences."},
+ {q:"Which human change to Earth's surface is most impressive — and which is most reckless?", a:"Any defended picks: dams, mines, cities, terraced mountains vs deforestation, strip mines, paved floodplains."},
+ {q:"A developer wants to build on a steep forested hill. What conditions would you set, and why?", a:"Keep trees where possible, silt fences, terracing, replanting, drainage — listen for erosion-control reasoning."}],
+"S6E5.f":[
+ {q:"Volcano tour guide or earthquake engineer: which job, and what plate boundary do you work at?", a:"Volcanoes: convergent zones/Ring of Fire. Quakes: transform faults like San Andreas. Match job to boundary."},
+ {q:"In 100 million years, the continents will have rearranged. Predict ONE change and defend it.", a:"Atlantic wider (divergent), Africa-Europe colliding (new mountains), Australia drifting north — any plate-motion logic."},
+ {q:"Which would you rather live near: a divergent, convergent, or transform boundary? Defend the risk.", a:"Divergent (Iceland: geothermal but eruptions), convergent (mountains + volcanoes + big quakes), transform (quakes only). Any reasoned trade-off."}],
+"S6E5.g":[
+ {q:"What's the most convincing single fossil discovery you could make to prove Georgia was once underwater?", a:"Whale/shark/coral fossils inland — marine life can't live on land. Reward evidence-to-claim reasoning."},
+ {q:"Are fossils more like photographs, footprints, or time capsules? Defend your metaphor.", a:"Any metaphor graded on accuracy: preserved remains/traces recording past life and environments."},
+ {q:"A million years from now, what 'fossil' of YOUR life might survive — and what would it prove?", a:"Creative: bones, fillings, phone in sediment… listen for burial + sediment + what future geologists could conclude."}],
+"S6E5.h":[
+ {q:"Soil or oil: which resource should worry us more if we waste it? Argue it.", a:"Both slow to form! Soil grows food and takes centuries; oil takes millions of years. Either defended side."},
+ {q:"Design the perfect soil for a garden. What's your recipe?", a:"Mineral mix (sand/silt/clay), generous humus, water, air, worms — listen for weathered rock + organic matter."},
+ {q:"Why do farmers fight harder for their topsoil than for almost anything else?", a:"Centuries to form, holds nutrients and water, grows everything — lose it and the farm is done."}]
 };
 
 let WU = null;
@@ -3165,7 +3322,19 @@ u4:[
  {std:"S6E4.d", q:"Brief violent thunderstorms rolled through, and now the air is cooler and the sky is clearing. What just passed?", o:["A warm front","A cold front","A sea breeze","The jet stream"], a:1, why:"Cold fronts shove warm air up fast: short intense storms, then cooler, drier, clearer air."},
  {std:"S6E4.e", q:"A hurricane crossing from warm ocean onto land rapidly weakens because…", o:["Trees block the wind","It loses its fuel — moisture evaporating from warm ocean water","Cities absorb storms","Gravity is stronger on land"], a:1, why:"The storm is an evaporation-powered engine. Cut off the warm-water fuel line and it winds down."}
 ],
-u5:[], u6:[]
+u5:[
+ {std:"S6E5.a", q:"Which layer of Earth is LIQUID?", o:["Crust","Mantle","Outer core","Inner core"], a:2, why:"The outer core is molten iron and nickel — its churning generates Earth's magnetic field. The inner core is solid from pressure."},
+ {std:"S6E5.b", q:"A geologist scratches an unknown mineral with her fingernail, a penny, and a steel nail. She is testing its…", o:["Color","Hardness","Streak","Magnetism"], a:1, why:"Scratch tests place a mineral on the Mohs hardness scale — a key identification property."},
+ {std:"S6E5.c", q:"A rock made of visible layers with seashell fragments inside formed by…", o:["Cooling lava","Sediments being compacted and cemented","Heat and pressure deep underground","A meteor impact"], a:1, why:"Layers + fossils = sedimentary. Sediments piled up, squeezed, and glued together over time."},
+ {std:"S6E5.c", q:"Limestone buried deep and subjected to intense heat and pressure becomes marble. Marble is…", o:["Igneous","Sedimentary","Metamorphic","Mineral-free"], a:2, why:"Metamorphic = changed in form. Heat and pressure transformed the original rock without melting it."},
+ {std:"S6E5.d", q:"A red-brown crust forms on iron-rich rocks left outside. This is…", o:["Mechanical weathering","Chemical weathering (oxidation)","Erosion","Deposition"], a:1, why:"Rusting creates a NEW substance — the chemical kind of weathering."},
+ {std:"S6E5.e", q:"After a dam is built, beaches downstream begin shrinking. Why?", o:["The ocean rose","The dam traps the sediment that rivers once delivered to rebuild the beaches","Fish ate the sand","Waves stopped"], a:1, why:"Humans changed the deposition system: no sediment supply, no beach rebuilding — erosion wins."},
+ {std:"S6E5.f", q:"Two continental plates collide head-on for millions of years. The most likely result is…", o:["A flat plain","A towering mountain range like the Himalayas","A new ocean","Nothing"], a:1, why:"Convergent collision crumples crust upward — the Himalayas are India still plowing into Asia."},
+ {std:"S6E5.f", q:"California's San Andreas Fault, where two plates grind PAST each other, is famous for…", o:["Volcanoes","Earthquakes","Glaciers","Geysers"], a:1, why:"Transform boundaries stick, strain, and slip — releasing energy as earthquakes."},
+ {std:"S6E5.g", q:"Fossils of tropical ferns are found in Antarctica. The best conclusion is…", o:["Ferns once grew in ice","Antarctica's climate (and position) was once warm — Earth's surface changes","Someone planted them","Fossils form in snow"], a:1, why:"Fossil evidence + plate motion: that land was once warm and positioned differently. Climates and surfaces change."},
+ {std:"S6E5.h", q:"In a soil profile, which layer is richest in decomposed organic material (humus)?", o:["Bedrock","C horizon","The dark top layers (O and A)","Subsoil"], a:2, why:"Organic litter decays at the surface, making the dark, fertile topsoil where roots thrive."}
+],
+u6:[]
 };
 
 
@@ -3312,7 +3481,15 @@ const STD_TEACH = {
  "S6E4.b":{fig:'heattransfer', teach:"The sun heats air, land, and water at different rates. Land heats up fast and cools fast; water heats and cools slowly (it takes far more energy to change temperature). Air barely absorbs sunlight directly — it's warmed mostly from below by the heated surface. This explains scorching sand next to cool ocean, mild coastal climates, and big desert temperature swings."},
  "S6E4.c":{fig:null, teach:"Wind is air flowing from high pressure to low pressure, and pressure differences come from unequal heating. Local scale: sea breezes — land heats faster by day, warm air rises, cool sea air flows in. Global scale: warm equatorial air rises, cold polar air sinks, and Earth's rotation curves the flow (the Coriolis effect), creating wind belts like the trade winds and the jet stream that steers weather systems."},
  "S6E4.d":{fig:null, teach:"An air mass is a huge body of air with similar temperature and humidity; a front is the boundary where two air masses collide — and where weather happens. Cold fronts shove warm air up fast: brief heavy storms (sometimes tornadoes), then cooler clear skies. Warm fronts slide up gently: long steady rain, then warmth. High pressure usually means fair weather; falling pressure warns that storms are coming."},
- "S6E4.e":{fig:null, teach:"Moisture evaporating from the ocean loads the atmosphere with water and heat — it drives everyday rain patterns and, at maximum volume, hurricanes. Over ocean water warmer than about 80°F, evaporation feeds rising air; condensation releases heat that powers more rising air, spinning a storm around a calm low-pressure eye. Cut the fuel line — landfall or cold water — and the hurricane weakens. That's why hurricane season peaks in late summer, when the ocean is warmest."}
+ "S6E4.e":{fig:null, teach:"Moisture evaporating from the ocean loads the atmosphere with water and heat — it drives everyday rain patterns and, at maximum volume, hurricanes. Over ocean water warmer than about 80°F, evaporation feeds rising air; condensation releases heat that powers more rising air, spinning a storm around a calm low-pressure eye. Cut the fuel line — landfall or cold water — and the hurricane weakens. That's why hurricane season peaks in late summer, when the ocean is warmest."},
+ "S6E5.a":{fig:null, teach:"Earth has four main layers, each hotter and denser than the one above: the thin rocky crust we live on, the mantle (the thickest layer — hot rock flowing very slowly), the liquid iron-nickel outer core (whose churning creates Earth's magnetic field), and the solid inner core — hottest of all, squeezed solid by immense pressure."},
+ "S6E5.b":{fig:null, teach:"A mineral is a naturally occurring, inorganic solid with a definite chemical makeup and crystal structure. Identify minerals by their properties: hardness (the Mohs scale, talc 1 to diamond 10), streak (the color of the powder), luster, and cleavage — color is the least reliable clue. Rocks are built FROM minerals: granite, for example, is quartz + feldspar + mica."},
+ "S6E5.c":{fig:null, teach:"Rocks are classified by how they FORMED. Igneous: cooled from melted rock (slow underground = big crystals like granite; fast at the surface = small crystals like basalt). Sedimentary: sediments compacted and cemented into layers — the family that preserves fossils. Metamorphic: existing rock transformed by heat and pressure (limestone → marble). The rock cycle connects them: any rock can melt, weather, or transform into any other, endlessly."},
+ "S6E5.d":{fig:null, teach:"Weathering breaks rock down in place — mechanically (smaller pieces of the same material: ice wedging, plant roots, abrasion) or chemically (new substances: acid rain dissolving limestone, oxidation rusting iron). Erosion then carries the pieces away — water, wind, glaciers, and gravity are the agents — and deposition drops them somewhere new: deltas, dunes, beaches, moraines. Weathering breaks it, erosion takes it, deposition drops it."},
+ "S6E5.e":{fig:null, teach:"Earth's surface is always being re-edited. Natural processes — weathering, erosion, deposition — carve canyons and rebuild coastlines over long ages. Human activity edits faster: mining removes hillsides, construction and deforestation strip the plants whose roots hold soil, dams trap river sediment. Practices like replanting, terracing, and cover crops slow the loss."},
+ "S6E5.f":{fig:null, teach:"Earth's outer shell is broken into lithospheric plates that creep along on the soft mantle. The drama happens at the boundaries: divergent (plates pull apart — mid-ocean ridges, new crust), convergent (plates collide — mountain ranges, trenches, volcanoes), and transform (plates grind sideways — earthquakes, like the San Andreas Fault). That's why earthquakes and volcanic eruptions cluster along plate edges, such as the Pacific Ring of Fire."},
+ "S6E5.g":{fig:null, teach:"Fossils — preserved remains and traces of ancient life — form mostly in sedimentary layers, oldest on the bottom. They're evidence that Earth's surface and climate change: marine fossils on mountaintops mean that rock was once sea floor before plates lifted it; tropical fossils in polar lands mean those places were once warm. Maps of fossil finds let scientists argue exactly how the surface has rearranged."},
+ "S6E5.h":{fig:null, teach:"Soil is a layered blend of weathered rock and decomposed organic material (humus), plus water and air. From top down: the O horizon (organic litter), A horizon (dark, fertile topsoil), B horizon (subsoil), C horizon (chunks of weathered parent rock), then bedrock. Because good topsoil takes centuries to build, protecting it matters."}
 };
 function stdDisplayName(std){
   const [parent, letter] = std.split('.');
