@@ -472,6 +472,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     </div>
     <p class="startnote">Students with an assignment link from their teacher: just open that link — it brings you straight to your checklist.</p>
     <p class="startnote">Teachers: print-ready PDFs (textbook chapters in English, Spanish &amp; scaffolded editions, activities, and review sheets) live in the <a href="#print" onclick="go('print');return false" style="font-weight:700">🖨 printable library</a>.</p>
+    <p class="startnote">Teach another grade? <a href="earth_science.html" style="font-weight:700">🌍 Earth &amp; Space Science (6th)</a> &nbsp;·&nbsp; <a href="life_science.html" style="font-weight:700">🧬 Life Science (7th)</a> — same engine, rolling out now.</p>
   </div>
 </section>
 
@@ -762,7 +763,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
   </div>
 </div>
 
-<div class="footer">Physical Science Hub · Aligned to Georgia Standards of Excellence S8P1–S8P5 · Study guides, games &amp; practice for the classroom</div>
+<div class="footer">Physical Science Hub · Aligned to Georgia Standards of Excellence S8P1–S8P5 · Study guides, games &amp; practice for the classroom · <a href="earth_science.html">Earth &amp; Space Science Hub</a> · <a href="life_science.html">Life Science Hub</a></div>
 <div id="toast" role="status" aria-live="polite"></div>
 </div>
 
@@ -1434,6 +1435,19 @@ function buildUnit(id){
   const page = document.getElementById('page-'+id);
   page.style.setProperty('--ac', u.hex);
   page.style.setProperty('--acsoft', u.soft);
+  if(u.soon){
+    page.innerHTML = `
+    <div class="unithead" style="--ac:${u.hex};background:${u.hex}">
+      <div class="bigsym">${u.sym}</div>
+      <div><span class="pill">UNIT ${u.num} · GEORGIA ${u.std}</span>
+        <h1 style="color:#fff">${u.name}</h1><p>${u.blurb||''}</p></div>
+    </div>
+    <div class="card" style="margin-top:24px;max-width:720px">
+      <h3>🚧 This unit is being built</h3>
+      <p>Lessons, quizzes, games, and activities for <b>${u.std}</b> are in production and will appear here soon — the same full treatment as the finished units. Check back shortly!</p>
+    </div>`;
+    return;
+  }
   page.innerHTML = `
   <div class="unithead" style="--ac:${u.hex};background:${u.hex}">
     <div class="bigsym">${u.sym}</div>
@@ -1480,6 +1494,11 @@ function unitGames(uid){ return Object.entries(GAMES).filter(([k,g])=>(g.unit||k
 function renderGamePicker(uid, startKey){
   const u = UNITS[uid];
   const games = unitGames(uid);
+  if(!games.length){
+    const pane = document.getElementById(uid+'-game');
+    if(pane) pane.innerHTML = `<div class="card" style="max-width:680px"><h3>🚧 Games coming soon</h3><p>Minigames for this unit are in production — in the meantime, hit the Practice tab and the quiz!</p></div>`;
+    return;
+  }
   const key = startKey || games[0][0];
   const pane = document.getElementById(uid+'-game');
   pane.innerHTML = `
@@ -3029,6 +3048,7 @@ function renderActPicker(uid, startStd){
   const firstBtn = tabs.querySelector(`.subtab[data-std="${first}"]`);
   if(firstBtn) firstBtn.classList.add('active');
   if(first) startActivity(first, uid+'-actarea');
+  else document.getElementById(uid+'-actarea').innerHTML = `<div class="card" style="max-width:680px"><p>🚧 Practice sets for this unit are in production — coming soon!</p></div>`;
 }
 
 function startActivity(std, areaId){
@@ -3326,6 +3346,7 @@ function startToday10(){
   document.getElementById('vmodecards').classList.remove('active');
   document.getElementById('vmodequiz').classList.remove('active');
   const all = fullDeck(), missed = missedGet();
+  if(!all.length){ document.getElementById('vocabarea').innerHTML = `<div class="card" style="max-width:600px"><p>🚧 Vocabulary is on its way!</p></div>`; return; }
   const missedDeck = all.filter(d=>missed[d[0]]);
   const rest = shuffle(all.filter(d=>!missed[d[0]]));
   const deck = [...shuffle(missedDeck), ...rest].slice(0,10);
@@ -3369,6 +3390,7 @@ function startToday10(){
 
 function renderVocab(){
   const deck = vocabDeck();
+  if(!deck.length){ document.getElementById('vocabarea').innerHTML = `<div class="card" style="max-width:600px"><p>🚧 Vocabulary for this unit is on its way!</p></div>`; return; }
   const hex = vState.unit==='all'? '#1B2440' : UNITS[vState.unit].hex;
   const label = vState.unit==='all'? `WHOLE DECK · ${deck.length} TERMS` : `${UNITS[vState.unit].name.toUpperCase()} · ${deck.length} TERMS`;
   if(vState.mode==='cards'){
