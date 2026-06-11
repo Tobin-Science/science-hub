@@ -1165,9 +1165,67 @@ u3:{ sym:"💧", num:3, name:"Water on Earth", std:"S6E3", color:"var(--u3)", so
    {q:"Tides are mainly caused by…", o:["Storms","The moon's gravity","Boats","Rivers"], a:1, lesson:7, why:"The moon's pull creates the ocean bulges we ride through twice a day."}
   ]
 },
-u4:{ sym:"🌪️", num:4, name:"Weather & Climate", std:"S6E4", color:"var(--u4)", soft:"var(--u4soft)", hex:"#159E96", soon:true,
-  blurb:"The atmosphere, winds, fronts, thunderstorms, and hurricanes — why the sky does what it does.",
-  lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
+u4:{ sym:"🌪️", num:4, name:"Weather & Climate", std:"S6E4", color:"var(--u4)", soft:"var(--u4soft)", hex:"#159E96",
+  blurb:"Why does the sky do what it does? It's a story of layered air, uneven heating, colliding air masses, and an ocean that loads the atmosphere with fuel.",
+  lessons:[
+   {t:"Layers of the Atmosphere", body:`Going up: the <b>troposphere</b> (where we live — and where ALL weather happens; temperature drops with height), the <b>stratosphere</b> (home of the <b>ozone layer</b>, which absorbs the sun's harmful UV — temperature rises here because of it), the <b>mesosphere</b> (coldest layer — where meteors burn up), and the <b>thermosphere</b> (super thin, technically scorching — where auroras glow and the ISS orbits).`,
+    callout:["Memory Hook","The Strong Man Threw up: Troposphere, Stratosphere, Mesosphere, Thermosphere — bottom to top."]},
+   {t:"Greenhouse Gases", body:`Some atmospheric gases — <b>carbon dioxide, methane, and water vapor</b> — let sunlight in but trap some of the heat Earth tries to radiate back to space, like the glass of a greenhouse. This natural <b>greenhouse effect</b> is a good thing: without it, Earth would average about 0°F. The concern is the <em>amount</em>: adding more greenhouse gas thickens the heat-trapping blanket.`},
+   {t:"The Sun Heats Unevenly", body:`Sunlight heats <b>land, water, and air at different rates</b>. Land heats up fast and cools fast; <b>water heats and cools slowly</b> (it takes far more energy to warm). Air barely absorbs sunlight directly — it's mostly heated <b>from below</b>, by the warmed surface. That's why beach sand can scorch your feet while the ocean stays cool, and why coastal cities have milder temperature swings than inland ones.`,
+    callout:["Try It","Two pans in the sun, one of soil, one of water, thermometers in each: soil wins the race up AND back down. That demo is the standard."]},
+   {t:"Wind: Air on the Move", body:`Unequal heating creates <b>pressure differences</b>, and air flows from <b>high pressure to low pressure</b> — that flow is <b>wind</b>. Local version: the daytime <b>sea breeze</b> (land heats faster → warm air rises → cool ocean air slides in), reversing at night. Global version: warm equator air rises while cold polar air sinks, and Earth's rotation <b>curves the winds</b> (the <b>Coriolis effect</b>), creating wind belts like the trade winds and the <b>jet stream</b> that steers our weather.`},
+   {t:"Air Masses & Fronts", body:`An <b>air mass</b> is a huge body of air with similar temperature and humidity (cold-dry from Canada, warm-humid from the Gulf). A <b>front</b> is the boundary where two air masses meet — where weather happens. A <b>cold front</b> shoves warm air up fast: brief, heavy storms, then cooler, clearer skies. A <b>warm front</b> slides up gently: hours of steady rain, then warmer air. <b>High pressure</b> generally means fair skies; <b>falling pressure</b> warns of storms.`},
+   {t:"Thunderstorms & Tornadoes", body:`Feed warm, humid air a fast ride upward (often at a cold front) and you build a <b>cumulonimbus</b> cloud: updrafts, lightning, thunder, heavy rain — a <b>thunderstorm</b>. In the strongest storms, wind shear can set the updraft spinning; if that spin tightens into a violent rotating column reaching the ground, it's a <b>tornado</b>. Know the difference: a <b>watch</b> means conditions are right; a <b>warning</b> means one is happening — take shelter.`},
+   {t:"Hurricanes: Ocean-Powered Storms", body:`Hurricanes are giant heat engines fueled by <b>moisture evaporating from warm ocean water</b> (about 80°F or warmer). Rising humid air condenses, releasing heat that powers more rising air — a feedback loop spinning around a calm low-pressure <b>eye</b>. This is the ocean shaping weather at full volume: the same ocean evaporation drives everyday rain patterns too. Over land or cold water, the fuel line is cut and the storm weakens — which is why hurricanes die inland.`,
+    callout:["Georgia Connection","Hurricane season peaks in late summer — exactly when the Atlantic has spent months soaking up solar heat. Warm water IS the fuel."]}
+  ],
+  quiz:[
+   {q:"All of Earth's weather happens in the…", o:["Stratosphere","Troposphere","Mesosphere","Thermosphere"], a:1, why:"The lowest layer holds most of the air and water vapor — clouds, storms, all of it."},
+   {q:"The ozone layer protects us by absorbing…", o:["Carbon dioxide","Ultraviolet radiation","Meteors","Wind"], a:1, why:"Ozone in the stratosphere soaks up harmful UV before it reaches the surface."},
+   {q:"Greenhouse gases like CO₂ and methane…", o:["Block all sunlight","Trap heat that Earth radiates","Create wind","Destroy ozone"], a:1, why:"They let sunlight in but slow heat's escape — Earth's insulating blanket."},
+   {q:"On a sunny day at the beach, the sand is scorching but the water is cool because…", o:["Water reflects all sunlight","Land heats up much faster than water","Sand creates its own heat","The ocean has no sun"], a:1, why:"Water needs far more energy to warm — it heats AND cools slowly, while land races both directions."},
+   {q:"Air is heated mostly…", o:["Directly by sunlight","From below, by the warmed land and water","By the ozone layer","By wind"], a:1, why:"Sunlight mostly passes through air and heats the surface; the surface then heats the air above it."},
+   {q:"Wind blows from areas of ___ pressure toward ___ pressure.", o:["low → high","high → low","equal → equal","no → all"], a:1, why:"Air flows downhill on the pressure map — from high to low. Bigger difference = stronger wind."},
+   {q:"Global winds curve instead of blowing straight because of…", o:["The Coriolis effect from Earth's rotation","Mountains","Ocean salt","The moon"], a:0, why:"The spinning Earth deflects long-distance winds — right in the northern hemisphere."},
+   {q:"A cold front usually brings…", o:["Days of gentle drizzle","Brief, heavy storms, then cooler clear air","No weather change","Permanent fog"], a:1, why:"Cold air wedges under warm air and launches it upward fast — short violent storms, then clearing."},
+   {q:"A tornado WARNING means…", o:["Conditions are right for tornadoes","A tornado has been spotted or detected — take shelter now","A tornado happened last week","Watch the sky casually"], a:1, why:"Watch = possible. Warning = happening. Warnings mean act immediately."},
+   {q:"Hurricanes get their energy from…", o:["Cold mountain air","Moisture evaporating from warm ocean water","Earthquakes","The jet stream alone"], a:1, why:"Warm water evaporates, rises, condenses, and releases heat — the engine that spins the storm."}
+  ],
+  vocab:[
+   ["Atmosphere","The blanket of gases surrounding Earth."],
+   ["Troposphere","The lowest layer — where all weather happens."],
+   ["Stratosphere","Second layer — home of the ozone layer."],
+   ["Ozone layer","Absorbs the sun's harmful UV radiation."],
+   ["Greenhouse gas","A gas (CO₂, methane, water vapor) that traps heat."],
+   ["Air pressure","The weight of the air pressing down."],
+   ["Wind","Air moving from high pressure to low pressure."],
+   ["Sea breeze","Daytime wind from the cool sea toward warm land."],
+   ["Coriolis effect","Earth's rotation curving global winds."],
+   ["Jet stream","A fast river of air that steers weather systems."],
+   ["Air mass","A huge body of air with similar temperature & humidity."],
+   ["Front","The boundary where two air masses meet."],
+   ["Cold front","Brings brief heavy storms, then cooler clear air."],
+   ["Warm front","Brings long, gentle rain, then warmer air."],
+   ["Humidity","The amount of water vapor in the air."],
+   ["Thunderstorm","Storm from fast-rising warm, humid air."],
+   ["Tornado","A violent rotating column of air touching the ground."],
+   ["Hurricane","A huge rotating storm fueled by warm ocean water."]
+  ],
+  videos:[
+   {t:"Layers of the atmosphere", ch:"Curated search", url:"https://www.youtube.com/results?search_query=layers+of+the+atmosphere+middle+school", kind:"search", note:""},
+   {t:"Why land heats faster than water", ch:"Curated search", url:"https://www.youtube.com/results?search_query=land+vs+water+heating+uneven+heating+sea+breeze+middle+school", kind:"search", note:"Look for the two-pan demo or sea breeze animations."},
+   {t:"Global winds & the Coriolis effect", ch:"Curated search", url:"https://www.youtube.com/results?search_query=global+winds+coriolis+effect+middle+school", kind:"search", note:""},
+   {t:"Weather fronts explained", ch:"Curated search", url:"https://www.youtube.com/results?search_query=cold+front+warm+front+weather+middle+school", kind:"search", note:"Cross-section animations make fronts click."},
+   {t:"How hurricanes form", ch:"Curated search", url:"https://www.youtube.com/results?search_query=how+hurricanes+form+warm+ocean+water+middle+school", kind:"search", note:"NOAA and NASA explainers are excellent."}
+  ],
+  pretest:[
+   {q:"Weather happens in which layer of the atmosphere?", o:["Troposphere","Stratosphere","Thermosphere","Ozone"], a:0, lesson:1, why:"The lowest layer holds the clouds, storms, and the air we breathe."},
+   {q:"Which heats up faster in the sun?", o:["Water","Land","They heat equally","Neither heats"], a:1, lesson:3, why:"Land races up in temperature; water lags — it heats and cools slowly."},
+   {q:"Wind is caused by differences in…", o:["Air pressure","Moonlight","Salinity","Altitude only"], a:0, lesson:4, why:"Air flows from high pressure to low pressure — that flow is wind."},
+   {q:"The boundary where two air masses meet is called a…", o:["Front","Breeze","Layer","Current"], a:0, lesson:5, why:"Fronts are where contrasting air masses collide — and where weather gets interesting."},
+   {q:"Hurricanes form over…", o:["Deserts","Warm ocean water","Mountains","Ice caps"], a:1, lesson:7, why:"Warm water evaporating is the storm's fuel supply."}
+  ]
+},
 u5:{ sym:"🌋", num:5, name:"Earth's Surface", std:"S6E5", color:"var(--u5)", soft:"var(--u5soft)", hex:"#8B5A2B", soon:true,
   blurb:"Layers, rocks and minerals, the rock cycle, plate tectonics, fossils, and soil — the planet's biography written in stone.",
   lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
@@ -1686,7 +1744,22 @@ const ACTIVITIES = {
  sort:{b:["Near the coast (shallow)","Open ocean (deep)"],items:[["Continental shelf",0],["Tide pools",0],["A fishing pier's seafloor",0],["Abyssal plain",1],["A trench",1],["A mid-ocean ridge",1]]}},
 "S6E3.d":{match:[["Waves","Wind energy traveling through water"],["Surface currents","Driven by wind and Earth's rotation"],["Deep currents","Driven by density — cold salty water sinks"],["Tides","Daily rise and fall from the moon's gravity"],["Spring tide","Sun + moon aligned — biggest range"],["Neap tide","Quarter moon — smallest range"]],
  blank:[{s:"Waves get their energy from the ___.",w:["wind","moon","salt"],a:0},{s:"Tides are caused mainly by the ___'s gravity.",w:["moon","sun","Earth"],a:0},{s:"Cold, salty water sinks because it is more ___.",w:["dense","salty-tasting","shiny"],a:0},{s:"Most coasts get ___ high tides each day.",w:["two","seven","zero"],a:0}],
- sort:{b:["Powered by wind","Powered by gravity or density"],items:[["Ocean waves",0],["Surface currents",0],["Whitecaps on a windy day",0],["The Gulf Stream",0],["High and low tides",1],["Spring tides at full moon",1],["Deep cold currents sinking",1],["The global conveyor belt",1]]}}
+ sort:{b:["Powered by wind","Powered by gravity or density"],items:[["Ocean waves",0],["Surface currents",0],["Whitecaps on a windy day",0],["The Gulf Stream",0],["High and low tides",1],["Spring tides at full moon",1],["Deep cold currents sinking",1],["The global conveyor belt",1]]}},
+"S6E4.a":{match:[["Troposphere","Lowest layer — all weather lives here"],["Stratosphere","Home of the ozone layer"],["Mesosphere","Coldest layer — meteors burn up here"],["Thermosphere","Highest, thinnest — auroras glow here"],["Greenhouse gases","CO₂, methane & water vapor — they trap heat"]],
+ blank:[{s:"The ozone layer absorbs harmful ___ radiation.",w:["ultraviolet","radio","sound"],a:0},{s:"All weather happens in the ___.",w:["troposphere","stratosphere","thermosphere"],a:0},{s:"Greenhouse gases trap ___ that Earth radiates.",w:["heat","wind","ozone"],a:0},{s:"Going up through the troposphere, temperature ___.",w:["drops","rises","stays equal"],a:0}],
+ sort:{b:["Troposphere","Stratosphere","Higher layers"],items:[["Thunderstorms",0],["The air you breathe",0],["Clouds and rain",0],["The ozone layer",1],["Where jets cruise (top of weather)",1],["Meteors burning up",2],["Auroras",2]]}},
+"S6E4.b":{match:[["Land","Heats up fast, cools down fast"],["Water","Heats and cools slowly"],["Air","Heated mostly from the surface below"],["Coastal climate","Mild — the ocean cushions temperature swings"],["Inland climate","Big temperature swings"]],
+ blank:[{s:"On a sunny day, beach sand gets hot ___ than the ocean.",w:["faster","slower","never"],a:0},{s:"Air is heated mostly from ___.",w:["below","above","inside"],a:0},{s:"Water heats up ___ than land.",w:["more slowly","faster","louder"],a:0},{s:"The sun transfers heat to air, land, and water at different ___.",w:["rates","colors","heights"],a:0}],
+ sort:{b:["Heats/cools FAST (land-like)","Heats/cools SLOWLY (water-like)"],items:[["Beach sand at noon",0],["A parking lot in summer",0],["Desert ground at night",0],["A backyard trampoline in the sun",0],["The ocean",1],["A deep lake",1],["A swimming pool in spring",1],["A coastal city's air",1]]}},
+"S6E4.c":{match:[["Wind","Air moving from high to low pressure"],["Sea breeze","Daytime: cool sea air flows toward warm land"],["Land breeze","Night: cooler land air flows toward the sea"],["Coriolis effect","Earth's rotation curves global winds"],["Jet stream","Fast high-altitude river of air steering weather"]],
+ blank:[{s:"Wind blows from ___ pressure to low pressure.",w:["high","no","medium"],a:0},{s:"Unequal ___ of Earth's surface creates wind.",w:["heating","spinning","raining"],a:0},{s:"The Coriolis effect comes from Earth's ___.",w:["rotation","tilt","oceans"],a:0},{s:"During the day, a sea breeze blows toward the ___.",w:["land","sea","sky"],a:0}],
+ sort:{b:["Local wind","Global wind pattern"],items:[["Afternoon sea breeze at the beach",0],["Night land breeze",0],["Wind down a city street",0],["The trade winds",1],["The jet stream",1],["Winds curved by the Coriolis effect",1]]}},
+"S6E4.d":{match:[["Air mass","Huge body of air with similar temperature & humidity"],["Front","Boundary where two air masses meet"],["Cold front","Brief heavy storms, then cooler and clearing"],["Warm front","Long gentle rain, then warmer air"],["Low pressure","Often means clouds and storms"]],
+ blank:[{s:"A falling barometer usually warns of ___.",w:["storms","sunshine","wind only"],a:0},{s:"A tornado ___ means one is happening — take shelter.",w:["warning","watch","party"],a:0},{s:"Thunderstorms form when warm, humid air rises ___.",w:["quickly","slowly","sideways"],a:0},{s:"High pressure usually brings ___ weather.",w:["fair","stormy","frozen"],a:0}],
+ sort:{b:["Cold front","Warm front"],items:[["Brief, violent thunderstorms",0],["Temperature drops afterward",0],["Sky clears quickly behind it",0],["Steep boundary — air shoved up fast",0],["Hours of steady, gentle rain",1],["Temperature rises afterward",1],["Gentle, gradual slope of air",1],["Drizzle ahead of the boundary",1]]}},
+"S6E4.e":{match:[["Hurricane fuel","Moisture evaporating from warm ocean water"],["The eye","Calm, low-pressure center of the storm"],["Landfall","When the storm crosses onto land — and starts to weaken"],["Hurricane season","Late summer, when the ocean is warmest"],["Storm surge","Ocean water pushed ashore by the storm"]],
+ blank:[{s:"Hurricanes need ocean water warmer than about ___°F.",w:["80","40","32"],a:0},{s:"Over land, hurricanes ___ because their fuel is cut off.",w:["weaken","strengthen","freeze"],a:0},{s:"Moisture evaporating from the ___ powers weather patterns and hurricanes.",w:["ocean","desert","moon"],a:0},{s:"The calm center of a hurricane is the ___.",w:["eye","ear","edge"],a:0}],
+ sort:{b:["Makes a hurricane STRONGER","Makes a hurricane WEAKER"],items:[["Very warm ocean water",0],["Lots of evaporation",0],["Staying over the open tropical sea",0],["Late-summer ocean heat",0],["Crossing onto land",1],["Moving over cold water",1],["Running out of moisture",1],["Reaching cool northern seas",1]]}}
 };
 function stdUnit(std){ return STD_LIST[std.split('.')[0]].unit; }
 function unitActs(uid){ return Object.keys(ACTIVITIES).filter(s=>stdUnit(s)===uid); }
@@ -2167,7 +2240,12 @@ const STD_TAGS = {
  "u3:L0":["S6E3.a"], "u3:L1":["S6E3.a"], "u3:L2":["S6E3.b"], "u3:L3":["S6E3.c"],
  "u3:L4":["S6E3.c"], "u3:L5":["S6E3.d"], "u3:L6":["S6E3.d"],
  /* --- Unit 3 videos --- */
- "u3:V0":["S6E3.a"], "u3:V1":["S6E3.b"], "u3:V2":["S6E3.c"], "u3:V3":["S6E3.d"], "u3:V4":["S6E3.d"]
+ "u3:V0":["S6E3.a"], "u3:V1":["S6E3.b"], "u3:V2":["S6E3.c"], "u3:V3":["S6E3.d"], "u3:V4":["S6E3.d"],
+ /* --- Unit 4 lessons --- */
+ "u4:L0":["S6E4.a"], "u4:L1":["S6E4.a"], "u4:L2":["S6E4.b"], "u4:L3":["S6E4.c"],
+ "u4:L4":["S6E4.d"], "u4:L5":["S6E4.d"], "u4:L6":["S6E4.e"],
+ /* --- Unit 4 videos --- */
+ "u4:V0":["S6E4.a"], "u4:V1":["S6E4.b"], "u4:V2":["S6E4.c"], "u4:V3":["S6E4.d"], "u4:V4":["S6E4.e"]
 };
 
 /* ---------- per-question sub-standard tags for the practice quizzes
@@ -2176,7 +2254,8 @@ const QUIZ_TAGS = {
  u1:["S6E1.a","S6E1.a","S6E1.b","S6E1.c","S6E1.c","S6E1.c","S6E1.d","S6E1.d","S6E1.e","S6E1.e"],
  u2:["S6E2.a","S6E2.a","S6E2.a","S6E2.b","S6E2.b","S6E2.b","S6E2.c","S6E2.c","S6E2.c","S6E2.c"],
  u3:["S6E3.a","S6E3.a","S6E3.a","S6E3.b","S6E3.b","S6E3.c","S6E3.c","S6E3.d","S6E3.d","S6E3.d"],
- u4:[], u5:[], u6:[]
+ u4:["S6E4.a","S6E4.a","S6E4.a","S6E4.b","S6E4.b","S6E4.c","S6E4.c","S6E4.d","S6E4.d","S6E4.e"],
+ u5:[], u6:[]
 };
 
 /* ---------- Resolver: selected sub-standards → concrete content ---------- */
@@ -2262,7 +2341,27 @@ const WARMUPS = {
 "S6E3.d":[
  {q:"A beach ball floats offshore as waves pass. Does it ride the waves to shore? Why or why not?", a:"Mostly it bobs in circles — waves move ENERGY, not (much) water. Wind and currents drift it slowly."},
  {q:"Why does Britain stay milder in winter than Canadian cities at the same latitude?", a:"The Gulf Stream delivers warm tropical water — surface currents move heat and shape climate."},
- {q:"This Saturday is a full moon. What should tide tables show, and why?", a:"Spring tides: extra-high highs and extra-low lows — sun and moon aligned, pulling together."}]
+ {q:"This Saturday is a full moon. What should tide tables show, and why?", a:"Spring tides: extra-high highs and extra-low lows — sun and moon aligned, pulling together."}],
+"S6E4.a":[
+ {q:"You ride a magic elevator from the ground to space. Describe the layers you pass through.", a:"Troposphere (weather, cooling), stratosphere (ozone, warming), mesosphere (coldest, meteors), thermosphere (thin, auroras)."},
+ {q:"Greenhouse gases get a bad reputation — but what would Earth be like with NONE?", a:"Frozen — about 0°F average. The natural greenhouse effect is essential; the concern is adding too much."},
+ {q:"Why do jets cruise at the top of the troposphere or just above it?", a:"Above most weather and turbulence, thinner air = less drag — listen for layer reasoning."}],
+"S6E4.b":[
+ {q:"Why can the sand burn your feet while the ocean feels cold — on the same beach, same sun?", a:"Land heats fast; water heats slowly (it takes far more energy). Same sunlight, different rates."},
+ {q:"Design an experiment to prove land and water heat at different rates.", a:"Two pans (soil/water), same sunlight, thermometers, record over time — the actual S6E4.b investigation!"},
+ {q:"Why do deserts scorch by day and freeze at night, while islands stay mild?", a:"Land gains AND loses heat fast; surrounding water cushions island temperatures."}],
+"S6E4.c":[
+ {q:"At the beach, the afternoon wind almost always blows in from the sea. Walk through why.", a:"Land heats faster → air rises → lower pressure → cooler sea air flows in. Sea breeze = unequal heating."},
+ {q:"If Earth stopped rotating (but kept its atmosphere), how would winds change?", a:"No Coriolis curve — winds would run straight from poles to equator; no trade winds or jet stream as we know them."},
+ {q:"Why do pilots flying east often arrive early?", a:"The jet stream — a fast west-to-east river of air. Tailwind east, headwind west."}],
+"S6E4.d":[
+ {q:"The weather app says a cold front arrives at 3 PM. Describe your afternoon and evening.", a:"Possible brief heavy storms around passage, then cooler, drier, clearing skies by night."},
+ {q:"What's the difference between a tornado watch and a warning — and what do you DO for each?", a:"Watch: conditions are right, stay alert. Warning: one is detected — shelter now, lowest floor, no windows."},
+ {q:"Why does stormy weather usually come with FALLING air pressure?", a:"Low pressure = rising air → cooling → condensation → clouds and precipitation."}],
+"S6E4.e":[
+ {q:"Why do hurricanes form in late summer instead of spring?", a:"The ocean needs months of solar heating to pass ~80°F — warm water is the fuel."},
+ {q:"A hurricane is a 'heat engine.' Explain the engine's fuel, fire, and exhaust.", a:"Fuel: warm ocean moisture. Fire: condensation releasing heat, driving updrafts. Exhaust: outflow aloft, rain bands."},
+ {q:"Why does a hurricane die within days of moving inland, while a thunderstorm can form anywhere?", a:"Hurricanes need continuous warm-ocean evaporation; storms just need one good updraft of humid air."}]
 };
 
 /* "many right answers" — any well-defended choice counts */
@@ -2314,7 +2413,27 @@ const WARMUPS_MULTI = {
 "S6E3.d":[
  {q:"Best free energy source for a coastal city: waves, tides, or currents? Defend it.", a:"Tides = predictable (moon!), waves = constant but variable wind energy, currents = steady. Any defended choice."},
  {q:"The moon vanished overnight. What happens to our beaches and oceans?", a:"Tides shrink dramatically (small solar tides remain), tidal ecosystems suffer — listen for the gravity link."},
- {q:"Sailors crossing the Atlantic 'ride a river in the ocean.' What do they mean, and is it smart?", a:"The Gulf Stream — a fast warm surface current; riding it saves days. Reward current reasoning."}]
+ {q:"Sailors crossing the Atlantic 'ride a river in the ocean.' What do they mean, and is it smart?", a:"The Gulf Stream — a fast warm surface current; riding it saves days. Reward current reasoning."}],
+"S6E4.a":[
+ {q:"Which atmospheric layer is the MVP? Defend your pick.", a:"Troposphere (weather, breathing), stratosphere (ozone shield), thermosphere (blocks meteors? that's meso!) — any defended layer."},
+ {q:"If you could thicken or thin ONE part of the atmosphere, what would you change and why?", a:"More ozone? Less CO₂? Creative + consequence reasoning wins."},
+ {q:"Rank these dangers if the ozone layer vanished: sunburn, crop damage, eye damage. Defend your order.", a:"All real UV effects — any reasoned ranking; listen for: ozone absorbs UV."}],
+"S6E4.b":[
+ {q:"Best place to spend a 100°F day: beach, forest, or downtown? Use heating rates to defend it.", a:"Beach: water cools the air. Forest: shade + transpiration. Downtown: worst — concrete heats like land. Any defended pick."},
+ {q:"Where would you build a city for the mildest weather — coast, inland plains, or desert? Why?", a:"Coast: water's thermal cushion. Listen for land vs water heating rates."},
+ {q:"Why does pizza stay scorching inside while the crust cools fast? Connect it to land and water.", a:"Sauce/cheese hold heat like water (high moisture); dry crust sheds it like land — playful but real rate reasoning."}],
+"S6E4.c":[
+ {q:"Wind is just 'air falling downhill.' Good description or bad? Argue it.", a:"Decent: air flows from high to low pressure like water downhill. Weakness: Coriolis curves it. Reward the analogy + critique."},
+ {q:"You're sailing west-to-east across the Atlantic with no engine. What's your wind plan?", a:"Ride the mid-latitude westerlies/jet-stream-driven winds; traders sailed west on the trade winds. Any wind-belt logic."},
+ {q:"Which would change Georgia's weather more: losing the sea breeze or losing the jet stream?", a:"Jet stream steers whole systems (bigger), sea breeze is local relief. Either side defended works."}],
+"S6E4.d":[
+ {q:"Would you rather forecast with ONLY a barometer or ONLY a thermometer? Defend it.", a:"Barometer: pressure trends predict fronts/storms — most forecasters' pick. Thermometer arguments welcome."},
+ {q:"Cold front vs. warm front: which would you rather have on game day? Why?", a:"Warm front: long drizzle, game soggy. Cold front: violent but brief — maybe clear by kickoff! Either defended."},
+ {q:"Design the perfect storm shelter. What features and why?", a:"Underground/interior room, no windows, low floor — listen for tornado-wind reasoning."}],
+"S6E4.e":[
+ {q:"Hurricanes are getting names — should tornadoes get names too? Argue it.", a:"Hurricanes: days of warning, big areas. Tornadoes: minutes, local — naming impractical? Either side with storm-behavior facts."},
+ {q:"Which hurricane defense would you fund first: better forecasts, stronger buildings, or wetland restoration?", a:"All defensible — listen for how each interrupts the storm's impact chain."},
+ {q:"Could a hurricane ever hit Atlanta at full strength? Defend your answer.", a:"No — 250+ miles inland cuts the warm-water fuel; storms weaken to remnants (still dangerous rain). Reward fuel reasoning."}]
 };
 
 let WU = null;
@@ -3034,7 +3153,19 @@ u3:[
  {std:"S6E3.d", q:"Western Europe stays milder in winter than other places at the same latitude because…", o:["It is closer to the equator","The warm Gulf Stream current carries ocean heat toward it","It has fewer clouds","The moon warms it"], a:1, why:"Surface currents move enormous amounts of heat — a key way the ocean shapes climate."},
  {std:"S6E3.d", q:"What makes water sink to power the ocean's deep currents?", o:["It warms up","It becomes colder and saltier, so it is denser","Wind pushes it down","Fish swim downward"], a:1, why:"Cold, salty water is heavy. It sinks near the poles and creeps along the bottom — the global conveyor."}
 ],
-u4:[], u5:[], u6:[]
+u4:[
+ {std:"S6E4.a", q:"A weather balloon rises and its thermometer first drops steadily, then begins WARMING. It has just entered the…", o:["Troposphere","Stratosphere, where ozone absorbs UV","Mesosphere","Ocean"], a:1, why:"Temperature falls through the troposphere, then rises in the stratosphere because the ozone layer absorbs solar UV."},
+ {std:"S6E4.a", q:"Without any greenhouse gases, Earth would be…", o:["About the same temperature","Far colder — around 0°F on average","Much hotter","Covered in ozone"], a:1, why:"The natural greenhouse effect keeps Earth livable. The issue is adding MORE gas, not the effect existing."},
+ {std:"S6E4.a", q:"Which list contains ONLY greenhouse gases?", o:["Oxygen, nitrogen, argon","Carbon dioxide, methane, water vapor","Ozone, oxygen, helium","Nitrogen, methane, neon"], a:1, why:"CO₂, methane, and water vapor are the classic heat-trappers. Nitrogen and oxygen — most of the air — are not."},
+ {std:"S6E4.b", q:"Two pans sit in the sun for an hour: one holds soil, one holds water. Predict the thermometers.", o:["Water is hotter","Soil is hotter — land heats faster than water","They're identical","Both stay cold"], a:1, why:"Land absorbs and releases heat quickly; water changes temperature slowly. The classic S6E4.b investigation."},
+ {std:"S6E4.b", q:"Coastal cities have milder summers and winters than inland cities at the same latitude because…", o:["They get more rain","The slow-heating, slow-cooling ocean moderates their temperatures","Wind avoids coasts","Salt air traps cold"], a:1, why:"Water's thermal lag smooths out the temperature swings — the ocean is a giant climate cushion."},
+ {std:"S6E4.c", q:"At the beach on a hot afternoon, the breeze blows from the sea toward the land because…", o:["Warm air over the land rises and cooler sea air flows in to replace it","The ocean pushes air ashore","Tides drag the wind","Land breathes in daylight"], a:0, why:"Sea breeze: land heats faster → low pressure over land → air flows from the cooler high-pressure sea."},
+ {std:"S6E4.c", q:"A wind blowing straight north in the northern hemisphere gradually curves to its right. This is caused by…", o:["Mountains","Earth's rotation — the Coriolis effect","Magnetic poles","The jet stream pushing it"], a:1, why:"On a rotating planet, long-range winds deflect — right in the north, left in the south."},
+ {std:"S6E4.d", q:"Your barometer has been falling all day and a line of dark clouds approaches from the west. You should expect…", o:["Days of fair weather","An approaching front with stormy weather","Permanent sunshine","A heat wave"], a:1, why:"Falling pressure + an advancing cloud line is the classic signature of a front bringing storms."},
+ {std:"S6E4.d", q:"Brief violent thunderstorms rolled through, and now the air is cooler and the sky is clearing. What just passed?", o:["A warm front","A cold front","A sea breeze","The jet stream"], a:1, why:"Cold fronts shove warm air up fast: short intense storms, then cooler, drier, clearer air."},
+ {std:"S6E4.e", q:"A hurricane crossing from warm ocean onto land rapidly weakens because…", o:["Trees block the wind","It loses its fuel — moisture evaporating from warm ocean water","Cities absorb storms","Gravity is stronger on land"], a:1, why:"The storm is an evaporation-powered engine. Cut off the warm-water fuel line and it winds down."}
+],
+u5:[], u6:[]
 };
 
 
@@ -3176,7 +3307,12 @@ const STD_TEACH = {
  "S6E3.a":{fig:null, teach:"About 97% of Earth's water is salt water in the oceans. Of the ~3% that's fresh, most is frozen in ice caps and glaciers, then comes groundwater (stored in aquifers — underground layers of permeable rock that wells tap into), and only a tiny sliver flows in rivers, lakes, and swamps. The water we use every day is the rarest kind on the planet — that's why conservation matters."},
  "S6E3.b":{fig:null, teach:"The sun is the engine of the water cycle. Solar energy evaporates water from oceans and lakes (plants add vapor through transpiration), the rising vapor cools and condenses into clouds, and the water falls back as precipitation — rain, snow, sleet, or hail. Then it runs off into rivers or soaks underground, and the loop repeats. Every step that lifts water UP is sun-powered."},
  "S6E3.c":{fig:null, teach:"All oceans connect into one world ocean — the Pacific is the largest and deepest basin. Ocean water is about 3.5% dissolved salts (its salinity). The sea floor has dramatic terrain mapped by sonar: the shallow continental shelf near shore, the steep slope, vast flat abyssal plains, mid-ocean ridges (underwater mountain chains), and trenches — the deepest places on Earth."},
- "S6E3.d":{fig:null, teach:"Three movers of ocean water: WAVES carry wind energy (the water itself mostly circles in place). CURRENTS are giant streams — surface currents pushed by wind and curved by Earth's rotation (like the warm Gulf Stream), deep currents driven by density as cold, salty water sinks. They move heat and shape climate. TIDES are the daily rise and fall caused mainly by the moon's gravity — biggest (spring tides) when sun, Earth, and moon align at new and full moon."}
+ "S6E3.d":{fig:null, teach:"Three movers of ocean water: WAVES carry wind energy (the water itself mostly circles in place). CURRENTS are giant streams — surface currents pushed by wind and curved by Earth's rotation (like the warm Gulf Stream), deep currents driven by density as cold, salty water sinks. They move heat and shape climate. TIDES are the daily rise and fall caused mainly by the moon's gravity — biggest (spring tides) when sun, Earth, and moon align at new and full moon."},
+ "S6E4.a":{fig:null, teach:"The atmosphere stacks in layers: the troposphere (all weather, temperature drops with height), the stratosphere (the ozone layer lives here, absorbing harmful UV), the mesosphere (coldest — meteors burn up), and the thermosphere (thin, where auroras glow). Mixed through the air are greenhouse gases — carbon dioxide, methane, water vapor — which trap heat Earth radiates. That natural blanket keeps the planet livable; adding more gas thickens it."},
+ "S6E4.b":{fig:'heattransfer', teach:"The sun heats air, land, and water at different rates. Land heats up fast and cools fast; water heats and cools slowly (it takes far more energy to change temperature). Air barely absorbs sunlight directly — it's warmed mostly from below by the heated surface. This explains scorching sand next to cool ocean, mild coastal climates, and big desert temperature swings."},
+ "S6E4.c":{fig:null, teach:"Wind is air flowing from high pressure to low pressure, and pressure differences come from unequal heating. Local scale: sea breezes — land heats faster by day, warm air rises, cool sea air flows in. Global scale: warm equatorial air rises, cold polar air sinks, and Earth's rotation curves the flow (the Coriolis effect), creating wind belts like the trade winds and the jet stream that steers weather systems."},
+ "S6E4.d":{fig:null, teach:"An air mass is a huge body of air with similar temperature and humidity; a front is the boundary where two air masses collide — and where weather happens. Cold fronts shove warm air up fast: brief heavy storms (sometimes tornadoes), then cooler clear skies. Warm fronts slide up gently: long steady rain, then warmth. High pressure usually means fair weather; falling pressure warns that storms are coming."},
+ "S6E4.e":{fig:null, teach:"Moisture evaporating from the ocean loads the atmosphere with water and heat — it drives everyday rain patterns and, at maximum volume, hurricanes. Over ocean water warmer than about 80°F, evaporation feeds rising air; condensation releases heat that powers more rising air, spinning a storm around a calm low-pressure eye. Cut the fuel line — landfall or cold water — and the hurricane weakens. That's why hurricane season peaks in late summer, when the ocean is warmest."}
 };
 function stdDisplayName(std){
   const [parent, letter] = std.split('.');
