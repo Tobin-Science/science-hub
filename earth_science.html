@@ -1042,9 +1042,67 @@ u1:{
    {q:"A 'shooting star' you see streak across the sky is really a…", o:["Star falling","Meteor","Comet landing","Planet"], a:1, lesson:8, why:"It's a meteoroid burning up in our atmosphere — a meteor."}
   ]
 },
-u2:{ sym:"🌙", num:2, name:"Sun, Earth & Moon", std:"S6E2", color:"var(--u2)", soft:"var(--u2soft)", hex:"#E08F0E", soon:true,
-  blurb:"Moon phases, eclipses, and why summer even exists — the three-body dance of sun, Earth, and moon.",
-  lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
+u2:{ sym:"🌙", num:2, name:"Sun, Earth & Moon", std:"S6E2", color:"var(--u2)", soft:"var(--u2soft)", hex:"#E08F0E",
+  blurb:"Moon phases, eclipses, and why summer even exists — it all comes down to the three-body dance of sun, Earth, and moon, plus one famous 23.5° tilt.",
+  lessons:[
+   {t:"Why the Moon Has Phases", body:`The moon makes no light of its own — it <b>reflects sunlight</b>, and <b>half of the moon is ALWAYS lit</b> (the half facing the sun). A <b>phase</b> is simply how much of that lit half WE can see from Earth, and it changes as the moon orbits us. Lit side facing away = <b>new moon</b> (we see nothing). Lit side facing us = <b>full moon</b>. The whole cycle takes about <b>29.5 days</b> — that's where "month" comes from!`,
+    callout:["The #1 Misconception","Phases are NOT Earth's shadow on the moon! The shadow only matters during a lunar eclipse. Phases are about your viewing angle of the moon's lit half."]},
+   {t:"Reading the Phase Cycle", body:`The order: <b>new moon → waxing crescent → first quarter → waxing gibbous → full moon → waning gibbous → third quarter → waning crescent</b> → and back to new. <b>Waxing</b> = the lit part is GROWING night after night (lit on the right side). <b>Waning</b> = SHRINKING (lit on the left). <b>Crescent</b> = less than half lit; <b>gibbous</b> = more than half lit.`,
+    callout:["Memory Hook: DOC","The moon spells D-O-C. Waxing looks like a D, full is the O, waning looks like a C."]},
+   {t:"Solar Eclipses", body:`At <b>new moon</b>, the moon sits between the sun and Earth. If the lineup is exact, the moon's shadow falls on Earth — a <b>solar eclipse</b>. The shadow is small, so totality is only visible from a <b>narrow path</b>, and only in daytime. Why doesn't this happen every month? The moon's orbit is <b>tilted about 5°</b>, so most months the shadow misses Earth.`,
+    callout:["Safety First","NEVER look directly at a solar eclipse — eclipse glasses or pinhole projectors only. Your eyes have no pain sensors to warn you."]},
+   {t:"Lunar Eclipses", body:`At <b>full moon</b>, Earth sits between the sun and the moon. If the lineup is exact, the moon passes through <b>Earth's shadow</b> — a <b>lunar eclipse</b>. Because Earth's shadow is huge, the eclipse is visible from the <b>entire night side</b> of the planet, lasts hours, and is completely safe to watch. The moon often glows <b>red</b> ("blood moon") because the only sunlight reaching it has bent through Earth's atmosphere — the same physics that makes sunsets red.`},
+   {t:"Why Seasons Happen (It's the Tilt!)", body:`Earth's axis is tilted about <b>23.5°</b>, and it keeps pointing the same direction all year as we orbit the sun. When YOUR hemisphere is tilted <b>toward</b> the sun, sunlight hits you more <b>directly</b> (concentrated heating) and days are <b>longer</b> — that's summer. Tilted away: slanted, spread-out light and short days — winter. Seasons have <b>nothing to do with distance</b>: Earth is actually CLOSEST to the sun in early January, the middle of northern winter!`,
+    callout:["Flashlight Test","Shine a flashlight straight down at paper: a small, bright spot. Tilt it: the same light spreads into a big, weak oval. That's winter sunlight."]},
+   {t:"Solstices, Equinoxes & Opposite Seasons", body:`Four checkpoints in Earth's orbit: the <b>June solstice</b> (northern hemisphere's longest day, southern's shortest), the <b>December solstice</b> (the reverse), and two <b>equinoxes</b> (March and September) when day and night are nearly equal everywhere. Because the hemispheres tilt opposite ways, their seasons are <b>opposite</b> — when Georgia shivers in January, Australia is at the beach. Near the equator, sunlight stays nearly direct all year, so temperatures barely change.`}
+  ],
+  quiz:[
+   {q:"Moon phases are caused by…", o:["Earth's shadow covering the moon","Our changing view of the moon's sunlit half as it orbits","Clouds blocking parts of the moon","The moon making more light some nights"], a:1, why:"Half the moon is always lit — the phase is just how much of that lit half faces Earth. (Shadow = eclipse, not phases!)"},
+   {q:"A few nights after a new moon, you see a thin sliver of light growing on the right side. This phase is…", o:["Waning crescent","Waxing crescent","Waxing gibbous","Third quarter"], a:1, why:"Growing = waxing; sliver = crescent. Waxing phases light up the right side."},
+   {q:"'Waxing' means the lit part of the moon is…", o:["Shrinking","Growing","Staying the same","Turning red"], a:1, why:"Waxing = growing toward full; waning = shrinking toward new."},
+   {q:"A solar eclipse happens when…", o:["Earth passes between the sun and moon","The new moon passes between the sun and Earth, casting its shadow on Earth","The full moon enters Earth's shadow","The sun turns off briefly"], a:1, why:"Sun → moon → Earth, in a perfect line. The moon's small shadow races across part of Earth's surface."},
+   {q:"During a lunar eclipse, the moon passes through…", o:["The sun's shadow","Earth's shadow","Its own shadow","A cloud bank"], a:1, why:"Sun → Earth → moon: Earth blocks the sunlight, and its huge shadow darkens the full moon."},
+   {q:"Why ISN'T there an eclipse every month?", o:["The moon stops orbiting sometimes","The moon's orbit is tilted about 5°, so the lineup is usually off","Eclipses only happen in summer","The sun moves out of the way"], a:1, why:"That small tilt means the moon usually passes a little above or below the perfect sun-Earth line."},
+   {q:"The REAL cause of Earth's seasons is…", o:["Earth's changing distance from the sun","The tilt of Earth's axis","The moon's gravity","Ocean currents"], a:1, why:"The 23.5° tilt controls how directly sunlight strikes you and how long days last. Distance barely changes — and we're closest in January!"},
+   {q:"It's summer in the northern hemisphere when the north is…", o:["Closest to the sun","Tilted toward the sun","Spinning faster","Tilted away from the sun"], a:1, why:"Tilted toward = direct sunlight + long days = summer."},
+   {q:"When Georgia is having winter, Australia is having…", o:["Winter too","Summer","Spring","No seasons"], a:1, why:"The hemispheres tilt opposite directions, so their seasons are always opposite."},
+   {q:"On an equinox…", o:["The north pole has 24 hours of sun","Day and night are nearly equal everywhere","It is the longest day of the year","The moon is always full"], a:1, why:"Equinox = 'equal night' — neither hemisphere tilts toward the sun, so day ≈ night worldwide."}
+  ],
+  vocab:[
+   ["Phase","The shape of the moon's sunlit part as seen from Earth."],
+   ["New moon","The lit half faces away from Earth — we see nothing."],
+   ["Full moon","We see the moon's entire sunlit half."],
+   ["Waxing","The lit portion is growing night after night."],
+   ["Waning","The lit portion is shrinking night after night."],
+   ["Crescent","Less than half of the moon appears lit."],
+   ["Gibbous","More than half of the moon appears lit."],
+   ["First quarter","Half lit (right side), one quarter through the cycle."],
+   ["Solar eclipse","The new moon blocks the sun; its shadow falls on Earth."],
+   ["Lunar eclipse","The full moon passes through Earth's shadow."],
+   ["Axis","The imaginary line Earth spins around."],
+   ["Axial tilt","Earth's 23.5° lean — the cause of seasons."],
+   ["Rotation","Earth spinning on its axis — one day."],
+   ["Revolution","Earth's trip around the sun — one year."],
+   ["Solstice","The longest or shortest day of the year."],
+   ["Equinox","Day and night nearly equal everywhere (March & September)."],
+   ["Hemisphere","Half of Earth — northern or southern."],
+   ["Direct sunlight","Light hitting nearly straight on — concentrated heating."]
+  ],
+  videos:[
+   {t:"Moon phases demonstration", ch:"Curated search", url:"https://www.youtube.com/results?search_query=moon+phases+demonstration+ball+lamp+middle+school", kind:"search", note:"Look for the classic ball-and-lamp demo — it kills the shadow misconception."},
+   {t:"Solar vs. lunar eclipses explained", ch:"Curated search", url:"https://www.youtube.com/results?search_query=solar+vs+lunar+eclipse+explained+middle+school", kind:"search", note:"NASA's eclipse videos are reliably excellent."},
+   {t:"What causes Earth's seasons", ch:"Curated search", url:"https://www.youtube.com/results?search_query=what+causes+seasons+earth+tilt+middle+school", kind:"search", note:"Pick one that debunks the distance misconception directly."},
+   {t:"Solstices & equinoxes", ch:"Curated search", url:"https://www.youtube.com/results?search_query=solstice+equinox+explained+middle+school", kind:"search", note:""},
+   {t:"Why is the blood moon red?", ch:"Curated search", url:"https://www.youtube.com/results?search_query=why+does+the+moon+turn+red+lunar+eclipse", kind:"search", note:"Bonus physics: it's sunset light bent through our atmosphere."}
+  ],
+  pretest:[
+   {q:"The moon shines at night because it…", o:["Makes its own light","Reflects sunlight","Burns like a star","Glows from heat"], a:1, lesson:1, why:"The moon is a giant mirror for sunlight — half of it is always lit."},
+   {q:"During a full moon, we are seeing…", o:["The moon's entire sunlit half","Earth's shadow","The dark side","A solar eclipse"], a:0, lesson:2, why:"Full moon = the lit half is facing us dead-on."},
+   {q:"In a solar eclipse, what blocks the sun?", o:["Earth","The moon","Clouds","Mars"], a:1, lesson:3, why:"The new moon slides exactly between the sun and Earth."},
+   {q:"Earth's seasons are caused by its…", o:["Distance from the sun","Tilted axis","Spinning speed","Moon"], a:1, lesson:5, why:"The 23.5° tilt changes how directly sunlight hits each hemisphere through the year."},
+   {q:"When it's summer in Georgia, in Australia it is…", o:["Summer","Winter","Fall","Always raining"], a:1, lesson:6, why:"Opposite hemispheres, opposite tilt, opposite seasons."}
+  ]
+},
 u3:{ sym:"💧", num:3, name:"Water on Earth", std:"S6E3", color:"var(--u3)", soft:"var(--u3soft)", hex:"#1E7FB8", soon:true,
   blurb:"Oceans, rivers, aquifers, and ice — where Earth's water hides, how the sun moves it, and what waves, currents, and tides do.",
   lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
@@ -1548,7 +1606,16 @@ const ACTIVITIES = {
  sort:{b:["Job of gravity","Job of inertia"],items:[["Pulling planets toward the sun",0],["Holding the moon near Earth",0],["Making an apple fall",0],["Keeping a planet moving forward",1],["Wanting to travel in a straight line",1],["Resisting changes in motion",1]]}},
 "S6E1.e":{match:[["Comet","Ice and dust — grows a tail near the sun"],["Asteroid","Rocky and metallic — mostly in the belt"],["Meteoroid","Small space rock traveling through space"],["Meteor","Streak of light burning in the atmosphere"],["Meteorite","Space rock that lands on the ground"]],
  blank:[{s:"Most asteroids orbit in a belt between Mars and ___.",w:["Jupiter","Earth","Neptune"],a:0},{s:"A comet's tail always points ___ from the sun.",w:["away","toward","north"],a:0},{s:"A 'shooting star' is really a ___.",w:["meteor","comet","planet"],a:0},{s:"A space rock that reaches the ground is called a ___.",w:["meteorite","meteoroid","crater"],a:0}],
- sort:{b:["Comet","Asteroid","Meteor family"],items:[["Made of ice and dust",0],["Grows a glowing tail",0],["Rocky and metallic",1],["Lives in the belt past Mars",1],["Streak of light in the night sky",2],["Lands in a farmer's field",2]]}}
+ sort:{b:["Comet","Asteroid","Meteor family"],items:[["Made of ice and dust",0],["Grows a glowing tail",0],["Rocky and metallic",1],["Lives in the belt past Mars",1],["Streak of light in the night sky",2],["Lands in a farmer's field",2]]}},
+"S6E2.a":{match:[["New moon","Lit half faces away — we see nothing"],["Full moon","We see the entire sunlit half"],["Waxing","The lit part is growing"],["Waning","The lit part is shrinking"],["Crescent","Less than half appears lit"],["Gibbous","More than half appears lit"]],
+ blank:[{s:"Half of the moon is ___ lit by the sun.",w:["always","never","rarely"],a:0},{s:"The full phase cycle takes about one ___.",w:["month","week","year"],a:0},{s:"The moon shines by ___ sunlight.",w:["reflecting","creating","absorbing"],a:0},{s:"Right after a full moon, the moon begins ___.",w:["waning","waxing","exploding"],a:0}],
+ sort:{b:["Waxing (growing)","Waning (shrinking)"],items:[["Waxing crescent",0],["First quarter",0],["Waxing gibbous",0],["Waning gibbous",1],["Third quarter",1],["Waning crescent",1]]}},
+"S6E2.b":{match:[["Solar eclipse","The moon's shadow falls on Earth"],["Lunar eclipse","The moon passes through Earth's shadow"],["New moon","The required phase for a solar eclipse"],["Full moon","The required phase for a lunar eclipse"],["Blood moon","Red glow from sunlight bending through Earth's air"]],
+ blank:[{s:"Never look directly at a ___ eclipse.",w:["solar","lunar","partial"],a:0},{s:"A lunar eclipse is visible from Earth's entire ___ side.",w:["night","day","west"],a:0},{s:"Eclipses don't happen monthly because the moon's orbit is ___ about 5°.",w:["tilted","square","backwards"],a:0},{s:"In a solar eclipse the lineup is sun, ___, Earth.",w:["moon","Mars","stars"],a:0}],
+ sort:{b:["Solar eclipse","Lunar eclipse"],items:[["Happens at new moon",0],["Daytime sky goes dark",0],["Visible only from a narrow path",0],["Happens at full moon",1],["The moon can turn red",1],["Safe to watch with bare eyes",1]]}},
+"S6E2.c":{match:[["Axial tilt","23.5° — the real reason for seasons"],["Summer","Your hemisphere is tilted toward the sun"],["Direct sunlight","Concentrated light — strong heating"],["Equinox","Day and night nearly equal everywhere"],["Solstice","The longest or shortest day of the year"]],
+ blank:[{s:"Earth's axis is tilted about ___ degrees.",w:["23.5","90","5"],a:0},{s:"Seasons are NOT caused by Earth's ___ from the sun.",w:["distance","tilt","spin"],a:0},{s:"When North America has winter, Australia has ___.",w:["summer","winter","autumn"],a:0},{s:"Slanted sunlight spreads its energy over a ___ area.",w:["larger","smaller","hotter"],a:0}],
+ sort:{b:["June in Georgia (summer)","December in Georgia (winter)"],items:[["North tilted toward the sun",0],["Longest days of the year",0],["Direct, concentrated sunlight",0],["Australia's winter",0],["North tilted away from the sun",1],["Shortest day of the year",1],["Sun stays low in the sky",1],["Australia's summer",1]]}}
 };
 function stdUnit(std){ return STD_LIST[std.split('.')[0]].unit; }
 function unitActs(uid){ return Object.keys(ACTIVITIES).filter(s=>stdUnit(s)===uid); }
@@ -2019,14 +2086,20 @@ const STD_TAGS = {
  "u1:L4":["S6E1.c"], "u1:L5":["S6E1.c"], "u1:L6":["S6E1.d"], "u1:L7":["S6E1.e"],
  /* --- Unit 1 videos & sims --- */
  "u1:V0":["S6E1.a"], "u1:V1":["S6E1.b"], "u1:V2":["S6E1.c"], "u1:V3":["S6E1.e"],
- "u1:V4":["S6E1.d"], "u1:V5":["S6E1.d"]
+ "u1:V4":["S6E1.d"], "u1:V5":["S6E1.d"],
+ /* --- Unit 2 lessons --- */
+ "u2:L0":["S6E2.a"], "u2:L1":["S6E2.a"], "u2:L2":["S6E2.b"], "u2:L3":["S6E2.b"],
+ "u2:L4":["S6E2.c"], "u2:L5":["S6E2.c"],
+ /* --- Unit 2 videos --- */
+ "u2:V0":["S6E2.a"], "u2:V1":["S6E2.b"], "u2:V2":["S6E2.c"], "u2:V3":["S6E2.c"], "u2:V4":["S6E2.b"]
 };
 
 /* ---------- per-question sub-standard tags for the practice quizzes
    (index-aligned with each unit's quiz array — used for report feedback) ---------- */
 const QUIZ_TAGS = {
  u1:["S6E1.a","S6E1.a","S6E1.b","S6E1.c","S6E1.c","S6E1.c","S6E1.d","S6E1.d","S6E1.e","S6E1.e"],
- u2:[], u3:[], u4:[], u5:[], u6:[]
+ u2:["S6E2.a","S6E2.a","S6E2.a","S6E2.b","S6E2.b","S6E2.b","S6E2.c","S6E2.c","S6E2.c","S6E2.c"],
+ u3:[], u4:[], u5:[], u6:[]
 };
 
 /* ---------- Resolver: selected sub-standards → concrete content ---------- */
@@ -2084,7 +2157,19 @@ const WARMUPS = {
 "S6E1.e":[
  {q:"You see a 'shooting star.' Walk us through what ACTUALLY just happened.", a:"A meteoroid hit the atmosphere and burned as a meteor — friction with air, not a star falling."},
  {q:"How could you tell a comet from an asteroid if you saw both through a telescope?", a:"Comet: fuzzy, icy, maybe a tail pointing away from the sun. Asteroid: a dry, rocky point of light, likely in the belt."},
- {q:"Why do comets only grow tails when they get close to the sun?", a:"Solar energy vaporizes their ice; the escaping gas and dust get pushed away from the sun into a tail."}]
+ {q:"Why do comets only grow tails when they get close to the sun?", a:"Solar energy vaporizes their ice; the escaping gas and dust get pushed away from the sun into a tail."}],
+"S6E2.a":[
+ {q:"Last week the moon was full; tonight it's a sliver lit on the left. What happened in between?", a:"It waned: full → waning gibbous → third quarter → waning crescent. Listen for: our VIEW of the lit half changed, not the moon itself."},
+ {q:"Half the moon is always lit by the sun. So why don't we always see a half-lit moon?", a:"Because the lit half doesn't always face US — the phase is the fraction of the lit half visible from Earth."},
+ {q:"Where must the moon be in its orbit for a NEW moon? Describe or sketch it.", a:"Between Earth and the sun — its lit side faces the sun, its dark side faces us."}],
+"S6E2.b":[
+ {q:"Why don't we get a solar eclipse every single month at new moon?", a:"The moon's orbit is tilted about 5°, so its shadow usually passes above or below Earth."},
+ {q:"Explain to a 2nd grader why the moon turns red during a lunar eclipse.", a:"Earth blocks the direct sunlight, but sunset-colored light bends through our air and reaches the moon — it's wearing Earth's sunsets."},
+ {q:"Why is a total solar eclipse visible only from a narrow strip of Earth, while everyone on the night side can watch a lunar eclipse?", a:"The moon's shadow on Earth is tiny; Earth's shadow on the moon is enormous."}],
+"S6E2.c":[
+ {q:"A friend says summer happens because Earth gets closer to the sun. What's wrong with that?", a:"Earth is actually CLOSEST in January (northern winter!). The 23.5° tilt — direct light + longer days — causes seasons."},
+ {q:"Why does Australia celebrate Christmas in the middle of summer?", a:"The hemispheres tilt opposite ways, so December is the southern hemisphere's 'June.'"},
+ {q:"Why doesn't the equator really get a winter?", a:"The tilt barely changes the sun angle there — sunlight stays nearly direct all year."}]
 };
 
 /* "many right answers" — any well-defended choice counts */
@@ -2108,7 +2193,19 @@ const WARMUPS_MULTI = {
 "S6E1.e":[
  {q:"A mile-wide asteroid is spotted heading toward Earth (years away). What's your plan?", a:"Deflection (nudge early), not destruction — any reasoned plan using orbits/gravity/inertia counts. DART mission bonus!"},
  {q:"Which would you most want to study up close: a comet, an asteroid, or a meteorite? Why?", a:"All defensible — comets = ancient ice, asteroids = early solar system rock, meteorites = free samples that came to US."},
- {q:"Why do scientists call comets and asteroids 'time capsules' of the solar system?", a:"They're leftover building materials, mostly unchanged for 4.6 billion years — studying them is studying our origins."}]
+ {q:"Why do scientists call comets and asteroids 'time capsules' of the solar system?", a:"They're leftover building materials, mostly unchanged for 4.6 billion years — studying them is studying our origins."}],
+"S6E2.a":[
+ {q:"Which moon phase is the best one? Defend your pick.", a:"Full (brightest), new (best stargazing!), crescent (prettiest) — any defended choice; bonus for explaining the geometry."},
+ {q:"If you lived on the moon, what 'Earth phases' would you see? Take a guess and defend it.", a:"Earth would go through opposite phases (full Earth at new moon!) — reward geometric reasoning over the right answer."},
+ {q:"Invent a memory trick for waxing vs. waning — or defend why DOC beats yours.", a:"Any working mnemonic counts. DOC: D-shape (waxing), O (full), C-shape (waning)."}],
+"S6E2.b":[
+ {q:"Eclipse chasers spend thousands of dollars to stand in the path of totality for two minutes. Worth it? Why might they say yes?", a:"Any argued side — listen for: totality is rare at any given place, the narrow path, day turning to night."},
+ {q:"You can schedule ONE eclipse over our school this year: solar or lunar? Defend the choice.", a:"Solar: spectacular but needs glasses and exact timing. Lunar: whole evening, safe, everyone sees it. Both defensible."},
+ {q:"Why were ancient people terrified of eclipses — and what one sentence would have calmed them?", a:"No model = no prediction. 'The moon is just passing between us and the sun — it'll move in minutes.' Listen for the power of models."}],
+"S6E2.c":[
+ {q:"If you could delete one season forever, which one — and what breaks?", a:"Any pick with consequences: no winter = pest survival, snowpack/water loss; no summer = crops. Reward systems thinking."},
+ {q:"Would you rather live at the equator (no real seasons) or somewhere with all four? Defend it.", a:"Either side — listen for the tilt/direct-light reasoning behind WHY the equator stays steady."},
+ {q:"Re-tilt the Earth: 0° or 45° — pick one and describe a year.", a:"0°: no seasons anywhere, equal days forever. 45°: brutal season swings, huge polar day/night zones. Reward tilt-to-sunlight logic."}]
 };
 
 let WU = null;
@@ -2804,7 +2901,19 @@ u1:[
  {std:"S6E1.e", q:"How is a comet different from an asteroid?", o:["Comets are rock and metal; asteroids are ice","Comets are ice and dust and can grow tails; asteroids are rocky and metallic","Comets orbit Earth","They are the same thing"], a:1, why:"Composition is the key: icy comets vaporize near the sun and grow tails; rocky asteroids don't."},
  {std:"S6E1.e", q:"A chunk of space rock streaks through the sky and a piece lands in a field. The piece on the ground is a…", o:["Meteor","Meteoroid","Meteorite","Comet"], a:2, why:"In space: meteoroid. Burning in the air: meteor. On the ground: meteorite."}
 ],
-u2:[], u3:[], u4:[], u5:[], u6:[]
+u2:[
+ {std:"S6E2.a", q:"Half of the moon is ALWAYS lit by the sun. So why do we see different phases?", o:["The moon makes different amounts of light","As the moon orbits, we see different amounts of its lit half","Clouds cover parts of it","Earth's shadow covers it most nights"], a:1, why:"Phases are a viewing-angle effect — the lit half rotates in and out of our view across the month."},
+ {std:"S6E2.a", q:"A student says phases are caused by Earth's shadow on the moon. The BEST correction is…", o:["Earth has no shadow","Earth's shadow only touches the moon during a lunar eclipse — phases come from our view of the lit half","The shadow causes only the full moon","The student is right"], a:1, why:"Earth's shadow reaches the moon roughly twice a year (eclipses), yet phases change every single night."},
+ {std:"S6E2.a", q:"Tonight the moon is lit on the LEFT side, and the lit part has been shrinking all week. The moon is…", o:["Waxing","Waning","Full","New"], a:1, why:"Shrinking = waning, and waning phases are lit on the left. (D-O-C: it's in the C stage.)"},
+ {std:"S6E2.a", q:"How long does one complete cycle of moon phases take?", o:["One day","One week","About a month (29.5 days)","One year"], a:2, why:"The ~29.5-day cycle is literally where the word 'month' (moon-th) comes from."},
+ {std:"S6E2.b", q:"An eclipse happens during the DAY and is only visible from a narrow strip of Earth's surface. It must be…", o:["A lunar eclipse — Earth's shadow is small","A solar eclipse — the moon's shadow is small","An equinox","A blood moon"], a:1, why:"The moon's shadow on Earth is tiny, so totality traces a narrow path. Lunar eclipses are seen by the whole night side."},
+ {std:"S6E2.b", q:"During a total lunar eclipse, the moon often glows red because…", o:["The moon heats up","Sunlight bends through Earth's atmosphere — sunset light reaches the moon","Mars passes nearby","The moon reflects city lights"], a:1, why:"Earth's atmosphere filters and bends red light into its shadow — a ring of sunsets projected on the moon."},
+ {std:"S6E2.b", q:"A solar eclipse can ONLY happen at which moon phase?", o:["Full moon","First quarter","New moon","Waning gibbous"], a:2, why:"Sun → moon → Earth requires the moon between us and the sun — that's the new-moon position."},
+ {std:"S6E2.c", q:"Earth is actually CLOSEST to the sun in early January — the middle of northern winter. This proves…", o:["Distance causes seasons","The tilt of Earth's axis, not distance, causes seasons","January should be summer","The sun cools in winter"], a:1, why:"If distance ruled, January would be northern summer. The 23.5° tilt is what matters."},
+ {std:"S6E2.c", q:"Why do temperatures near the equator stay warm all year?", o:["It's closer to the sun","Sunlight strikes it nearly straight on year-round, since the tilt barely changes the angle there","There is no air there","Ocean water heats it"], a:1, why:"The equator never tilts far from the sun, so it gets direct, concentrated light every month."},
+ {std:"S6E2.c", q:"On the June solstice, the northern hemisphere has…", o:["Its shortest day","Day and night equal","Its longest day, because it is tilted toward the sun","No sunrise"], a:2, why:"Maximum tilt toward the sun = the most daylight hours of the year — the first day of northern summer."}
+],
+u3:[], u4:[], u5:[], u6:[]
 };
 
 
@@ -2939,7 +3048,10 @@ const STD_TEACH = {
  "S6E1.b":{fig:null, teach:"Your cosmic address, smallest to largest: Earth → our solar system → the Orion Arm → the Milky Way galaxy → the universe. The Milky Way is a spiral galaxy of 100+ billion stars, and our sun is one ordinary star sitting about halfway out from the center — not in the middle. Beyond our galaxy lie billions more."},
  "S6E1.c":{fig:null, teach:"The four inner planets (Mercury, Venus, Earth, Mars) are small, dense, and rocky; the four outer planets (Jupiter, Saturn, Uranus, Neptune) are huge, far away, and made mostly of gas and ice. Venus is the hottest — its thick CO₂ atmosphere traps heat. When comparing planets' ability to support life, check three boxes: a distance allowing liquid water (the habitable zone), a protective atmosphere, and shelter from harmful radiation. Earth checks all three."},
  "S6E1.d":{fig:'gravity', teach:"Orbits come from a perfect tug-of-war. Inertia makes a moving planet want to travel in a straight line forever; the sun's gravity constantly pulls it inward. Combined, the path bends into an orbit — the planet is forever falling around the sun. Gravity grows with mass and weakens with distance, which is why close-in planets orbit fastest. The same balance keeps the moon circling Earth and satellites circling overhead."},
- "S6E1.e":{fig:null, teach:"Three kinds of space leftovers: comets are ice and dust from the cold outer solar system — near the sun they grow glowing tails that always point away from it. Asteroids are rocky, metallic bodies, mostly in the belt between Mars and Jupiter. Meteoroids are smaller space rocks: burning through our atmosphere they're meteors ('shooting stars'), and any piece that lands is a meteorite."}
+ "S6E1.e":{fig:null, teach:"Three kinds of space leftovers: comets are ice and dust from the cold outer solar system — near the sun they grow glowing tails that always point away from it. Asteroids are rocky, metallic bodies, mostly in the belt between Mars and Jupiter. Meteoroids are smaller space rocks: burning through our atmosphere they're meteors ('shooting stars'), and any piece that lands is a meteorite."},
+ "S6E2.a":{fig:null, teach:"The moon makes no light — it reflects sunlight, and half of it is ALWAYS lit. A phase is simply how much of that lit half we can see from Earth, which changes as the moon orbits us over about 29.5 days. Waxing means the lit part is growing (lit on the right); waning means shrinking (lit on the left). And remember: phases are NOT Earth's shadow — that only matters during an eclipse."},
+ "S6E2.b":{fig:null, teach:"Eclipses are perfect lineups. Solar eclipse: at NEW moon, the moon slides between the sun and Earth, casting its small shadow on a narrow path of Earth's surface — never look at one directly. Lunar eclipse: at FULL moon, the moon passes through Earth's huge shadow, visible safely from the entire night side, often glowing red from sunlight bent through our atmosphere. They don't happen monthly because the moon's orbit tilts about 5°."},
+ "S6E2.c":{fig:null, teach:"Seasons come from Earth's 23.5° axial tilt — NOT distance from the sun (we're actually closest in January!). When your hemisphere tilts toward the sun, sunlight strikes more directly and days run longer: summer. Tilted away: slanted, spread-out light and short days: winter. That's also why the hemispheres always have opposite seasons, why solstices mark the longest and shortest days, and why equinoxes give everyone nearly equal day and night."}
 };
 function stdDisplayName(std){
   const [parent, letter] = std.split('.');
