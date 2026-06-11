@@ -486,6 +486,32 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <p style="margin-top:10px"><a class="pdfbtn" href="#print" onclick="go('print');return false">Open the printable library →</a></p>
   </div>
 
+  <div class="card" style="border:2px solid #E08F0E;background:#FFF7E8;margin:0 0 24px;max-width:780px">
+    <h3>🌅 Warmup of the Day</h3>
+    <p>A bell-ringer in two clicks: pick a topic (or roll the dice), pick a question type, and project it. Questions never repeat until the whole pool has been used.</p>
+    <div class="asnrow" style="margin:10px 0">
+      <select id="wu-std" style="flex:1;min-width:220px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.95rem;font-family:inherit">
+        <option value="random">🎲 Random — any standard</option>
+      </select>
+      <select id="wu-type" style="min-width:200px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.95rem;font-family:inherit">
+        <option value="disc">💬 Open discussion</option>
+        <option value="blank">✏️ Fill in the blank</option>
+        <option value="mc">✅ Multiple choice</option>
+      </select>
+    </div>
+    <button class="genbtn" style="background:#E08F0E" onclick="warmupGo()">🌅 Generate warmup</button>
+    <div id="wu-out" hidden style="margin-top:16px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:18px 20px">
+      <p class="eyebrow" id="wu-tag" style="margin:0 0 8px"></p>
+      <div id="wu-q" style="font-size:1.3rem;font-weight:600;line-height:1.5"></div>
+      <div id="wu-a" hidden style="margin-top:12px;border-top:1.5px dashed var(--line);padding-top:10px;font-size:1rem"></div>
+      <p style="margin:14px 0 0;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="pveye" onclick="warmupGo()">↻ New question</button>
+        <button class="pveye" id="wu-reveal" onclick="warmupReveal()">👁 Reveal answer</button>
+        <button class="pveye" onclick="warmupProject()">⛶ Project big</button>
+      </p>
+    </div>
+  </div>
+
   <div class="teachcols">
     <div id="stdtree"></div>
     <div id="teachpreview"></div>
@@ -3513,10 +3539,163 @@ function decodeAssignment(s){
 }
 
 /* ---------- Educator preview page (Phase 1: tag verification + live preview) ---------- */
+/* =========================================================
+   WARMUP OF THE DAY — discussion prompts (MC + fill-in-the-blank
+   pools reuse the posttest/quiz banks and ACTIVITIES blanks)
+   ========================================================= */
+const WARMUPS = {
+"S8P1.a":[
+ {q:"Look around this classroom: name one element, one compound, and one mixture you can see right now.", a:"Listen for: aluminum/copper (elements), water/CO₂ (compounds), air/paint/wood (mixtures) — and the WHY behind each."},
+ {q:"Your kitchen has table salt, sugar water, and aluminum foil. Which is an element, a compound, and a mixture — and how do you know?", a:"Foil = element (one type of atom), salt = compound (Na + Cl bonded), sugar water = homogeneous mixture (separable by evaporation)."},
+ {q:"Why can you separate trail mix with your fingers, but you can't pull water apart into hydrogen and oxygen the same way?", a:"Trail mix is a mixture — physically combined. Water is a compound — chemically bonded, so it takes a chemical change to separate."}],
+"S8P1.b":[
+ {q:"Describe what the water particles are doing at every stage as an ice cube melts in your drink on a hot day.", a:"Locked-in vibration (solid) → gaining energy → breaking from fixed positions and sliding (liquid). Temperature pauses during the melt itself."},
+ {q:"Where have you seen plasma in real life — maybe without knowing it?", a:"Lightning, neon signs, plasma globes, welding arcs, the Sun and every star."},
+ {q:"A puddle disappears from the sidewalk on a sunny day even though it never boiled. What's happening, particle by particle?", a:"Evaporation: the fastest surface particles gain enough energy to escape as gas — no boiling required."}],
+"S8P1.c":[
+ {q:"Pick any object in your backpack. Give two physical properties and one chemical property it has.", a:"Physical: color, mass, density, flexibility. Chemical: flammability, whether it rusts/tarnishes/reacts with acid."},
+ {q:"A mystery metal is shiny, dense, and rusts in the rain. Which of those clues could you check WITHOUT changing the metal?", a:"Shiny and dense — observable as-is (physical). Rusting requires the metal to become a new substance (chemical)."},
+ {q:"Why does a gas can warn 'FLAMMABLE' but never 'SHINY'? What kind of property is the warning about?", a:"Flammability is a chemical property — how it reacts (dangerously!). Shininess is just a physical property."}],
+"S8P1.d":[
+ {q:"At a weekend cookout, name one physical change and one chemical change you'd see.", a:"Physical: ice melting, chopping vegetables. Chemical: charcoal burning, burgers browning."},
+ {q:"You bake cookies. What evidence from the oven says a CHEMICAL change happened?", a:"Browning (new substances), aroma (new gases), texture change that can't be undone — you can't un-bake a cookie."},
+ {q:"Crushing a soda can vs. the can slowly rusting: why is one physical and the other chemical?", a:"Crushing changes shape only — still aluminum. Rust is a brand-new substance (iron/metal oxide)."}],
+"S8P1.e":[
+ {q:"If atoms are mostly empty space, why can't you walk through walls?", a:"Electrons repel electrons — the electric repulsion between your atoms and the wall's atoms stops you, not 'solid stuff.'"},
+ {q:"The periodic table is called a map. What can you predict about an element just from WHERE it sits?", a:"Metal vs. nonmetal (left/right), family behavior (column), reactivity patterns — sodium's column all reacts with water."},
+ {q:"Why does changing the number of protons change EVERYTHING about an atom, while changing neutrons barely matters?", a:"Protons define the element's identity (atomic number). Neutrons just change the mass — same element, different version."}],
+"S8P1.f":[
+ {q:"A campfire burns all evening and leaves a tiny pile of ash. Where did the rest of the matter go?", a:"Into the air as CO₂, water vapor, and smoke. Ash + gases = log + oxygen used. Atoms never vanish."},
+ {q:"Why do chemists bother balancing equations — what law of nature forces them to?", a:"Conservation of matter: atoms can't be created or destroyed, so reactant and product atom counts must match."},
+ {q:"You seal rising bread dough in a jar. The dough puffs up — has the mass inside the jar changed?", a:"No! Gas was produced from ingredients already inside. Sealed system = same mass, just rearranged atoms."}],
+"S8P2.a":[
+ {q:"Where would you find kinetic energy at the beach? Where would you find potential energy?", a:"KE: waves, running kids, flying frisbees, wind. PE: a lifeguard up a tower, a raised beach umbrella, a stretched kite line."},
+ {q:"Why does a small increase in driving speed make a crash so much worse?", a:"KE = ½mv² — speed is SQUARED. 10% more speed ≈ 21% more energy; double the speed = 4× the energy."},
+ {q:"Two hikers climb the same hill, but one carries a heavy pack. Who stored more potential energy, and why?", a:"The loaded hiker: PE = mgh, same height but more mass = more stored energy."}],
+"S8P2.b":[
+ {q:"Pick one ride at a fair and tell its energy story: where is potential energy highest? Kinetic?", a:"Coaster: max PE at the top of the first hill, max KE at the bottom of the biggest drop; the trade repeats all ride."},
+ {q:"Why can't a trampoline bounce you higher than where you started — unless you push off?", a:"Energy is conserved and some converts to heat/sound each bounce. Going higher requires ADDING energy (your legs)."},
+ {q:"A museum pendulum swings all day, but a playground swing dies out in a minute. What's stealing the energy?", a:"Friction and air resistance convert motion to heat. Museum pendulums minimize friction (and often get tiny pushes)."}],
+"S8P2.c":[
+ {q:"Trace the energy chain from your breakfast all the way to you walking into class.", a:"Sunlight → plants (chemical) → food → your muscles (mechanical) + body heat (thermal)."},
+ {q:"Pick any device in your pocket or backpack. What energy transformations happen when you use it?", a:"Phone: chemical (battery) → electrical → light + sound + thermal. Listen for a chain, not one form."},
+ {q:"Why does your phone get warm during a long video call? Where does that heat come from?", a:"No transformation is perfect — some electrical energy always leaks out as thermal energy."}],
+"S8P2.d":[
+ {q:"On the same sunny day, why does the metal slide feel burning hot while the wooden bench beside it feels fine?", a:"Same temperature — but metal conducts heat into your skin much faster. Conductor vs. poor conductor."},
+ {q:"Where are conduction, convection, AND radiation all happening in a kitchen during dinner?", a:"Conduction: pan → food. Convection: boiling water, oven air circulating. Radiation: broiler glow, heat you feel near the stove."},
+ {q:"Why do you feel a campfire's heat on your face from meters away, even with no wind?", a:"Radiation — energy traveling as EM waves. No contact (conduction) or air current (convection) needed."}],
+"S8P3.a":[
+ {q:"Describe a trip where your SPEED stayed constant but your VELOCITY changed.", a:"Any turn does it: a car rounding a curve at steady 30 mph — velocity includes direction."},
+ {q:"After a jog, a friend says 'I went zero miles — I ended at home.' What are they measuring: distance or displacement?", a:"Displacement (start-to-finish straight line) = 0. The distance was the whole route."},
+ {q:"What does a car's speedometer measure, and how is that different from what a GPS trip summary tells you?", a:"Speedometer: instantaneous speed right now. GPS summary: average speed = total distance ÷ total time."}],
+"S8P3.b":[
+ {q:"You're sitting perfectly still in your chair. What forces are acting on you, and why aren't you moving?", a:"Gravity down, chair pushing up (normal force) — balanced, net force zero, motion unchanged."},
+ {q:"Why do you lurch forward when the bus brakes suddenly — what law is at work?", a:"Newton's 1st: your body keeps moving forward until a force (seatbelt, seat back) changes its motion. Inertia!"},
+ {q:"In tug-of-war, what must be true about the forces when the flag sits still? When it finally moves?", a:"Still = balanced (equal pulls). Moving = unbalanced — net force toward the stronger team."}],
+"S8P3.c":[
+ {q:"Why is it harder to get a full shopping cart moving than an empty one? Say it using F = ma.", a:"More mass means the same force produces less acceleration (a = F ÷ m) — so you push harder."},
+ {q:"Highway signs give trucks longer stopping distances than cars. Explain with Newton's 2nd law.", a:"Huge mass = huge inertia; the same braking force decelerates a massive truck far more slowly."},
+ {q:"You kick a soccer ball and then a bowling ball with the same kick. Compare what happens and explain why.", a:"Soccer ball accelerates far more (less mass, less inertia); bowling ball barely moves — and your toes learn about the 3rd law."}],
+"S8P4.a":[
+ {q:"You see lightning instantly but hear thunder seconds later. What does that tell you about the two waves?", a:"Light = EM wave, blazing fast, no medium needed. Sound = mechanical, needs air, ~343 m/s — about 5 s per mile."},
+ {q:"On the Moon, astronauts chat by radio but could never just shout. Why do radios work where voices don't?", a:"Radio waves are electromagnetic (no medium needed); voices are mechanical sound waves — no air, no sound."},
+ {q:"Name three waves you used before school today. Which needed matter and which didn't?", a:"Sound (alarm, voices — needs air), light (EM, doesn't), WiFi/radio (EM, doesn't), water waves in the shower (need matter)."}],
+"S8P4.b":[
+ {q:"Radio waves pass through your body all day, harmlessly. Why do X-rays need a lead apron?", a:"Energy! Short wavelength = high energy. X-rays carry enough energy to damage cells; radio waves don't come close."},
+ {q:"Why can ultraviolet light give you a sunburn while a bright reading lamp can't?", a:"UV waves are shorter and higher-energy than visible light — enough to damage skin cells. Brightness ≠ energy per wave."},
+ {q:"Rank by energy: the WiFi in this room, sunlight through the window, the X-ray at the dentist. How do you know?", a:"WiFi (radio/microwave) < visible sunlight < X-ray. Shorter wavelength = higher frequency = more energy."}],
+"S8P4.c":[
+ {q:"Your family's evening runs on the EM spectrum. Name three devices and the waves they use.", a:"TV remote (infrared), phone/WiFi (radio & microwaves), microwave oven (microwaves), lamps (visible)."},
+ {q:"Doctors use X-rays for bones and airports use them for luggage. What's the shared superpower?", a:"Penetration: X-rays pass through soft materials but are absorbed by dense ones — bones and metal show as shadows."},
+ {q:"If every microwave-frequency wave vanished tomorrow, what daily technology breaks?", a:"Cell calls/data, WiFi, GPS, Bluetooth, microwave ovens, radar weather forecasts."}],
+"S8P4.d":[
+ {q:"Standing at the edge of a pool: where do you see reflection, refraction, and absorption all at once?", a:"Reflection: sky mirrored on the surface. Refraction: legs look bent/short underwater. Absorption: dark tiles warming up."},
+ {q:"You hear your name called from around the corner before you see the person. Which wave behavior explains it?", a:"Diffraction — sound's long waves bend around corners easily; light's tiny waves barely bend, so no see-around-corners."},
+ {q:"Why do black car seats burn your legs in July while white ones just feel warm?", a:"Dark surfaces ABSORB most light and convert it to heat; light surfaces reflect most of it away."}],
+"S8P4.e":[
+ {q:"In old westerns, people press an ear to the railroad track to listen for trains. Why does that actually work?", a:"Sound races through solid steel (~5,960 m/s) far faster — and farther — than through air (343 m/s)."},
+ {q:"A spaceship explodes in a movie with a giant BOOM. What would it really sound like, and why?", a:"Silence. Space is a vacuum — no particles, no medium, no mechanical waves, no sound."},
+ {q:"Whales call to each other across miles of ocean. Why does sound travel better in water than in air?", a:"Water's particles are much closer together than air's, passing vibrations along faster and with less loss."}],
+"S8P4.f":[
+ {q:"You turn the volume up but the song's pitch doesn't change. In wave language, what changed and what didn't?", a:"Amplitude went up (louder, more energy); frequency stayed the same (same pitch)."},
+ {q:"Compare the sound wave of a bass drum to a referee's whistle.", a:"Drum: low frequency (low pitch), often big amplitude. Whistle: high frequency (high pitch). Loudness = amplitude, pitch = frequency."},
+ {q:"In wave terms, what's the difference between a gentle ocean swell and a storm wave?", a:"Amplitude! The storm wave is taller from rest position — same water, way more energy."}],
+"S8P4.g":[
+ {q:"Your eye, a camera, and a magnifying glass all share one key part. What is it and what does it do?", a:"A convex lens — it refracts (bends) light rays together to form an image."},
+ {q:"Why do a nearsighted friend's glasses make their eyes look slightly smaller, while a magnifier makes things bigger?", a:"Their glasses are concave (spread rays — smaller image); a magnifier is convex (converges rays — bigger image)."},
+ {q:"In a movie theater, where does the image form, and what bent the light to get it there?", a:"On the screen — the projector's convex lens refracts light from a small bright frame into a huge focused image."}],
+"S8P5.a":[
+ {q:"Name three forces acting on you right now that aren't touching you. (Or is it fewer than three?)", a:"Gravity definitely; Earth's magnetic field (tiny effect); static near a charged object. Listen for: fields act without contact."},
+ {q:"How does Earth keep the Moon in orbit with no rope, cable, or contact of any kind?", a:"Its gravitational FIELD reaches across 384,000 km of empty space — field forces don't need touching."},
+ {q:"A fridge magnet defies gravity all year long. What two fields are fighting over it, and which is winning?", a:"The magnet's magnetic field (pulling it to the steel) vs. Earth's gravitational field. Magnetism wins — at that tiny distance."}],
+"S8P5.b":[
+ {q:"Why do you get zapped at the door handle all winter but almost never in summer?", a:"Dry winter air is a great insulator, so charge builds up on you; humid summer air bleeds charge away before it can build."},
+ {q:"High-voltage power lines are bare metal, but the wires in your walls are wrapped in plastic. Why both choices?", a:"Air itself insulates lines that nothing touches; in walls, plastic insulation keeps charge in the copper conductor and away from you."},
+ {q:"Rub a balloon on your hair. Why does it stick to the wall — and what's happening to the wall's charges?", a:"The balloon steals electrons (negative); near the wall it shifts the wall's charges (induction), attracting the closer positives."}],
+"S8P5.c":[
+ {q:"You're designing a junkyard crane's electromagnet. Name three design changes that make it stronger.", a:"More wire coils, more current (more battery cells/voltage), an iron core. Bonus: closer to the metal."},
+ {q:"What's the full chain that turns stronger wind into a brighter lightbulb at a wind farm?", a:"Faster spin → magnets sweep coils faster → more induced voltage/current → brighter bulb. Speed, coils, and magnet strength are the dials."},
+ {q:"Two fridge magnets: one holds ten photos, one barely holds one. What could explain the difference?", a:"Stronger magnetic material, bigger magnet, or distance (a thick photo stack weakens the grip — fields fade with distance)."}]
+};
+let WU = null;
+function warmupPool(type, std){
+  if(type==='disc') return (WARMUPS[std]||[]).map((w,i)=>({key:`disc|${std}|${i}`, q:w.q, a:`<b>Listen for:</b> ${w.a}`}));
+  if(type==='blank') return ((ACTIVITIES[std]||{}).blank||[]).map((b,i)=>({key:`blank|${std}|${i}`,
+    q:b.s.replace('___','<span style="border-bottom:3px solid #E08F0E;padding:0 14px">&nbsp;</span>') + `<div style="font-size:.85em;margin-top:10px;opacity:.8">Word bank: ${shuffle([...b.w]).join(' · ')}</div>`,
+    a:`<b>Answer:</b> ${b.w[b.a]}`}));
+  /* mc: posttest bank + practice quiz questions for this sub-standard */
+  const pool = [];
+  Object.entries(POSTTESTS).forEach(([u,bank])=>bank.forEach((q,i)=>{ if(q.std===std) pool.push({key:`mcp|${u}|${i}`, mc:q}); }));
+  Object.entries(QUIZ_TAGS).forEach(([u,tags])=>tags.forEach((t,i)=>{ if(t===std && UNITS[u].quiz[i]) pool.push({key:`mcq|${u}|${i}`, mc:UNITS[u].quiz[i]}); }));
+  return pool.map(p=>({key:p.key,
+    q:`${p.mc.q}<div style="margin-top:10px;font-size:.9em">${p.mc.o.map((o,j)=>`<div>${'ABCD'[j]}. ${o}</div>`).join('')}</div>`,
+    a:`<b>Answer: ${'ABCD'[p.mc.a]}.</b> ${p.mc.o[p.mc.a]} — <em>${p.mc.why}</em>`}));
+}
+function warmupGo(){
+  const stdSel = document.getElementById('wu-std').value;
+  const type = document.getElementById('wu-type').value;
+  const allStds = Object.keys(WARMUPS);
+  const std = stdSel==='random'? allStds[Math.floor(Math.random()*allStds.length)] : stdSel;
+  let pool = warmupPool(type, std);
+  if(!pool.length){ document.getElementById('wu-out').hidden=false; document.getElementById('wu-q').textContent='No questions for that combination yet.'; return; }
+  let seen = store.get('warmup_seen') || [];
+  let fresh = pool.filter(p=>!seen.includes(p.key));
+  if(!fresh.length){ seen = seen.filter(k=>!pool.some(p=>p.key===k)); fresh = pool; }   // pool exhausted → reset just this pool
+  const item = fresh[Math.floor(Math.random()*fresh.length)];
+  seen.push(item.key); if(seen.length>800) seen.splice(0, seen.length-800);
+  store.set('warmup_seen', seen);
+  WU = {item, std, type};
+  const typeName = {disc:'💬 Discussion', blank:'✏️ Fill in the blank', mc:'✅ Multiple choice'}[type];
+  document.getElementById('wu-tag').textContent = `${typeName} · ${stdDisplayName(std)}`;
+  document.getElementById('wu-q').innerHTML = item.q;
+  const aEl = document.getElementById('wu-a'); aEl.hidden = true; aEl.innerHTML = item.a;
+  document.getElementById('wu-reveal').textContent = '👁 Reveal answer';
+  document.getElementById('wu-out').hidden = false;
+}
+function warmupReveal(){
+  const aEl = document.getElementById('wu-a');
+  aEl.hidden = !aEl.hidden;
+  document.getElementById('wu-reveal').textContent = aEl.hidden? '👁 Reveal answer' : '🙈 Hide answer';
+}
+function warmupProject(){
+  if(!WU) return;
+  pvOpen(`🌅 Warmup of the Day`, `
+    <p class="eyebrow">${document.getElementById('wu-tag').textContent}</p>
+    <div style="font-size:1.9rem;font-weight:600;line-height:1.5;padding:10px 0">${WU.item.q}</div>
+    <div id="pvwu-a" hidden style="font-size:1.2rem;border-top:2px dashed var(--line);margin-top:14px;padding-top:14px">${WU.item.a}</div>
+    <p style="margin-top:16px"><button class="pveye" onclick="const a=document.getElementById('pvwu-a'); a.hidden=!a.hidden">👁 Reveal / hide answer</button></p>`);
+}
+
 function buildTeach(){
   const tree = document.getElementById('stdtree');
   if(!tree || tree.dataset.built) return;
   tree.dataset.built='1';
+  const wuSel = document.getElementById('wu-std');
+  if(wuSel) Object.entries(STD_LIST).forEach(([code,std])=>{
+    Object.entries(std.subs).forEach(([k,desc])=>{
+      const o=document.createElement('option'); o.value=`${code}.${k}`; o.textContent=`${code}.${k} — ${desc}`; wuSel.appendChild(o);
+    });
+  });
   tree.innerHTML = Object.entries(STD_LIST).map(([code,std])=>{
     const u = UNITS[std.unit];
     return `<div class="stdgroup" style="--ac:${u.hex}">
