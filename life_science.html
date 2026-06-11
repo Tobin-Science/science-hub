@@ -970,13 +970,88 @@ FIG.lens = c => `<svg viewBox="0 0 480 220" width="480" role="img" aria-label="A
 <text x="400" y="180" text-anchor="middle" font-weight="bold" fill="#1B2440">image (flipped)</text>
 <text x="240" y="206" text-anchor="middle" fill="#3A4566">A convex lens bends (refracts) rays together — they cross at the focal point and form an image.</text></g></svg>`;
 
+FIG.taxonomy = c => `<svg viewBox="0 0 460 240" width="460" role="img" aria-label="Classification levels from kingdom down to species, using the gray wolf as the example">
+<g font-size="11" text-anchor="middle">
+<rect x="20" y="6" width="320" height="22" rx="6" fill="${c}" opacity=".15"/><text x="180" y="21" fill="#1B2440" font-weight="bold">KINGDOM · Animalia</text>
+<rect x="40" y="34" width="280" height="22" rx="6" fill="${c}" opacity=".25"/><text x="180" y="49" fill="#1B2440" font-weight="bold">PHYLUM · Chordata</text>
+<rect x="60" y="62" width="240" height="22" rx="6" fill="${c}" opacity=".35"/><text x="180" y="77" fill="#1B2440" font-weight="bold">CLASS · Mammalia</text>
+<rect x="80" y="90" width="200" height="22" rx="6" fill="${c}" opacity=".45"/><text x="180" y="105" fill="#1B2440" font-weight="bold">ORDER · Carnivora</text>
+<rect x="100" y="118" width="160" height="22" rx="6" fill="${c}" opacity=".6"/><text x="180" y="133" fill="#fff" font-weight="bold">FAMILY · Canidae</text>
+<rect x="120" y="146" width="120" height="22" rx="6" fill="${c}" opacity=".78"/><text x="180" y="161" fill="#fff" font-weight="bold">GENUS · Canis</text>
+<rect x="140" y="174" width="80" height="22" rx="6" fill="${c}"/><text x="180" y="189" fill="#fff" font-weight="bold">SPECIES</text>
+<line x1="400" y1="10" x2="400" y2="186" stroke="#8b95b3" stroke-width="2.5"/><path d="M392,182 L400,196 L408,182z" fill="#8b95b3"/>
+<text transform="rotate(90 416 100)" x="416" y="100" fill="#3A4566">fewer kinds · more alike</text>
+<text x="230" y="222" fill="#3A4566">Each step down holds fewer organisms — until only ONE species fits: <tspan font-style="italic">Canis lupus</tspan>, the gray wolf.</text></g></svg>`;
+
 /* =========================================================
    UNIT DATA
    ========================================================= */
 const UNITS = {
-u1:{ sym:"🦠", num:1, name:"Diversity & Classification", std:"S7L1", color:"var(--u1)", soft:"var(--u1soft)", hex:"#5B67E0", soon:true,
+u1:{ sym:"🦠", num:1, name:"Diversity & Classification", std:"S7L1", color:"var(--u1)", soft:"var(--u1soft)", hex:"#5B67E0",
   blurb:"Millions of species, one filing system — how scientists sort every living thing into the six kingdoms.",
-  lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
+  lessons:[
+   {t:"What Counts as Alive?", body:`A rock rolls downhill. A flame grows, "eats" fuel, and even makes more flames. So why aren't they alive? Scientists use a checklist — the <b>characteristics of life</b>. Every living thing (every <b>organism</b>) is made of one or more <b>cells</b>, uses <b>energy</b>, <b>grows and develops</b>, <b>responds</b> to its environment, <b>reproduces</b>, and keeps its insides stable. Fail even one test and you're not alive. The flame fails the cell test (and several others) — case closed.`,
+    callout:["The Virus Debate","Viruses have genetic material but no cells, and they can't reproduce without hijacking a living cell. Most scientists say NOT alive — but the argument continues!"]},
+   {t:"Sorting Life by Shared Characteristics", body:`With millions of species, scientists need a filing system — and the folders are built from <b>common characteristics</b>. The big sorting questions: How many cells? (<b>unicellular</b> = one, <b>multicellular</b> = many.) Do its cells have a nucleus? (<b>eukaryote</b> = yes, <b>prokaryote</b> = no.) How does it get energy? (<b>autotrophs</b> make their own food; <b>heterotrophs</b> eat other organisms.) Answer those questions about any organism and you've built a <b>classification model</b> — a sorting system you can defend with evidence.`,
+    callout:["One Trait Isn't Enough","Group dolphins with sharks because 'both swim'? Dolphins have lungs, warm blood, and milk for their young — MANY shared characteristics put them with the mammals. Good models use lots of traits, not one."]},
+   {t:"The Filing System: Kingdom to Species", fig:"taxonomy", body:`Classification runs in levels, from giant folders down to tiny ones: <b>kingdom → phylum → class → order → family → genus → species</b>. Each step down holds fewer organisms that are more alike. The last two levels make an organism's <b>scientific name</b> — <b>binomial nomenclature</b>, like <i>Canis lupus</i> (gray wolf) or <i>Homo sapiens</i> (that's you!). Two-word Latin names work in every country and every language, so a scientist in Georgia and a scientist in Japan always know they're talking about the same species.`,
+    callout:["Memory Hook","King Phillip Came Over For Good Soup — Kingdom, Phylum, Class, Order, Family, Genus, Species."]},
+   {t:"Using a Dichotomous Key", body:`Found a mystery organism? A <b>dichotomous key</b> identifies it through a series of <b>paired either-or choices</b> ("di-" means two). Step 1: backbone — yes or no? Each answer sends you to the next pair, narrowing the possibilities until only one organism is left. Because every step asks about a clear, observable <b>characteristic</b>, two students using the same key on the same organism land on the same answer — that's what makes it science instead of guessing.`,
+    callout:["It's 20 Questions","A dichotomous key is the game 20 Questions with rules: every question splits the remaining organisms into exactly two groups."]},
+   {t:"Science Changes Its Mind: From Two Kingdoms to Six", body:`About 2,300 years ago, <b>Aristotle</b> sorted every organism into just two groups — <b>plants</b> and <b>animals</b> — based on the physical characteristics he could see. In the 1700s, <b>Linnaeus</b> kept the two kingdoms but invented the naming system we still use. Then the <b>microscope</b> changed everything: a hidden world of unicellular organisms fit in NEITHER kingdom. New kingdoms were added for the microbes, fungi earned their own, and finally chemical and genetic evidence split the prokaryotes into <b>bacteria</b> and <b>archaea</b> — landing us at today's <b>six kingdoms</b>.`,
+    callout:["The Big Lesson","Models change when new tools reveal new evidence. Aristotle wasn't foolish — he built the best model his evidence allowed. That's science working, not failing."]},
+   {t:"Meet the Kingdoms: The Microscopic Three", body:`<b>Bacteria</b> — unicellular prokaryotes living nearly everywhere: soil, oceans, your skin, your gut. A few cause disease, but most are harmless or helpful (yogurt! digestion!). <b>Archaea</b> — also unicellular prokaryotes, but with different chemistry; famous as <b>extremophiles</b> thriving in boiling hot springs, super-salty lakes, and deep-sea vents. <b>Protists</b> — the "junk drawer" kingdom: eukaryotes that aren't plants, animals, or fungi. Amoebas ooze, paramecia row themselves with tiny hairs, and algae make food like plants do.`,
+    callout:["Look-Alikes, Not Relatives","Bacteria and archaea LOOK similar under a microscope — both tiny prokaryotes. Genetic evidence proved they're as different from each other as they are from you. That's why they get separate kingdoms."]},
+   {t:"Meet the Kingdoms: Fungi, Plants & Animals", body:`<b>Fungi</b> — mushrooms, molds, and yeasts. They look plant-like but CAN'T make their own food: they're heterotrophs that <b>absorb nutrients</b> from decaying material, which makes them nature's great <b>decomposers</b> and recyclers. <b>Plants</b> — multicellular <b>autotrophs</b> with cell walls and chloroplasts, making food from sunlight. <b>Animals</b> — multicellular <b>heterotrophs</b> with no cell walls; most move around to find their food. That's your kingdom: Animalia.`,
+    callout:["Mind = Blown","Genetically, fungi are closer to ANIMALS than to plants. A mushroom is more closely related to you than to the grass it grows in."]}
+  ],
+  quiz:[
+   {q:"Which list gives characteristics that ALL living things share?", o:["Made of cells, use energy, grow, reproduce","Can move, breathe air, have legs","Are green and make their own food","Can think and learn"], a:0, why:"That's the life checklist. Moving, breathing air, and making food are tricks of SOME organisms — cells, energy, growth, and reproduction belong to all of them."},
+   {q:"A scientist finds a new organism: it has ONE cell, and that cell has NO nucleus. Which two labels fit?", o:["Multicellular and eukaryote","Unicellular and prokaryote","Unicellular and eukaryote","Multicellular and prokaryote"], a:1, why:"One cell = unicellular; no nucleus = prokaryote. Those two questions are the first sorting tools scientists reach for."},
+   {q:"An organism that makes its own food using sunlight is a(n)…", o:["Heterotroph","Autotroph","Decomposer","Predator"], a:1, why:"Auto = self, troph = feeding. Autotrophs build their own food; heterotrophs have to eat someone else's."},
+   {q:"Which classification level is the MOST specific?", o:["Kingdom","Phylum","Genus","Species"], a:3, why:"Kingdom is the giant folder; species is the smallest one — its members are alike enough to reproduce together."},
+   {q:"A dichotomous key identifies organisms using…", o:["A series of paired either-or choices about characteristics","Alphabetical order","Size order, biggest first","Color matching"], a:0, why:"Each step splits the options in two based on an observable trait, narrowing down until one organism remains."},
+   {q:"Aristotle's early classification model sorted all life into which two kingdoms?", o:["Bacteria and archaea","Plants and animals","Land and water organisms","Fungi and protists"], a:1, why:"He grouped by physical characteristics he could see — and for 2,000 years, plant-or-animal was the whole system."},
+   {q:"What discovery forced scientists to add new kingdoms beyond plants and animals?", o:["The microscope revealed unicellular organisms that fit neither kingdom","New continents were explored","Dinosaur fossils were found","Plants were found growing underwater"], a:0, why:"Microbes aren't plants OR animals. New evidence from a new tool — that's what makes a model change."},
+   {q:"Bacteria and archaea are both unicellular prokaryotes, yet they sit in separate kingdoms because…", o:["They live in different places","Chemical and genetic evidence shows they are deeply different","Archaea are bigger","Bacteria are all harmful"], a:1, why:"They look alike under the microscope, but their chemistry and genes are as different from each other as they are from us."},
+   {q:"Which kingdom is nicknamed the 'junk drawer' — eukaryotes that aren't plants, animals, or fungi?", o:["Bacteria","Archaea","Protists","Animalia"], a:2, why:"Amoebas, paramecia, algae — wildly different organisms that share one thing: they don't fit anywhere else."},
+   {q:"A mushroom is NOT classified as a plant because it…", o:["Is too small","Cannot make its own food — it absorbs nutrients instead","Has no cells","Doesn't reproduce"], a:1, why:"No chloroplasts, no photosynthesis. Fungi are heterotrophs that absorb nutrients from decaying material."}
+  ],
+  vocab:[
+   ["Organism","Any individual living thing."],
+   ["Classification","Sorting things into groups based on shared characteristics."],
+   ["Taxonomy","The science of classifying and naming organisms."],
+   ["Unicellular","Made of just one cell."],
+   ["Multicellular","Made of many cells working together."],
+   ["Prokaryote","An organism whose cell has NO nucleus — bacteria and archaea."],
+   ["Eukaryote","An organism whose cells have a nucleus — protists, fungi, plants, animals."],
+   ["Autotroph","An organism that makes its own food (usually using sunlight)."],
+   ["Heterotroph","An organism that must eat other organisms for energy."],
+   ["Dichotomous key","An identification tool built from pairs of either-or choices."],
+   ["Kingdom","The largest, broadest classification group."],
+   ["Species","The most specific level — members can reproduce together."],
+   ["Genus","The level just above species; the first word of a scientific name."],
+   ["Binomial nomenclature","The two-word scientific naming system: Genus + species."],
+   ["Archaea","Prokaryotes famous for thriving in extreme environments."],
+   ["Bacteria","Prokaryotes found nearly everywhere — some harmful, most helpful or harmless."],
+   ["Protist","A member of the 'junk drawer' kingdom — eukaryotes that aren't plants, animals, or fungi."],
+   ["Fungus","A eukaryotic decomposer that absorbs nutrients — mushrooms, molds, yeasts."]
+  ],
+  videos:[
+   {t:"Characteristics of living things", ch:"Curated search", url:"https://www.youtube.com/results?search_query=characteristics+of+living+things+middle+school", kind:"search", note:"Look for one with a clear checklist — cells, energy, growth, response, reproduction."},
+   {t:"Classification & taxonomy basics", ch:"Curated search", url:"https://www.youtube.com/results?search_query=classification+taxonomy+levels+amoeba+sisters", kind:"search", note:"The Amoeba Sisters' classification video is a reliable pick."},
+   {t:"How to use a dichotomous key", ch:"Curated search", url:"https://www.youtube.com/results?search_query=dichotomous+key+tutorial+middle+school", kind:"search", note:"Pick one that identifies a real organism step by step."},
+   {t:"The six kingdoms of life", ch:"Curated search", url:"https://www.youtube.com/results?search_query=six+kingdoms+of+life+classification+middle+school", kind:"search", note:"Check that it covers all six — some older videos stop at five."},
+   {t:"Archaea: life in extreme places", ch:"Curated search", url:"https://www.youtube.com/results?search_query=archaea+extremophiles+hot+springs+middle+school", kind:"search", note:"Yellowstone hot-spring footage makes this kingdom unforgettable."}
+  ],
+  pretest:[
+   {q:"Which of these is something ALL living things do?", o:["Move around","Use energy","Breathe air","Make their own food"], a:1, lesson:1, why:"Every organism uses energy. Not all of them move, breathe air, or make food."},
+   {q:"Scientists classify organisms into groups based on…", o:["Shared characteristics","Size only","Where they were discovered","Alphabetical order"], a:0, lesson:2, why:"Common characteristics — cell type, energy source, structure — are the basis of every classification model."},
+   {q:"In the scientific name Canis lupus, 'Canis' is the…", o:["Species","Genus","Kingdom","Nickname"], a:1, lesson:3, why:"Scientific names are Genus + species — genus comes first and gets the capital letter."},
+   {q:"Scientists moved from a two-kingdom model to six kingdoms because…", o:["New evidence — like microscopic life — was discovered","They took a vote","The old model was just a guess","Too many animals went extinct"], a:0, lesson:5, why:"Microscopes (and later genetic evidence) revealed organisms the old model couldn't place."},
+   {q:"A mushroom belongs to which kingdom?", o:["Plants","Animals","Fungi","Bacteria"], a:2, lesson:7, why:"Fungi can't make their own food — they absorb nutrients from decaying material, so they're not plants."}
+  ]
+},
 u2:{ sym:"🧫", num:2, name:"Cells & Body Systems", std:"S7L2", color:"var(--u2)", soft:"var(--u2soft)", hex:"#E08F0E", soon:true,
   blurb:"From organelles to organ systems — how cells build tissues, tissues build organs, and organs keep you alive.",
   lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
@@ -1465,7 +1540,14 @@ const distToSeg=(px,py,x1,y1,x2,y2)=>{
    blank: {s: sentence with ___, w: word bank, a: right index}
    sort:  {b: bucket names, items: [[card, bucketIndex],…]} (drag)
    ========================================================= */
-const ACTIVITIES = {};
+const ACTIVITIES = {
+"S7L1.a":{match:[["Unicellular","Made of a single cell"],["Multicellular","Made of many cells working together"],["Prokaryote","Cell with no nucleus"],["Eukaryote","Cell with a nucleus"],["Autotroph","Makes its own food"],["Heterotroph","Must eat other organisms"]],
+ blank:[{s:"All living things are made of one or more ___.",w:["cells","bones","leaves"],a:0},{s:"An organism that makes its own food is an ___.",w:["autotroph","heterotroph","omnivore"],a:0},{s:"A dichotomous key offers ___ choices at every step.",w:["two","ten","random"],a:0},{s:"The most specific classification level is the ___.",w:["species","kingdom","phylum"],a:0}],
+ sort:{b:["Characteristic of ALL living things","NOT required to be alive"],items:[["Made of cells",0],["Uses energy",0],["Grows and develops",0],["Reproduces",0],["Can walk or swim",1],["Has a brain",1],["Is green",1],["Breathes air",1]]}},
+"S7L1.b":{match:[["Archaea","Prokaryotes that thrive in extreme places"],["Bacteria","Prokaryotes living nearly everywhere"],["Protists","Eukaryote 'junk drawer' — amoebas and algae"],["Fungi","Decomposers that absorb their nutrients"],["Plants","Multicellular autotrophs with cell walls"],["Animals","Multicellular heterotrophs — no cell walls"]],
+ blank:[{s:"Aristotle's model sorted all life into plants and ___.",w:["animals","fungi","microbes"],a:0},{s:"The invention of the ___ revealed a hidden world of unicellular life.",w:["microscope","telescope","thermometer"],a:0},{s:"Mushrooms belong to the kingdom ___.",w:["fungi","plants","protists"],a:0},{s:"Classification models changed as new ___ was discovered.",w:["evidence","money","land"],a:0}],
+ sort:{b:["Prokaryotes (no nucleus)","Eukaryotes (nucleus)"],items:[["Bacteria",0],["Archaea",0],["Protists",1],["Fungi",1],["Plants",1],["Animals",1]]}}
+};
 function stdUnit(std){ return STD_LIST[std.split('.')[0]].unit; }
 function unitActs(uid){ return Object.keys(ACTIVITIES).filter(s=>stdUnit(s)===uid); }
 function actTarget(std){ const A=ACTIVITIES[std]; return (A.match.length+A.blank.length+A.sort.items.length)*2; }
@@ -1916,8 +1998,16 @@ const STD_LIST = {
      games    → game id
      quiz     → "uN:quiz"  · pretest → "uN:pre"
    Values are arrays of sub-standard codes like "S8P1.b".            */
-const STD_TAGS = {};
-const QUIZ_TAGS = {u1:[],u2:[],u3:[],u4:[],u5:[]};
+const STD_TAGS = {
+ /* --- Unit 1 lessons --- */
+ "u1:L0":["S7L1.a"], "u1:L1":["S7L1.a"], "u1:L2":["S7L1.a"], "u1:L3":["S7L1.a"],
+ "u1:L4":["S7L1.b"], "u1:L5":["S7L1.b"], "u1:L6":["S7L1.b"],
+ /* --- Unit 1 videos --- */
+ "u1:V0":["S7L1.a"], "u1:V1":["S7L1.a"], "u1:V2":["S7L1.a"], "u1:V3":["S7L1.b"], "u1:V4":["S7L1.b"]
+};
+const QUIZ_TAGS = {
+ u1:["S7L1.a","S7L1.a","S7L1.a","S7L1.a","S7L1.a","S7L1.b","S7L1.b","S7L1.b","S7L1.b","S7L1.b"],
+ u2:[],u3:[],u4:[],u5:[]};
 /* ---------- Resolver: selected sub-standards → concrete content ---------- */
 function resolveStandards(selected){ // selected: ["S8P1.a","S8P1.b",...]
   const sel = new Set(selected);
@@ -1953,8 +2043,26 @@ function decodeAssignment(s){
    WARMUP OF THE DAY — discussion prompts (MC + fill-in-the-blank
    pools reuse the posttest/quiz banks and ACTIVITIES blanks)
    ========================================================= */
-const WARMUPS = {};
-const WARMUPS_MULTI = {};
+const WARMUPS = {
+"S7L1.a":[
+ {q:"List everything a goldfish and an oak tree have in common. What does that tell you about life?", a:"Made of cells, use energy, grow, respond, reproduce — the shared characteristics that define ALL living things."},
+ {q:"Is a virus alive? Make your case using the characteristics of life.", a:"No cells, can't reproduce on its own, no energy use by itself — most scientists say not alive. Reward checklist-based reasoning either way."},
+ {q:"You find a strange organism on a field trip. What questions would you ask to classify it?", a:"One cell or many? Nucleus or not? Makes food or eats it? Cell walls? Listen for questions about observable characteristics."}],
+"S7L1.b":[
+ {q:"Aristotle classified all life as plants or animals 2,300 years ago. Was he wrong — or just early?", a:"He built the best model his evidence allowed. New tools (microscopes, genetics) changed the evidence, so the model changed."},
+ {q:"Why couldn't scientists keep mushrooms in the plant kingdom?", a:"Fungi can't make their own food — no chlorophyll. They absorb nutrients from decaying material, so they earned their own kingdom."},
+ {q:"What invention changed classification more than any other? Defend your pick.", a:"The microscope — it revealed unicellular life that fit neither old kingdom. (Genetic sequencing is a strong modern answer too.)"}]
+};
+const WARMUPS_MULTI = {
+"S7L1.a":[
+ {q:"Invent your own system that sorts every animal in a zoo into exactly three groups. Defend it.", a:"Any consistent, characteristic-based system counts — bonus for systems where every animal fits exactly one group."},
+ {q:"Which characteristic of life is the most important one? Argue your pick.", a:"All defensible — reproduction (no species without it), energy use, cells as the building blocks. Listen for reasoning, not the pick."},
+ {q:"Sketch a dichotomous key that separates a dog, a goldfish, and an eagle.", a:"Many correct keys! Each step must be an either-or characteristic (fur? fins? feathers?) — reward clean two-way splits."}],
+"S7L1.b":[
+ {q:"You discover Earth's 7th kingdom. What's in it, and what do you name it?", a:"Creative — any answer that explains WHY its members fit no existing kingdom shows real understanding."},
+ {q:"Which kingdom would be the worst one to lose? Argue it.", a:"Bacteria and fungi are powerful answers (decomposers, digestion, nutrient cycling) — but any defended choice works."},
+ {q:"Which kingdom is the most underrated? Make the case.", a:"Protists feed the oceans, archaea survive anywhere, fungi recycle the world — listen for real kingdom characteristics."}]
+};
 let WU = null;
 function warmupPool(type, std){
   if(type==='multi') return (WARMUPS_MULTI[std]||[]).map((w,i)=>({key:`multi|${std}|${i}`, q:w.q, a:`<b>Many right answers!</b> ${w.a}`}));
@@ -2635,7 +2743,20 @@ function updateAsnBanner(){
    10 per unit · tagged by sub-standard · distinct from
    the practice quizzes and pretests
    ========================================================= */
-const POSTTESTS = {u1:[],u2:[],u3:[],u4:[],u5:[]};
+const POSTTESTS = {
+u1:[
+ {std:"S7L1.a", q:"A student's model groups dolphins with sharks because 'both swim.' A scientist would place dolphins with mammals instead because…", o:["Dolphins are bigger than sharks","Classification uses MANY shared characteristics — lungs, warm blood, milk — not one behavior","Sharks are not alive","Swimming is impossible to observe"], a:1, why:"A defensible model rests on many common characteristics. By every deep trait, dolphins match mammals, not fish."},
+ {std:"S7L1.a", q:"A new organism has many cells, eats other organisms, and its cells have a nucleus but NO cell wall. Which kingdom?", o:["Plants","Fungi","Animals","Bacteria"], a:2, why:"Multicellular + heterotroph + eukaryote + no cell walls is the animal kingdom's exact membership card."},
+ {std:"S7L1.a", q:"Two organisms share the same genus. What else MUST be true?", o:["They are the same species","They also share the same family, order, class, phylum, and kingdom","They look identical","They live in the same place"], a:1, why:"The levels nest like folders inside folders — same small folder means same every-bigger-folder above it."},
+ {std:"S7L1.a", q:"Why do scientists worldwide use two-word Latin names like Ursus arctos instead of common names like 'brown bear'?", o:["Latin sounds more scientific","One species can have many common names — the scientific name is the same in every country and language","Latin names are shorter","Common names are illegal in science"], a:1, why:"Binomial nomenclature means zero mix-ups: every scientist on Earth knows exactly which species is meant."},
+ {std:"S7L1.a", q:"Why does a dichotomous key beat 'judging by overall appearance' for identifying organisms?", o:["It is faster","Each step tests one clear observable characteristic, so different people reach the same answer","It requires no observations","It works without seeing the organism"], a:1, why:"Either-or steps about specific traits make identification repeatable — the heart of a defensible model."},
+ {std:"S7L1.b", q:"Linnaeus's two-kingdom system worked for a century — until microscopes improved. What broke it?", o:["Plants went extinct","Unicellular organisms were discovered that fit neither kingdom","Animals learned to swim","The kingdoms got too crowded"], a:1, why:"Microbes aren't plants OR animals. The model had to grow to hold the new evidence."},
+ {std:"S7L1.b", q:"Scientists once lumped all prokaryotes into one kingdom. Why was it split into bacteria AND archaea?", o:["They live on different continents","Chemical and genetic evidence revealed they are fundamentally different","Archaea were discovered to have nuclei","One group is much larger"], a:1, why:"Under the microscope they look alike — but their genes and chemistry are as different from each other as from eukaryotes."},
+ {std:"S7L1.b", q:"A euglena makes food like a plant but swims and eats like an animal. Why is it classified as a protist?", o:["Scientists flipped a coin","It doesn't fit cleanly in the plant, animal, or fungus kingdoms — and protists collect those eukaryotes","It is a prokaryote","It is too small to classify"], a:1, why:"Protists are the 'doesn't-fit-elsewhere' kingdom of eukaryotes — euglena is the classic example."},
+ {std:"S7L1.b", q:"Which kingdoms contain ONLY prokaryotes?", o:["Plants and fungi","Bacteria and archaea","Protists and bacteria","Animals and protists"], a:1, why:"Bacteria and archaea: unicellular, no nucleus. The other four kingdoms are all eukaryotes."},
+ {std:"S7L1.b", q:"Classification history went 2 kingdoms → 5 → 6. This BEST shows that…", o:["Early scientists were careless","Scientific models are revised as new tools and evidence appear","Classification is just opinion","The number of kingdoms will always grow"], a:1, why:"From Aristotle's eyes to Linnaeus's system to microscopes to genetics — every new tool refined the model. That's science working."}
+],
+u2:[],u3:[],u4:[],u5:[]};
 function asnPosttestQs(uid, stds){
   const bank = POSTTESTS[uid] || [];
   const sel = new Set(stds || (ASN? ASN.cfg.std : []) || []);
@@ -2762,7 +2883,10 @@ function asnVerifyCode(asnId, nameK, pct, dateStr){
    PERSONALIZED FEEDBACK — built from the attempt log
    ========================================================= */
 /* plain-language re-teach text + figure for every sub-standard */
-const STD_TEACH = {};
+const STD_TEACH = {
+ "S7L1.a":{fig:'taxonomy', teach:"All living things share core characteristics: they're made of cells, use energy, grow and develop, respond to their environment, and reproduce. Scientists build classification models by sorting organisms on shared characteristics — one cell or many (unicellular vs. multicellular), nucleus or not (eukaryote vs. prokaryote), makes food or eats it (autotroph vs. heterotroph). The levels run from kingdom (broadest) down to species (most specific), every species gets a two-word scientific name (Genus + species), and a dichotomous key — a series of either-or choices about observable traits — lets anyone identify an unknown organism and land on the same answer."},
+ "S7L1.b":{fig:null, teach:"Classification models change when new evidence arrives. Aristotle sorted all life into just plants and animals based on what he could see; Linnaeus kept two kingdoms but gave us the naming system. Then microscopes revealed unicellular organisms that fit neither group, so kingdoms were added — and later, chemical and genetic evidence split the prokaryotes into bacteria and archaea. Today's six kingdoms: archaea and bacteria (the prokaryotes), plus protists, fungi, plants, and animals (the eukaryotes). The model improved every time a new tool revealed new evidence — and it may change again."}
+};
 function stdDisplayName(std){
   const [parent, letter] = std.split('.');
   const sub = STD_LIST[parent]?.subs[letter];
