@@ -481,8 +481,8 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
   <p class="lead">Step 1: check every standard your current unit covers. The panel on the right shows exactly which study guides, games, videos, and PhET labs match — live.</p>
 
   <div class="card" style="border:2px solid var(--ac);background:#EDEFFD;margin:0 0 24px;max-width:780px">
-    <h3>🌍 Earth &amp; Space Science — rolling out unit by unit</h3>
-    <p>Unit 1 (The Universe &amp; Solar System) is fully live: study guides, practice quiz, pretest, posttest, practice activities, and warmups. The remaining units appear in the standards tree below and unlock as they're finished — assignments you generate now stay frozen and safe.</p>
+    <h3>🌍 Earth &amp; Space Science — all six units live</h3>
+    <p>Every unit is fully loaded: study guides, practice quizzes, pretests, posttests, practice activities, warmups, and personalized report feedback across all 28 sub-standards. (Minigames are the one piece still in production.)</p>
   </div>
 
   <div class="card" style="border:2px solid #E08F0E;background:#FFF7E8;margin:0 0 24px;max-width:780px">
@@ -1292,9 +1292,63 @@ u5:{ sym:"🌋", num:5, name:"Earth's Surface", std:"S6E5", color:"var(--u5)", s
    {q:"Soil contains weathered rock plus…", o:["Plastic","Decomposed organic material","Pure sand","Lava"], a:1, lesson:9, why:"The organic half — humus — is what makes soil alive and fertile."}
   ]
 },
-u6:{ sym:"♻️", num:6, name:"Natural Resources", std:"S6E6", color:"var(--u1)", soft:"var(--u1soft)", hex:"#2f7a4d", soon:true,
-  blurb:"Renewable vs. nonrenewable energy, protecting water, soil, and air, and the evidence behind rising global temperatures.",
-  lessons:[], quiz:[], vocab:[], videos:[], pretest:[] }
+u6:{ sym:"♻️", num:6, name:"Natural Resources", std:"S6E6", color:"var(--u1)", soft:"var(--u1soft)", hex:"#2f7a4d",
+  blurb:"Everything you used today came from Earth. Which resources refill themselves, which run out, and how do we keep the water, soil, and air in working order?",
+  lessons:[
+   {t:"Renewable Energy Resources", body:`<b>Renewable (sustainable) resources</b> are replaced naturally about as fast as we use them. The lineup: <b>solar</b> (panels turning sunlight into electricity), <b>wind</b> (turbines), <b>hydroelectric</b> (falling water spinning generators behind dams), <b>geothermal</b> (Earth's internal heat), <b>tidal</b> (the moon's twice-daily ocean pull), and <b>biomass</b> (plant material and waste burned or turned into fuel). You use them every day: solar calculators, wind-powered grids, hydro electricity.`,
+    callout:["Spot the Connections","Wind exists because the sun heats Earth unevenly (Unit 4), tides come from the moon (Units 2–3), and geothermal taps the hot interior (Unit 5). This unit is the whole course holding hands."]},
+   {t:"Nonrenewable Energy Resources", body:`<b>Nonrenewable resources</b> form over <em>millions of years</em> — use them up and they're gone on any human timescale. <b>Fossil fuels</b> — <b>coal, oil (petroleum), and natural gas</b> — are the buried, transformed remains of ancient organisms; they power most cars, power plants, and furnaces today. <b>Nuclear energy</b> splits <b>uranium</b> atoms to make heat — no air pollution while running, but the uranium is finite and the waste must be stored carefully.`},
+   {t:"Protecting Water, Soil & Air", body:`Engineers and communities <b>design and evaluate solutions</b> to keep resources usable. <b>Water</b>: low-flow fixtures, rain barrels, protecting wetlands and watersheds, fixing leaks. <b>Soil</b>: crop rotation, cover crops, no-till farming, terracing — keeping the centuries-old topsoil where it belongs. <b>Air</b>: scrubbers on smokestacks, catalytic converters, cleaner fuels, public transit. Every solution gets judged the same way: how well does it work, what does it cost, and what are the trade-offs?`,
+    callout:["Think Like an Engineer","There's no perfect solution — only trade-offs. The standard asks you to DESIGN one and EVALUATE it honestly."]},
+   {t:"Earth's Rising Temperature: The Evidence", body:`Over the past century, Earth's average surface temperature has risen by roughly <b>1°C (about 2°F)</b>. The evidence comes from many independent sources that agree: thermometer records worldwide, <b>ice cores</b> (bubbles of ancient air showing past CO<sub>2</sub> levels), shrinking glaciers and sea ice, rising sea level, and earlier springs. Over the same century, burning fossil fuels has raised atmospheric CO<sub>2</sub> — a greenhouse gas (Unit 4) — to levels far above anything in the ice-core record.`},
+   {t:"Weighing the Contributions", body:`Scientists <b>construct arguments from evidence</b> when explaining the warming. Natural factors — volcanic eruptions, small solar cycles — are real but measured to be too small and in the wrong patterns to explain the past century's rise. The greenhouse-gas increase from human activity (burning fossil fuels, deforestation) matches the timing, the amount, and the fingerprints. That's why the scientific consensus points to human activity as the major contributor — and why the energy choices in this unit matter.`,
+    callout:["Your Skill Here","The standard isn't about memorizing a conclusion — it's about EVALUATING evidence: what data supports a claim, and how strong is it?"]}
+  ],
+  quiz:[
+   {q:"A renewable resource is one that…", o:["Never gets used","Is replaced by nature about as fast as we use it","Comes only from the sun","Is always free"], a:1, why:"Renewable = replenished on human timescales: solar, wind, hydro, geothermal, tidal, biomass."},
+   {q:"Which list contains ONLY renewable energy resources?", o:["Coal, oil, natural gas","Solar, wind, hydroelectric","Uranium, coal, tidal","Oil, biomass, gas"], a:1, why:"Sun, wind, and water keep coming. Coal, oil, gas, and uranium are one-time supplies."},
+   {q:"Fossil fuels formed from…", o:["Volcanoes","The remains of ancient organisms buried for millions of years","Sea salt","Meteor impacts"], a:1, why:"Ancient organisms, buried, squeezed, and transformed — that's why they can't be quickly replaced."},
+   {q:"Nuclear energy is considered NONrenewable because…", o:["It makes greenhouse gases","Uranium supplies are limited and not replaced by nature","Reactors run on coal","It uses water"], a:1, why:"Nuclear plants emit no CO₂ while running, but the uranium fuel is finite."},
+   {q:"Which is an everyday use of a renewable resource?", o:["Filling a gasoline tank","Electricity from a hydroelectric dam","Burning coal for heat","A diesel generator"], a:1, why:"Falling water spins generators — renewable energy lighting whole regions."},
+   {q:"Crop rotation and cover crops are solutions designed mainly to protect…", o:["Air","Soil","Sunlight","Uranium"], a:1, why:"They keep nutrients balanced and roots holding the topsoil — soil conservation classics."},
+   {q:"Scrubbers on smokestacks and catalytic converters on cars are designed to protect…", o:["Water","Soil","Air quality","Forests"], a:2, why:"Both strip pollutants out of exhaust before it reaches the atmosphere."},
+   {q:"A rain barrel under a gutter is a simple solution for conserving…", o:["Air","Soil","Water","Coal"], a:2, why:"Captured rain waters gardens for free and reduces demand on treated water."},
+   {q:"Which is direct evidence that Earth's average temperature has risen over the past century?", o:["One hot summer in Georgia","Worldwide thermometer records, shrinking glaciers, and rising sea level together","A single melted ice cube","More air conditioners being sold"], a:1, why:"One data point isn't a trend — multiple independent global datasets agreeing IS."},
+   {q:"Ice cores help scientists study past climate because they contain…", o:["Frozen dinosaurs","Trapped bubbles of ancient air showing past CO₂ levels","Old thermometers","Salt water"], a:1, why:"Each layer seals a sample of that year's atmosphere — a CO₂ record reaching back hundreds of thousands of years."}
+  ],
+  vocab:[
+   ["Natural resource","A material from Earth that people use."],
+   ["Renewable resource","Replaced by nature about as fast as it's used."],
+   ["Nonrenewable resource","Used faster than nature can replace it."],
+   ["Fossil fuel","Coal, oil, or natural gas — ancient buried organisms."],
+   ["Solar energy","Electricity or heat captured from sunlight."],
+   ["Wind energy","Electricity from turbines turned by moving air."],
+   ["Hydroelectric energy","Electricity from falling water spinning generators."],
+   ["Geothermal energy","Heat from inside the Earth."],
+   ["Tidal energy","Power captured from the rise and fall of tides."],
+   ["Biomass","Energy from plant material and organic waste."],
+   ["Nuclear energy","Heat from splitting uranium atoms."],
+   ["Conservation","Using resources carefully so they last."],
+   ["Sustainability","Meeting today's needs without wrecking tomorrow's."],
+   ["Greenhouse gas","A heat-trapping gas such as CO₂ or methane."],
+   ["Ice core","A drilled cylinder of ancient ice — a climate time capsule."],
+   ["Climate","The long-term pattern of weather in a region."]
+  ],
+  videos:[
+   {t:"Renewable vs. nonrenewable energy", ch:"Curated search", url:"https://www.youtube.com/results?search_query=renewable+vs+nonrenewable+energy+resources+middle+school", kind:"search", note:""},
+   {t:"How fossil fuels form", ch:"Curated search", url:"https://www.youtube.com/results?search_query=how+fossil+fuels+form+coal+oil+natural+gas+middle+school", kind:"search", note:""},
+   {t:"Soil & water conservation solutions", ch:"Curated search", url:"https://www.youtube.com/results?search_query=soil+and+water+conservation+methods+middle+school", kind:"search", note:""},
+   {t:"Ice cores: reading past climate", ch:"Curated search", url:"https://www.youtube.com/results?search_query=ice+cores+climate+evidence+middle+school", kind:"search", note:"Teacher preview recommended — pick an evidence-focused one."},
+   {t:"Greenhouse Effect", ch:"PhET Interactive Simulations", url:"https://phet.colorado.edu/en/simulations/greenhouse-effect", kind:"phet", note:"Adjust greenhouse gas levels and watch the temperature respond — evidence you can experiment with."}
+  ],
+  pretest:[
+   {q:"Solar, wind, and hydroelectric power are all ___ resources.", o:["Nonrenewable","Renewable","Fossil","Imaginary"], a:1, lesson:1, why:"Nature keeps resupplying sunlight, wind, and flowing water."},
+   {q:"Coal, oil, and natural gas are called…", o:["Renewable resources","Fossil fuels","Biomass","Solar fuels"], a:1, lesson:2, why:"They're the transformed remains of ancient life — finite and nonrenewable."},
+   {q:"Nuclear power plants run on…", o:["Coal","Uranium","Sunlight","Water vapor"], a:1, lesson:2, why:"Splitting uranium atoms releases enormous heat."},
+   {q:"Planting cover crops protects which resource?", o:["Air","Soil","Oil","Wind"], a:1, lesson:3, why:"Roots hold precious topsoil in place between growing seasons."},
+   {q:"Over the past century, Earth's average temperature has…", o:["Stayed exactly the same","Risen","Dropped sharply","Doubled"], a:1, lesson:4, why:"About 1°C of warming, recorded by thermometers, glaciers, and sea level together."}
+  ]
+}
 };
 
 /* =========================================================
@@ -1846,7 +1900,16 @@ const ACTIVITIES = {
  sort:{b:["Good evidence Earth changed","Not fossil evidence"],items:[["Fish fossils in a desert",0],["Ferns fossilized in Antarctica",0],["Shells in mountain rock",0],["Coral fossils far from any ocean",0],["A rock that looks cool",1],["A shiny mineral",1],["Yesterday's footprints in mud",1],["A plastic toy in the yard",1]]}},
 "S6E5.h":{match:[["Soil","Weathered rock + decomposed organic material"],["Humus","The dark, decayed organic part"],["Topsoil (A horizon)","Where roots and most life live"],["C horizon","Chunks of weathered parent rock"],["Bedrock","The solid rock below it all"]],
  blank:[{s:"The organic part of soil is called ___.",w:["humus","lava","clay"],a:0},{s:"Good topsoil takes ___ to form.",w:["centuries","minutes","one storm"],a:0},{s:"Soil forms as rock ___ and life decays.",w:["weathers","freezes","votes"],a:0},{s:"The deepest soil layer sits on solid ___.",w:["bedrock","sand","water"],a:0}],
- sort:{b:["Near the TOP of a soil profile","Near the BOTTOM"],items:[["Fallen leaves and humus",0],["Dark topsoil",0],["Earthworms and roots",0],["Chunks of weathered rock",1],["The C horizon",1],["Solid bedrock",1]]}}
+ sort:{b:["Near the TOP of a soil profile","Near the BOTTOM"],items:[["Fallen leaves and humus",0],["Dark topsoil",0],["Earthworms and roots",0],["Chunks of weathered rock",1],["The C horizon",1],["Solid bedrock",1]]}},
+"S6E6.a":{match:[["Solar","Energy captured from sunlight"],["Hydroelectric","Falling water spins generators"],["Geothermal","Earth's internal heat"],["Fossil fuels","Coal, oil & natural gas — ancient organisms"],["Nuclear","Splitting uranium atoms"],["Biomass","Energy from plants and organic waste"]],
+ blank:[{s:"Fossil fuels take ___ of years to form.",w:["millions","dozens","hundreds"],a:0},{s:"Wind and solar are ___ resources.",w:["renewable","nonrenewable","fossil"],a:0},{s:"Nuclear power plants split ___ atoms.",w:["uranium","oxygen","carbon"],a:0},{s:"Tidal energy is powered by the ___'s pull on the ocean.",w:["moon","sun","wind"],a:0}],
+ sort:{b:["Renewable","Nonrenewable"],items:[["Solar panels",0],["Wind turbines",0],["Hydroelectric dam",0],["Geothermal plant",0],["Tidal generator",0],["Coal",1],["Oil (petroleum)",1],["Natural gas",1],["Nuclear (uranium)",1]]}},
+"S6E6.b":{match:[["Crop rotation","Keeps soil nutrients balanced"],["Cover crops","Roots hold topsoil between seasons"],["Rain barrel","Captures free water for gardens"],["Smokestack scrubber","Strips pollutants from factory exhaust"],["Wetland protection","Filters water and recharges aquifers"]],
+ blank:[{s:"Terracing slows erosion on steep ___.",w:["slopes","rivers","clouds"],a:0},{s:"Catalytic converters clean car ___.",w:["exhaust","tires","seats"],a:0},{s:"Every solution has costs and ___-offs to evaluate.",w:["trade","take","hand"],a:0},{s:"Fixing a dripping faucet conserves ___.",w:["water","soil","coal"],a:0}],
+ sort:{b:["Protects WATER","Protects SOIL","Protects AIR"],items:[["Rain barrels",0],["Protecting wetlands",0],["Low-flow showerheads",0],["Cover crops",1],["No-till farming",1],["Terracing hillsides",1],["Smokestack scrubbers",2],["Riding the bus instead of driving",2]]}},
+"S6E6.c":{match:[["Ice cores","Trapped ancient air reveals past CO₂"],["Thermometer records","Direct global temperature data"],["Shrinking glaciers","Physical evidence of warming"],["Greenhouse gases","Trap heat — increased by burning fossil fuels"],["Scientific argument","A claim supported by evidence"]],
+ blank:[{s:"Earth's average temperature rose about ___°C in the past century.",w:["1","10","0"],a:0},{s:"Strong claims need ___ lines of evidence.",w:["multiple","zero","secret"],a:0},{s:"Burning fossil fuels adds ___ to the atmosphere.",w:["CO₂","oxygen","ozone"],a:0},{s:"Ice cores hold bubbles of ancient ___.",w:["air","lava","gold"],a:0}],
+ sort:{b:["Strong evidence of warming","NOT good evidence"],items:[["Worldwide thermometer records",0],["Glaciers shrinking for decades",0],["Rising sea level",0],["Ice-core CO₂ records",0],["One hot afternoon",1],["A single melted snowman",1],["My cousin's opinion",1],["One cold day in winter",1]]}}
 };
 function stdUnit(std){ return STD_LIST[std.split('.')[0]].unit; }
 function unitActs(uid){ return Object.keys(ACTIVITIES).filter(s=>stdUnit(s)===uid); }
@@ -2337,7 +2400,11 @@ const STD_TAGS = {
  "u5:L0":["S6E5.a"], "u5:L1":["S6E5.b"], "u5:L2":["S6E5.c"], "u5:L3":["S6E5.d"],
  "u5:L4":["S6E5.d"], "u5:L5":["S6E5.e"], "u5:L6":["S6E5.f"], "u5:L7":["S6E5.g"], "u5:L8":["S6E5.h"],
  /* --- Unit 5 videos --- */
- "u5:V0":["S6E5.a"], "u5:V1":["S6E5.b"], "u5:V2":["S6E5.c"], "u5:V3":["S6E5.d","S6E5.e"], "u5:V4":["S6E5.g"], "u5:V5":["S6E5.f"]
+ "u5:V0":["S6E5.a"], "u5:V1":["S6E5.b"], "u5:V2":["S6E5.c"], "u5:V3":["S6E5.d","S6E5.e"], "u5:V4":["S6E5.g"], "u5:V5":["S6E5.f"],
+ /* --- Unit 6 lessons --- */
+ "u6:L0":["S6E6.a"], "u6:L1":["S6E6.a"], "u6:L2":["S6E6.b"], "u6:L3":["S6E6.c"], "u6:L4":["S6E6.c"],
+ /* --- Unit 6 videos --- */
+ "u6:V0":["S6E6.a"], "u6:V1":["S6E6.a"], "u6:V2":["S6E6.b"], "u6:V3":["S6E6.c"], "u6:V4":["S6E6.c"]
 };
 
 /* ---------- per-question sub-standard tags for the practice quizzes
@@ -2348,7 +2415,7 @@ const QUIZ_TAGS = {
  u3:["S6E3.a","S6E3.a","S6E3.a","S6E3.b","S6E3.b","S6E3.c","S6E3.c","S6E3.d","S6E3.d","S6E3.d"],
  u4:["S6E4.a","S6E4.a","S6E4.a","S6E4.b","S6E4.b","S6E4.c","S6E4.c","S6E4.d","S6E4.d","S6E4.e"],
  u5:["S6E5.a","S6E5.b","S6E5.c","S6E5.c","S6E5.d","S6E5.e","S6E5.f","S6E5.f","S6E5.g","S6E5.h"],
- u6:[]
+ u6:["S6E6.a","S6E6.a","S6E6.a","S6E6.a","S6E6.a","S6E6.b","S6E6.b","S6E6.b","S6E6.c","S6E6.c"]
 };
 
 /* ---------- Resolver: selected sub-standards → concrete content ---------- */
@@ -2486,7 +2553,19 @@ const WARMUPS = {
 "S6E5.h":[
  {q:"Why can't we just manufacture new topsoil when we wear it out?", a:"Real soil needs centuries of weathering rock + generations of decomposing life. Listen for BOTH ingredients."},
  {q:"Shake garden soil in a jar of water and let it settle overnight. Predict the layers.", a:"Sand at the bottom, silt, then clay, with organic bits floating — soil is layered weathered rock + organic matter."},
- {q:"Describe everything a shovelful of forest soil contains.", a:"Mineral grains (weathered rock), humus, roots, fungi, insects, water, air — a living mixture in layers."}]
+ {q:"Describe everything a shovelful of forest soil contains.", a:"Mineral grains (weathered rock), humus, roots, fungi, insects, water, air — a living mixture in layers."}],
+"S6E6.a":[
+ {q:"What's the difference between renewable and nonrenewable — and why does the TIMESCALE matter?", a:"Renewable: replaced about as fast as used (sun, wind, water). Nonrenewable: millions of years to form (fossil fuels, uranium)."},
+ {q:"Where did the electricity powering this classroom probably come from? Trace it back.", a:"Georgia grid: natural gas, nuclear (Plant Vogtle!), hydro, growing solar — trace outlet → lines → plant → fuel."},
+ {q:"Why are coal, oil, and natural gas called FOSSIL fuels?", a:"They're the buried, transformed remains of ancient organisms — energy from sunlight captured by life millions of years ago."}],
+"S6E6.b":[
+ {q:"Name one thing our school could do this month to protect water, soil, or air.", a:"Any real solution + which resource it protects; bonus for naming a trade-off (cost, effort)."},
+ {q:"Why does protecting a wetland count as protecting a town's drinking water?", a:"Wetlands filter runoff and recharge the aquifers wells draw from."},
+ {q:"What does it mean to EVALUATE a solution instead of just liking it?", a:"Test it against effectiveness, cost, and trade-offs — engineering judgment, not vibes."}],
+"S6E6.c":[
+ {q:"What kinds of EVIDENCE do scientists use to track Earth's temperature over a whole century?", a:"Global thermometer records, ice cores, glacier extent, sea level — multiple independent sources."},
+ {q:"Why is one independent line of evidence never enough for a big scientific claim?", a:"Any single source can have errors; independent lines agreeing make the claim strong."},
+ {q:"How do greenhouse gases connect Unit 4's atmosphere lesson to this unit's energy choices?", a:"Burning fossil fuels adds CO₂ → thicker heat-trapping blanket → rising temperatures; energy choices control the input."}]
 };
 
 /* "many right answers" — any well-defended choice counts */
@@ -2590,7 +2669,19 @@ const WARMUPS_MULTI = {
 "S6E5.h":[
  {q:"Soil or oil: which resource should worry us more if we waste it? Argue it.", a:"Both slow to form! Soil grows food and takes centuries; oil takes millions of years. Either defended side."},
  {q:"Design the perfect soil for a garden. What's your recipe?", a:"Mineral mix (sand/silt/clay), generous humus, water, air, worms — listen for weathered rock + organic matter."},
- {q:"Why do farmers fight harder for their topsoil than for almost anything else?", a:"Centuries to form, holds nutrients and water, grows everything — lose it and the farm is done."}]
+ {q:"Why do farmers fight harder for their topsoil than for almost anything else?", a:"Centuries to form, holds nutrients and water, grows everything — lose it and the farm is done."}],
+"S6E6.a":[
+ {q:"List every energy resource you've used since waking up — and label each renewable or nonrenewable.", a:"Lights/phone (grid: mostly gas/nuclear/some renewables in GA), bus (diesel), breakfast (biomass!). Listen for correct labels."},
+ {q:"Why is biomass renewable but coal is not — when both come from plants?", a:"Biomass regrows in seasons; coal took millions of years of burial and transformation. Timescale is everything."},
+ {q:"Georgia gets energy from nuclear, gas, hydro, and solar. Why use a MIX instead of just one source?", a:"Reliability (sun sets, wind stops), cost, fuel limits — a portfolio covers each source's weakness."}],
+"S6E6.b":[
+ {q:"Your school wants to cut its water use by 25%. Design two solutions and evaluate the trade-offs.", a:"Low-flow fixtures (cost up front), rain barrels for landscaping, leak hunts — listen for design + honest evaluation."},
+ {q:"Why would a farmer leave a field unplanted-looking with clover all winter on purpose?", a:"Cover crops: roots hold topsoil, add nutrients, stop winter erosion."},
+ {q:"What happens to a town's air, water, AND soil when a forest uphill is clear-cut?", a:"Erosion muddies water, topsoil washes away, fewer trees filtering air — one change ripples through all three."}],
+"S6E6.c":[
+ {q:"A claim needs evidence. What evidence would convince you Earth's average temperature rose over the past century?", a:"Multiple independent lines: global thermometer records, glaciers, sea level, ice cores — listen for 'more than one source.'"},
+ {q:"How can bubbles in ancient ice tell us about today's climate?", a:"Each layer traps that year's air; measuring CO₂ across layers builds a baseline — modern levels stand far above it."},
+ {q:"Why do scientists compare natural factors (volcanoes, solar cycles) against human factors when explaining warming?", a:"That IS evaluating contributions: test each candidate cause against the data's size and timing, keep what fits."}]
 };
 
 let WU = null;
@@ -3334,7 +3425,18 @@ u5:[
  {std:"S6E5.g", q:"Fossils of tropical ferns are found in Antarctica. The best conclusion is…", o:["Ferns once grew in ice","Antarctica's climate (and position) was once warm — Earth's surface changes","Someone planted them","Fossils form in snow"], a:1, why:"Fossil evidence + plate motion: that land was once warm and positioned differently. Climates and surfaces change."},
  {std:"S6E5.h", q:"In a soil profile, which layer is richest in decomposed organic material (humus)?", o:["Bedrock","C horizon","The dark top layers (O and A)","Subsoil"], a:2, why:"Organic litter decays at the surface, making the dark, fertile topsoil where roots thrive."}
 ],
-u6:[]
+u6:[
+ {std:"S6E6.a", q:"A country builds dams, wind farms, and solar plants. All three energy sources share what advantage?", o:["They work only at night","Nature keeps resupplying them","They burn cleaner coal","They never break"], a:1, why:"Falling water, wind, and sunlight are renewable — used today, available again tomorrow."},
+ {std:"S6E6.a", q:"Why can't we simply make more oil when supplies run low?", o:["It's illegal","Oil forms from buried organisms over millions of years","Oil comes from space","We can — it's renewable"], a:1, why:"Fossil fuels need geologic time to form. On human timescales, what we have is what we get."},
+ {std:"S6E6.a", q:"Tidal energy is renewable because its 'fuel supply' is…", o:["Burning seaweed","The moon's gravity moving the ocean twice a day","Ship engines","Warm water"], a:1, why:"As long as the moon orbits, the tides keep coming — a perfectly predictable renewable."},
+ {std:"S6E6.a", q:"Which energy source does NOT release greenhouse gases while generating power, but still counts as nonrenewable?", o:["Coal","Wind","Nuclear (uranium)","Biomass"], a:2, why:"Nuclear runs clean but on a finite fuel — uranium isn't replenished by nature."},
+ {std:"S6E6.a", q:"Geothermal power plants in places like Iceland get their energy from…", o:["Volcgas burning","Earth's internal heat","Imported coal","Wind caves"], a:1, why:"Heat from inside the Earth (Unit 5's hot interior!) boils water to spin turbines — renewable and steady."},
+ {std:"S6E6.b", q:"A farm switches to no-till planting and cover crops. The PRIMARY resource being protected is…", o:["Air","Topsoil","Oil","Sunlight"], a:1, why:"Both practices keep roots in the ground and soil out of the rivers — protecting centuries-old topsoil."},
+ {std:"S6E6.b", q:"Which solution best protects a town's groundwater supply?", o:["Paving more parking lots","Protecting the wetlands that filter and recharge the aquifer","Pumping wells faster","Removing all trees"], a:1, why:"Wetlands filter water and let it soak down to recharge aquifers — pavement does the opposite."},
+ {std:"S6E6.b", q:"When engineers EVALUATE a conservation solution, they should ask…", o:["Is it expensive enough?","How well does it work, what does it cost, and what are the trade-offs?","Is it popular online?","Does it look impressive?"], a:1, why:"Design-and-evaluate means weighing effectiveness, cost, and side effects honestly — no solution is free."},
+ {std:"S6E6.c", q:"Which combination of evidence BEST supports the claim that global temperatures rose over the past century?", o:["One record-hot day","Thermometer records + shrinking glaciers + rising sea level, all agreeing","A warm winter in one town","Old photographs"], a:1, why:"Strong claims need multiple independent lines of evidence pointing the same way."},
+ {std:"S6E6.c", q:"When evaluating contributions to the past century's warming, scientists concluded natural factors alone (volcanoes, solar cycles)…", o:["Explain everything","Are too small and mismatched in timing to explain the rise — greenhouse gases from human activity fit the data","Cooled the planet completely","Cannot be measured"], a:1, why:"That's constructing an argument from evidence: test each contributor against the data and keep what fits."}
+]
 };
 
 
@@ -3489,7 +3591,10 @@ const STD_TEACH = {
  "S6E5.e":{fig:null, teach:"Earth's surface is always being re-edited. Natural processes — weathering, erosion, deposition — carve canyons and rebuild coastlines over long ages. Human activity edits faster: mining removes hillsides, construction and deforestation strip the plants whose roots hold soil, dams trap river sediment. Practices like replanting, terracing, and cover crops slow the loss."},
  "S6E5.f":{fig:null, teach:"Earth's outer shell is broken into lithospheric plates that creep along on the soft mantle. The drama happens at the boundaries: divergent (plates pull apart — mid-ocean ridges, new crust), convergent (plates collide — mountain ranges, trenches, volcanoes), and transform (plates grind sideways — earthquakes, like the San Andreas Fault). That's why earthquakes and volcanic eruptions cluster along plate edges, such as the Pacific Ring of Fire."},
  "S6E5.g":{fig:null, teach:"Fossils — preserved remains and traces of ancient life — form mostly in sedimentary layers, oldest on the bottom. They're evidence that Earth's surface and climate change: marine fossils on mountaintops mean that rock was once sea floor before plates lifted it; tropical fossils in polar lands mean those places were once warm. Maps of fossil finds let scientists argue exactly how the surface has rearranged."},
- "S6E5.h":{fig:null, teach:"Soil is a layered blend of weathered rock and decomposed organic material (humus), plus water and air. From top down: the O horizon (organic litter), A horizon (dark, fertile topsoil), B horizon (subsoil), C horizon (chunks of weathered parent rock), then bedrock. Because good topsoil takes centuries to build, protecting it matters."}
+ "S6E5.h":{fig:null, teach:"Soil is a layered blend of weathered rock and decomposed organic material (humus), plus water and air. From top down: the O horizon (organic litter), A horizon (dark, fertile topsoil), B horizon (subsoil), C horizon (chunks of weathered parent rock), then bedrock. Because good topsoil takes centuries to build, protecting it matters."},
+ "S6E6.a":{fig:null, teach:"Renewable (sustainable) resources are replaced by nature about as fast as we use them: solar, wind, hydroelectric, geothermal, tidal, and biomass. Nonrenewable resources form over millions of years and don't come back on human timescales: the fossil fuels (coal, oil, natural gas — transformed remains of ancient organisms) and nuclear fuel (uranium). Both kinds power your everyday life — the difference is whether the fuel tank refills."},
+ "S6E6.b":{fig:null, teach:"Sustaining resources is an engineering problem: design a solution, then evaluate it. Water: low-flow fixtures, rain barrels, wetland and watershed protection. Soil: crop rotation, cover crops, no-till farming, terracing. Air: smokestack scrubbers, catalytic converters, cleaner transportation. Every solution gets judged on how well it works, what it costs, and its trade-offs."},
+ "S6E6.c":{fig:null, teach:"Earth's average temperature rose about 1°C over the past century. The evidence comes from multiple independent sources that agree: worldwide thermometer records, ice cores (ancient air bubbles showing past CO₂ levels), shrinking glaciers, and rising sea level. Evaluating contributions means testing each candidate cause against the data: measured natural factors (volcanoes, solar cycles) are too small and mistimed to explain the rise, while the greenhouse-gas increase from burning fossil fuels matches it — that's how scientists construct the argument."}
 };
 function stdDisplayName(std){
   const [parent, letter] = std.split('.');
