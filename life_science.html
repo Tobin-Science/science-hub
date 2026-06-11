@@ -2129,6 +2129,113 @@ GAMES.u5b={title:"Fossil Dig",icon:"⛏️",id:"u5b",unit:"u5",
   draw();
  }};
 
+/* =========================================================
+   LIFE SCIENCE — THIRD GAME PER UNIT (5 more)
+   Adds a new "odd one out" tap mechanic (DOM chips, no SVG).
+   ========================================================= */
+
+/* ---------- reusable mechanic: ODD ONE OUT (tap the misfit) ----------
+   rounds = [ {prompt, items:[[emoji,label],...], odd:index, why}, ... ] */
+function oddGame(areaId,id,title,desc,rounds){
+  kineShell(areaId,id,title,desc,`<span>ROUND <b id="${areaId}-r">1</b>/${rounds.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const deck=shuffle([...rounds]); let i=0,score=0,tries=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=deck.length){ kineDone(areaId,id,score); return; }
+    tries=0; document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    const rd=deck[i]; const shown=shuffle(rd.items.map((_,k)=>k));
+    stage.innerHTML=`<div style="font-size:1.04rem;margin-bottom:10px">${rd.prompt}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">${shown.map(k=>
+        `<button class="gbtn koc" data-k="${k}" style="min-width:130px;max-width:170px;white-space:normal;line-height:1.3">${rd.items[k][0]}<br>${rd.items[k][1]}</button>`).join('')}</div>`;
+    stage.querySelectorAll('.koc').forEach(b=>b.onclick=()=>{
+      const k=+b.dataset.k; tries++;
+      if(k===rd.odd){ b.style.boxShadow='0 0 0 3px #5ad08a';
+        stage.querySelectorAll('.koc').forEach(x=>x.disabled=true);
+        const pts=tries===1?12:tries===2?7:4; score+=pts; kineScore(areaId,score);
+        kineMsg(areaId,`✅ <b>That's the odd one!</b> <span class="why">${rd.why}</span> +${pts}`);
+        i++; setTimeout(draw,1800);
+      } else { b.style.boxShadow='0 0 0 3px #f08c8c'; b.style.opacity='.5'; b.disabled=true;
+        kineMsg(areaId,`❌ <b>That one fits the group.</b> <span class="why">Look again — which one is different?</span>`); }
+    });
+  }
+  draw();
+}
+
+/* u1c · ODD ONE OUT — spot the organism that doesn't belong (S7L1.b) */
+GAMES.u1c={title:"Odd One Out",icon:"🔍",id:"u1c",unit:"u1",
+ desc:"Three of these share a group; one doesn't. TAP the organism that does NOT belong.",
+ start(areaId){ oddGame(areaId,'u1c',this.title,this.desc,[
+  {prompt:"Three are PLANTS. Tap the one that is NOT.",items:[["🌳","Oak tree"],["🌿","Fern"],["🌾","Wheat"],["🍄","Mushroom"]],odd:3,why:"A mushroom is a FUNGUS — it absorbs food instead of making it like plants do."},
+  {prompt:"Three are ANIMALS. Tap the one that is NOT.",items:[["🐝","Honeybee"],["🐟","Fish"],["🦅","Eagle"],["🌵","Cactus"]],odd:3,why:"A cactus is a plant — it makes its own food. The others are heterotrophs that eat."},
+  {prompt:"Three are made of MANY cells. Tap the unicellular one.",items:[["🦠","Bacterium"],["🐘","Elephant"],["🌻","Sunflower"],["🐠","Clownfish"]],odd:0,why:"A bacterium is a single cell (unicellular). The others are multicellular."},
+  {prompt:"Three are AUTOTROPHS (make their own food). Tap the one that isn't.",items:[["🌲","Pine tree"],["🌱","Grass"],["🦌","Deer"],["🪴","Houseplant"]],odd:2,why:"A deer is a heterotroph — it must eat other organisms. Plants make their own food."},
+  {prompt:"Three are PROKARYOTES (no nucleus). Tap the eukaryote.",items:[["🦠","Bacterium"],["♨️","Archaeon"],["🧫","Another bacterium"],["🍄","Yeast (a fungus)"]],odd:3,why:"Yeast is a eukaryote — its cells have a nucleus. Bacteria and archaea are prokaryotes."},
+  {prompt:"Three are DECOMPOSERS. Tap the one that is NOT.",items:[["🍄","Mushroom"],["🦠","Soil bacteria"],["🧫","Mold"],["🦁","Lion"]],odd:3,why:"A lion is a consumer (predator). The others break down dead material as decomposers."}
+ ]); }};
+
+/* u2c · BODY SYSTEM SORT — match the job to its body system (S7L2.c) */
+GAMES.u2c={title:"Body System Sort",icon:"🫀",id:"u2c",unit:"u2",
+ desc:"Your body systems work as a team. DRAG each job or organ onto the system it belongs to.",
+ start(areaId){ binGame(areaId,'u2c',this.title,this.desc,[
+  ["Takes in oxygen and releases carbon dioxide","R","Gas exchange is the respiratory system's job."],
+  ["The lungs","R","The lungs are the main organs of the respiratory system."],
+  ["The heart pumps to keep it moving","C","The heart drives the cardiovascular (circulatory) system."],
+  ["Delivers oxygen and nutrients to every cell","C","Blood is the body's delivery service — cardiovascular system."],
+  ["Blood vessels carry it through the body","C","Arteries and veins are part of the cardiovascular system."],
+  ["Breaks food down into usable nutrients","D","Breaking down food is the digestive system's job."],
+  ["The stomach and intestines","D","These organs digest food and absorb nutrients."],
+  ["Absorbs nutrients from your meal","D","Nutrient absorption happens in the digestive system."],
+  ["The brain sends and receives signals","N","The brain is the command center of the nervous system."],
+  ["Senses the world and controls your muscles","N","Sensing and commanding is the nervous system's job."],
+  ["Fast electrical messages travel through nerves","N","Nerves carry the nervous system's signals."],
+  ["White blood cells hunt down germs","C","White blood cells travel in the blood (cardiovascular) to reach infections — systems working together!"]
+ ],[
+  {t:"R",label:"RESPIRATORY",emoji:"🫁",sub:"oxygen"},
+  {t:"C",label:"CARDIOVASCULAR",emoji:"🫀",sub:"delivery"},
+  {t:"D",label:"DIGESTIVE",emoji:"🍎",sub:"food"},
+  {t:"N",label:"NERVOUS",emoji:"🧠",sub:"signals"}
+ ]); }};
+
+/* u3c · WHO CHOSE? — selective breeding vs natural selection (S7L3.c) */
+GAMES.u3c={title:"Who Chose?",icon:"👩‍🌾",id:"u3c",unit:"u3",
+ desc:"Same engine, different driver. SWIPE each example — left if HUMANS chose the trait, right if the ENVIRONMENT did.",
+ start(areaId){ swipeGame(areaId,'u3c',this.title,this.desc,[
+  ["A farmer breeds only her sweetest corn, year after year","L","Humans picking the parents = selective breeding."],
+  ["Faster gazelles escape lions and have more offspring","R","Predators (the environment) do the choosing = natural selection."],
+  ["Breeders pair the gentlest dogs to get calm puppies","L","People choosing which dogs reproduce = selective breeding."],
+  ["Dark moths survive better on soot-darkened trees","R","The environment favors the camouflaged moths = natural selection."],
+  ["Cattle are bred over generations for more milk","L","Humans selecting the highest-milk cows = selective breeding."],
+  ["Bacteria that resist an antibiotic survive and multiply","R","The antibiotic (environment) selects the survivors = natural selection."],
+  ["Seedless watermelons were developed by people","L","Humans guided this trait = selective breeding."],
+  ["A drought favors plants with deeper roots","R","Dry conditions select the survivors = natural selection."],
+  ["Roses are bred for bigger, showier blooms","L","Gardeners choosing the parents = selective breeding."],
+  ["Finches with stronger beaks survive a seed shortage","R","The food supply selects the survivors = natural selection."]
+ ],{emoji:"👩‍🌾",label:"HUMANS CHOSE"},{emoji:"🌿",label:"NATURE CHOSE"}); }};
+
+/* u4c · WRONG HABITAT — tap the animal that doesn't belong in the biome (S7L4.d) */
+GAMES.u4c={title:"Wrong Habitat",icon:"🗺️",id:"u4c",unit:"u4",
+ desc:"Each biome has its residents — and one outsider. TAP the animal that does NOT live there.",
+ start(areaId){ oddGame(areaId,'u4c',this.title,this.desc,[
+  {prompt:"Which animal does NOT belong in the DESERT?",items:[["🐫","Camel"],["🦂","Scorpion"],["🐍","Rattlesnake"],["🐻‍❄️","Polar bear"]],odd:3,why:"Polar bears live in the frozen Arctic — not the hot, dry desert."},
+  {prompt:"Which does NOT belong in the TROPICAL RAIN FOREST?",items:[["🦜","Toucan"],["🐆","Jaguar"],["🐸","Tree frog"],["🐫","Camel"]],odd:3,why:"Camels are desert animals; rainforests are warm and wet."},
+  {prompt:"Which does NOT belong in the ARCTIC TUNDRA?",items:[["🐻‍❄️","Polar bear"],["🦊","Arctic fox"],["🦌","Caribou"],["🐒","Monkey"]],odd:3,why:"Monkeys live in warm forests, not the frozen, treeless tundra."},
+  {prompt:"Which does NOT belong in the OCEAN?",items:[["🦈","Shark"],["🐬","Dolphin"],["🪼","Jellyfish"],["🦌","Deer"]],odd:3,why:"Deer are land animals; the others live in the marine ecosystem."},
+  {prompt:"Which does NOT belong in the GRASSLAND / SAVANNA?",items:[["🦁","Lion"],["🦓","Zebra"],["🦒","Giraffe"],["🐧","Penguin"]],odd:3,why:"Penguins live in cold coastal regions, not the warm, open savanna."},
+  {prompt:"Which does NOT belong in a FRESHWATER POND?",items:[["🐸","Frog"],["🦆","Duck"],["🐟","Minnow"],["🐪","Camel"]],odd:3,why:"A camel belongs in the desert — the others live in or around fresh water."}
+ ]); }};
+
+/* u5c · SELECTION RECIPE — order the steps of natural selection (S7L5.a) */
+GAMES.u5c={title:"Selection Recipe",icon:"🧪",id:"u5c",unit:"u5",
+ desc:"Natural selection follows a recipe. Drag the four steps into the order they happen, first at the top.",
+ start(areaId){ orderGame(areaId,'u5c',this.title,this.desc,
+  [["1️⃣","Overproduction — more offspring are born than can survive"],
+   ["2️⃣","Variation — those offspring have differing traits"],
+   ["3️⃣","Selection — the best-suited survive and reproduce more"],
+   ["4️⃣","Over time — helpful traits become more common"]],
+  "Put the steps of <b>natural selection</b> in order, the FIRST step at the top:",
+  "Overproduction → variation → selection → time: more are born than can survive, they vary, the best-suited reproduce most, and over generations those traits spread through the population."); }};
+
 /* ---------- shared kinesthetic helpers ---------- */
 function kineShell(areaId,id,title,desc,hud){
   document.getElementById(areaId).innerHTML = `
@@ -2712,11 +2819,11 @@ const STD_TAGS = {
  /* --- Unit 5 videos --- */
  "u5:V0":["S7L5.a"], "u5:V1":["S7L5.a"], "u5:V2":["S7L5.b"], "u5:V3":["S7L5.c"], "u5:V4":["S7L5.a","S7L5.b"],
  /* --- Minigames (keyed by game id) --- */
- "u1":["S7L1.a"], "u1b":["S7L1.b"],
- "u2":["S7L2.a"], "u2b":["S7L2.b"],
- "u3":["S7L3.b"], "u3b":["S7L3.a"],
- "u4":["S7L4.b"], "u4b":["S7L4.a"],
- "u5":["S7L5.b"], "u5b":["S7L5.c"]
+ "u1":["S7L1.a"], "u1b":["S7L1.b"], "u1c":["S7L1.b"],
+ "u2":["S7L2.a"], "u2b":["S7L2.b"], "u2c":["S7L2.c"],
+ "u3":["S7L3.b"], "u3b":["S7L3.a"], "u3c":["S7L3.c"],
+ "u4":["S7L4.b"], "u4b":["S7L4.a"], "u4c":["S7L4.d"],
+ "u5":["S7L5.b"], "u5b":["S7L5.c"], "u5c":["S7L5.a"]
 };
 const QUIZ_TAGS = {
  u1:["S7L1.a","S7L1.a","S7L1.a","S7L1.a","S7L1.a","S7L1.b","S7L1.b","S7L1.b","S7L1.b","S7L1.b"],
