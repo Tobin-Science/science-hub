@@ -565,6 +565,18 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 
 
   <div class="teachstep" style="margin-top:30px">
+    <h3>📊 Gradebook — collect scores without paper</h3>
+    <p class="stepsub">Students click <b>"📋 Copy results code"</b> on their checklist and paste the code into your LMS assignment. Paste everything they sent below (any order, any mess) and build the table — sorted by period, tamper-checked automatically.</p>
+    <textarea id="gb-in" placeholder="Paste student results codes here — as many as you want, mixed with any other text…" style="width:100%;height:110px;border:1.5px solid var(--line);border-radius:10px;padding:10px;font-family:var(--mono);font-size:.74rem"></textarea>
+    <p style="margin:10px 0 0;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="genbtn" style="padding:11px 24px;font-size:.95rem" onclick="buildGradebook()">📊 Build gradebook</button>
+      <button class="pveye" id="gb-csv" hidden onclick="gradebookCSV()">📋 Copy as CSV (for Excel / Sheets)</button>
+      <span id="gb-msg" style="font-weight:700;color:#2f7a4d"></span>
+    </p>
+    <div id="gb-out" style="margin-top:12px"></div>
+  </div>
+
+  <div class="teachstep" style="margin-top:30px">
     <h3>🔍 Verify a student's score report</h3>
     <p class="stepsub">Enter the five values exactly as printed on the report. A valid code proves the name, score, and date weren't edited after printing.</p>
     <div class="asnrow">
@@ -4107,7 +4119,16 @@ function asnChooseName(name){
   name = (name||'').trim().slice(0,40);
   if(!name){ const el=document.getElementById('asn-name-in'); if(el){ el.focus(); el.placeholder='Type your name first!'; } return; }
   const {cfg, code} = ASN_PENDING;
-  ASN = {cfg, code, name, key:nameKey(name)};
+  const key = nameKey(name);
+  const perKey = `asn_${cfg.id}_${key}_period`;
+  const sel = document.getElementById('asn-period-in');
+  const picked = sel? sel.value : '';
+  if(picked) store.set(perKey, picked);
+  else if(!store.get(perKey)){ // new student must pick a period (returning students keep theirs)
+    if(sel){ sel.style.outline='3px solid #E25555'; sel.focus(); }
+    return;
+  }
+  ASN = {cfg, code, name, key};
   ASN_PENDING = null;
   const roster = store.get('asnroster_'+cfg.id) || [];
   if(!roster.includes(name)){ roster.push(name); store.set('asnroster_'+cfg.id, roster); }
@@ -4148,7 +4169,8 @@ const EN_UI = {
  rep_practice:'Where to practice on the site:', rep_thenRetake:'Then retake the quiz — best score always counts.',
  statQ:'answered {r} of {n} questions correctly across every attempt', statG:'best game run reached {p}% of the target score',
  rep_attempts:'Based on {n} recorded attempts — quizzes, pretests, posttests, games and practice, not just the best ones.',
- rep_excusedRes:'excused (external English-only site)'
+ rep_excusedRes:'excused (external English-only site)',
+ resBtn:'📋 Copy results code', resNote:'Paste this code into your teacher\'s assignment page — it carries your score, period, and progress.', copied:'✅ Copied! Now paste it into the class assignment page.', periodShort:'Period'
 };
 const LANGS = {
  en:{name:'English'},
@@ -4172,7 +4194,8 @@ const LANGS = {
   rep_practice:'Dónde practicar en el sitio:', rep_thenRetake:'Luego repite el cuestionario — siempre cuenta tu mejor calificación.',
   statQ:'respondiste bien {r} de {n} preguntas contando todos los intentos', statG:'tu mejor partida llegó al {p}% de la meta',
   rep_attempts:'Basado en {n} intentos registrados — cuestionarios, pruebas, juegos y práctica, no solo los mejores.',
-  rep_excusedRes:'exento (sitio externo solo en inglés)'
+  rep_excusedRes:'exento (sitio externo solo en inglés)',
+  resBtn:'📋 Copiar código de resultados', resNote:'Pega este código en la página de la tarea de tu maestro — lleva tu calificación, período y progreso.', copied:'✅ ¡Copiado! Ahora pégalo en la página de la tarea.', periodShort:'Período'
  }},
  vi:{name:'Tiếng Việt', ui:{
   tn_g:'Bài học', tn_m:'Trò chơi nhỏ', tn_a:'Hoạt động luyện tập', tn_v:'Video', tn_p:'Thí nghiệm PhET', tn_q:'Bài kiểm tra luyện tập', tn_pr:'Bài kiểm tra đầu', tn_po:'Bài kiểm tra cuối',
@@ -4194,7 +4217,8 @@ const LANGS = {
   rep_practice:'Luyện tập ở đâu trên trang:', rep_thenRetake:'Sau đó làm lại bài kiểm tra — luôn tính điểm cao nhất.',
   statQ:'trả lời đúng {r}/{n} câu hỏi tính mọi lần làm', statG:'lượt chơi tốt nhất đạt {p}% mục tiêu',
   rep_attempts:'Dựa trên {n} lần làm được ghi lại — kiểm tra, trò chơi và luyện tập, không chỉ lần tốt nhất.',
-  rep_excusedRes:'được miễn (trang bên ngoài chỉ có tiếng Anh)'
+  rep_excusedRes:'được miễn (trang bên ngoài chỉ có tiếng Anh)',
+  resBtn:'📋 Sao chép mã kết quả', resNote:'Dán mã này vào trang bài tập của giáo viên — mã chứa điểm, tiết học và tiến độ của bạn.', copied:'✅ Đã sao chép! Hãy dán vào trang bài tập của lớp.', periodShort:'Tiết'
  }},
  zh:{name:'中文', ui:{
   tn_g:'学习指南', tn_m:'小游戏', tn_a:'练习活动', tn_v:'视频', tn_p:'PhET 实验', tn_q:'练习测验', tn_pr:'前测', tn_po:'后测',
@@ -4216,7 +4240,8 @@ const LANGS = {
   rep_practice:'在网站上哪里练习：', rep_thenRetake:'然后重新做测验 — 永远计最高分。',
   statQ:'在所有尝试中答对了 {n} 题中的 {r} 题', statG:'最佳游戏成绩达到目标的 {p}%',
   rep_attempts:'基于记录的 {n} 次尝试 — 测验、游戏和练习，不只是最好的一次。',
-  rep_excusedRes:'免做（外部网站仅有英文）'
+  rep_excusedRes:'免做（外部网站仅有英文）',
+  resBtn:'📋 复制成绩代码', resNote:'把这个代码粘贴到老师的作业页面 — 它包含你的分数、节次和进度。', copied:'✅ 已复制！现在粘贴到班级作业页面。', periodShort:'第…节'
  }},
  ko:{name:'한국어', ui:{
   tn_g:'학습 가이드', tn_m:'미니게임', tn_a:'연습 활동', tn_v:'동영상', tn_p:'PhET 실험', tn_q:'연습 퀴즈', tn_pr:'사전 평가', tn_po:'사후 평가',
@@ -4238,7 +4263,8 @@ const LANGS = {
   rep_practice:'사이트에서 연습할 곳:', rep_thenRetake:'그다음 퀴즈를 다시 풀어 보세요 — 항상 최고 점수로 기록됩니다.',
   statQ:'모든 시도에서 {n}문제 중 {r}문제 정답', statG:'최고 게임 기록이 목표의 {p}%에 도달',
   rep_attempts:'기록된 {n}회의 시도 기준 — 퀴즈, 평가, 게임, 연습 모두 포함 (최고 기록만이 아님).',
-  rep_excusedRes:'면제 (영어로만 된 외부 사이트)'
+  rep_excusedRes:'면제 (영어로만 된 외부 사이트)',
+  resBtn:'📋 결과 코드 복사', resNote:'이 코드를 선생님 과제 페이지에 붙여넣으세요 — 점수, 교시, 진행 상황이 담겨 있어요.', copied:'✅ 복사됨! 이제 학급 과제 페이지에 붙여넣으세요.', periodShort:'교시'
  }}
 };
 /* Coach's Corner teach text, translated (falls back to English) */
@@ -4355,6 +4381,32 @@ function teachText(std){ const lg=asnLang(); return ((LANGS[lg]||{}).teach||{})[
 /* videos & PhET are excused (don't count) when the student works in a non-English language */
 function asnExcused(type){ return (type==='v'||type==='p') && asnLang()!=='en'; }
 
+/* ---------- results code: scores → compact paste-able code for the teacher ---------- */
+function asnPeriod(){ return (ASN && store.get(`asn_${ASN.cfg.id}_${ASN.key}_period`)) || ''; }
+function asnResultsCode(){
+  const s = asnScore();
+  const items = asnItems(ASN.cfg);
+  const countable = items.filter(x=>!asnExcused(x.type));
+  const done = countable.filter(x=>asnStatus(x).done).length;
+  const comp = countable.length? Math.round(100*done/countable.length) : 0;
+  const dateStr = new Date().toISOString().slice(0,10);
+  const po = (ASN.cfg.it.po||[]).map(u=>{ const r=store.get(`asn_${ASN.cfg.id}_${ASN.key}_po:${u}`); return r? `${r.score}/${r.total}×${r.attempts}` : '—'; }).join(' ');
+  const fb = asnFeedback();
+  const payload = {v:1, a:ASN.cfg.id, t:(ASN.cfg.t||'').slice(0,40), n:ASN.name, p:asnPeriod(), s:s.pct, c:comp, d:dateStr, po,
+    w:(fb? fb.weak.map(r=>r.std) : []), k:asnVerifyCode(ASN.cfg.id, ASN.key, s.pct, dateStr)};
+  return 'PSH1.' + encodeAssignment(payload);
+}
+function asnCopyResults(){
+  const code = asnResultsCode();
+  const box = document.getElementById('asn-rescode');
+  if(box){ box.hidden=false; box.querySelector('textarea').value = code; }
+  const msg = document.getElementById('asn-resmsg');
+  const showMsg = ok=>{ if(msg) msg.textContent = ok? L('copied') : ''; };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(code).then(()=>showMsg(true)).catch(()=>{ if(box){ box.querySelector('textarea').select(); } });
+  } else if(box){ box.querySelector('textarea').select(); try{ document.execCommand('copy'); showMsg(true); }catch(e){} }
+}
+
 /* ---------- the checklist page ---------- */
 function renderAssign(){
   const box = document.getElementById('assigninfo');
@@ -4371,6 +4423,10 @@ function renderAssign(){
           <p style="margin:12px 0 4px;font-size:.9rem;opacity:.8">Or add yourself:</p>` : `<p style="margin:6px 0 4px;font-size:.9rem;opacity:.8">Enter your first and last name — it goes on your score report:</p>`}
         <div class="asnnamerow">
           <input id="asn-name-in" maxlength="40" placeholder="e.g., Jordan Smith" onkeydown="if(event.key==='Enter')asnChooseName(this.value)">
+          <select id="asn-period-in" class="asnlangsel" style="margin:0">
+            <option value="">Class period…</option>
+            ${[1,2,3,4,5,6,7,8,9,10].map(p=>`<option value="${p}">Period ${p}</option>`).join('')}
+          </select>
           <button class="gbtn" onclick="asnChooseName(document.getElementById('asn-name-in').value)">Start →</button>
         </div>
       </div>`;
@@ -4408,7 +4464,7 @@ function renderAssign(){
         <p style="font-size:1.3rem;margin:0"><b>${cfg.t||'Class assignment'}</b>${cfg.by? ' · '+cfg.by : ''}</p>
         <p style="opacity:.75;font-family:var(--mono);font-size:.78rem;margin:3px 0 0">Standards: ${(cfg.std||[]).join(', ')}</p>
       </div>
-      <div class="asnwho">👤 <b>${ASN.name}</b>
+      <div class="asnwho">👤 <b>${ASN.name}</b>${asnPeriod()? ` <span style="opacity:.7;font-size:.85rem">· ${L('periodShort')} ${asnPeriod()}</span>`:''}
         <select class="asnlangsel" onchange="asnSetLang(this.value)" title="Language / Idioma / Ngôn ngữ / 语言 / 언어">${Object.entries(LANGS).map(([k,v])=>`<option value="${k}" ${k===asnLang()?'selected':''}>🌐 ${v.name}</option>`).join('')}</select>
         <button class="ghostlink" onclick="asnSwitchStudent()">${L('switchStudent')}</button>
         <button class="ghostlink" onclick="asnExit()">${L('exitLbl')}</button>
@@ -4418,7 +4474,13 @@ function renderAssign(){
       <div class="asnbar"><i style="width:${pct}%"></i></div>
       <p><b>${Lf('progress',{d:done,n:countable.length})}</b> · ${pct}%${pct===100? L('allDoneFlag'):''}</p>
       <p class="asnscoreline">${L('curScore')} <b>${asnScore().pct}%</b> <span style="opacity:.65;font-size:.82rem">${L('scoreNote')}</span></p>
-      <p style="margin:12px 0 0"><button class="asnprintbtn ${pct===100?'ready':''}" onclick="asnPrintReport()">${L('printBtn')}</button></p>
+      <p style="margin:12px 0 0;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="asnprintbtn ${pct===100?'ready':''}" onclick="asnPrintReport()">${L('printBtn')}</button>
+        <button class="asnprintbtn" style="background:#1B2440" onclick="asnCopyResults()">${L('resBtn')}</button>
+        <span id="asn-resmsg" style="font-weight:700;color:#2f7a4d;font-size:.9rem"></span>
+      </p>
+      <div id="asn-rescode" hidden style="margin-top:8px"><textarea readonly onclick="this.select()" style="width:100%;max-width:560px;height:62px;font-family:var(--mono);font-size:.72rem;border:1.5px solid var(--line);border-radius:8px;padding:8px"></textarea>
+        <p style="font-size:.8rem;opacity:.75;margin:4px 0 0">${L('resNote')}</p></div>
       <p style="font-size:.82rem;opacity:.7;margin:7px 0 0">${pct===100? L('allDoneNote') : L('turnIn')}</p>
       ${asnLang()!=='en'? `<p style="font-size:.82rem;opacity:.8;margin:7px 0 0">${L('tip')}</p>`:''}
     </div>
@@ -4836,7 +4898,7 @@ function asnPrintReport(){
     <div class="prhead">
       <h1>Score Report — ${ASN.cfg.t || 'Class Assignment'}</h1>
       <table class="prmeta"><tr>
-        <td><b>Student:</b> ${ASN.name}</td>
+        <td><b>Student:</b> ${ASN.name}${asnPeriod()? ` (Period ${asnPeriod()})`:''}</td>
         <td><b>Teacher:</b> ${ASN.cfg.by || '—'}</td>
         <td><b>Date:</b> ${dateStr}</td>
       </tr><tr>
@@ -4863,12 +4925,62 @@ function asnPrintReport(){
         return `<tr><td>${asnExcused(x.type)?'🌐':(st.done||x.type==='po'&&store.get(asnItemKey(x))?'✔':'✗')}</td><td>${typeName[x.type]}</td><td>U${UNITS[x.uid].num} · ${x.label}</td><td>${res}</td></tr>`;}).join('')}
     </table>
     ${asnFeedbackHtml()}
-    <p class="prfoot">Pretest scores never count against the student — completion only. Generated by Physical Science Hub · ${location.host || 'local'} · Teachers can verify this report's code in Educator Mode.</p>`;
+    <p class="prfoot">Pretest scores never count against the student — completion only. Generated by Physical Science Hub · ${location.host || 'local'} · Teachers can verify this report's code in Educator Mode.</p>
+    <p class="prfoot" style="font-family:monospace;font-size:.62rem;word-break:break-all">Results code: ${asnResultsCode()}</p>`;
   document.body.classList.add('printing');
   const done = ()=>{ document.body.classList.remove('printing'); window.removeEventListener('afterprint', done); };
   window.addEventListener('afterprint', done);
   setTimeout(()=>window.print(), 60);
   setTimeout(done, 4000); // safety: some mobile browsers skip afterprint
+}
+
+/* ---------- teacher gradebook: paste results codes → table ---------- */
+let GB_ROWS = [];
+function buildGradebook(){
+  const raw = document.getElementById('gb-in').value;
+  const out = document.getElementById('gb-out');
+  const codes = raw.match(/PSH1\.[A-Za-z0-9\-_]+/g) || [];
+  if(!codes.length){ out.innerHTML = '<p style="color:#c0392b">No results codes found — they start with <code>PSH1.</code></p>'; document.getElementById('gb-csv').hidden=true; return; }
+  const rows = [];
+  let bad = 0;
+  codes.forEach(c=>{
+    const r = decodeAssignment(c.slice(5));
+    if(!r || !r.n){ bad++; return; }
+    r.valid = asnVerifyCode(r.a, nameKey(r.n), r.s, r.d) === r.k;
+    rows.push(r);
+  });
+  /* dedupe: keep each student's latest (then highest) per assignment */
+  const best = {};
+  rows.forEach(r=>{
+    const key = `${r.a}|${nameKey(r.n)}|${r.p}`;
+    const b = best[key];
+    if(!b || (r.valid && !b.valid) || (r.valid===b.valid && (r.d > b.d || (r.d===b.d && r.s > b.s)))) best[key] = r;
+  });
+  GB_ROWS = Object.values(best).sort((a,b)=> (+a.p||99)-(+b.p||99) || a.n.localeCompare(b.n));
+  /* class insights: tally weak topics */
+  const tally = {};
+  GB_ROWS.forEach(r=>(r.w||[]).forEach(s=>tally[s]=(tally[s]||0)+1));
+  const topWeak = Object.entries(tally).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  out.innerHTML = `
+    <p style="font-size:.9rem;margin:0 0 8px"><b>${GB_ROWS.length}</b> student${GB_ROWS.length!==1?'s':''} from <b>${codes.length}</b> code${codes.length!==1?'s':''}${rows.length<Object.keys(best).length? '' : rows.length>GB_ROWS.length? ` (${rows.length-GB_ROWS.length} older duplicate${rows.length-GB_ROWS.length>1?'s':''} dropped)`:''}${bad? ` · <span style="color:#c0392b">${bad} unreadable</span>`:''}</p>
+    <table>
+      <tr><th>Period</th><th>Student</th><th>Score</th><th>Completed</th><th>Posttest (best × tries)</th><th>Assignment</th><th>Date</th><th>Check</th></tr>
+      ${GB_ROWS.map(r=>`<tr>
+        <td>${r.p||'—'}</td><td><b>${r.n}</b></td><td><b>${r.s}%</b></td><td>${r.c}%</td><td>${r.po||'—'}</td>
+        <td style="font-size:.8rem">${r.t||r.a}</td><td style="font-family:var(--mono);font-size:.78rem">${r.d}</td>
+        <td>${r.valid? '✅' : '<span style="color:#c0392b;font-weight:800">⚠️ edited?</span>'}</td></tr>`).join('')}
+    </table>
+    ${topWeak.length? `<p style="margin:12px 0 0;font-size:.92rem"><b>🔁 Reteach radar:</b> ${topWeak.map(([s,n])=>`${stdDisplayName(s)} <b>(${n} student${n>1?'s':''})</b>`).join(' · ')}</p>`:''}`;
+  document.getElementById('gb-csv').hidden = false;
+  document.getElementById('gb-msg').textContent = '';
+}
+function gradebookCSV(){
+  const esc = v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`;
+  const csv = ['Period,Student,Score %,Completed %,Posttest,Assignment,Date,Verified',
+    ...GB_ROWS.map(r=>[r.p||'',r.n,r.s,r.c,r.po||'',r.t||r.a,r.d,r.valid?'yes':'CHECK'].map(esc).join(','))].join('\n');
+  const done = ()=>{ document.getElementById('gb-msg').textContent = '✅ CSV copied — paste into Excel or Google Sheets.'; };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(csv).then(done).catch(()=>prompt('Copy this CSV:', csv));
+  else prompt('Copy this CSV:', csv);
 }
 
 /* ---------- teacher-side verification checker ---------- */
