@@ -614,6 +614,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <button class="subtab active" id="vmodecards" onclick="vocabMode('cards')">🃏 Flashcards</button>
     <button class="subtab" id="vmodequiz" onclick="vocabMode('quiz')">⚡ Quiz Me</button>
     <button class="subtab" id="vmodetoday" onclick="startToday10()" style="--ac:#9C4DC4">⭐ Today's 10 <span id="missedcount" style="font-family:var(--mono);font-size:.75rem"></span></button>
+    <button class="subtab" id="vmodees" onclick="vocabES()" style="--ac:#2f7a4d" title="Flashcards in Spanish with the English term shown">🇪🇸 Español</button>
   </div>
   <div id="vocabarea"></div>
 </section>
@@ -3163,6 +3164,93 @@ function launchQuest(){
    VOCAB PAGE (all units + quiz-me)
    ========================================================= */
 let vState = {unit:'all', mode:'cards'};
+/* ---------- Spanish vocabulary (flashcards toggle) ---------- */
+const VOCAB_ES = {
+"Matter":["Materia","Todo lo que tiene masa y ocupa espacio (volumen)."],
+"Atom":["Átomo","La unidad más pequeña de la materia que conserva las propiedades de un elemento."],
+"Element":["Elemento","Sustancia pura formada por un solo tipo de átomo."],
+"Compound":["Compuesto","Sustancia pura formada por dos o más elementos unidos químicamente (H₂O, CO₂)."],
+"Mixture":["Mezcla","Dos o más sustancias combinadas físicamente; se pueden separar por medios físicos."],
+"Homogeneous mixture":["Mezcla homogénea","Mezcla que se ve igual en todas partes (agua salada); también llamada solución."],
+"Heterogeneous mixture":["Mezcla heterogénea","Mezcla en la que se distinguen sus partes (mezcla de frutos secos)."],
+"Proton":["Protón","Partícula con carga positiva en el núcleo."],
+"Neutron":["Neutrón","Partícula sin carga en el núcleo."],
+"Electron":["Electrón","Partícula con carga negativa que se mueve alrededor del núcleo."],
+"Atomic number":["Número atómico","El número de protones; identifica al elemento."],
+"Group (family)":["Grupo (familia)","Columna vertical de la tabla periódica; propiedades parecidas."],
+"Period":["Período","Fila horizontal de la tabla periódica."],
+"Metalloid":["Metaloide","Elemento con propiedades de metal y de no metal (junto a la línea escalonada)."],
+"Physical change":["Cambio físico","Cambio de forma o apariencia solamente; no se forma una sustancia nueva (derretir, cortar)."],
+"Chemical change":["Cambio químico","Cambio que produce una sustancia nueva (oxidarse, quemarse)."],
+"Density":["Densidad","Cantidad de masa en un volumen dado; D = m ÷ V."],
+"Energy":["Energía","La capacidad de realizar trabajo o causar cambios; se mide en julios (J)."],
+"Kinetic energy":["Energía cinética","La energía del movimiento; crece con la masa y con el cuadrado de la velocidad."],
+"Potential energy":["Energía potencial","Energía almacenada por la posición o condición de un objeto."],
+"Gravitational PE":["EP gravitatoria","Energía almacenada por la altura; EP = m × g × h."],
+"Elastic PE":["EP elástica","Energía guardada en objetos estirados o comprimidos (resortes, ligas)."],
+"Chemical energy":["Energía química","Energía almacenada en los enlaces (comida, baterías, gasolina)."],
+"Thermal energy":["Energía térmica","La energía total del movimiento de las partículas de un objeto."],
+"Temperature":["Temperatura","El promedio de la energía cinética de las partículas."],
+"Heat":["Calor","Energía térmica que se transfiere de lo caliente a lo frío."],
+"Conduction":["Conducción","Transferencia de calor por contacto directo."],
+"Convection":["Convección","Transferencia de calor por corrientes en líquidos y gases."],
+"Radiation":["Radiación","Transferencia de calor por ondas electromagnéticas; no necesita materia."],
+"Law of conservation of energy":["Ley de conservación de la energía","La energía no se crea ni se destruye, solo se transforma."],
+"Energy transformation":["Transformación de energía","Cambio de la energía de una forma a otra."],
+"Motion":["Movimiento","Cambio de posición respecto a un punto de referencia."],
+"Reference point":["Punto de referencia","Objeto que se usa para saber si algo se mueve."],
+"Distance":["Distancia","Cuánto recorre un objeto en total por su trayectoria."],
+"Displacement":["Desplazamiento","Distancia en línea recta desde el inicio hasta el final."],
+"Speed":["Rapidez","Distancia ÷ tiempo."],
+"Velocity":["Velocidad","Rapidez con dirección (20 m/s hacia el este)."],
+"Acceleration":["Aceleración","Cualquier cambio de velocidad: acelerar, frenar o girar."],
+"Force":["Fuerza","Un empujón o un jalón; se mide en newtons (N)."],
+"Net force":["Fuerza neta","Todas las fuerzas combinadas en una sola."],
+"Balanced forces":["Fuerzas equilibradas","Fuerza neta cero; el movimiento no cambia."],
+"Unbalanced forces":["Fuerzas no equilibradas","Fuerza neta distinta de cero; cambia el movimiento."],
+"Inertia":["Inercia","Resistencia a cambiar el movimiento; depende de la masa."],
+"Newton's 1st Law":["1.ª Ley de Newton","Un objeto mantiene su movimiento hasta que actúa una fuerza no equilibrada."],
+"Newton's 2nd Law":["2.ª Ley de Newton","F = m × a."],
+"Newton's 3rd Law":["3.ª Ley de Newton","A toda acción corresponde una reacción igual y opuesta."],
+"Friction":["Fricción","Fuerza que se opone al movimiento entre superficies en contacto."],
+"Wave":["Onda","Perturbación que transporta energía de un lugar a otro."],
+"Medium":["Medio","La materia por la que viaja una onda mecánica."],
+"Mechanical wave":["Onda mecánica","Onda que necesita un medio (sonido, olas)."],
+"Electromagnetic wave":["Onda electromagnética","Onda que puede viajar por el espacio vacío (luz, radio)."],
+"Transverse wave":["Onda transversal","El medio se mueve perpendicular a la dirección de la onda."],
+"Longitudinal wave":["Onda longitudinal","El medio se mueve paralelo a la dirección de la onda (sonido)."],
+"Crest":["Cresta","El punto más alto de una onda transversal."],
+"Trough":["Valle","El punto más bajo de una onda transversal."],
+"Amplitude":["Amplitud","Altura desde la posición de reposo hasta la cresta; mide la energía."],
+"Wavelength":["Longitud de onda","Distancia de una cresta a la siguiente (λ)."],
+"Frequency":["Frecuencia","Ondas que pasan por un punto cada segundo; se mide en hercios (Hz)."],
+"Reflection":["Reflexión","Una onda que rebota en una superficie."],
+"Refraction":["Refracción","Una onda que se dobla al entrar en un medio nuevo."],
+"Diffraction":["Difracción","Una onda que se curva alrededor de un obstáculo o a través de una abertura."],
+"Pitch":["Tono","Qué tan agudo o grave es un sonido; depende de la frecuencia."],
+"Doppler effect":["Efecto Doppler","Cambio del tono cuando la fuente del sonido se acerca o se aleja."],
+"Gravity":["Gravedad","Fuerza de atracción entre todos los objetos con masa."],
+"Gravitational field":["Campo gravitatorio","Región donde la gravedad actúa sobre otros objetos."],
+"Mass":["Masa","Cantidad de materia; no cambia de lugar en lugar (kg)."],
+"Weight":["Peso","La fuerza de la gravedad sobre la masa; cambia según el lugar (N)."],
+"Electric charge":["Carga eléctrica","Propiedad de la materia: positiva o negativa; las cargas iguales se repelen."],
+"Static electricity":["Electricidad estática","Carga acumulada en una superficie."],
+"Conductor":["Conductor","Material por el que la carga fluye fácilmente (metales)."],
+"Insulator":["Aislante","Material que resiste el flujo de carga (plástico, vidrio, caucho)."],
+"Friction (charging)":["Fricción (para cargar)","Transferir electrones frotando dos objetos."],
+"Conduction (charging)":["Conducción (para cargar)","Transferir carga por contacto directo."],
+"Induction":["Inducción","Las cargas se desplazan sin contacto, solo por la cercanía de un objeto cargado."],
+"Magnetic field":["Campo magnético","Región alrededor de un imán donde actúa su fuerza; más fuerte en los polos."],
+"Magnetic poles":["Polos magnéticos","Los extremos norte y sur de un imán; los polos iguales se repelen."],
+"Electromagnet":["Electroimán","Bobina con corriente alrededor de un núcleo de hierro; se puede apagar."],
+"Electromagnetic induction":["Inducción electromagnética","Un imán en movimiento cerca de una bobina genera corriente."],
+"Generator":["Generador","Máquina que produce corriente girando imanes cerca de bobinas."]
+};
+function vocabES(){
+  vState.es = !vState.es;
+  document.getElementById('vmodees').classList.toggle('active', vState.es);
+  if(vState.mode!=='cards') vocabMode('cards'); else renderVocab();
+}
 function buildVocabPage(){
   const tabs = document.getElementById('vocabunits');
   tabs.innerHTML = `<button class="subtab active" style="--ac:var(--ink)" data-vu="all">All units</button>` +
@@ -3243,7 +3331,12 @@ function renderVocab(){
   const deck = vocabDeck();
   const hex = vState.unit==='all'? '#1B2440' : UNITS[vState.unit].hex;
   const label = vState.unit==='all'? `WHOLE DECK · ${deck.length} TERMS` : `${UNITS[vState.unit].name.toUpperCase()} · ${deck.length} TERMS`;
-  if(vState.mode==='cards'){ startCards('vocabarea', deck.map(d=>[d[0],d[1]]), hex, label); return; }
+  if(vState.mode==='cards'){
+    let cards = deck.map(d=>[d[0],d[1]]);
+    if(vState.es) cards = cards.map(([t,d])=>{ const es=VOCAB_ES[t];
+      return es? [`${es[0]}<div style="font-size:.62em;opacity:.85;margin-top:8px;font-weight:400">${t}</div>`, es[1]] : [t,d]; });
+    startCards('vocabarea', cards, hex, label + (vState.es? ' · ESPAÑOL':'')); return;
+  }
   // quiz-me: term -> pick the definition
   let order = shuffle([...deck.keys()]), i=0, score=0;
   const area = document.getElementById('vocabarea');
