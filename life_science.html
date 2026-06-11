@@ -983,6 +983,67 @@ FIG.taxonomy = c => `<svg viewBox="0 0 460 240" width="460" role="img" aria-labe
 <text transform="rotate(90 416 100)" x="416" y="100" fill="#3A4566">fewer kinds · more alike</text>
 <text x="230" y="222" fill="#3A4566">Each step down holds fewer organisms — until only ONE species fits: <tspan font-style="italic">Canis lupus</tspan>, the gray wolf.</text></g></svg>`;
 
+FIG.cell = c => `<svg viewBox="0 0 480 240" width="480" role="img" aria-label="Animal cell and plant cell compared side by side">
+<g font-size="10" text-anchor="middle">
+<ellipse cx="115" cy="105" rx="95" ry="72" fill="${c}" opacity=".08" stroke="${c}" stroke-width="2.5"/>
+<circle cx="115" cy="95" r="24" fill="${c}" opacity=".3" stroke="${c}" stroke-width="1.5"/><text x="115" y="99" font-weight="bold" fill="#1B2440">nucleus</text>
+<ellipse cx="62" cy="130" rx="16" ry="8" fill="#E25555" opacity=".6"/><ellipse cx="160" cy="136" rx="16" ry="8" fill="#E25555" opacity=".6"/><text x="62" y="152" fill="#3A4566">mitochondria</text>
+<circle cx="168" cy="68" r="7" fill="#8b95b3"/><text x="172" y="52" fill="#3A4566">lysosome</text>
+<text x="115" y="200" font-weight="bold" font-size="12" fill="#1B2440">ANIMAL CELL</text>
+<text x="115" y="216" fill="#3A4566">flexible membrane only</text>
+<rect x="262" y="28" width="186" height="154" rx="8" fill="none" stroke="#2f7a4d" stroke-width="6"/>
+<rect x="272" y="38" width="166" height="134" rx="6" fill="#2f7a4d" opacity=".06" stroke="${c}" stroke-width="2"/>
+<circle cx="355" cy="85" r="22" fill="${c}" opacity=".3" stroke="${c}" stroke-width="1.5"/><text x="355" y="89" font-weight="bold" fill="#1B2440">nucleus</text>
+<ellipse cx="305" cy="142" rx="15" ry="8" fill="#2f7a4d" opacity=".7"/><ellipse cx="355" cy="152" rx="15" ry="8" fill="#2f7a4d" opacity=".7"/><ellipse cx="405" cy="140" rx="15" ry="8" fill="#2f7a4d" opacity=".7"/>
+<text x="355" y="170" fill="#1B2440">chloroplasts</text>
+<ellipse cx="412" cy="60" rx="14" ry="7" fill="#E25555" opacity=".6"/>
+<text x="355" y="200" font-weight="bold" font-size="12" fill="#1B2440">PLANT CELL</text>
+<text x="355" y="216" fill="#3A4566">+ cell wall &amp; chloroplasts</text>
+</g></svg>`;
+
+FIG.levels = c => `<svg viewBox="0 0 480 190" width="480" role="img" aria-label="Levels of organization from cell to organism">
+<g font-size="10" text-anchor="middle">
+<circle cx="48" cy="78" r="14" fill="${c}" opacity=".5"/>
+<text x="48" y="122" font-weight="bold" fill="#1B2440">CELL</text><text x="48" y="136" fill="#3A4566">muscle cell</text>
+<path d="M70,78 L92,78" stroke="#8b95b3" stroke-width="2.5"/><path d="M88,72 L98,78 L88,84z" fill="#8b95b3"/>
+<circle cx="130" cy="70" r="10" fill="${c}" opacity=".45"/><circle cx="148" cy="78" r="10" fill="${c}" opacity=".45"/><circle cx="130" cy="88" r="10" fill="${c}" opacity=".45"/>
+<text x="139" y="122" font-weight="bold" fill="#1B2440">TISSUE</text><text x="139" y="136" fill="#3A4566">muscle tissue</text>
+<path d="M168,78 L190,78" stroke="#8b95b3" stroke-width="2.5"/><path d="M186,72 L196,78 L186,84z" fill="#8b95b3"/>
+<path d="M232,58 C218,44 196,56 200,74 C204,92 232,106 232,106 C232,106 260,92 264,74 C268,56 246,44 232,58z" fill="#E25555" opacity=".75"/>
+<text x="232" y="122" font-weight="bold" fill="#1B2440">ORGAN</text><text x="232" y="136" fill="#3A4566">the heart</text>
+<path d="M278,78 L300,78" stroke="#8b95b3" stroke-width="2.5"/><path d="M296,72 L306,78 L296,84z" fill="#8b95b3"/>
+<circle cx="345" cy="76" r="20" fill="none" stroke="#E25555" stroke-width="3"/><path d="M345,56 L345,96 M325,76 L365,76" stroke="#E25555" stroke-width="3"/>
+<text x="345" y="122" font-weight="bold" fill="#1B2440">SYSTEM</text><text x="345" y="136" fill="#3A4566">heart + vessels</text>
+<path d="M375,78 L397,78" stroke="#8b95b3" stroke-width="2.5"/><path d="M393,72 L403,78 L393,84z" fill="#8b95b3"/>
+<circle cx="438" cy="50" r="10" fill="${c}"/><path d="M438,60 L438,86 M438,66 L424,78 M438,66 L452,78 M438,86 L426,102 M438,86 L450,102" stroke="${c}" stroke-width="4" fill="none" stroke-linecap="round"/>
+<text x="438" y="122" font-weight="bold" fill="#1B2440">ORGANISM</text><text x="438" y="136" fill="#3A4566">you!</text>
+<text x="240" y="168" fill="#3A4566" font-size="11">Each level can do things the one below can't — one cell twitches, but the system pumps blood to your whole body.</text>
+</g></svg>`;
+
+FIG.pyramid = c => `<svg viewBox="0 0 460 240" width="460" role="img" aria-label="Energy pyramid showing about ten percent of energy passing up each level">
+<g font-size="11" text-anchor="middle">
+<polygon points="50,190 410,190 350,150 110,150" fill="#2f7a4d" opacity=".7"/><text x="230" y="175" fill="#fff" font-weight="bold">PRODUCERS — grass · 1,000 units</text>
+<polygon points="110,150 350,150 300,110 160,110" fill="${c}" opacity=".55"/><text x="230" y="135" fill="#1B2440" font-weight="bold">grasshoppers · 100 units</text>
+<polygon points="160,110 300,110 260,70 200,70" fill="#E08F0E" opacity=".75"/><text x="230" y="95" fill="#1B2440" font-weight="bold">songbirds · 10 units</text>
+<polygon points="200,70 260,70 230,30" fill="#E25555" opacity=".85"/><text x="230" y="62" font-weight="bold" fill="#1B2440">hawk · 1</text>
+<path d="M425,185 L425,40" stroke="#8b95b3" stroke-width="2.5"/><path d="M417,48 L425,34 L433,48z" fill="#8b95b3"/>
+<text transform="rotate(-90 444 112)" x="444" y="112" fill="#3A4566">only ~10% moves up</text>
+<text x="230" y="222" fill="#3A4566">Each level passes only about 10% of its energy upward — the rest runs the organism or escapes as heat.</text>
+</g></svg>`;
+
+FIG.natsel = c => `<svg viewBox="0 0 460 240" width="460" role="img" aria-label="Bar graph of dark moths becoming more common over generations">
+<g font-size="11">
+<line x1="60" y1="190" x2="430" y2="190" stroke="#1B2440" stroke-width="2"/>
+<line x1="60" y1="190" x2="60" y2="30" stroke="#1B2440" stroke-width="2"/>
+<text x="34" y="42" font-size="10" fill="#3A4566">100%</text><text x="42" y="194" font-size="10" fill="#3A4566">0%</text>
+<rect x="85" y="182" width="50" height="8" fill="#1B2440"/><text x="110" y="208" text-anchor="middle" fill="#3A4566">Gen 1</text><text x="110" y="176" text-anchor="middle" fill="#3A4566">5%</text>
+<rect x="175" y="134" width="50" height="56" fill="#1B2440"/><text x="200" y="208" text-anchor="middle" fill="#3A4566">Gen 10</text><text x="200" y="128" text-anchor="middle" fill="#3A4566">35%</text>
+<rect x="265" y="86" width="50" height="104" fill="#1B2440"/><text x="290" y="208" text-anchor="middle" fill="#3A4566">Gen 20</text><text x="290" y="80" text-anchor="middle" fill="#3A4566">65%</text>
+<rect x="355" y="46" width="50" height="144" fill="${c}"/><text x="380" y="208" text-anchor="middle" fill="#3A4566">Gen 30</text><text x="380" y="40" text-anchor="middle" fill="#3A4566">90%</text>
+<text x="245" y="20" text-anchor="middle" font-weight="bold" fill="#1B2440">Dark moths in the population (trees darkened by soot)</text>
+<text x="245" y="230" text-anchor="middle" fill="#3A4566">The percentages shift a little each generation — natural selection you can graph.</text>
+</g></svg>`;
+
 /* =========================================================
    UNIT DATA
    ========================================================= */
@@ -1052,18 +1113,258 @@ u1:{ sym:"🦠", num:1, name:"Diversity & Classification", std:"S7L1", color:"va
    {q:"A mushroom belongs to which kingdom?", o:["Plants","Animals","Fungi","Bacteria"], a:2, lesson:7, why:"Fungi can't make their own food — they absorb nutrients from decaying material, so they're not plants."}
   ]
 },
-u2:{ sym:"🧫", num:2, name:"Cells & Body Systems", std:"S7L2", color:"var(--u2)", soft:"var(--u2soft)", hex:"#E08F0E", soon:true,
+u2:{ sym:"🧫", num:2, name:"Cells & Body Systems", std:"S7L2", color:"var(--u2)", soft:"var(--u2soft)", hex:"#E08F0E",
   blurb:"From organelles to organ systems — how cells build tissues, tissues build organs, and organs keep you alive.",
-  lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
-u3:{ sym:"🧬", num:3, name:"Reproduction & Heredity", std:"S7L3", color:"var(--u3)", soft:"var(--u3soft)", hex:"#1E7FB8", soon:true,
+  lessons:[
+   {t:"Cells: Life's Smallest Working System", body:`Every living thing is built from <b>cells</b> — and a cell isn't just a blob. It's a <b>system</b>: a team of tiny parts called <b>organelles</b>, each with a job, all working together to keep the cell alive. Think of a factory: a main office issuing instructions, a power plant making energy, security gates controlling who enters, a cleanup crew hauling waste. Remove any one department and the whole factory grinds to a halt — and that's exactly how a cell works.`,
+    callout:["System Thinking","A system means parts working TOGETHER. Knock out one organelle and the whole cell fails — which is why scientists study the cell as a system, not a parts list."]},
+   {t:"Organelle Job Tour", body:`Meet the staff. The <b>nucleus</b> is the control center — it holds the DNA instructions and directs everything. The <b>cell membrane</b> is the gatekeeper, controlling what enters and leaves. The <b>cytoplasm</b> is the jelly-like filling where the organelles float. The <b>mitochondria</b> are the powerhouses — they break down food to release usable energy (hard-working cells like muscle cells are packed with them). And the <b>lysosomes</b> are the cleanup crew, breaking down waste and worn-out parts for recycling.`,
+    callout:["Memory Hook","NUCLEUS = headquarters · MEMBRANE = security gate · MITOCHONDRIA = power plant · LYSOSOME = recycling center."]},
+   {t:"Plant vs. Animal Cells", fig:"cell", body:`Plant and animal cells share the basic kit — nucleus, membrane, cytoplasm, mitochondria. But plant cells carry two extras. The <b>cell wall</b> is a stiff outer layer (outside the membrane) that gives plants their structure — it's why trees stand tall with no skeleton. <b>Chloroplasts</b> are the green solar panels: they capture sunlight and make the plant's food. Animal cells skip both — animals eat their food instead of making it, and moving around works better with flexible cells.`,
+    callout:["Quick ID Test","Stiff wall + green chloroplasts = plant cell. Neither = animal cell. (Why no walls on animals? Try jogging with rigid cells!)"]},
+   {t:"From One Cell to You: Levels of Organization", fig:"levels", body:`Your body is organized like an army. Similar <b>cells</b> working together form a <b>tissue</b> (heart muscle cells → cardiac muscle tissue). Different tissues teamed up form an <b>organ</b> (muscle + nerve + blood tissue → your heart). Organs working on one big job form an <b>organ system</b> (heart + blood vessels → the cardiovascular system). And all the systems together make the <b>organism</b> — you. The same pattern builds a daisy, a dog, and a dolphin.`,
+    callout:["The Ladder","cells → tissues → organs → organ systems → organism. Each level can do things the level below can't — a heart pumps, but one heart cell can only twitch."]},
+   {t:"Fuel & Delivery: Digestive, Respiratory & Cardiovascular", body:`Your cells need two deliveries — fuel and oxygen — and THREE systems run the supply chain. The <b>digestive system</b> breaks food into nutrients your cells can use. The <b>respiratory system</b> pulls in oxygen and dumps carbon dioxide with every breath. The <b>cardiovascular system</b> (heart, blood, vessels) is the delivery service, carrying nutrients AND oxygen to every cell and hauling wastes away. No system works alone — dinner is useless if the blood never delivers it.`,
+    callout:["Feel the Teamwork","Sprint up the stairs: your breathing AND heartbeat speed up together. Your muscles demanded more oxygen, and two systems instantly raised the supply."]},
+   {t:"Command & Motion: Nervous & Muscular", body:`The <b>nervous system</b> — brain, spinal cord, and nerves — is mission control: it senses the world, makes decisions, and sends electrical messages at up to 250 mph. The <b>muscular system</b> carries the orders out, contracting to move bones, pump blood, and push food through your gut. Every step you take is the nervous system commanding and the muscular system executing. Touch a hot pan and your hand jerks away before you even feel the pain — that's a <b>reflex</b>, the fastest team play in your body.`},
+   {t:"Cleanup & Defense: Excretory & Immune", body:`Cells make wastes, and the <b>excretory system</b> takes out the trash: the <b>kidneys</b> filter your blood and remove wastes as urine, your skin sweats some out, and your lungs exhale carbon dioxide (yes — systems share organs!). Meanwhile the <b>immune system</b> is your security force: white blood cells patrol the bloodstream, identify invaders like bacteria and viruses, and destroy them. Fever and swelling aren't the germ winning — that's your immune system fighting back.`,
+    callout:["Systems Share","The lungs serve the respiratory AND excretory systems; the blood highway serves nearly everyone. Body systems overlap on purpose — that's interaction."]}
+  ],
+  quiz:[
+   {q:"Which organelle holds the DNA and directs the cell's activities?", o:["Mitochondria","Nucleus","Lysosome","Cell wall"], a:1, why:"The nucleus is the control center — the cell's instruction manual lives there."},
+   {q:"A muscle cell is packed with organelles that release energy from food. Those are…", o:["Chloroplasts","Lysosomes","Mitochondria","Nuclei"], a:2, why:"Mitochondria are the powerhouses — hard-working cells need lots of them."},
+   {q:"Under a microscope you see cells with thick outer walls and green structures inside. They are…", o:["Animal cells","Plant cells","Blood cells","Skin cells"], a:1, why:"Cell wall + chloroplasts is the plant-cell signature. Animal cells have neither."},
+   {q:"The cell membrane's main job is to…", o:["Make food","Control what enters and leaves the cell","Store DNA","Break down waste"], a:1, why:"It's the gatekeeper — nutrients in, wastes out, troublemakers blocked."},
+   {q:"Which sequence is in the correct order, smallest to largest?", o:["Cell → tissue → organ → organ system → organism","Tissue → cell → organ system → organ → organism","Organ → tissue → cell → organism → organ system","Cell → organ → tissue → organism → organ system"], a:0, why:"Cells build tissues, tissues build organs, organs build systems, and systems build YOU."},
+   {q:"A tissue is best described as…", o:["A group of similar cells working together","A single giant cell","Different organs teamed up","The liquid inside cells"], a:0, why:"Similar cells + same job = tissue, like the cardiac muscle tissue in your heart."},
+   {q:"Your heart contains muscle tissue, nerve tissue, and blood. That makes the heart a(n)…", o:["Tissue","Organ","Cell","Organism"], a:1, why:"Different tissues working together = an organ."},
+   {q:"Which two systems team up to load oxygen into your blood and deliver it to your cells?", o:["Digestive and muscular","Respiratory and cardiovascular","Excretory and immune","Nervous and digestive"], a:1, why:"The lungs load the oxygen (respiratory); the heart and blood deliver it (cardiovascular)."},
+   {q:"You touch a hot pan and your hand jerks away instantly. Which systems just teamed up?", o:["Immune and excretory","Nervous and muscular","Digestive and respiratory","Cardiovascular and immune"], a:1, why:"Nerves sensed danger and fired the command; muscles yanked the hand back — a reflex."},
+   {q:"The kidneys filter wastes out of your blood. They belong to the ___ system.", o:["Digestive","Excretory","Immune","Respiratory"], a:1, why:"Excretory = waste removal. The kidneys filter your entire blood supply many times a day."}
+  ],
+  vocab:[
+   ["Cell","The basic unit of all living things."],
+   ["Organelle","A tiny cell part with a specific job."],
+   ["Nucleus","The control center — holds the cell's DNA."],
+   ["Cytoplasm","The jelly-like filling where organelles float."],
+   ["Cell membrane","The gatekeeper controlling what enters and leaves."],
+   ["Cell wall","Stiff outer support layer — plant cells only."],
+   ["Chloroplast","Captures sunlight to make food — plant cells only."],
+   ["Mitochondria","The powerhouse — releases usable energy from food."],
+   ["Lysosome","The cleanup crew — breaks down waste and worn-out parts."],
+   ["Tissue","Similar cells working together on one job."],
+   ["Organ","Different tissues teamed up — heart, stomach, brain."],
+   ["Organ system","A group of organs sharing one major job."],
+   ["Cardiovascular system","Heart, blood & vessels — the body's delivery service."],
+   ["Respiratory system","Lungs & airways — oxygen in, carbon dioxide out."],
+   ["Digestive system","Breaks food into nutrients cells can use."],
+   ["Nervous system","Brain, spinal cord & nerves — senses and commands."],
+   ["Excretory system","Removes wastes — kidneys, skin, and lungs."],
+   ["Immune system","White blood cells & defenses that fight invaders."]
+  ],
+  videos:[
+   {t:"Introduction to cells & organelles", ch:"Curated search", url:"https://www.youtube.com/results?search_query=introduction+to+cells+organelles+amoeba+sisters", kind:"search", note:"The Amoeba Sisters' cell videos are middle-school gold."},
+   {t:"Plant vs. animal cells", ch:"Curated search", url:"https://www.youtube.com/results?search_query=plant+vs+animal+cells+middle+school", kind:"search", note:"Look for one with clear side-by-side diagrams."},
+   {t:"Levels of organization in the body", ch:"Curated search", url:"https://www.youtube.com/results?search_query=levels+of+organization+cells+tissues+organs+systems", kind:"search", note:""},
+   {t:"How body systems work together", ch:"Curated search", url:"https://www.youtube.com/results?search_query=human+body+systems+working+together+middle+school", kind:"search", note:"Pick one that follows oxygen or food through multiple systems."},
+   {t:"The immune system in action", ch:"Curated search", url:"https://www.youtube.com/results?search_query=immune+system+explained+middle+school", kind:"search", note:"Preview for pacing — immune videos range from gentle to intense."}
+  ],
+  pretest:[
+   {q:"The 'control center' of the cell is the…", o:["Mitochondria","Nucleus","Cell wall","Cytoplasm"], a:1, lesson:2, why:"The nucleus holds the DNA and directs the cell."},
+   {q:"Which is found in plant cells but NOT animal cells?", o:["Nucleus","Cell membrane","Chloroplast","Mitochondria"], a:2, lesson:3, why:"Chloroplasts (and cell walls) are the plant-only equipment."},
+   {q:"A group of similar cells working together is called a(n)…", o:["Organ","Tissue","System","Organism"], a:1, lesson:4, why:"Tissue is the first level above the cell."},
+   {q:"Which system delivers oxygen and nutrients to your cells?", o:["Cardiovascular","Digestive","Excretory","Muscular"], a:0, lesson:5, why:"The heart and blood are the body's delivery service."},
+   {q:"Which system fights off germs and infections?", o:["Respiratory","Immune","Digestive","Nervous"], a:1, lesson:7, why:"White blood cells are your body's security force."}
+  ]
+},
+u3:{ sym:"🧬", num:3, name:"Reproduction & Heredity", std:"S7L3", color:"var(--u3)", soft:"var(--u3soft)", hex:"#1E7FB8",
   blurb:"Genes, chromosomes, and why you look like your family — plus how humans breed traits into dogs, corn, and cattle.",
-  lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
-u4:{ sym:"🌿", num:4, name:"Ecology & Interdependence", std:"S7L4", color:"var(--u4)", soft:"var(--u4soft)", hex:"#2f7a4d", soon:true,
+  lessons:[
+   {t:"The Instruction Manual: DNA, Genes & Chromosomes", body:`Inside nearly every one of your cells sits a complete instruction manual for building YOU. The molecule is <b>DNA</b>. One instruction — say, for eye color — is a <b>gene</b>. And genes come packaged in bundles called <b>chromosomes</b>. Humans carry <b>46 chromosomes in 23 pairs</b> in each cell's nucleus: one of each pair came from mom, one from dad. That's <b>heredity</b> — the passing of traits from parents to offspring through genes.`,
+    callout:["Size Order","DNA is the language, a gene is one sentence, a chromosome is a whole chapter — and the nucleus holds the complete book."]},
+   {t:"Why You Look Like Your Family (But Not Exactly)", body:`You inherited half your chromosomes from each parent — so you carry TWO versions of most genes. Different versions of a gene are called <b>alleles</b>. Some are <b>dominant</b> (they show up with just one copy); others are <b>recessive</b> (they only show with two copies). That's why a trait can skip a generation, and why siblings — each drawing a different half from the same two decks — share family features without being copies. The exception: identical twins, who start from one cell with identical DNA.`,
+    callout:["Inherited vs. Acquired","Eye color and ear-lobe shape ride in on your genes. Your accent, your scar, your skateboard skills? Acquired during life — and they do NOT pass on to your kids."]},
+   {t:"Asexual Reproduction: Send in the Clones", body:`In <b>asexual reproduction</b>, ONE parent produces offspring that are <b>genetically identical</b> to it — clones. Bacteria split in two (<b>binary fission</b>), yeast and hydra grow buds that pinch off (<b>budding</b>), and strawberry plants send out runners that sprout copies. The advantages: it's FAST, and no partner is needed — one organism can fill a pond. The catch: every offspring has the same strengths… and exactly the same weaknesses.`},
+   {t:"Sexual Reproduction: Shuffling the Deck", body:`In <b>sexual reproduction</b>, TWO parents each contribute half their genes, and <b>fertilization</b> combines them into a brand-new mix. Every offspring is a different shuffle — that's <b>genetic variation</b>, and it's why puppies in one litter don't match. Variation is a species' insurance policy: when the environment changes (a new disease, a new climate), a varied population is more likely to include SOME individuals with the traits to survive it.`,
+    callout:["The Trade-Off","Asexual: fast, easy, identical — risky in a changing world. Sexual: slower, costlier, varied — ready for surprises. Each strategy wins in different conditions."]},
+   {t:"Selective Breeding: Humans Pick the Traits", body:`For thousands of years, humans have steered heredity. In <b>selective breeding</b>, people choose which plants or animals reproduce, based on <b>desired traits</b> — and repeat that choice generation after generation. Every dog breed descends from wolves this way. Corn was bred from a scraggly wild grass called <b>teosinte</b>. Dairy cows, seedless watermelons, racehorses, roses — all shaped by patient human choice, no laboratory required.`},
+   {t:"From Wolves to Corgis: Wins & Worries", body:`Selective breeding gave us bigger harvests, sweeter fruit, gentler livestock, and dogs for every job from herding to cuddling. But choosing for a few traits has costs: <b>less genetic variation</b> (a cloned or narrowly-bred crop can be wiped out by one disease), and <b>inherited health problems</b> when relatives are bred for looks — pugs and bulldogs struggle to breathe because humans selected ever-flatter faces. Good breeders weigh the trait they want against the health of the animal that carries it.`,
+    callout:["You Ate Selective Breeding Today","Wild bananas: stubby and full of hard seeds. Wild watermelons: small and bitter. Generations of human choice built your snacks."]}
+  ],
+  quiz:[
+   {q:"What is the correct relationship between genes and chromosomes?", o:["Genes are made of chromosomes","Chromosomes are structures that carry many genes","They are the same thing","Chromosomes live inside genes"], a:1, why:"The chromosome is the package; genes are the instructions riding inside it."},
+   {q:"Your 46 chromosomes came from…", o:["All from your mother","All from your father","23 from each parent","A random number from each"], a:2, why:"Half from each parent — that's why you resemble both sides of the family."},
+   {q:"A gene is best described as…", o:["A section of DNA with instructions for a trait","A type of cell","A kind of tissue","A whole chromosome"], a:0, why:"One gene = one set of instructions, like the recipe for eye color."},
+   {q:"Offspring produced by asexual reproduction are…", o:["Genetically identical to the single parent","A mix of two parents","Always stronger than the parent","A brand-new species"], a:0, why:"One parent, one set of genes, exact copies — clones."},
+   {q:"Which is an example of asexual reproduction?", o:["A bacterium splitting into two","A puppy born to two dogs","A chick hatching from a fertilized egg","Two flowers cross-pollinating"], a:0, why:"Binary fission: one parent cell divides into two identical cells."},
+   {q:"Sexual reproduction produces variation because…", o:["Offspring receive a new mix of genes from TWO parents","Offspring copy their environment","Genes change when organisms exercise","All offspring are identical"], a:0, why:"Every fertilization is a fresh shuffle of two decks of genes."},
+   {q:"A new disease strikes. Which population is more likely to have SOME survivors?", o:["A field of identical cloned plants","A genetically varied population","Any population, as long as it is large","Variation makes no difference"], a:1, why:"Variation means some individuals may already carry resistance — clones share every weakness."},
+   {q:"Selective breeding means…", o:["Humans choose which organisms reproduce, based on desired traits","Nature selects the fittest automatically","Organisms choose their own mates","Scientists edit DNA in a lab"], a:0, why:"People pick the parents, generation after generation — no lab needed."},
+   {q:"A farmer wants sweeter corn. Using selective breeding, she should…", o:["Plant seeds only from the sweetest plants, every generation","Water the corn more","Plant all the seeds equally","Add sugar to the soil"], a:0, why:"Choose the best, breed the best, repeat — sweetness shifts generation by generation."},
+   {q:"A risk of selective breeding is…", o:["Reduced variation and inherited health problems","Organisms turning wild again","Traits changing randomly overnight","It has no effect at all"], a:0, why:"Breeding a narrow family tree for a few traits can lock in weaknesses too — just ask a pug."}
+  ],
+  vocab:[
+   ["DNA","The molecule that carries the instructions for life."],
+   ["Gene","A section of DNA with instructions for one trait."],
+   ["Chromosome","A bundle of many genes — humans have 46 in 23 pairs."],
+   ["Trait","A characteristic, like eye color or ear-lobe shape."],
+   ["Heredity","The passing of traits from parents to offspring."],
+   ["Allele","One version of a gene."],
+   ["Dominant","An allele that shows even with only one copy."],
+   ["Recessive","An allele that shows only with two copies."],
+   ["Inherited trait","A feature passed down through genes."],
+   ["Acquired trait","A feature gained during life — never passed on."],
+   ["Asexual reproduction","One parent; offspring are identical clones."],
+   ["Binary fission","A single cell splitting in two — how bacteria reproduce."],
+   ["Budding","Offspring grows as a bump on the parent, then pinches off."],
+   ["Sexual reproduction","Two parents; offspring get a new mix of genes."],
+   ["Fertilization","Two parents' cells combining to start a new offspring."],
+   ["Genetic variation","The differences among members of a species."],
+   ["Offspring","An organism's young."],
+   ["Selective breeding","Humans choosing parents to pass on desired traits."]
+  ],
+  videos:[
+   {t:"DNA, genes & chromosomes", ch:"Curated search", url:"https://www.youtube.com/results?search_query=dna+genes+chromosomes+middle+school", kind:"search", note:"Look for one with the book-chapter-sentence analogy."},
+   {t:"Heredity: why you look like your family", ch:"Curated search", url:"https://www.youtube.com/results?search_query=heredity+inherited+traits+amoeba+sisters", kind:"search", note:"The Amoeba Sisters' heredity videos are a reliable pick."},
+   {t:"Asexual vs. sexual reproduction", ch:"Curated search", url:"https://www.youtube.com/results?search_query=asexual+vs+sexual+reproduction+amoeba+sisters", kind:"search", note:""},
+   {t:"Selective breeding explained", ch:"Curated search", url:"https://www.youtube.com/results?search_query=selective+breeding+artificial+selection+middle+school", kind:"search", note:"Dogs and corn are the classic examples to look for."},
+   {t:"How teosinte became corn", ch:"Curated search", url:"https://www.youtube.com/results?search_query=teosinte+corn+selective+breeding+history", kind:"search", note:"Seeing the scraggly wild ancestor next to modern corn says it all."}
+  ],
+  pretest:[
+   {q:"Genes are carried on structures called…", o:["Chromosomes","Muscles","Organs","Membranes"], a:0, lesson:1, why:"Chromosomes are the packages that bundle your genes."},
+   {q:"You inherited your genes from…", o:["Only your mother","Only your father","Both parents","Your environment"], a:2, lesson:2, why:"Half your chromosomes came from each parent."},
+   {q:"Offspring that are identical copies of one parent come from ___ reproduction.", o:["Sexual","Asexual","Selective","Slow"], a:1, lesson:3, why:"One parent, no gene mixing — clones."},
+   {q:"Which type of reproduction creates MORE variety in offspring?", o:["Asexual","Sexual","Cloning","Budding"], a:1, lesson:4, why:"Two parents means a new shuffle of genes every time."},
+   {q:"Breeding only the friendliest dogs, generation after generation, is called…", o:["Natural selection","Selective breeding","Mutation","Heredity"], a:1, lesson:5, why:"Humans choosing the parents = selective breeding."}
+  ]
+},
+u4:{ sym:"🌿", num:4, name:"Ecology & Interdependence", std:"S7L4", color:"var(--u4)", soft:"var(--u4soft)", hex:"#2f7a4d",
   blurb:"Food webs, energy flow, biomes, and what happens when one piece of an ecosystem changes.",
-  lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
-u5:{ sym:"🦖", num:5, name:"Evolution", std:"S7L5", color:"var(--u5)", soft:"var(--u5soft)", hex:"#9C4DC4", soon:true,
+  lessons:[
+   {t:"Ecosystems: The Cast & the Stage", body:`An <b>ecosystem</b> is all the living things in an area PLUS the nonliving things they depend on. The living players are the <b>biotic factors</b> — plants, animals, fungi, bacteria. The stage is the <b>abiotic factors</b> — sunlight, water, temperature, soil, air. Ecologists zoom in and out: one <b>organism</b>; a <b>population</b> (ALL the white-tailed deer in a forest); a <b>community</b> (every species living there); and the <b>ecosystem</b> (the community plus its abiotic stage, all interacting).`,
+    callout:["Don't Be Fooled","Dead leaves and fallen logs still count as biotic — they WERE alive, and they feed the decomposers. Sunlight, water, rocks, and temperature never lived: abiotic."]},
+   {t:"Patterns of Interaction", body:`The same interaction patterns repeat in every ecosystem on Earth. <b>Competition</b>: organisms struggle over limited resources (two trees racing for light). <b>Predation</b>: predator eats prey (hawk and field mouse). And <b>symbiosis</b> — two species living closely together — comes in three flavors: <b>mutualism</b> (both win: the bee pollinates the flower, the flower feeds the bee), <b>commensalism</b> (one wins, the other isn't affected: a barnacle riding a whale), and <b>parasitism</b> (one wins at the other's expense: a tick on a deer).`,
+    callout:["Symbiosis Scorecard","Mutualism: + / + · Commensalism: + / 0 · Parasitism: + / −"]},
+   {t:"Energy Flow: Food Chains & Webs", body:`Nearly all energy in an ecosystem starts as <b>sunlight</b>. <b>Producers</b> (plants, algae) capture it and make food. <b>Consumers</b> eat to get it — herbivores eat plants, carnivores eat animals, omnivores eat both. <b>Decomposers</b> (fungi, bacteria) break down the dead and return nutrients to the soil. A <b>food chain</b> traces one energy path — grass → rabbit → fox — and a <b>food web</b> weaves the chains together, because almost everything eats more than one thing.`,
+    callout:["Arrow Rule","Food-chain arrows point where the ENERGY goes. Grass → rabbit means the rabbit gets the energy. Draw it backwards and the grass eats the rabbit!"]},
+   {t:"The Energy Pyramid & Recycling Matter", fig:"pyramid", body:`Here's the catch: only about <b>10%</b> of the energy at each level passes UP to the next — the rest runs the organism's life or escapes as heat. Stack the levels and you get the <b>energy pyramid</b>: 1,000 units in the grass → 100 in the grasshoppers → 10 in the songbirds → 1 in the hawk. That's why ecosystems hold MANY plants and FEW top predators. Energy flows ONE WAY and out — but <b>matter recycles</b> forever: water, carbon, and nutrients loop from soil and air through organisms and back, with decomposers running the return desk.`,
+    callout:["Energy Flows, Matter Loops","Sunlight must pour in constantly because energy escapes as heat. But the atoms in your body? Recycled — countless organisms used them before you borrowed them."]},
+   {t:"Limiting Factors & Carrying Capacity", body:`No population grows forever. <b>Limiting factors</b> — food, water, shelter, space, disease, predators — put a ceiling on growth. The biggest population an ecosystem can support long-term is its <b>carrying capacity</b>. Below it, a population can grow; push above it, and food runs short, disease spreads faster in the crowd, and the population falls back. Graph a real population and you'll see growth leveling off into a wavy line around the carrying capacity.`},
+   {t:"When Ecosystems Change", body:`Change one piece and the effects ripple through the whole web. <b>Natural changes</b>: drought, disease outbreaks, wildfire. <b>Human changes</b>: deforestation, pollution, overfishing — and introducing <b>invasive species</b>, outsiders that arrive without the predators that kept them in check back home. Georgia knows this one personally: <b>kudzu</b>, a vine imported to control erosion, now smothers whole forests. And a shifting climate moves the abiotic stage itself, changing where species can survive at all.`,
+    callout:["The Ripple Rule","In an ecosystem you can never change just ONE thing. Remove the wolves and the deer boom; the deer boom and the forest shrinks."]},
+   {t:"World Tour: The Seven Land Biomes", body:`A <b>biome</b> is a large region defined by its climate — temperature and precipitation — and the organisms adapted to it. The seven terrestrial biomes: <b>tropical rain forest</b> (hot, wet, more species than anywhere on Earth); <b>savanna</b> (warm grassland with scattered trees and wet/dry seasons — lions and zebras); <b>desert</b> (under 25 cm of rain a year); <b>grassland</b> (fertile prairies); <b>temperate forest</b> (four seasons, trees that drop their leaves — that's Georgia!); <b>taiga</b> (long winters, evergreen conifers); and <b>tundra</b> (frozen ground called permafrost, too cold for trees).`,
+    callout:["Climate Writes the Guest List","Same recipe everywhere: temperature + precipitation decide the plants, and the plants decide the animals."]},
+   {t:"Water Worlds: Freshwater, Estuaries & Marine", body:`Aquatic ecosystems sort by SALT. <b>Freshwater</b>: rivers, streams, lakes, ponds, and wetlands — a tiny fraction of Earth's water, but home to a huge share of its species. <b>Marine</b>: the oceans — the largest ecosystem on Earth, from sunlit coral reefs to the pitch-black deep sea. And where a river meets the sea sits the <b>estuary</b>: a mix of fresh and salt water (brackish), loaded with nutrients and calm shallows. Estuaries are nicknamed the <b>nurseries of the sea</b> — countless fish and shellfish begin life there.`}
+  ],
+  quiz:[
+   {q:"Which list contains ONLY abiotic factors?", o:["Sunlight, water, temperature","Deer, oak trees, mushrooms","Bacteria, soil, rain","Fish, algae, rocks"], a:0, why:"Abiotic = never alive. Sunlight, water, and temperature qualify; deer, trees, fish, and bacteria don't."},
+   {q:"All the white-tailed deer living in one forest are a…", o:["Community","Population","Biome","Kingdom"], a:1, why:"One species + one area = a population. ALL the species together make the community."},
+   {q:"A tick feeds on a deer's blood. The tick benefits; the deer is harmed. This is…", o:["Mutualism","Commensalism","Parasitism","Competition"], a:2, why:"Plus for one, minus for the other — the parasitism signature."},
+   {q:"The original source of energy for almost every food chain is…", o:["Soil","The sun","Water","Decomposers"], a:1, why:"Producers capture sunlight and everything else eats its way up from there."},
+   {q:"In the food chain grass → rabbit → fox, the arrows show…", o:["Which organism is bigger","The direction energy flows","Which animal is faster","The order they evolved"], a:1, why:"Arrows trace the energy: from the grass into the rabbit, from the rabbit into the fox."},
+   {q:"Why can an ecosystem support thousands of mice but only a few hawks?", o:["Hawks don't like company","Only about 10% of energy passes up each level of the pyramid","Mice reproduce by accident","Hawks eat very little"], a:1, why:"Each level keeps ~90% of the energy for living. By the top, there's only enough left for a few predators."},
+   {q:"A drought kills most of the grass. What happens next in the grass → rabbit → fox chain?", o:["Nothing — animals don't need plants","Rabbit numbers fall, then fox numbers fall","Foxes start eating grass","Rabbits become producers"], a:1, why:"Less food ripples upward: fewer rabbits to eat means hungrier foxes — interactions connect every level."},
+   {q:"The maximum population an ecosystem can support long-term is its…", o:["Limiting factor","Carrying capacity","Food web","Biome"], a:1, why:"Populations grow until limiting factors — food, space, disease — level them off at carrying capacity."},
+   {q:"Hot and rainy all year, with more species than anywhere else on Earth. Which biome?", o:["Tundra","Desert","Tropical rain forest","Taiga"], a:2, why:"Warmth + constant water = the planet's biodiversity champion."},
+   {q:"Where a river meets the sea and fresh water mixes with salt water, you've found a(n)…", o:["Estuary","Lake","Coral reef","Aquifer"], a:0, why:"Brackish, nutrient-rich, calm — the nursery of the sea."}
+  ],
+  vocab:[
+   ["Ecosystem","All the living AND nonliving things interacting in an area."],
+   ["Biotic factor","A living (or once-living) part of an ecosystem."],
+   ["Abiotic factor","A nonliving part — sunlight, water, soil, temperature."],
+   ["Population","All the members of ONE species in an area."],
+   ["Community","ALL the species living together in an area."],
+   ["Producer","Makes its own food from sunlight — plants and algae."],
+   ["Consumer","Gets energy by eating other organisms."],
+   ["Decomposer","Breaks down dead material and recycles nutrients."],
+   ["Food web","All of an ecosystem's overlapping food chains."],
+   ["Energy pyramid","Shows energy shrinking about 90% at each level up."],
+   ["Symbiosis","Two species living in a close relationship."],
+   ["Mutualism","Symbiosis where BOTH species benefit."],
+   ["Commensalism","One benefits; the other is unaffected."],
+   ["Parasitism","One benefits by harming the other."],
+   ["Limiting factor","Anything that caps a population's growth."],
+   ["Carrying capacity","The largest population an ecosystem can support."],
+   ["Biome","A large region defined by its climate and organisms."],
+   ["Estuary","Where a river meets the sea — the 'nursery of the sea.'"]
+  ],
+  videos:[
+   {t:"Ecological relationships (symbiosis)", ch:"Curated search", url:"https://www.youtube.com/results?search_query=ecological+relationships+symbiosis+amoeba+sisters", kind:"search", note:"The Amoeba Sisters' symbiosis video nails the three types."},
+   {t:"Food chains, webs & the energy pyramid", ch:"Curated search", url:"https://www.youtube.com/results?search_query=food+chain+food+web+energy+pyramid+middle+school", kind:"search", note:"Look for one that shows the 10% rule with real numbers."},
+   {t:"Invasive species: the kudzu story", ch:"Curated search", url:"https://www.youtube.com/results?search_query=invasive+species+kudzu+explained", kind:"search", note:"Students will recognize this vine from Georgia roadsides."},
+   {t:"Biomes of the world tour", ch:"Curated search", url:"https://www.youtube.com/results?search_query=world+biomes+tour+middle+school", kind:"search", note:"Check that it covers all seven terrestrial biomes."},
+   {t:"Estuaries: nurseries of the sea", ch:"Curated search", url:"https://www.youtube.com/results?search_query=estuary+ecosystem+nursery+of+the+sea", kind:"search", note:"NOAA's estuary videos are reliably good."}
+  ],
+  pretest:[
+   {q:"The NONLIVING parts of an ecosystem — like sunlight and water — are called…", o:["Biotic factors","Abiotic factors","Producers","Communities"], a:1, lesson:1, why:"A-biotic = not living."},
+   {q:"A bee gets food from a flower while pollinating it. Both benefit. This is…", o:["Parasitism","Mutualism","Competition","Predation"], a:1, lesson:2, why:"Both species win — mutualism."},
+   {q:"Almost every food chain begins with energy from…", o:["The sun","The soil","Water","Animals"], a:0, lesson:3, why:"Producers capture sunlight; everything else eats its way up the chain."},
+   {q:"The largest population an ecosystem can support is called its…", o:["Limiting factor","Carrying capacity","Food web","Energy pyramid"], a:1, lesson:5, why:"Growth levels off when the ecosystem can't support any more."},
+   {q:"The frozen, treeless biome with permafrost is the…", o:["Taiga","Desert","Tundra","Savanna"], a:2, lesson:7, why:"Tundra: ground frozen year-round, too harsh for trees."}
+  ]
+},
+u5:{ sym:"🦖", num:5, name:"Evolution", std:"S7L5", color:"var(--u5)", soft:"var(--u5soft)", hex:"#9C4DC4",
   blurb:"Natural selection, genetic variation, and the fossil record — the evidence behind life's long story.",
-  lessons:[], quiz:[], vocab:[], videos:[], pretest:[] }
+  lessons:[
+   {t:"Natural Selection: The Recipe", body:`Nature runs a constant filter, and the recipe has four ingredients. <b>Overproduction</b>: organisms make more offspring than can survive (a frog lays thousands of eggs). <b>Variation</b>: those offspring differ — slightly different colors, speeds, beaks. <b>Selection</b>: the individuals whose traits best fit the environment are more likely to survive and <b>reproduce</b>, passing those traits on. <b>Time</b>: repeat for many generations, and the helpful traits become more common in the population. That's <b>natural selection</b> — nobody chooses; the environment filters.`,
+    callout:["Compare: Selective Breeding","Same engine, different driver. In selective breeding, HUMANS pick who reproduces. In natural selection, the ENVIRONMENT does the picking."]},
+   {t:"Doing the Math: Tracking Traits Across Generations", fig:"natsel", body:`Natural selection is measurable. England's <b>peppered moths</b>: before factories, light moths blended into pale tree bark, and dark moths were rare — about 2 in 100. When coal soot blackened the trees, birds spotted the light moths easily, and within decades dark moths topped 90 in 100 in industrial areas. When clean-air laws restored the trees, the numbers flipped back. Scientists track shifts like this with percentages and graphs — <b>mathematical models</b> of how a trait's share of the population changes generation by generation.`,
+    callout:["Individuals Don't Evolve","A moth can't decide to darken. Selection changes the PERCENTAGES across generations — populations evolve; individuals don't."]},
+   {t:"Variation Is the Raw Material", body:`Selection can only choose from what already exists — no <b>variation</b>, no natural selection. Where does variation come from? <b>Sexual reproduction</b> shuffles genes into new combinations every generation, and <b>mutations</b> — random changes in DNA — occasionally deal a brand-new card. Most mutations do little, some hurt, and a rare few help. The helpful ones spread over generations as their carriers out-survive and out-reproduce the rest.`},
+   {t:"Environment Decides the Winners", body:`Here's the twist: NO trait is good everywhere. White fur is a superpower in the Arctic and a target on a brown forest floor. Thick blubber wins in polar seas and overheats in the tropics. When bacteria meet antibiotics, the rare resistant ones survive and multiply — the same recipe, hospital edition. And because survival is about odds, think in <b>probability</b>: a helpful trait raises an individual's CHANCE of surviving and reproducing. Across thousands of individuals and many generations, better odds become population-wide change.`,
+    callout:["Probability, Not Destiny","Camouflage doesn't guarantee one rabbit's survival — it shifts the odds. Natural selection is statistics in action, which is why scientists model it with math."]},
+   {t:"Reading the Fossil Record", body:`<b>Fossils</b> — preserved remains and traces of ancient life — form mostly in layers of <b>sedimentary rock</b>, with older layers below younger ones. Read the stack bottom-to-top and the <b>fossil record</b> tells a story: life has existed for billions of years; it has been astonishingly <b>diverse</b>; most species that ever lived are now <b>extinct</b>; and organisms change from layer to layer — simple sea life deepest, with fish, amphibians, reptiles, and mammals appearing in order above.`,
+    callout:["A Library Underfoot","Each rock layer is a page, and the bottom pages were written first — that single rule lets scientists put the history of life in order."]},
+   {t:"Fossils & Family Resemblance", body:`The fossil record doesn't just show vanished creatures — it CONNECTS them to the living. Fossil whales have small <b>leg bones</b>, matching their land-walking ancestors. <b>Transitional fossils</b> like Tiktaalik — a fish with wrist-like bones in its fins — bridge fish and four-legged land animals. Horses trace back through the layers to dog-sized ancestors with toes instead of hooves. Pattern after pattern ties ancient organisms to modern ones, letting scientists map life's family tree.`,
+    callout:["Whales Have Hip Bones","Modern whales still carry tiny leftover hip bones — a souvenir from ancestors that walked on land."]}
+  ],
+  quiz:[
+   {q:"Natural selection can only act on a population if its members…", o:["Are all identical","Show variation in their traits","Live a long time","Choose to improve"], a:1, why:"No differences = nothing to select. Variation is the raw material."},
+   {q:"A moth population goes from 20% dark to 80% dark over 50 years as tree bark darkens. This shift is evidence of…", o:["Moths choosing new colors","Natural selection changing trait percentages over generations","Individual moths changing color","Pure coincidence"], a:1, why:"Camouflaged moths survived and reproduced more — and the population's mix shifted, measurably."},
+   {q:"In natural selection, which organisms leave the most offspring?", o:["The largest ones","Those whose traits best fit the environment","The oldest ones","The rarest ones"], a:1, why:"Best-suited doesn't mean biggest — it means best matched to the environment's challenges."},
+   {q:"White fur helps Arctic rabbits mainly because it…", o:["Keeps them warmer","Raises their chance of hiding from predators in the snow","Makes them faster","Helps in every habitat"], a:1, why:"Camouflage is about odds: harder to spot means more likely to survive and reproduce."},
+   {q:"Why does genetic variation help a species when the environment changes?", o:["Some individuals may already carry traits that fit the new conditions","It makes every member stronger","It prevents all mutations","It doesn't help"], a:0, why:"Variation is the species' insurance policy — somebody in the population may hold a winning ticket."},
+   {q:"After antibiotics are used, resistant bacteria become common because…", o:["Antibiotics teach bacteria resistance","The few naturally resistant bacteria survived and reproduced","Bacteria choose to resist","Doctors add resistance"], a:1, why:"The antibiotic is the filter: it removes the vulnerable and leaves the resistant to multiply."},
+   {q:"A student says 'the best-suited individual ALWAYS survives.' What's wrong with that?", o:["Nothing — it's correct","Helpful traits raise the PROBABILITY of survival; they don't guarantee it","Survival is totally random","Only luck matters"], a:1, why:"Selection works through odds across many individuals and generations — not guarantees for any single one."},
+   {q:"In undisturbed rock layers, the OLDEST fossils are found…", o:["In the top layers","In the bottom layers","Spread evenly","Only in mountains"], a:1, why:"Layers stack over time — the bottom pages of the rock 'book' were written first."},
+   {q:"What does the fossil record show about most species that have ever lived?", o:["They are still alive today","They are extinct","They never changed","They were all dinosaurs"], a:1, why:"Extinction is the rule, not the exception — the record is full of vanished life."},
+   {q:"Fossil whales with small leg bones are evidence that whales…", o:["Are related to land-walking ancestors","Always lived in water","Are actually fish","Used legs to swim faster"], a:0, why:"Leftover leg and hip bones tie modern whales to four-legged ancestors on land."}
+  ],
+  vocab:[
+   ["Evolution","Change in a population's traits over many generations."],
+   ["Natural selection","The environment 'filters' which traits get passed on."],
+   ["Adaptation","An inherited trait that helps survival or reproduction."],
+   ["Variation","Differences in traits among members of a population."],
+   ["Mutation","A random change in DNA — a source of new variation."],
+   ["Overproduction","Making more offspring than the environment can support."],
+   ["Fitness","How well an organism's traits match its environment."],
+   ["Generation","One round of parents producing offspring."],
+   ["Camouflage","Coloring that helps an organism blend in."],
+   ["Antibiotic resistance","Bacteria surviving medicines — natural selection, live."],
+   ["Fossil","Preserved remains or traces of ancient life."],
+   ["Fossil record","All known fossils and the history they tell."],
+   ["Sedimentary rock","Layered rock where most fossils form."],
+   ["Transitional fossil","A fossil linking an older group to a modern one."],
+   ["Extinction","The permanent loss of a species."],
+   ["Ancestor","An earlier organism a modern one descends from."],
+   ["Descendant","A later organism that comes from an ancestor."],
+   ["Trait frequency","How common a trait is in a population — the number scientists track."]
+  ],
+  videos:[
+   {t:"Natural selection explained", ch:"Curated search", url:"https://www.youtube.com/results?search_query=natural+selection+amoeba+sisters", kind:"search", note:"The Amoeba Sisters' natural selection video is a classroom staple."},
+   {t:"The peppered moth story", ch:"Curated search", url:"https://www.youtube.com/results?search_query=peppered+moth+natural+selection+industrial+revolution", kind:"search", note:"The unit's key data story, told with real photos."},
+   {t:"Galápagos finches & beak variation", ch:"Curated search", url:"https://www.youtube.com/results?search_query=galapagos+finches+natural+selection+beaks", kind:"search", note:"Variation meeting environment — Darwin's famous example."},
+   {t:"What fossils tell us", ch:"Curated search", url:"https://www.youtube.com/results?search_query=fossil+record+evidence+middle+school", kind:"search", note:""},
+   {t:"Natural Selection", ch:"PhET Interactive Simulations", url:"https://phet.colorado.edu/en/simulations/natural-selection", kind:"phet", note:"Breed bunnies, add wolves, and watch the trait percentages shift — this unit's math, live."}
+  ],
+  pretest:[
+   {q:"In natural selection, which organisms are most likely to survive and reproduce?", o:["The biggest","Those best suited to their environment","The oldest","The friendliest"], a:1, lesson:1, why:"Best fit to the environment — not biggest or strongest — wins the odds."},
+   {q:"After soot darkened tree trunks, dark peppered moths became common because they were…", o:["Harder for birds to see","Stronger fliers","Warmer","Luckier"], a:0, lesson:2, why:"Camouflage on dark bark meant dark moths survived to reproduce."},
+   {q:"The differences among members of one species are called…", o:["Variation","Extinction","Fitness","Fossils"], a:0, lesson:3, why:"Variation is the raw material natural selection works on."},
+   {q:"In undisturbed rock layers, the deepest fossils are the…", o:["Newest","Oldest","Largest","Rarest"], a:1, lesson:5, why:"Layers stack over time — deepest means earliest."},
+   {q:"Fossil whale ancestors show that whales once had…", o:["Wings","Legs","Gills only","Shells"], a:1, lesson:6, why:"Ancient whales walked on land — their leg bones tell the story."}
+  ]
+}
 };
 
 /* =========================================================
@@ -1546,7 +1847,46 @@ const ACTIVITIES = {
  sort:{b:["Characteristic of ALL living things","NOT required to be alive"],items:[["Made of cells",0],["Uses energy",0],["Grows and develops",0],["Reproduces",0],["Can walk or swim",1],["Has a brain",1],["Is green",1],["Breathes air",1]]}},
 "S7L1.b":{match:[["Archaea","Prokaryotes that thrive in extreme places"],["Bacteria","Prokaryotes living nearly everywhere"],["Protists","Eukaryote 'junk drawer' — amoebas and algae"],["Fungi","Decomposers that absorb their nutrients"],["Plants","Multicellular autotrophs with cell walls"],["Animals","Multicellular heterotrophs — no cell walls"]],
  blank:[{s:"Aristotle's model sorted all life into plants and ___.",w:["animals","fungi","microbes"],a:0},{s:"The invention of the ___ revealed a hidden world of unicellular life.",w:["microscope","telescope","thermometer"],a:0},{s:"Mushrooms belong to the kingdom ___.",w:["fungi","plants","protists"],a:0},{s:"Classification models changed as new ___ was discovered.",w:["evidence","money","land"],a:0}],
- sort:{b:["Prokaryotes (no nucleus)","Eukaryotes (nucleus)"],items:[["Bacteria",0],["Archaea",0],["Protists",1],["Fungi",1],["Plants",1],["Animals",1]]}}
+ sort:{b:["Prokaryotes (no nucleus)","Eukaryotes (nucleus)"],items:[["Bacteria",0],["Archaea",0],["Protists",1],["Fungi",1],["Plants",1],["Animals",1]]}},
+"S7L2.a":{match:[["Nucleus","Control center — holds the DNA"],["Mitochondria","Releases usable energy from food"],["Cell membrane","Controls what enters and leaves"],["Chloroplast","Captures sunlight to make food"],["Cell wall","Stiff outer support — plants only"],["Lysosome","Breaks down waste for recycling"]],
+ blank:[{s:"The basic unit of all living things is the ___.",w:["cell","atom","organ"],a:0},{s:"The 'powerhouse of the cell' is the ___.",w:["mitochondria","nucleus","lysosome"],a:0},{s:"Plant cells have chloroplasts and a cell ___.",w:["wall","window","engine"],a:0},{s:"Organelles float in a jelly-like filling called ___.",w:["cytoplasm","chlorophyll","saliva"],a:0}],
+ sort:{b:["In BOTH plant & animal cells","ONLY in plant cells"],items:[["Nucleus",0],["Cell membrane",0],["Mitochondria",0],["Cytoplasm",0],["Cell wall",1],["Chloroplasts",1]]}},
+"S7L2.b":{match:[["Cell","The smallest unit of life"],["Tissue","Similar cells working together"],["Organ","Different tissues teamed up"],["Organ system","Organs sharing one big job"],["Organism","The complete living thing"]],
+ blank:[{s:"A group of similar cells working together is a ___.",w:["tissue","kingdom","colony"],a:0},{s:"The stomach and the heart are examples of ___.",w:["organs","tissues","cells"],a:0},{s:"Organs working together form an organ ___.",w:["system","pyramid","chart"],a:0},{s:"Cells → tissues → organs → systems → ___.",w:["organism","ecosystem","kingdom"],a:0}],
+ sort:{b:["Tissue","Organ","Organ system"],items:[["Cardiac muscle tissue",0],["Nerve tissue",0],["The heart",1],["The brain",1],["The stomach",1],["Cardiovascular system",2],["Digestive system",2]]}},
+"S7L2.c":{match:[["Cardiovascular","Heart & blood — the delivery service"],["Respiratory","Oxygen in, carbon dioxide out"],["Digestive","Breaks food into usable nutrients"],["Nervous","Senses, decides, and commands"],["Excretory","Filters and removes wastes"],["Immune","Finds and destroys invaders"]],
+ blank:[{s:"The kidneys filter wastes from your ___.",w:["blood","bones","hair"],a:0},{s:"White blood cells travel to infections through the ___.",w:["bloodstream","stomach","spine"],a:0},{s:"During exercise, heart rate and ___ rate rise together.",w:["breathing","blinking","growing"],a:0},{s:"The ___ system tells your muscles when to move.",w:["nervous","immune","digestive"],a:0}],
+ sort:{b:["Digestive system","Respiratory system","Cardiovascular system"],items:[["Breaks pizza into nutrients",0],["Stomach acid at work",0],["Lungs fill with air",1],["Exhaling carbon dioxide",1],["The heart pumping",2],["Blood delivering oxygen",2]]}},
+"S7L3.a":{match:[["DNA","The molecule carrying life's instructions"],["Gene","One instruction — codes for a trait"],["Chromosome","A bundle of many genes"],["Heredity","Traits passing from parents to offspring"],["Allele","One version of a gene"]],
+ blank:[{s:"Humans have ___ chromosomes in 23 pairs.",w:["46","23","100"],a:0},{s:"You inherited ___ of your chromosomes from each parent.",w:["half","none","all"],a:0},{s:"A ___ is a section of DNA that codes for one trait.",w:["gene","cell","tissue"],a:0},{s:"Traits passed down through genes are ___ traits.",w:["inherited","acquired","invisible"],a:0}],
+ sort:{b:["Inherited trait","Acquired trait"],items:[["Eye color",0],["Attached ear lobes",0],["Natural hair color",0],["Dimples",0],["Riding a bike",1],["A scar",1],["Speaking Spanish",1],["Skateboard skills",1]]}},
+"S7L3.b":{match:[["Asexual reproduction","One parent — identical offspring"],["Sexual reproduction","Two parents — varied offspring"],["Binary fission","A bacterium splitting in two"],["Budding","Offspring pinches off the parent's body"],["Genetic variation","The differences within a species"]],
+ blank:[{s:"Asexual offspring are genetically ___ to the parent.",w:["identical","opposite","unrelated"],a:0},{s:"Sexual reproduction mixes genes from ___ parents.",w:["two","ten","zero"],a:0},{s:"Variation helps a species survive when the ___ changes.",w:["environment","alphabet","moon"],a:0},{s:"A strawberry plant spreading by runners is reproducing ___.",w:["asexually","sexually","loudly"],a:0}],
+ sort:{b:["Asexual reproduction","Sexual reproduction"],items:[["Bacterium splits in two",0],["Yeast grows a bud",0],["Strawberry runners",0],["Offspring all identical",0],["Two parents required",1],["Puppies in a litter all look different",1],["Creates new gene combinations",1]]}},
+"S7L3.c":{match:[["Selective breeding","Humans choose which organisms reproduce"],["Desired trait","The feature breeders want more of"],["Teosinte","The wild grass corn was bred from"],["Generations","Selective breeding's key ingredient — repetition"],["Reduced variation","A hidden cost of selective breeding"]],
+ blank:[{s:"In selective breeding, humans pick parents with ___ traits.",w:["desired","random","invisible"],a:0},{s:"Corn was bred over centuries from a wild grass called ___.",w:["teosinte","bamboo","kudzu"],a:0},{s:"Every dog breed was selectively bred from ___.",w:["wolves","foxes","bears"],a:0},{s:"Breeding only for looks can cause inherited ___ problems.",w:["health","math","weather"],a:0}],
+ sort:{b:["Selective breeding (humans chose)","Natural selection (environment chose)"],items:[["Corgis from wolves",0],["Seedless watermelon",0],["Cows that give more milk",0],["Sweeter corn",0],["Moths matching dark tree bark",1],["Bacteria resisting antibiotics",1],["White fur on Arctic hares",1]]}},
+"S7L4.a":{match:[["Biotic factor","A living part of an ecosystem"],["Abiotic factor","A nonliving part — sun, water, soil"],["Mutualism","Both species benefit"],["Commensalism","One benefits; the other is unaffected"],["Parasitism","One benefits; the other is harmed"],["Competition","A struggle over limited resources"]],
+ blank:[{s:"All the members of one species in an area form a ___.",w:["population","community","kingdom"],a:0},{s:"A bee and a flower helping each other is ___.",w:["mutualism","parasitism","competition"],a:0},{s:"A tick feeding on a deer is a ___.",w:["parasite","producer","mutualist"],a:0},{s:"Sunlight, temperature, and water are ___ factors.",w:["abiotic","biotic","imaginary"],a:0}],
+ sort:{b:["Biotic","Abiotic"],items:[["Oak tree",0],["Mushroom",0],["Soil bacteria",0],["White-tailed deer",0],["Sunlight",1],["Rainfall",1],["Temperature",1],["Rocks",1]]}},
+"S7L4.b":{match:[["Producer","Makes its own food from sunlight"],["Consumer","Eats other organisms for energy"],["Decomposer","Breaks down the dead, recycles nutrients"],["Food web","All the food chains woven together"],["Energy pyramid","Shows energy shrinking at each level"]],
+ blank:[{s:"Food-chain arrows point in the direction the ___ flows.",w:["energy","wind","water"],a:0},{s:"Only about ___% of energy passes up each level.",w:["10","90","50"],a:0},{s:"Energy flows one way, but matter ___.",w:["recycles","disappears","freezes"],a:0},{s:"Decomposers return ___ to the soil.",w:["nutrients","sunlight","oxygen"],a:0}],
+ sort:{b:["Producer","Consumer","Decomposer"],items:[["Grass",0],["Oak tree",0],["Algae",0],["Rabbit",1],["Hawk",1],["Deer",1],["Mushroom",2],["Soil bacteria",2]]}},
+"S7L4.c":{match:[["Limiting factor","Anything that caps population growth"],["Carrying capacity","The max population an area supports"],["Invasive species","An outsider that overruns natives"],["Deforestation","Human removal of forest habitat"],["Drought","A natural change that shrinks resources"]],
+ blank:[{s:"Food, water, space, and disease are ___ factors.",w:["limiting","lucky","invisible"],a:0},{s:"___ is the invasive vine smothering Georgia forests.",w:["Kudzu","Cactus","Seaweed"],a:0},{s:"A population levels off when it reaches carrying ___.",w:["capacity","cost","speed"],a:0},{s:"Invasive species often spread because they have no natural ___.",w:["predators","colors","leaves"],a:0}],
+ sort:{b:["Natural change","Human-caused change"],items:[["Drought",0],["Disease outbreak",0],["Lightning wildfire",0],["Deforestation",1],["Water pollution",1],["Introducing kudzu",1],["Overfishing",1]]}},
+"S7L4.d":{match:[["Tropical rain forest","Hot, wet, the most species on Earth"],["Desert","Less than 25 cm of rain a year"],["Tundra","Frozen ground called permafrost"],["Taiga","Cold evergreen forest"],["Temperate forest","Four seasons — Georgia's biome"],["Estuary","Where a river meets the sea"]],
+ blank:[{s:"Biomes are defined by temperature and ___.",w:["precipitation","elevation","population"],a:0},{s:"The savanna has scattered trees and wet and ___ seasons.",w:["dry","snowy","windy"],a:0},{s:"Estuary water is a mix of fresh and ___ water.",w:["salt","frozen","boiling"],a:0},{s:"The largest ecosystem on Earth is the ___.",w:["ocean","desert","taiga"],a:0}],
+ sort:{b:["Terrestrial biome","Aquatic ecosystem"],items:[["Grassland",0],["Taiga",0],["Tundra",0],["Savanna",0],["Estuary",1],["Coral reef",1],["Freshwater lake",1],["Open ocean",1]]}},
+"S7L5.a":{match:[["Overproduction","More offspring than can survive"],["Variation","Offspring differ from one another"],["Selection","Best-suited survive and reproduce more"],["Generation","One round of parents → offspring"],["Adaptation","An inherited trait that raises the odds"]],
+ blank:[{s:"Natural selection needs ___ to act on.",w:["variation","permission","sunlight"],a:0},{s:"Traits shift over many ___.",w:["generations","minutes","meals"],a:0},{s:"As soot darkened the trees, ___ moths became more common.",w:["dark","light","striped"],a:0},{s:"In natural selection, the ___ does the choosing.",w:["environment","breeder","government"],a:0}],
+ sort:{b:["Part of natural selection","NOT how natural selection works"],items:[["Variation among offspring",0],["Competition to survive",0],["Best-suited reproduce more",0],["Change across generations",0],["Organisms choosing to evolve",1],["One moth changing its own color",1],["Changes in a single day",1]]}},
+"S7L5.b":{match:[["Camouflage","Blending in — raises survival odds"],["Mutation","A random DNA change; new variation"],["Environment","Decides which traits are favorable"],["Antibiotic resistance","Natural selection in hospitals"],["Probability","Helpful traits raise the CHANCE, not a guarantee"]],
+ blank:[{s:"White fur helps in snow but hurts in a ___.",w:["forest","blizzard","cloud"],a:0},{s:"New variation comes from gene shuffling and ___.",w:["mutations","exercise","practice"],a:0},{s:"A helpful trait raises the ___ of surviving.",w:["probability","color","volume"],a:0},{s:"Resistant bacteria survive antibiotics and then ___.",w:["multiply","vanish","shrink"],a:0}],
+ sort:{b:["Helpful in the Arctic","Helpful in the desert"],items:[["Thick white fur",0],["A layer of blubber",0],["Small ears that save heat",0],["Storing water in your body",1],["Sandy tan camouflage",1],["Being active only at night",1]]}},
+"S7L5.c":{match:[["Fossil","Preserved remains or traces of ancient life"],["Fossil record","All fossils and the story they tell"],["Sedimentary rock","Layered rock where most fossils form"],["Extinction","A species gone forever"],["Transitional fossil","A bridge between older and modern groups"]],
+ blank:[{s:"In undisturbed layers, the deepest fossils are the ___.",w:["oldest","newest","fanciest"],a:0},{s:"Most species that ever lived are now ___.",w:["extinct","hiding","microscopic"],a:0},{s:"Fossil whales' tiny leg bones link them to ___ ancestors.",w:["land-walking","flying","frozen"],a:0},{s:"Fossils form mostly in ___ rock.",w:["sedimentary","igneous","metamorphic"],a:0}],
+ sort:{b:["Shown by the fossil record","NOT shown by the fossil record"],items:[["Life has existed for billions of years",0],["Most species went extinct",0],["Organisms appear in order through the layers",0],["Ancient species relate to modern ones",0],["Exactly what dinosaurs sounded like",1],["What ancient animals dreamed about",1]]}}
 };
 function stdUnit(std){ return STD_LIST[std.split('.')[0]].unit; }
 function unitActs(uid){ return Object.keys(ACTIVITIES).filter(s=>stdUnit(s)===uid); }
@@ -2003,11 +2343,34 @@ const STD_TAGS = {
  "u1:L0":["S7L1.a"], "u1:L1":["S7L1.a"], "u1:L2":["S7L1.a"], "u1:L3":["S7L1.a"],
  "u1:L4":["S7L1.b"], "u1:L5":["S7L1.b"], "u1:L6":["S7L1.b"],
  /* --- Unit 1 videos --- */
- "u1:V0":["S7L1.a"], "u1:V1":["S7L1.a"], "u1:V2":["S7L1.a"], "u1:V3":["S7L1.b"], "u1:V4":["S7L1.b"]
+ "u1:V0":["S7L1.a"], "u1:V1":["S7L1.a"], "u1:V2":["S7L1.a"], "u1:V3":["S7L1.b"], "u1:V4":["S7L1.b"],
+ /* --- Unit 2 lessons --- */
+ "u2:L0":["S7L2.a"], "u2:L1":["S7L2.a"], "u2:L2":["S7L2.a"], "u2:L3":["S7L2.b"],
+ "u2:L4":["S7L2.c"], "u2:L5":["S7L2.c"], "u2:L6":["S7L2.c"],
+ /* --- Unit 2 videos --- */
+ "u2:V0":["S7L2.a"], "u2:V1":["S7L2.a"], "u2:V2":["S7L2.b"], "u2:V3":["S7L2.c"], "u2:V4":["S7L2.c"],
+ /* --- Unit 3 lessons --- */
+ "u3:L0":["S7L3.a"], "u3:L1":["S7L3.a"], "u3:L2":["S7L3.b"], "u3:L3":["S7L3.b"],
+ "u3:L4":["S7L3.c"], "u3:L5":["S7L3.c"],
+ /* --- Unit 3 videos --- */
+ "u3:V0":["S7L3.a"], "u3:V1":["S7L3.a"], "u3:V2":["S7L3.b"], "u3:V3":["S7L3.c"], "u3:V4":["S7L3.c"],
+ /* --- Unit 4 lessons --- */
+ "u4:L0":["S7L4.a"], "u4:L1":["S7L4.a"], "u4:L2":["S7L4.b"], "u4:L3":["S7L4.b"],
+ "u4:L4":["S7L4.c"], "u4:L5":["S7L4.c"], "u4:L6":["S7L4.d"], "u4:L7":["S7L4.d"],
+ /* --- Unit 4 videos --- */
+ "u4:V0":["S7L4.a"], "u4:V1":["S7L4.b"], "u4:V2":["S7L4.c"], "u4:V3":["S7L4.d"], "u4:V4":["S7L4.d"],
+ /* --- Unit 5 lessons --- */
+ "u5:L0":["S7L5.a"], "u5:L1":["S7L5.a"], "u5:L2":["S7L5.b"], "u5:L3":["S7L5.b"],
+ "u5:L4":["S7L5.c"], "u5:L5":["S7L5.c"],
+ /* --- Unit 5 videos --- */
+ "u5:V0":["S7L5.a"], "u5:V1":["S7L5.a"], "u5:V2":["S7L5.b"], "u5:V3":["S7L5.c"], "u5:V4":["S7L5.a","S7L5.b"]
 };
 const QUIZ_TAGS = {
  u1:["S7L1.a","S7L1.a","S7L1.a","S7L1.a","S7L1.a","S7L1.b","S7L1.b","S7L1.b","S7L1.b","S7L1.b"],
- u2:[],u3:[],u4:[],u5:[]};
+ u2:["S7L2.a","S7L2.a","S7L2.a","S7L2.a","S7L2.b","S7L2.b","S7L2.b","S7L2.c","S7L2.c","S7L2.c"],
+ u3:["S7L3.a","S7L3.a","S7L3.a","S7L3.b","S7L3.b","S7L3.b","S7L3.b","S7L3.c","S7L3.c","S7L3.c"],
+ u4:["S7L4.a","S7L4.a","S7L4.a","S7L4.b","S7L4.b","S7L4.b","S7L4.c","S7L4.c","S7L4.d","S7L4.d"],
+ u5:["S7L5.a","S7L5.a","S7L5.a","S7L5.b","S7L5.b","S7L5.b","S7L5.b","S7L5.c","S7L5.c","S7L5.c"]};
 /* ---------- Resolver: selected sub-standards → concrete content ---------- */
 function resolveStandards(selected){ // selected: ["S8P1.a","S8P1.b",...]
   const sel = new Set(selected);
@@ -2051,7 +2414,59 @@ const WARMUPS = {
 "S7L1.b":[
  {q:"Aristotle classified all life as plants or animals 2,300 years ago. Was he wrong — or just early?", a:"He built the best model his evidence allowed. New tools (microscopes, genetics) changed the evidence, so the model changed."},
  {q:"Why couldn't scientists keep mushrooms in the plant kingdom?", a:"Fungi can't make their own food — no chlorophyll. They absorb nutrients from decaying material, so they earned their own kingdom."},
- {q:"What invention changed classification more than any other? Defend your pick.", a:"The microscope — it revealed unicellular life that fit neither old kingdom. (Genetic sequencing is a strong modern answer too.)"}]
+ {q:"What invention changed classification more than any other? Defend your pick.", a:"The microscope — it revealed unicellular life that fit neither old kingdom. (Genetic sequencing is a strong modern answer too.)"}],
+"S7L2.a":[
+ {q:"A cell is like a factory (or a school, or a city). Pick a comparison and assign jobs to the nucleus, membrane, and mitochondria.", a:"Any consistent mapping: nucleus = office/principal, membrane = security gate, mitochondria = power plant. Listen for job-to-structure matching."},
+ {q:"Why do plant cells need cell walls and chloroplasts when animal cells get along fine without them?", a:"Plants can't move to find food — they make their own (chloroplasts) and need stiff support to stand tall (walls). Animals eat and move instead."},
+ {q:"A poison shuts down every lysosome in a cell. What goes wrong, and how soon?", a:"Waste and worn-out parts pile up with no cleanup crew — the cell clogs and eventually fails. Listen for 'the system breaks when one part stops.'"}],
+"S7L2.b":[
+ {q:"Put these in order and explain: heart, cardiac muscle cell, you, cardiovascular system, cardiac tissue.", a:"Cell → tissue → organ (heart) → system → organism (you). Each level is built from the one below."},
+ {q:"Why can't an organ be built from just ONE type of tissue?", a:"Organs need different jobs done at once — the heart needs muscle to pump, nerves to time the beat, and blood to feed it all."},
+ {q:"An amoeba has no tissues or organs — one cell does everything. What jobs must that single cell handle?", a:"Eating, waste removal, sensing, moving, reproducing — every job our organ systems split up, in one cell."}],
+"S7L2.c":[
+ {q:"Trace a bite of pizza from your mouth to fueling your leg muscles. Which systems touch it along the way?", a:"Digestive breaks it into nutrients → cardiovascular delivers them → muscles burn them (with oxygen from the respiratory system)."},
+ {q:"You sprint one lap. Why do your heartbeat AND breathing speed up together?", a:"Muscles demand more oxygen: lungs load more (respiratory), heart delivers faster (cardiovascular) — systems interacting on demand."},
+ {q:"You recover from a cold in a week without medicine. What did your body do behind the scenes?", a:"The immune system: white blood cells found the virus, multiplied, and destroyed it — traveling through the bloodstream to get there."}],
+"S7L3.a":[
+ {q:"What's the difference between DNA, a gene, and a chromosome? Build a comparison (book, playlist, recipe binder…).", a:"DNA = the language/molecule, gene = one instruction (a sentence/song/recipe), chromosome = the bundle (chapter/album/binder)."},
+ {q:"Why aren't you an exact copy of either parent?", a:"You got half your chromosomes from each — a brand-new combination neither parent has."},
+ {q:"Name two traits you inherited and two you acquired. How do you tell the difference?", a:"Inherited rides on genes (eye color, dimples); acquired comes from life (scars, skills, language) and never passes to offspring."}],
+"S7L3.b":[
+ {q:"A disease hits a strawberry farm where every plant is a clone of one parent. Predict what happens and why.", a:"If one plant is vulnerable, ALL are — identical genes mean identical weaknesses. Variation is the missing insurance."},
+ {q:"Why do puppies in the same litter look different from each other?", a:"Sexual reproduction: each puppy drew a different half-and-half mix of mom's and dad's genes."},
+ {q:"Asexual reproduction is faster and easier — so why does sexual reproduction even exist?", a:"Variation. In a changing world (disease, climate), varied offspring give the species better odds that someone survives."}],
+"S7L3.c":[
+ {q:"How did wolves become chihuahuas? Walk through the steps.", a:"Generations of humans choosing the tamest/smallest/friendliest individuals to breed — selective breeding repeated for thousands of years."},
+ {q:"A farmer wants cows that give more milk. Design the breeding plan.", a:"Breed only the highest-milk cows (and their best offspring), repeat every generation. Listen for 'choose → breed → repeat.'"},
+ {q:"What's the difference between selective breeding and natural selection?", a:"WHO chooses: humans pick the parents in selective breeding; the environment 'picks' in natural selection."}],
+"S7L4.a":[
+ {q:"Name every biotic and abiotic factor in our schoolyard you can think of in 60 seconds.", a:"Biotic: grass, trees, insects, birds, bacteria. Abiotic: sunlight, rain, soil minerals, temperature, concrete. Listen for correct sorting."},
+ {q:"A remora fish rides a shark and eats its leftover scraps; the shark barely notices. Classify the relationship.", a:"Commensalism: + for the remora, 0 for the shark. Bonus discussion: could it ever tip into parasitism or mutualism?"},
+ {q:"Two oak trees grow one meter apart. What exactly are they competing for?", a:"Sunlight, water, soil nutrients, root space — competition doesn't need teeth."}],
+"S7L4.b":[
+ {q:"Why does one hawk need a whole field of grass below it? Use the energy pyramid.", a:"Only ~10% of energy passes up each level — 1,000 units of grass become 1 unit of hawk. Top predators need a wide base."},
+ {q:"Every decomposer on Earth vanishes overnight. What happens to ecosystems?", a:"Dead material piles up, nutrients never return to the soil, producers starve, and every level above them follows."},
+ {q:"Trace today's lunch back to the sun, step by step.", a:"Example: pizza → wheat/tomato (producers) ← sunlight; cheese → cow → grass ← sunlight. Every chain starts at the sun."}],
+"S7L4.c":[
+ {q:"Kudzu can swallow a Georgia hillside in one summer. Why do invasive species win so often?", a:"They arrive without the predators, diseases, and competitors that controlled them at home — natives never evolved defenses."},
+ {q:"A deer population doubles after wolves disappear — then crashes two winters later. Explain with carrying capacity.", a:"No predator let deer overshoot the food supply; too many deer ate it down, then starvation and disease pulled the population below capacity."},
+ {q:"List three human actions that change ecosystems — and one way to reduce the damage of each.", a:"Deforestation/replanting; pollution/cleanup & regulation; overfishing/catch limits; invasives/inspection programs. Any reasoned trio."}],
+"S7L4.d":[
+ {q:"Georgia is temperate forest. What would have to change about our climate to turn it into savanna?", a:"Warmer year-round with strong wet/dry seasons instead of four — climate (temp + precipitation) defines the biome."},
+ {q:"Why are estuaries called the 'nurseries of the sea'?", a:"Calm, shallow, nutrient-rich brackish water = food and protection for young fish and shellfish before open-ocean life."},
+ {q:"Deserts and tundras BOTH have few plants — for opposite reasons. Explain.", a:"Desert: too dry. Tundra: too cold, with frozen permafrost soil. Same result, different limiting factor."}],
+"S7L5.a":[
+ {q:"A frog lays 2,000 eggs but the pond only supports 20 adult frogs. Why does that overproduction matter for natural selection?", a:"It guarantees competition — and with variation, the best-suited 20 are the likeliest survivors. Selection needs the excess."},
+ {q:"Walk through the peppered moth story. What changed — the moths, or the percentages?", a:"The percentages! Individual moths never changed color; dark moths survived more, so each generation had a higher share of dark."},
+ {q:"How is natural selection like selective breeding, and what's the one big difference?", a:"Same engine — some individuals reproduce more, traits shift over generations. Difference: environment selects vs. humans select."}],
+"S7L5.b":[
+ {q:"White fur: superpower or death sentence? Explain how BOTH can be true.", a:"Superpower in snow (camouflage), death sentence on a brown forest floor — the ENVIRONMENT decides a trait's value."},
+ {q:"Why do doctors tell you to finish ALL your antibiotics?", a:"Quitting early leaves the toughest bacteria alive — exactly the ones that survive and multiply. You'd be running natural selection against yourself."},
+ {q:"Why doesn't a perfectly camouflaged rabbit always survive?", a:"Traits shift the ODDS, not certainties — bad luck happens. Selection shows up in averages across many individuals."}],
+"S7L5.c":[
+ {q:"How can scientists tell which fossil is older without any dates written on the rocks?", a:"Layer position: in undisturbed sedimentary rock, deeper = older. The stack is a timeline."},
+ {q:"Whales have tiny leftover hip bones. What story do those bones tell?", a:"Whale ancestors walked on land — the bones are leftovers connecting modern whales to four-legged ancestors in the fossil record."},
+ {q:"Most species that ever lived are extinct. What does that tell us about life on Earth?", a:"Environments change constantly, and species that can't adapt disappear — extinction is normal; survival is the exception."}]
 };
 const WARMUPS_MULTI = {
 "S7L1.a":[
@@ -2061,7 +2476,59 @@ const WARMUPS_MULTI = {
 "S7L1.b":[
  {q:"You discover Earth's 7th kingdom. What's in it, and what do you name it?", a:"Creative — any answer that explains WHY its members fit no existing kingdom shows real understanding."},
  {q:"Which kingdom would be the worst one to lose? Argue it.", a:"Bacteria and fungi are powerful answers (decomposers, digestion, nutrient cycling) — but any defended choice works."},
- {q:"Which kingdom is the most underrated? Make the case.", a:"Protists feed the oceans, archaea survive anywhere, fungi recycle the world — listen for real kingdom characteristics."}]
+ {q:"Which kingdom is the most underrated? Make the case.", a:"Protists feed the oceans, archaea survive anywhere, fungi recycle the world — listen for real kingdom characteristics."}],
+"S7L2.a":[
+ {q:"Vote: which organelle is the cell's MVP? Defend your pick.", a:"Nucleus (instructions), mitochondria (energy), membrane (protection) — all defensible. Listen for job-based reasoning."},
+ {q:"Invent a better nickname than 'the powerhouse of the cell' for the mitochondria.", a:"Any nickname tied to its real job — battery, engine room, generator, snack-to-spark converter."},
+ {q:"Design a brand-new organelle. What problem does it solve for the cell?", a:"Creative — reward answers that name a real cell problem (defense, storage, communication) and a structure to solve it."}],
+"S7L2.b":[
+ {q:"Compare your body to a school or a city: what are the cells, tissues, organs, and systems?", a:"Any consistent mapping — students = cells, classes = tissues, departments = organs, the school = organism."},
+ {q:"If you could upgrade one of your organs, which one and what's the new feature?", a:"Anything goes — bonus for knowing the organ's real job and system before upgrading it."},
+ {q:"Which is more amazing: that you're ONE organism, or that you're 37 trillion cells? Argue it.", a:"Both defensible — listen for levels-of-organization thinking either way."}],
+"S7L2.c":[
+ {q:"Which body system could you 'pause' for ten seconds with the least damage? Defend your choice.", a:"Digestive or muscular are reasonable; nervous/cardiovascular pauses are catastrophic. Reward knowing what each system does."},
+ {q:"Your body gets ONE dashboard warning light. Which system does it monitor?", a:"Any defended pick — heart (cardiovascular), immune (infection), nervous (overload). Listen for system functions."},
+ {q:"Pick the best two-system team in the body and make the case.", a:"Respiratory + cardiovascular is the classic, but nervous + muscular and digestive + cardiovascular are strong too."}],
+"S7L3.a":[
+ {q:"If you could read one page of your DNA instruction manual, which trait would you look up?", a:"Anything — bonus for distinguishing inherited traits (readable in DNA) from acquired ones (not in there!)."},
+ {q:"Best analogy for DNA → gene → chromosome wins: book, playlist, recipe binder, or your own?", a:"Any mapping that keeps the sizes straight: molecule/language → single instruction → bundle of instructions."},
+ {q:"Which family trait would you most want to pass on someday?", a:"Open — gently steer toward inherited traits vs. learned family traditions (both valuable, only one rides on genes)."}],
+"S7L3.b":[
+ {q:"You're an organism choosing a reproduction strategy: asexual or sexual. Which and why?", a:"Asexual: speed, no partner. Sexual: variation insurance. Either defended with trade-offs wins."},
+ {q:"Name a situation where being identical to everyone else is GREAT — and one where it's a disaster.", a:"Great: stable, perfect environment. Disaster: new disease or changing climate — clones share every weakness."},
+ {q:"Invent an organism that uses BOTH strategies. When does it switch?", a:"Real answer: many do (aphids, some plants)! Asexual when conditions are good, sexual when stress demands variation."}],
+"S7L3.c":[
+ {q:"If you could selectively breed any plant or animal, what trait would you aim for?", a:"Anything — listen for the method: choose parents with the trait, breed, repeat over generations."},
+ {q:"Is selective breeding 'inventing' a new organism? Argue your side.", a:"Both sides defensible — humans didn't create the variation, but they steered it dramatically (teosinte → corn)."},
+ {q:"Pugs struggle to breathe because they were bred for flat faces. Where should breeders draw the line?", a:"Open ethics discussion — reward connecting the health cost to reduced variation and trait-focused breeding."}],
+"S7L4.a":[
+ {q:"Nominate the best symbiosis duo in nature and classify the relationship.", a:"Clownfish/anemone (mutualism), oxpecker/rhino (debated!), tick/dog (parasitism) — reward correct +/+, +/0, +/− labels."},
+ {q:"Invent a mutualism between you and a wild animal — what does each side get?", a:"Creative — both sides must genuinely benefit or it's not mutualism."},
+ {q:"Which abiotic factor matters most in an ecosystem? Argue it.", a:"Sunlight (powers everything), water, temperature — any defended pick using real ecosystem reasoning."}],
+"S7L4.b":[
+ {q:"Build the longest accurate food chain you can from a Georgia forest.", a:"Example: sun → oak → caterpillar → songbird → hawk; decomposers at the end. Check the arrows point along the energy."},
+ {q:"Decomposers: grossest or greatest organisms? Argue a side using their real job.", a:"Both! No decomposers = no nutrient recycling = ecosystem collapse. Reward the 'return desk' understanding."},
+ {q:"If you had to be a producer, consumer, or decomposer, which and why?", a:"Any defended pick — bonus for naming the energy source that comes with the job."}],
+"S7L4.c":[
+ {q:"Design a billboard warning Georgians about one human impact on ecosystems.", a:"Kudzu, litter in watersheds, deforestation — reward a real impact plus a real consequence."},
+ {q:"Which limiting factor would hit our town's squirrels first: food, space, disease, or predators? Argue it.", a:"Any defended choice — listen for understanding that SOME factor always caps growth."},
+ {q:"You're put in charge of stopping kudzu. What's your plan?", a:"Real methods: repeated cutting, grazing goats, careful herbicide, replanting natives. Any reasoned multi-step plan counts."}],
+"S7L4.d":[
+ {q:"You must live one year in any biome except temperate forest. Which one, and how do you survive?", a:"Any biome defended with its real climate facts — water plan in the desert, heat plan in the tundra."},
+ {q:"Rank the seven land biomes from easiest to hardest for humans. Defend your top and bottom.", a:"Most rank grassland/temperate easiest, tundra/desert hardest — the reasoning matters more than the order."},
+ {q:"Invent an animal perfectly adapted to the tundra. Describe three traits.", a:"Insulation, compact body, fat storage, white camouflage, burrowing — reward traits matched to cold + permafrost."}],
+"S7L5.a":[
+ {q:"Make up your own 'peppered moth' story for an animal in Georgia.", a:"Any version with the right engine: variation exists → environment changes → one variant survives/reproduces more → percentages shift."},
+ {q:"Which would shift a population faster: a new predator or a new food source? Argue it.", a:"Either — predators select hard and fast; food shifts reward different feeders. Listen for selection-pressure reasoning."},
+ {q:"Natural selection in six words or fewer. Best slogan wins.", a:"Examples: 'Best fit breeds the future' · 'The environment does the choosing.' Reward accuracy over style."}],
+"S7L5.b":[
+ {q:"Give any animal ONE new variation that would raise its odds in YOUR neighborhood.", a:"Anything tied to local conditions — heat tolerance, traffic awareness, camouflage for red clay. Environment decides value!"},
+ {q:"Name a trait that would be helpful in one environment and harmful in another.", a:"White fur, huge size, bright colors, thick blubber — reward the two-environment contrast."},
+ {q:"If a mutation gave you one tiny advantage, what would you want it to be?", a:"Open and fun — bonus for explaining what 'advantage' means: better odds of surviving and reproducing, not superpowers."}],
+"S7L5.c":[
+ {q:"You can dig up ONE perfectly preserved fossil of anything. What do you hope to find, and what could it prove?", a:"Any pick — best answers connect the fossil to a question: a transitional form, an extinction, a relationship to modern life."},
+ {q:"A friend says fossils are just rocks shaped like animals. Convince them otherwise.", a:"Fossils are preserved remains/traces in datable layers, in consistent worldwide patterns — too ordered to be coincidence."},
+ {q:"Which would teach us more: a brand-new dinosaur, or a transitional fossil between two groups? Argue it.", a:"Both defensible — transitional fossils connect branches of life's family tree; new species add diversity data."}]
 };
 let WU = null;
 function warmupPool(type, std){
@@ -2756,7 +3223,54 @@ u1:[
  {std:"S7L1.b", q:"Which kingdoms contain ONLY prokaryotes?", o:["Plants and fungi","Bacteria and archaea","Protists and bacteria","Animals and protists"], a:1, why:"Bacteria and archaea: unicellular, no nucleus. The other four kingdoms are all eukaryotes."},
  {std:"S7L1.b", q:"Classification history went 2 kingdoms → 5 → 6. This BEST shows that…", o:["Early scientists were careless","Scientific models are revised as new tools and evidence appear","Classification is just opinion","The number of kingdoms will always grow"], a:1, why:"From Aristotle's eyes to Linnaeus's system to microscopes to genetics — every new tool refined the model. That's science working."}
 ],
-u2:[],u3:[],u4:[],u5:[]};
+u2:[
+ {std:"S7L2.a", q:"Why do scientists describe the cell as a SYSTEM?", o:["It is very small","Its organelles each do a job, and the cell only works when they work together","It is shaped like a circle","It can think"], a:1, why:"Nucleus directing, membrane guarding, mitochondria powering — remove one part and the whole cell fails. That's a system."},
+ {std:"S7L2.a", q:"A cell can survive without chloroplasts by eating — but no cell survives without mitochondria. Why?", o:["Mitochondria store the DNA","Mitochondria release the usable energy every life process depends on","Mitochondria make the cell green","Mitochondria hold the cell together"], a:1, why:"There are other ways to GET food — but without mitochondria, food can't become usable energy."},
+ {std:"S7L2.a", q:"Which organelle–job pairing is WRONG?", o:["Nucleus — holds DNA and directs the cell","Cell membrane — controls what enters and leaves","Lysosome — captures sunlight to make food","Mitochondria — release energy from food"], a:2, why:"Lysosomes are the cleanup crew. Capturing sunlight is the chloroplast's job — and only in plant cells."},
+ {std:"S7L2.a", q:"Under the microscope, Cell X has a nucleus, a stiff outer wall, and green organelles. Cell X comes from…", o:["An animal","A plant","A bacterium","A virus"], a:1, why:"Nucleus = eukaryote; wall + chloroplasts = plant. Bacteria lack nuclei, and viruses aren't even cells."},
+ {std:"S7L2.b", q:"Cardiac muscle cells → cardiac muscle tissue → heart → cardiovascular system → organism. This sequence shows…", o:["A food chain","The levels of organization in a multicellular organism","How cells reproduce","The order organs evolved"], a:1, why:"Cells build tissues, tissues build organs, organs build systems, systems build the organism."},
+ {std:"S7L2.b", q:"What makes an ORGAN different from a TISSUE?", o:["Organs are smaller","An organ is DIFFERENT tissues working together; a tissue is SIMILAR cells","Tissues are only in plants","There is no difference"], a:1, why:"Your heart needs muscle, nerve, and blood tissue cooperating — that teamwork of tissues is what makes an organ."},
+ {std:"S7L2.b", q:"Why are your body's cells specialized into many types instead of all being identical?", o:["Identical cells would be too heavy","Different jobs need different tools — specialization lets each cell type do one job well","Cells get bored","It happens by accident"], a:1, why:"A muscle cell contracts, a nerve cell signals, a blood cell carries oxygen — division of labor is the point of multicellular life."},
+ {std:"S7L2.c", q:"During exercise, your heart rate AND breathing rate rise together. This is evidence that…", o:["The systems are competing","Body systems interact to meet the muscles' demand for oxygen","Breathing is controlled by the stomach","The heart needs air"], a:1, why:"Muscles demand more oxygen; the respiratory system loads it and the cardiovascular system speeds delivery — interaction in action."},
+ {std:"S7L2.c", q:"Which sequence shows three systems teaming up to fuel your body?", o:["Digestive breaks down food → cardiovascular delivers nutrients → muscular uses the energy","Immune digests food → nervous delivers it → skin uses it","Respiratory breaks down food → excretory delivers it → digestive uses it","Muscular breaks down food → immune delivers it → nervous uses it"], a:0, why:"Break it down, deliver it, burn it — digestive, cardiovascular, muscular."},
+ {std:"S7L2.c", q:"A virus gets into your body. Which system attacks it, and how do its defenders travel?", o:["Excretory — through sweat","Immune — white blood cells riding the cardiovascular system's blood","Digestive — stomach acid","Muscular — squeezing the virus"], a:1, why:"White blood cells are the immune system's soldiers, and the bloodstream is their highway — two systems interacting."}
+],
+u3:[
+ {std:"S7L3.a", q:"Which lists the structures from SMALLEST to LARGEST?", o:["Gene → chromosome → nucleus → cell","Cell → nucleus → gene → chromosome","Chromosome → cell → gene → nucleus","Nucleus → gene → cell → chromosome"], a:0, why:"Genes ride on chromosomes, chromosomes live in the nucleus, and the nucleus sits inside the cell."},
+ {std:"S7L3.a", q:"Two siblings share many family traits but look clearly different. The best explanation?", o:["Traits aren't inherited","Each inherited a DIFFERENT half-and-half mix of their parents' genes","One didn't get genes","They ate different foods"], a:1, why:"Same two decks of cards, different shuffle — every child draws a unique combination."},
+ {std:"S7L3.a", q:"A man gets a scar on his cheek. Will his children inherit it?", o:["Yes — all traits pass on","No — acquired traits aren't carried in genes","Only if it's a deep scar","Only his sons"], a:1, why:"Genes carry inherited traits. Life experiences change your body, not the DNA instructions you pass on."},
+ {std:"S7L3.b", q:"A strawberry farm grows only clones from one parent plant. The advantage AND the danger?", o:["Fast and identical — but one disease could destroy them all","Slow but varied","No advantage at all","Clones can't grow fruit"], a:0, why:"Asexual reproduction is efficient, but identical genes mean identical weaknesses."},
+ {std:"S7L3.b", q:"The KEY genetic difference between asexual and sexual reproduction is…", o:["Asexual offspring are identical; sexual offspring get a new mix from two parents","Asexual takes longer","Sexual produces clones","Asexual needs two parents"], a:0, why:"One parent copying vs. two parents shuffling — identical vs. varied."},
+ {std:"S7L3.b", q:"A student models sexual reproduction by drawing half the marbles from mom's bag and half from dad's bag for each 'offspring.' What does the model show well?", o:["Why offspring are identical","Why every offspring gets a different combination — variation","Why genes don't matter","How mutations happen"], a:1, why:"Each draw is a new mix — exactly why siblings differ."},
+ {std:"S7L3.b", q:"A sudden climate shift hits two lizard populations: A is highly varied, B is nearly identical. Predict the outcome.", o:["A is more likely to include some survivors with helpful traits","B definitely survives","Both are equally safe","Neither can survive any change"], a:0, why:"Variation is insurance: a varied population is more likely to hold a winning ticket for the new conditions."},
+ {std:"S7L3.c", q:"Selective breeding is DIFFERENT from natural selection because…", o:["Humans choose which traits get passed on","It happens without reproduction","Only plants can be selected","The environment does the choosing"], a:0, why:"Same engine — repeated selection over generations — but humans drive it."},
+ {std:"S7L3.c", q:"Modern corn looks nothing like teosinte, the wild grass it came from. This shows that…", o:["Corn appeared by accident","Generations of humans choosing seeds with desired traits can transform a species","Teosinte is imaginary","Corn is not a plant"], a:1, why:"Thousands of years of picking the biggest, easiest-to-harvest seeds rebuilt the plant entirely."},
+ {std:"S7L3.c", q:"Purebred dogs often suffer inherited health problems because…", o:["They exercise too little","Breeding a narrow family line for looks reduces variation and locks in harmful genes","Mixed-breed dogs steal their food","Their food is different"], a:1, why:"Selecting hard for appearance shrinks the gene pool — health costs ride along with the chosen looks."}
+],
+u4:[
+ {std:"S7L4.a", q:"A clownfish gets shelter among an anemone's stinging arms; the anemone gets cleaned and defended. This relationship is…", o:["Parasitism","Mutualism","Commensalism","Competition"], a:1, why:"Both partners benefit: + / + = mutualism."},
+ {std:"S7L4.a", q:"Every deer is removed from a forest. Which prediction best shows how INTERACTIONS connect an ecosystem?", o:["Nothing else changes","Predators of deer lose food while plants the deer ate grow thicker — effects ripple outward","Only the deer are affected","The forest instantly becomes a desert"], a:1, why:"Ecosystems are webs: pull one thread and connected populations shift up AND down the chain."},
+ {std:"S7L4.a", q:"Which group lists ONLY abiotic factors?", o:["Sunlight, temperature, water","Bacteria, fungi, moss","Deer, soil, rain","Trees, rocks, fish"], a:0, why:"Abiotic = never alive. Bacteria, moss, deer, trees, and fish are all biotic."},
+ {std:"S7L4.b", q:"If every decomposer vanished, ecosystems would collapse because…", o:["Predators would starve immediately","Nutrients would stay locked in dead material instead of recycling back to producers","The sun would stop shining","Plants would grow too fast"], a:1, why:"Decomposers run the return desk — without them, the matter cycle stops and soils starve."},
+ {std:"S7L4.b", q:"Grass in a field stores 1,000 units of energy. About how much reaches the grasshoppers that eat it?", o:["1,000 units","100 units","500 units","0 units"], a:1, why:"Roughly 10% passes up each level — the energy pyramid's rule."},
+ {std:"S7L4.b", q:"Which statement gets energy and matter RIGHT?", o:["Both recycle forever","Energy flows one way and escapes as heat; matter recycles through organisms again and again","Matter flows one way; energy recycles","Neither moves through ecosystems"], a:1, why:"That's why the sun must keep shining but no new atoms need delivering — energy flows, matter loops."},
+ {std:"S7L4.c", q:"Kudzu, introduced to Georgia by humans, now smothers native forests. Invasive species often win because…", o:["They are always bigger","They arrive without the predators and competitors that kept them in check back home","Native species invite them","They never need water"], a:1, why:"No natural enemies + natives with no evolved defenses = unchecked spread."},
+ {std:"S7L4.c", q:"A graph shows a rabbit population climbing, then leveling off into small waves around 500. The leveling shows…", o:["The rabbits stopped reproducing","The population reached the ecosystem's carrying capacity","Rabbits became extinct","The graph is broken"], a:1, why:"Limiting factors — food, space, predators, disease — cap growth around the carrying capacity."},
+ {std:"S7L4.d", q:"A biome has four distinct seasons and forests of trees that drop their leaves each fall. It is a…", o:["Taiga","Temperate forest","Savanna","Tundra"], a:1, why:"Four seasons + deciduous trees = temperate forest — Georgia's home biome."},
+ {std:"S7L4.d", q:"Why are estuaries called the 'nurseries of the sea'?", o:["They are the deepest waters","Calm, nutrient-rich water where rivers meet the sea shelters countless young fish and shellfish","Whales are born there","They contain no predators at all"], a:1, why:"Brackish, shallow, food-rich water is the perfect protected start for young sea life."}
+],
+u5:[
+ {std:"S7L5.a", q:"A beetle population is 90% brown, 10% green. Birds easily spot brown beetles on the green leaves where they live. Predict the population after 20 generations.", o:["Still 90% brown","Mostly green — green beetles survived and reproduced more","All beetles turn blue","Exactly 50/50"], a:1, why:"Camouflaged beetles dodge the birds, reproduce more, and their share grows generation by generation."},
+ {std:"S7L5.a", q:"A graph shows the PERCENT of dark moths rising from 2% to 90% over 50 years. The graph is a mathematical representation of…", o:["Moths learning to hide","Natural selection shifting a trait's frequency across generations","Individual moths changing color","Random weather"], a:1, why:"Tracking a trait's percentage over generations is exactly how scientists measure natural selection."},
+ {std:"S7L5.a", q:"Why does natural selection require MANY generations?", o:["Individuals slowly change their own genes","Selection shifts the POPULATION'S mix of inherited traits a little each generation","Animals must learn the new traits first","It doesn't — it finishes in days"], a:1, why:"Individuals don't evolve — populations do, as each generation's survivors tilt the percentages."},
+ {std:"S7L5.a", q:"A salmon lays thousands of eggs; few survive. Overproduction matters to natural selection because…", o:["It guarantees all offspring live","The competition that follows means the best-suited variants are likeliest to survive and reproduce","It creates new mutations on demand","More eggs mean less variation"], a:1, why:"Excess offspring + limited resources = the struggle that lets selection sort the variants."},
+ {std:"S7L5.b", q:"One bacterium in millions carries a mutation for antibiotic resistance. Antibiotics are used. What happens?", o:["All the bacteria die","The resistant one survives and multiplies — soon resistance is common","The antibiotic creates more resistance","Nothing changes"], a:1, why:"The antibiotic doesn't CREATE resistance — it selects for the variation that already existed."},
+ {std:"S7L5.b", q:"White fur saves Arctic hares but dooms forest hares. This shows that…", o:["White fur is always best","The ENVIRONMENT determines which variations are favorable","Fur color doesn't matter","Forests are unnatural"], a:1, why:"No trait is good everywhere — favorable depends entirely on the surroundings."},
+ {std:"S7L5.b", q:"A student says organisms evolve by TRYING to adapt. The best correction is…", o:["Correct — effort changes genes","Variation already exists by chance; the environment determines which variants survive and reproduce more","Organisms vote on adaptations","Only strong organisms evolve"], a:1, why:"No trying involved: the variation is already there, and the environment filters it."},
+ {std:"S7L5.c", q:"The fossil record shows that the vast majority of species that ever lived…", o:["Are alive today","Are extinct","Became humans","Left no trace"], a:1, why:"Extinction is the rule — the record is a library of vanished life."},
+ {std:"S7L5.c", q:"In one undisturbed cliff: fish fossils in the deepest layer, amphibians above them, reptiles above that. The best conclusion?", o:["Fish appeared on Earth before amphibians and reptiles","Reptiles are the oldest","All three appeared at the same time","The cliff is upside down"], a:0, why:"Deeper = older, so the stack records the order these groups appeared."},
+ {std:"S7L5.c", q:"Tiktaalik is a fossil fish with wrist-like bones in its fins. Fossils like this matter because they…", o:["Prove fish can't swim","Show relationships linking ancient groups to modern ones — fins on the way to walking limbs","Are the largest fossils ever found","Show fossils form quickly"], a:1, why:"Transitional fossils are the bridges in life's family tree, connecting past organisms to their modern relatives."}
+]};
 function asnPosttestQs(uid, stds){
   const bank = POSTTESTS[uid] || [];
   const sel = new Set(stds || (ASN? ASN.cfg.std : []) || []);
@@ -2885,7 +3399,20 @@ function asnVerifyCode(asnId, nameK, pct, dateStr){
 /* plain-language re-teach text + figure for every sub-standard */
 const STD_TEACH = {
  "S7L1.a":{fig:'taxonomy', teach:"All living things share core characteristics: they're made of cells, use energy, grow and develop, respond to their environment, and reproduce. Scientists build classification models by sorting organisms on shared characteristics — one cell or many (unicellular vs. multicellular), nucleus or not (eukaryote vs. prokaryote), makes food or eats it (autotroph vs. heterotroph). The levels run from kingdom (broadest) down to species (most specific), every species gets a two-word scientific name (Genus + species), and a dichotomous key — a series of either-or choices about observable traits — lets anyone identify an unknown organism and land on the same answer."},
- "S7L1.b":{fig:null, teach:"Classification models change when new evidence arrives. Aristotle sorted all life into just plants and animals based on what he could see; Linnaeus kept two kingdoms but gave us the naming system. Then microscopes revealed unicellular organisms that fit neither group, so kingdoms were added — and later, chemical and genetic evidence split the prokaryotes into bacteria and archaea. Today's six kingdoms: archaea and bacteria (the prokaryotes), plus protists, fungi, plants, and animals (the eukaryotes). The model improved every time a new tool revealed new evidence — and it may change again."}
+ "S7L1.b":{fig:null, teach:"Classification models change when new evidence arrives. Aristotle sorted all life into just plants and animals based on what he could see; Linnaeus kept two kingdoms but gave us the naming system. Then microscopes revealed unicellular organisms that fit neither group, so kingdoms were added — and later, chemical and genetic evidence split the prokaryotes into bacteria and archaea. Today's six kingdoms: archaea and bacteria (the prokaryotes), plus protists, fungi, plants, and animals (the eukaryotes). The model improved every time a new tool revealed new evidence — and it may change again."},
+ "S7L2.a":{fig:'cell', teach:"A cell is a system — organelles working together, each with a job. The nucleus is the control center holding the DNA; the cell membrane is the gatekeeper controlling what enters and leaves; the cytoplasm is the jelly where organelles float; the mitochondria release usable energy from food; and lysosomes break down waste. Plant cells add two extras: a stiff cell wall for support and chloroplasts that capture sunlight to make food. Animal cells have neither — animals eat their food and need flexible cells to move."},
+ "S7L2.b":{fig:'levels', teach:"Multicellular life is organized in levels: similar cells form a tissue; different tissues form an organ; organs working on one big job form an organ system; and the systems together make the organism. Example: cardiac muscle cells → cardiac muscle tissue → the heart → the cardiovascular system → you. Each level can do things the one below can't — a heart pumps, but a single heart cell can only twitch."},
+ "S7L2.c":{fig:null, teach:"Body systems never work alone. The digestive system breaks food into nutrients, the respiratory system loads oxygen, and the cardiovascular system delivers both to every cell. The nervous system senses and commands; the muscular system executes. The excretory system (kidneys, skin, lungs) removes wastes, and the immune system's white blood cells — traveling in the blood — hunt down invaders. Exercise shows the teamwork: muscles demand more oxygen, so heartbeat and breathing rise together."},
+ "S7L3.a":{fig:null, teach:"Traits pass from parents to offspring through genes — sections of DNA that each carry instructions for a trait. Genes are bundled into chromosomes; humans have 46 in 23 pairs, half from each parent. Different versions of a gene (alleles) can be dominant or recessive, which is why traits can skip generations and why siblings resemble — but don't copy — their parents. Inherited traits ride on genes; acquired traits (a scar, a skill) do not pass on."},
+ "S7L3.b":{fig:null, teach:"Asexual reproduction: ONE parent, offspring genetically identical — fast and efficient (bacteria splitting, budding, plant runners), but every clone shares the same weaknesses. Sexual reproduction: TWO parents each give half their genes, so every offspring is a new combination — slower, but the variation is insurance: when the environment changes, a varied population is more likely to include survivors."},
+ "S7L3.c":{fig:null, teach:"In selective breeding, humans — not nature — choose which organisms reproduce, picking parents with desired traits generation after generation. It turned wolves into every dog breed and a wild grass (teosinte) into corn. The costs: reduced genetic variation, and inherited health problems when breeding focuses on looks — that's why pugs struggle to breathe. Same engine as natural selection, but humans do the selecting."},
+ "S7L4.a":{fig:null, teach:"An ecosystem is the living (biotic) community plus the nonliving (abiotic) stage — sunlight, water, soil, temperature — all interacting. The levels: organism → population (one species) → community (all species) → ecosystem. The interaction patterns repeat everywhere: competition over limited resources, predator and prey, and the three symbioses — mutualism (+/+), commensalism (+/0), and parasitism (+/−)."},
+ "S7L4.b":{fig:'pyramid', teach:"Energy FLOWS one way: sun → producers → consumers, with decomposers breaking down the dead. Only about 10% of energy passes up each level — that's the energy pyramid, and why ecosystems hold many plants but few top predators. Matter is different: water, carbon, and nutrients RECYCLE endlessly through organisms, soil, and air, with decomposers running the return desk. Energy flows; matter loops."},
+ "S7L4.c":{fig:null, teach:"Populations can't grow forever: limiting factors — food, water, space, disease, predators — cap growth at the ecosystem's carrying capacity. Change any piece and effects ripple through the food web. Natural changes include drought and disease; human changes include deforestation, pollution, and introducing invasive species like Georgia's kudzu, which spread unchecked because natives never evolved defenses against them. A shifting climate moves the abiotic stage itself."},
+ "S7L4.d":{fig:null, teach:"Biomes are large regions defined by climate — temperature plus precipitation. The seven land biomes: tropical rain forest (hot, wet, most diverse), savanna, desert, grassland, temperate forest (Georgia's biome — four seasons), taiga (cold and evergreen), and tundra (permafrost). Aquatic ecosystems sort by salt: freshwater (rivers, lakes, wetlands), marine (the oceans — Earth's largest ecosystem), and estuaries — the brackish river-meets-sea 'nurseries of the sea' where countless sea creatures begin life."},
+ "S7L5.a":{fig:'natsel', teach:"Natural selection's recipe: overproduction (more offspring than can survive) + variation (offspring differ) + selection (the best-suited are more likely to survive and reproduce) + time (many generations). The peppered moths showed it measurably: as soot darkened the trees, dark moths went from about 2% to over 90% — and scientists track shifts like that with percentages and graphs. Individuals never change their inherited traits; the population's MIX changes generation by generation."},
+ "S7L5.b":{fig:null, teach:"Variation is the raw material — it comes from gene-shuffling sexual reproduction and random mutations — and the ENVIRONMENT decides which variations win. No trait is good everywhere: white fur hides in snow and stands out in forest; resistant bacteria are rare until antibiotics arrive, then they inherit the hospital. And it's probability, not destiny: helpful traits raise the CHANCE of surviving and reproducing, and across many individuals and generations those odds become real population change."},
+ "S7L5.c":{fig:null, teach:"Fossils form mostly in sedimentary rock layers — older below, younger above — and reading the stack tells life's story: life is ancient, it has been wildly diverse, most species that ever lived are extinct, and organisms appear in a clear order through the layers. Fossils also connect past to present: whale ancestors with legs, transitional fossils like a fish with wrist-like fins, horse ancestors the size of dogs — patterns tying ancient organisms to their modern relatives."}
 };
 function stdDisplayName(std){
   const [parent, letter] = std.split('.');
