@@ -1103,9 +1103,68 @@ u2:{ sym:"🌙", num:2, name:"Sun, Earth & Moon", std:"S6E2", color:"var(--u2)",
    {q:"When it's summer in Georgia, in Australia it is…", o:["Summer","Winter","Fall","Always raining"], a:1, lesson:6, why:"Opposite hemispheres, opposite tilt, opposite seasons."}
   ]
 },
-u3:{ sym:"💧", num:3, name:"Water on Earth", std:"S6E3", color:"var(--u3)", soft:"var(--u3soft)", hex:"#1E7FB8", soon:true,
-  blurb:"Oceans, rivers, aquifers, and ice — where Earth's water hides, how the sun moves it, and what waves, currents, and tides do.",
-  lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
+u3:{ sym:"💧", num:3, name:"Water on Earth", std:"S6E3", color:"var(--u3)", soft:"var(--u3soft)", hex:"#1E7FB8",
+  blurb:"We live on a water planet — but almost none of it is drinkable. Find out where the water hides, how the sun keeps it moving, and what pushes the waves, currents, and tides.",
+  lessons:[
+   {t:"Where Is Earth's Water?", body:`About <b>97%</b> of Earth's water is <b>salt water</b> in the oceans. Of the ~3% that's fresh, <b>most is frozen</b> in ice caps and glaciers. The rest hides as <b>groundwater</b>, with only a tiny sliver in <b>rivers, lakes, and swamps</b> — the water we see every day is the rarest kind! Know the locations: oceans, rivers, lakes, swamps, groundwater, aquifers, and ice.`,
+    callout:["The Bathtub Picture","If all Earth's water filled a bathtub, the fresh liquid water we can easily use would be about one teaspoon."]},
+   {t:"Groundwater & Aquifers", body:`Rain that soaks into the ground (<b>infiltration</b>) fills the tiny spaces in soil and rock. The top of this saturated zone is the <b>water table</b>. An <b>aquifer</b> is an underground layer of permeable rock or sediment that stores and carries water — it's where wells get their water. Aquifers refill slowly, so pumping too fast can empty them faster than nature recharges them.`},
+   {t:"The Sun-Powered Water Cycle", body:`The water cycle's engine is the <b>sun</b>. Solar energy drives <b>evaporation</b> from oceans and lakes (and <b>transpiration</b> from plants). Rising water vapor cools and <b>condenses</b> into clouds, then falls as <b>precipitation</b> — rain, snow, sleet, or hail. Water then flows as <b>runoff</b> into rivers and oceans or soaks in as groundwater, and the loop begins again. No sun, no cycle.`,
+    callout:["Follow One Drop","Ocean → vapor → cloud → rain on a mountain → river → ocean. Every drop you drink has run this loop countless times."]},
+   {t:"The World Ocean", body:`All the oceans connect into one <b>world ocean</b>, divided into five basins: the <b>Pacific</b> (largest and deepest), <b>Atlantic</b>, <b>Indian</b>, <b>Southern</b>, and <b>Arctic</b>. Ocean water is about <b>3.5% dissolved salts</b> — that's its <b>salinity</b> — carried in by rivers over billions of years and concentrated as water evaporates (the salt stays behind).`},
+   {t:"Mapping the Sea Floor", body:`The ocean floor has terrain wilder than the continents. Moving offshore: the shallow <b>continental shelf</b>, the steep <b>continental slope</b>, the vast flat <b>abyssal plain</b>, towering <b>mid-ocean ridges</b> (underwater mountain chains), and plunging <b>trenches</b> — the Mariana Trench drops nearly 11,000 m, deeper than Everest is tall. We map it with <b>sonar</b>: sound pulses timed as they bounce off the bottom.`},
+   {t:"Waves & Currents", body:`<b>Waves</b> carry <b>wind energy</b> across the water — the water itself mostly moves in circles while the energy travels. <b>Surface currents</b> are giant rivers in the sea, driven by steady winds and curved by Earth's rotation; the <b>Gulf Stream</b> carries warm water from the Gulf of Mexico toward Europe. <b>Deep currents</b> are driven by <b>density</b>: cold, salty water sinks and creeps along the bottom, forming a global conveyor that moves heat around the planet — a major control on climate.`},
+   {t:"Tides", body:`<b>Tides</b> are the daily rise and fall of sea level, caused mainly by the <b>moon's gravity</b> pulling the ocean into bulges (the sun helps too). Most coasts get about <b>two high tides and two low tides</b> a day. When the sun, Earth, and moon line up (new or full moon), their pulls combine into extra-large <b>spring tides</b>; at quarter moons they work at right angles, giving small <b>neap tides</b>.`,
+    callout:["Connection Alert","Tides link Unit 2 to Unit 3: the same moon whose phases you tracked is dragging the entire ocean up and down twice a day."]}
+  ],
+  quiz:[
+   {q:"About 97% of Earth's water is…", o:["Frozen in glaciers","Fresh water in lakes","Salt water in the oceans","Groundwater"], a:2, why:"The oceans dominate. Only ~3% is fresh — and most of THAT is frozen."},
+   {q:"Where is most of Earth's FRESH water?", o:["Rivers and lakes","Frozen in ice caps and glaciers","Swamps","The atmosphere"], a:1, why:"The big fresh-water bank is ice. Rivers and lakes are a tiny sliver of the total."},
+   {q:"An aquifer is…", o:["A salty lake","An underground layer of rock that stores water","A type of cloud","A river delta"], a:1, why:"Permeable rock holding groundwater — the source for wells and springs."},
+   {q:"The energy source that powers the entire water cycle is…", o:["The moon","Wind","The sun","Ocean currents"], a:2, why:"Solar energy drives evaporation and transpiration — the 'up' steps that keep the cycle spinning."},
+   {q:"Water vapor cooling and turning into cloud droplets is called…", o:["Evaporation","Condensation","Precipitation","Runoff"], a:1, why:"Condensation builds clouds; precipitation is what falls out of them."},
+   {q:"The largest and deepest ocean is the…", o:["Atlantic","Indian","Arctic","Pacific"], a:3, why:"The Pacific covers more area than all land on Earth combined and holds the deepest trench."},
+   {q:"The deepest places in the ocean are…", o:["Continental shelves","Abyssal plains","Trenches","Mid-ocean ridges"], a:2, why:"Trenches like the Mariana plunge deeper below sea level than Everest rises above it."},
+   {q:"Ocean waves get their energy from…", o:["The moon","Wind","Salinity","Boats"], a:1, why:"Wind transfers energy to the water surface; the energy travels while the water mostly circles in place."},
+   {q:"Cold, extra-salty ocean water sinks because it is…", o:["Warmer","Less dense","More dense","Fresher"], a:2, why:"Density driving deep currents: cold + salty = heavy, so it sinks and powers the global conveyor."},
+   {q:"Tides are caused mainly by…", o:["Wind","The moon's gravity","Earthquakes","Ship traffic"], a:1, why:"The moon's pull stretches the ocean into bulges; Earth rotates through them — about two highs and two lows a day."}
+  ],
+  vocab:[
+   ["Water cycle","The sun-powered loop of evaporation, condensation, and precipitation."],
+   ["Evaporation","Liquid water becoming vapor — powered by the sun."],
+   ["Condensation","Water vapor cooling into droplets — how clouds form."],
+   ["Precipitation","Water falling as rain, snow, sleet, or hail."],
+   ["Transpiration","Water vapor released by plants."],
+   ["Runoff","Water flowing over the land into rivers and oceans."],
+   ["Infiltration","Water soaking down into the ground."],
+   ["Groundwater","Fresh water stored underground."],
+   ["Water table","The top of the saturated zone underground."],
+   ["Aquifer","A permeable rock layer that stores and carries groundwater."],
+   ["Salinity","The saltiness of water — the ocean is about 3.5%."],
+   ["Continental shelf","The shallow, gently sloping edge of a continent."],
+   ["Trench","The deepest kind of ocean-floor feature."],
+   ["Mid-ocean ridge","An underwater mountain chain."],
+   ["Sonar","Mapping the sea floor by timing sound echoes."],
+   ["Current","A giant stream of moving ocean water."],
+   ["Tide","The daily rise and fall of sea level — mostly the moon's doing."],
+   ["Spring tide","Extra-large tides when the sun, Earth, and moon align."],
+   ["Neap tide","Small tides at the quarter moons."]
+  ],
+  videos:[
+   {t:"Where is all of Earth's water?", ch:"Curated search", url:"https://www.youtube.com/results?search_query=distribution+of+earth%27s+water+fresh+salt+middle+school", kind:"search", note:"Look for ones with the bathtub/bucket visualizations."},
+   {t:"The water cycle", ch:"Curated search", url:"https://www.youtube.com/results?search_query=water+cycle+explained+middle+school", kind:"search", note:"Make sure it names the sun as the engine."},
+   {t:"Ocean floor features & sonar mapping", ch:"Curated search", url:"https://www.youtube.com/results?search_query=ocean+floor+features+continental+shelf+trench+middle+school", kind:"search", note:""},
+   {t:"Ocean currents & the global conveyor belt", ch:"Curated search", url:"https://www.youtube.com/results?search_query=ocean+currents+global+conveyor+belt+middle+school", kind:"search", note:"NASA's visualizations of the Gulf Stream are stunning."},
+   {t:"What causes tides? Spring vs. neap", ch:"Curated search", url:"https://www.youtube.com/results?search_query=what+causes+tides+spring+neap+middle+school", kind:"search", note:""}
+  ],
+  pretest:[
+   {q:"Most of Earth's water is…", o:["Fresh and drinkable","Salty ocean water","Frozen","Underground"], a:1, lesson:1, why:"About 97% is salt water in the oceans."},
+   {q:"The water cycle is powered by…", o:["The moon","The sun","Volcanoes","Wind"], a:1, lesson:3, why:"Solar energy drives the evaporation that lifts water into the sky."},
+   {q:"The largest ocean is the…", o:["Atlantic","Pacific","Indian","Arctic"], a:1, lesson:4, why:"The Pacific is the biggest and deepest basin of the world ocean."},
+   {q:"Ocean waves get their energy from…", o:["Wind","The moon","Salt","Fish"], a:0, lesson:6, why:"Wind pushes energy across the water surface."},
+   {q:"Tides are mainly caused by…", o:["Storms","The moon's gravity","Boats","Rivers"], a:1, lesson:7, why:"The moon's pull creates the ocean bulges we ride through twice a day."}
+  ]
+},
 u4:{ sym:"🌪️", num:4, name:"Weather & Climate", std:"S6E4", color:"var(--u4)", soft:"var(--u4soft)", hex:"#159E96", soon:true,
   blurb:"The atmosphere, winds, fronts, thunderstorms, and hurricanes — why the sky does what it does.",
   lessons:[], quiz:[], vocab:[], videos:[], pretest:[] },
@@ -1615,7 +1674,19 @@ const ACTIVITIES = {
  sort:{b:["Solar eclipse","Lunar eclipse"],items:[["Happens at new moon",0],["Daytime sky goes dark",0],["Visible only from a narrow path",0],["Happens at full moon",1],["The moon can turn red",1],["Safe to watch with bare eyes",1]]}},
 "S6E2.c":{match:[["Axial tilt","23.5° — the real reason for seasons"],["Summer","Your hemisphere is tilted toward the sun"],["Direct sunlight","Concentrated light — strong heating"],["Equinox","Day and night nearly equal everywhere"],["Solstice","The longest or shortest day of the year"]],
  blank:[{s:"Earth's axis is tilted about ___ degrees.",w:["23.5","90","5"],a:0},{s:"Seasons are NOT caused by Earth's ___ from the sun.",w:["distance","tilt","spin"],a:0},{s:"When North America has winter, Australia has ___.",w:["summer","winter","autumn"],a:0},{s:"Slanted sunlight spreads its energy over a ___ area.",w:["larger","smaller","hotter"],a:0}],
- sort:{b:["June in Georgia (summer)","December in Georgia (winter)"],items:[["North tilted toward the sun",0],["Longest days of the year",0],["Direct, concentrated sunlight",0],["Australia's winter",0],["North tilted away from the sun",1],["Shortest day of the year",1],["Sun stays low in the sky",1],["Australia's summer",1]]}}
+ sort:{b:["June in Georgia (summer)","December in Georgia (winter)"],items:[["North tilted toward the sun",0],["Longest days of the year",0],["Direct, concentrated sunlight",0],["Australia's winter",0],["North tilted away from the sun",1],["Shortest day of the year",1],["Sun stays low in the sky",1],["Australia's summer",1]]}},
+"S6E3.a":{match:[["Oceans","About 97% of all water — salty"],["Ice caps & glaciers","The largest store of FRESH water"],["Groundwater","Fresh water hidden underground"],["Aquifer","Permeable rock layer that stores water"],["Rivers & lakes","A tiny sliver of the fresh water"]],
+ blank:[{s:"About ___% of Earth's water is in the oceans.",w:["97","50","25"],a:0},{s:"Most fresh water is ___ in ice caps and glaciers.",w:["frozen","floating","boiling"],a:0},{s:"Wells pump water out of an ___.",w:["aquifer","ocean","iceberg"],a:0},{s:"Only about ___% of Earth's water is fresh.",w:["3","30","60"],a:0}],
+ sort:{b:["Salt water","Fresh water"],items:[["The Pacific Ocean",0],["The Atlantic Ocean",0],["A sea",0],["A glacier",1],["A mountain river",1],["An aquifer",1],["An iceberg",1],["A freshwater lake",1]]}},
+"S6E3.b":{match:[["Evaporation","Liquid → vapor, powered by the sun"],["Condensation","Vapor → droplets — clouds form"],["Precipitation","Rain, snow, sleet, or hail falling"],["Transpiration","Plants releasing water vapor"],["Runoff","Water flowing over land to rivers"]],
+ blank:[{s:"The ___ is the engine of the water cycle.",w:["sun","moon","wind"],a:0},{s:"Clouds form by ___.",w:["condensation","evaporation","runoff"],a:0},{s:"Rain, snow, sleet, and hail are forms of ___.",w:["precipitation","transpiration","salinity"],a:0},{s:"Water soaking into the ground is called ___.",w:["infiltration","evaporation","deposition"],a:0}],
+ sort:{b:["Water going UP","Water coming DOWN","Water moving ACROSS"],items:[["Evaporation from the ocean",0],["Transpiration from a forest",0],["Rain on your roof",1],["Snow in the mountains",1],["Runoff after a storm",2],["A river flowing to the sea",2]]}},
+"S6E3.c":{match:[["Continental shelf","Shallow, gently sloping continent edge"],["Trench","The deepest ocean-floor feature"],["Mid-ocean ridge","Underwater mountain chain"],["Abyssal plain","Vast flat deep-ocean floor"],["Salinity","Ocean saltiness — about 3.5%"]],
+ blank:[{s:"The largest, deepest ocean is the ___.",w:["Pacific","Atlantic","Arctic"],a:0},{s:"Scientists map the sea floor with ___.",w:["sonar","telescopes","nets"],a:0},{s:"The Mariana ___ is the deepest spot on Earth.",w:["Trench","Ridge","Shelf"],a:0},{s:"Ocean water is about 3.5% dissolved ___.",w:["salts","sand","sugar"],a:0}],
+ sort:{b:["Near the coast (shallow)","Open ocean (deep)"],items:[["Continental shelf",0],["Tide pools",0],["A fishing pier's seafloor",0],["Abyssal plain",1],["A trench",1],["A mid-ocean ridge",1]]}},
+"S6E3.d":{match:[["Waves","Wind energy traveling through water"],["Surface currents","Driven by wind and Earth's rotation"],["Deep currents","Driven by density — cold salty water sinks"],["Tides","Daily rise and fall from the moon's gravity"],["Spring tide","Sun + moon aligned — biggest range"],["Neap tide","Quarter moon — smallest range"]],
+ blank:[{s:"Waves get their energy from the ___.",w:["wind","moon","salt"],a:0},{s:"Tides are caused mainly by the ___'s gravity.",w:["moon","sun","Earth"],a:0},{s:"Cold, salty water sinks because it is more ___.",w:["dense","salty-tasting","shiny"],a:0},{s:"Most coasts get ___ high tides each day.",w:["two","seven","zero"],a:0}],
+ sort:{b:["Powered by wind","Powered by gravity or density"],items:[["Ocean waves",0],["Surface currents",0],["Whitecaps on a windy day",0],["The Gulf Stream",0],["High and low tides",1],["Spring tides at full moon",1],["Deep cold currents sinking",1],["The global conveyor belt",1]]}}
 };
 function stdUnit(std){ return STD_LIST[std.split('.')[0]].unit; }
 function unitActs(uid){ return Object.keys(ACTIVITIES).filter(s=>stdUnit(s)===uid); }
@@ -2091,7 +2162,12 @@ const STD_TAGS = {
  "u2:L0":["S6E2.a"], "u2:L1":["S6E2.a"], "u2:L2":["S6E2.b"], "u2:L3":["S6E2.b"],
  "u2:L4":["S6E2.c"], "u2:L5":["S6E2.c"],
  /* --- Unit 2 videos --- */
- "u2:V0":["S6E2.a"], "u2:V1":["S6E2.b"], "u2:V2":["S6E2.c"], "u2:V3":["S6E2.c"], "u2:V4":["S6E2.b"]
+ "u2:V0":["S6E2.a"], "u2:V1":["S6E2.b"], "u2:V2":["S6E2.c"], "u2:V3":["S6E2.c"], "u2:V4":["S6E2.b"],
+ /* --- Unit 3 lessons --- */
+ "u3:L0":["S6E3.a"], "u3:L1":["S6E3.a"], "u3:L2":["S6E3.b"], "u3:L3":["S6E3.c"],
+ "u3:L4":["S6E3.c"], "u3:L5":["S6E3.d"], "u3:L6":["S6E3.d"],
+ /* --- Unit 3 videos --- */
+ "u3:V0":["S6E3.a"], "u3:V1":["S6E3.b"], "u3:V2":["S6E3.c"], "u3:V3":["S6E3.d"], "u3:V4":["S6E3.d"]
 };
 
 /* ---------- per-question sub-standard tags for the practice quizzes
@@ -2099,7 +2175,8 @@ const STD_TAGS = {
 const QUIZ_TAGS = {
  u1:["S6E1.a","S6E1.a","S6E1.b","S6E1.c","S6E1.c","S6E1.c","S6E1.d","S6E1.d","S6E1.e","S6E1.e"],
  u2:["S6E2.a","S6E2.a","S6E2.a","S6E2.b","S6E2.b","S6E2.b","S6E2.c","S6E2.c","S6E2.c","S6E2.c"],
- u3:[], u4:[], u5:[], u6:[]
+ u3:["S6E3.a","S6E3.a","S6E3.a","S6E3.b","S6E3.b","S6E3.c","S6E3.c","S6E3.d","S6E3.d","S6E3.d"],
+ u4:[], u5:[], u6:[]
 };
 
 /* ---------- Resolver: selected sub-standards → concrete content ---------- */
@@ -2169,7 +2246,23 @@ const WARMUPS = {
 "S6E2.c":[
  {q:"A friend says summer happens because Earth gets closer to the sun. What's wrong with that?", a:"Earth is actually CLOSEST in January (northern winter!). The 23.5° tilt — direct light + longer days — causes seasons."},
  {q:"Why does Australia celebrate Christmas in the middle of summer?", a:"The hemispheres tilt opposite ways, so December is the southern hemisphere's 'June.'"},
- {q:"Why doesn't the equator really get a winter?", a:"The tilt barely changes the sun angle there — sunlight stays nearly direct all year."}]
+ {q:"Why doesn't the equator really get a winter?", a:"The tilt barely changes the sun angle there — sunlight stays nearly direct all year."}],
+"S6E3.a":[
+ {q:"Earth is called the water planet, yet we're told to conserve water. Explain the contradiction.", a:"97% is salt, most fresh water is frozen — the usable fraction is tiny and unevenly distributed."},
+ {q:"Trace where your last glass of tap water might have been before it reached you.", a:"Any reasonable chain: aquifer/reservoir ← river ← rain ← cloud ← ocean evaporation. Listen for real locations: groundwater, lakes, rivers."},
+ {q:"What's the difference between groundwater and an aquifer?", a:"Groundwater is the water itself; an aquifer is the underground rock layer that stores and carries it."}],
+"S6E3.b":[
+ {q:"What would happen to the water cycle if the sun dimmed by half?", a:"Less evaporation → fewer clouds → less precipitation; the whole loop slows. Listen for: the sun is the engine."},
+ {q:"Why does a mirror fog up when you breathe on it — and which water-cycle step is that?", a:"Warm vapor in your breath condenses on the cool glass — condensation, the cloud-forming step."},
+ {q:"Where does the water in clouds come from? Walk through the steps.", a:"Sun-driven evaporation from oceans/lakes (+ plant transpiration), then vapor rises, cools, condenses on particles."}],
+"S6E3.c":[
+ {q:"Why is the ocean salty when the rivers that feed it taste fresh?", a:"Rivers carry tiny amounts of dissolved salts; evaporation removes pure water and leaves salt behind — concentrated over billions of years."},
+ {q:"We have better maps of the Moon than of our own sea floor. Why is the ocean so hard to map?", a:"Light can't reach it, pressure is crushing, it's vast — we rely on sonar from ships. Listen for sound-based mapping."},
+ {q:"Describe the terrain you'd cross walking from a beach straight out to the deepest ocean.", a:"Continental shelf → steep slope → abyssal plain → maybe a ridge — and at subduction zones, a trench."}],
+"S6E3.d":[
+ {q:"A beach ball floats offshore as waves pass. Does it ride the waves to shore? Why or why not?", a:"Mostly it bobs in circles — waves move ENERGY, not (much) water. Wind and currents drift it slowly."},
+ {q:"Why does Britain stay milder in winter than Canadian cities at the same latitude?", a:"The Gulf Stream delivers warm tropical water — surface currents move heat and shape climate."},
+ {q:"This Saturday is a full moon. What should tide tables show, and why?", a:"Spring tides: extra-high highs and extra-low lows — sun and moon aligned, pulling together."}]
 };
 
 /* "many right answers" — any well-defended choice counts */
@@ -2205,7 +2298,23 @@ const WARMUPS_MULTI = {
 "S6E2.c":[
  {q:"If you could delete one season forever, which one — and what breaks?", a:"Any pick with consequences: no winter = pest survival, snowpack/water loss; no summer = crops. Reward systems thinking."},
  {q:"Would you rather live at the equator (no real seasons) or somewhere with all four? Defend it.", a:"Either side — listen for the tilt/direct-light reasoning behind WHY the equator stays steady."},
- {q:"Re-tilt the Earth: 0° or 45° — pick one and describe a year.", a:"0°: no seasons anywhere, equal days forever. 45°: brutal season swings, huge polar day/night zones. Reward tilt-to-sunlight logic."}]
+ {q:"Re-tilt the Earth: 0° or 45° — pick one and describe a year.", a:"0°: no seasons anywhere, equal days forever. 45°: brutal season swings, huge polar day/night zones. Reward tilt-to-sunlight logic."}],
+"S6E3.a":[
+ {q:"You're the water minister of a desert country. Ocean, aquifer, or icebergs — where do you get water, and why?", a:"Desalination (costly energy), aquifers (can run dry), towing icebergs (wild but studied!) — any defended plan counts."},
+ {q:"Which would be worse to lose: all groundwater or all glaciers? Argue it.", a:"Groundwater: wells and farms fail now. Glaciers: rivers and sea level change for centuries. Both defensible."},
+ {q:"Where's the most surprising place Earth stores water?", a:"Inside rock (aquifers), the atmosphere, swamps, living things — any defended pick."}],
+"S6E3.b":[
+ {q:"Design the fastest possible round trip for one water drop: ocean → sky → ocean. What route wins?", a:"Tropical ocean evaporation → quick storm offshore → rain back in. Listen for cycle steps used correctly."},
+ {q:"Rank these as water-cycle MVPs: the sun, the ocean, plants. Defend your order.", a:"Sun = energy, ocean = supply, plants = transpiration pump. Any reasoned ranking."},
+ {q:"If you could see water vapor, describe your classroom right now.", a:"Vapor rising from breath, skin, plants; condensing on cold windows — listen for invisible-water awareness."}],
+"S6E3.c":[
+ {q:"You get one deep-sea submarine trip: trench, mid-ocean ridge, or abyssal plain? Why?", a:"Trench = extremes, ridge = new crust forming and vents, plain = vast unknown. Any defended pick."},
+ {q:"Should we explore the deep ocean or deep space first? Make your case.", a:"Either side — listen for real challenges: pressure vs distance, sonar vs telescopes, life discoveries."},
+ {q:"A 'mountain range taller than the Rockies' exists underwater. Convince a skeptic.", a:"Mid-ocean ridges run 65,000 km around the globe — mapped by sonar. Reward evidence-based persuasion."}],
+"S6E3.d":[
+ {q:"Best free energy source for a coastal city: waves, tides, or currents? Defend it.", a:"Tides = predictable (moon!), waves = constant but variable wind energy, currents = steady. Any defended choice."},
+ {q:"The moon vanished overnight. What happens to our beaches and oceans?", a:"Tides shrink dramatically (small solar tides remain), tidal ecosystems suffer — listen for the gravity link."},
+ {q:"Sailors crossing the Atlantic 'ride a river in the ocean.' What do they mean, and is it smart?", a:"The Gulf Stream — a fast warm surface current; riding it saves days. Reward current reasoning."}]
 };
 
 let WU = null;
@@ -2913,7 +3022,19 @@ u2:[
  {std:"S6E2.c", q:"Why do temperatures near the equator stay warm all year?", o:["It's closer to the sun","Sunlight strikes it nearly straight on year-round, since the tilt barely changes the angle there","There is no air there","Ocean water heats it"], a:1, why:"The equator never tilts far from the sun, so it gets direct, concentrated light every month."},
  {std:"S6E2.c", q:"On the June solstice, the northern hemisphere has…", o:["Its shortest day","Day and night equal","Its longest day, because it is tilted toward the sun","No sunrise"], a:2, why:"Maximum tilt toward the sun = the most daylight hours of the year — the first day of northern summer."}
 ],
-u3:[], u4:[], u5:[], u6:[]
+u3:[
+ {std:"S6E3.a", q:"A pie chart shows Earth's water: one slice is 97%, a thin slice is ~2%, and a sliver is ~1%. The 97% slice is…", o:["Glaciers","Salt water in the oceans","Groundwater","Rivers and lakes"], a:1, why:"Oceans dominate Earth's water. The ~2% is mostly ice; everything else shares the last sliver."},
+ {std:"S6E3.a", q:"A town drills a deep well for drinking water. The water it pumps comes from…", o:["The ocean","An aquifer (groundwater)","A cloud","Runoff"], a:1, why:"Wells tap aquifers — underground layers of permeable rock saturated with fresh water."},
+ {std:"S6E3.a", q:"Earth is covered in water, yet many regions ration it. The best explanation is…", o:["Water keeps escaping to space","Almost all of Earth's water is salty or frozen","Rivers flow too fast to use","Rain only falls on oceans"], a:1, why:"97% salt + most fresh water locked in ice = only a tiny usable fraction, unevenly spread."},
+ {std:"S6E3.b", q:"A puddle from last night's rain is gone by afternoon. The energy that removed it came from…", o:["The moon","The sun, driving evaporation","Wind alone","The ground's gravity"], a:1, why:"Solar energy turned the liquid into vapor — the same engine that lifts ocean water into clouds."},
+ {std:"S6E3.b", q:"Which correctly orders one trip through the water cycle?", o:["Precipitation → condensation → evaporation","Evaporation → condensation → precipitation","Condensation → evaporation → precipitation","Runoff → evaporation → infiltration"], a:1, why:"Up as vapor, cool into clouds, fall as rain or snow — then runoff or soak in, and repeat."},
+ {std:"S6E3.c", q:"A sea-floor profile shows a wide, shallow, gently sloping zone right next to the continent. That zone is the…", o:["Trench","Abyssal plain","Continental shelf","Mid-ocean ridge"], a:2, why:"The continental shelf is the drowned edge of the continent — shallow, sunlit, and full of life."},
+ {std:"S6E3.c", q:"Ocean water tastes salty because it contains about 3.5%…", o:["Sand","Dissolved salts","Plankton","Carbon dioxide"], a:1, why:"That's salinity: dissolved salts delivered by rivers and concentrated as water evaporates."},
+ {std:"S6E3.d", q:"The biggest tidal ranges (spring tides) happen when…", o:["The moon is at first quarter","The sun, Earth, and moon line up at new or full moon","Wind blows hardest","Earth is closest to the sun"], a:1, why:"Aligned sun + moon pull together, stacking their bulges into extra-high highs and extra-low lows."},
+ {std:"S6E3.d", q:"Western Europe stays milder in winter than other places at the same latitude because…", o:["It is closer to the equator","The warm Gulf Stream current carries ocean heat toward it","It has fewer clouds","The moon warms it"], a:1, why:"Surface currents move enormous amounts of heat — a key way the ocean shapes climate."},
+ {std:"S6E3.d", q:"What makes water sink to power the ocean's deep currents?", o:["It warms up","It becomes colder and saltier, so it is denser","Wind pushes it down","Fish swim downward"], a:1, why:"Cold, salty water is heavy. It sinks near the poles and creeps along the bottom — the global conveyor."}
+],
+u4:[], u5:[], u6:[]
 };
 
 
@@ -3051,7 +3172,11 @@ const STD_TEACH = {
  "S6E1.e":{fig:null, teach:"Three kinds of space leftovers: comets are ice and dust from the cold outer solar system — near the sun they grow glowing tails that always point away from it. Asteroids are rocky, metallic bodies, mostly in the belt between Mars and Jupiter. Meteoroids are smaller space rocks: burning through our atmosphere they're meteors ('shooting stars'), and any piece that lands is a meteorite."},
  "S6E2.a":{fig:null, teach:"The moon makes no light — it reflects sunlight, and half of it is ALWAYS lit. A phase is simply how much of that lit half we can see from Earth, which changes as the moon orbits us over about 29.5 days. Waxing means the lit part is growing (lit on the right); waning means shrinking (lit on the left). And remember: phases are NOT Earth's shadow — that only matters during an eclipse."},
  "S6E2.b":{fig:null, teach:"Eclipses are perfect lineups. Solar eclipse: at NEW moon, the moon slides between the sun and Earth, casting its small shadow on a narrow path of Earth's surface — never look at one directly. Lunar eclipse: at FULL moon, the moon passes through Earth's huge shadow, visible safely from the entire night side, often glowing red from sunlight bent through our atmosphere. They don't happen monthly because the moon's orbit tilts about 5°."},
- "S6E2.c":{fig:null, teach:"Seasons come from Earth's 23.5° axial tilt — NOT distance from the sun (we're actually closest in January!). When your hemisphere tilts toward the sun, sunlight strikes more directly and days run longer: summer. Tilted away: slanted, spread-out light and short days: winter. That's also why the hemispheres always have opposite seasons, why solstices mark the longest and shortest days, and why equinoxes give everyone nearly equal day and night."}
+ "S6E2.c":{fig:null, teach:"Seasons come from Earth's 23.5° axial tilt — NOT distance from the sun (we're actually closest in January!). When your hemisphere tilts toward the sun, sunlight strikes more directly and days run longer: summer. Tilted away: slanted, spread-out light and short days: winter. That's also why the hemispheres always have opposite seasons, why solstices mark the longest and shortest days, and why equinoxes give everyone nearly equal day and night."},
+ "S6E3.a":{fig:null, teach:"About 97% of Earth's water is salt water in the oceans. Of the ~3% that's fresh, most is frozen in ice caps and glaciers, then comes groundwater (stored in aquifers — underground layers of permeable rock that wells tap into), and only a tiny sliver flows in rivers, lakes, and swamps. The water we use every day is the rarest kind on the planet — that's why conservation matters."},
+ "S6E3.b":{fig:null, teach:"The sun is the engine of the water cycle. Solar energy evaporates water from oceans and lakes (plants add vapor through transpiration), the rising vapor cools and condenses into clouds, and the water falls back as precipitation — rain, snow, sleet, or hail. Then it runs off into rivers or soaks underground, and the loop repeats. Every step that lifts water UP is sun-powered."},
+ "S6E3.c":{fig:null, teach:"All oceans connect into one world ocean — the Pacific is the largest and deepest basin. Ocean water is about 3.5% dissolved salts (its salinity). The sea floor has dramatic terrain mapped by sonar: the shallow continental shelf near shore, the steep slope, vast flat abyssal plains, mid-ocean ridges (underwater mountain chains), and trenches — the deepest places on Earth."},
+ "S6E3.d":{fig:null, teach:"Three movers of ocean water: WAVES carry wind energy (the water itself mostly circles in place). CURRENTS are giant streams — surface currents pushed by wind and curved by Earth's rotation (like the warm Gulf Stream), deep currents driven by density as cold, salty water sinks. They move heat and shape climate. TIDES are the daily rise and fall caused mainly by the moon's gravity — biggest (spring tides) when sun, Earth, and moon align at new and full moon."}
 };
 function stdDisplayName(std){
   const [parent, letter] = std.split('.');
