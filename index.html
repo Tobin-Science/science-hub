@@ -422,6 +422,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 .asnprintbtn{display:inline-block;background:#2f7a4d;color:#fff;border:none;border-radius:12px;padding:14px 28px;font-weight:800;font-size:1.05rem;cursor:pointer;box-shadow:0 4px 14px rgba(47,122,77,.35)}
 .asnprintbtn:hover{filter:brightness(1.12)}
 .asnprintbtn.ready{animation:asnpulse 1.6s infinite}
+.asnlangsel{border:1.5px solid var(--line);border-radius:8px;padding:5px 8px;font-size:.85rem;font-family:inherit;background:#fff;margin:0 6px}
 @keyframes asnpulse{0%,100%{box-shadow:0 4px 14px rgba(47,122,77,.35);transform:scale(1)}50%{box-shadow:0 6px 28px rgba(47,122,77,.7);transform:scale(1.035)}}
 </style>
 </head>
@@ -4123,6 +4124,237 @@ function asnExit(){
   updateAsnBanner(); go('start');
 }
 
+/* =========================================================
+   STUDENT LANGUAGE (assignment mode) — checklist + report UI
+   and Coach's Corner teach text in 5 languages
+   ========================================================= */
+const EN_UI = {
+ tn_g:'Study guides', tn_m:'Minigames', tn_a:'Practice activities', tn_v:'Videos', tn_p:'PhET labs', tn_q:'Practice quizzes', tn_pr:'Pretest', tn_po:'Posttest',
+ vb_g:'Read', vb_m:'Play', vb_a:'Practice', vb_v:'Watch', vb_p:'Open lab', vb_q:'Take quiz', vb_pr:'Take pretest', vb_po:'Take posttest',
+ ag_g:'Reread', ag_m:'Play again', ag_a:'Practice again', ag_q:'Retake', ag_po:'Retake', ag_x:'Reopen',
+ progress:'{d} of {n} complete', allDoneFlag:' — 🎉 everything done!',
+ curScore:'📊 Current weighted score:', scoreNote:'(posttest counts most — see your printed report for the breakdown)',
+ printBtn:'🖨 Print Score Report',
+ turnIn:'Turn in your work any time: print → <b>Save as PDF</b> → upload to your teacher. You can keep improving and print again.',
+ allDoneNote:'<b>All done!</b> Print your report, choose <b>"Save as PDF"</b>, and upload it to the class assignment page.',
+ excused:'🌐 excused — outside website in English; does not affect your score',
+ tip:'💡 Lessons, quizzes and games are in English — your browser\'s translate feature works well on them.',
+ switchStudent:'switch student', exitLbl:'exit',
+ rep_cat:'Category breakdown', rep_item:'Item-by-item', rep_topic:'Performance by topic (every attempt counted)',
+ rep_coach:"Coach's Corner — what to study next", rep_mastered:'What you mastered 🌟',
+ rep_congrats:'🎉 Congratulations, {name}! You showed real mastery of {n} topic(s) on this assignment. That mastery came from your effort — keep it up!',
+ rep_masteredLine:'— this topic is yours now.',
+ rep_noMastered:'Mastered topics land here once a topic hits 85% or better across attempts. Pick one topic from Coach\'s Corner, study it, and retake the quiz — the next printout will look even better.',
+ rep_practice:'Where to practice on the site:', rep_thenRetake:'Then retake the quiz — best score always counts.',
+ statQ:'answered {r} of {n} questions correctly across every attempt', statG:'best game run reached {p}% of the target score',
+ rep_attempts:'Based on {n} recorded attempts — quizzes, pretests, posttests, games and practice, not just the best ones.',
+ rep_excusedRes:'excused (external English-only site)'
+};
+const LANGS = {
+ en:{name:'English'},
+ es:{name:'Español', ui:{
+  tn_g:'Guías de estudio', tn_m:'Minijuegos', tn_a:'Actividades de práctica', tn_v:'Videos', tn_p:'Laboratorios PhET', tn_q:'Cuestionarios de práctica', tn_pr:'Prueba previa', tn_po:'Prueba final',
+  vb_g:'Leer', vb_m:'Jugar', vb_a:'Practicar', vb_v:'Ver', vb_p:'Abrir laboratorio', vb_q:'Hacer cuestionario', vb_pr:'Hacer prueba previa', vb_po:'Hacer prueba final',
+  ag_g:'Releer', ag_m:'Jugar otra vez', ag_a:'Practicar otra vez', ag_q:'Repetir', ag_po:'Repetir', ag_x:'Reabrir',
+  progress:'{d} de {n} completados', allDoneFlag:' — 🎉 ¡todo listo!',
+  curScore:'📊 Calificación ponderada actual:', scoreNote:'(la prueba final cuenta más — mira el desglose en tu reporte impreso)',
+  printBtn:'🖨 Imprimir reporte de calificación',
+  turnIn:'Entrega tu trabajo cuando quieras: imprime → <b>Guardar como PDF</b> → súbelo para tu maestro. Puedes seguir mejorando e imprimir de nuevo.',
+  allDoneNote:'<b>¡Terminaste!</b> Imprime tu reporte, elige <b>"Guardar como PDF"</b> y súbelo a la página de la tarea.',
+  excused:'🌐 exento — sitio externo en inglés; no afecta tu calificación',
+  tip:'💡 Las lecciones, los cuestionarios y los juegos están en inglés — el traductor de tu navegador funciona muy bien con ellos.',
+  switchStudent:'cambiar de estudiante', exitLbl:'salir',
+  rep_cat:'Desglose por categoría', rep_item:'Detalle por elemento', rep_topic:'Desempeño por tema (cuenta cada intento)',
+  rep_coach:'Rincón del entrenador — qué estudiar ahora', rep_mastered:'Lo que dominaste 🌟',
+  rep_congrats:'🎉 ¡Felicidades, {name}! Demostraste verdadero dominio de {n} tema(s) en esta tarea. Ese dominio vino de tu esfuerzo — ¡sigue así!',
+  rep_masteredLine:'— este tema ya es tuyo.',
+  rep_noMastered:'Los temas dominados aparecen aquí cuando llegas al 85% o más. Elige un tema del Rincón del entrenador, estúdialo y repite el cuestionario — el próximo reporte se verá aún mejor.',
+  rep_practice:'Dónde practicar en el sitio:', rep_thenRetake:'Luego repite el cuestionario — siempre cuenta tu mejor calificación.',
+  statQ:'respondiste bien {r} de {n} preguntas contando todos los intentos', statG:'tu mejor partida llegó al {p}% de la meta',
+  rep_attempts:'Basado en {n} intentos registrados — cuestionarios, pruebas, juegos y práctica, no solo los mejores.',
+  rep_excusedRes:'exento (sitio externo solo en inglés)'
+ }},
+ vi:{name:'Tiếng Việt', ui:{
+  tn_g:'Bài học', tn_m:'Trò chơi nhỏ', tn_a:'Hoạt động luyện tập', tn_v:'Video', tn_p:'Thí nghiệm PhET', tn_q:'Bài kiểm tra luyện tập', tn_pr:'Bài kiểm tra đầu', tn_po:'Bài kiểm tra cuối',
+  vb_g:'Đọc', vb_m:'Chơi', vb_a:'Luyện tập', vb_v:'Xem', vb_p:'Mở thí nghiệm', vb_q:'Làm bài kiểm tra', vb_pr:'Làm kiểm tra đầu', vb_po:'Làm kiểm tra cuối',
+  ag_g:'Đọc lại', ag_m:'Chơi lại', ag_a:'Luyện tập lại', ag_q:'Làm lại', ag_po:'Làm lại', ag_x:'Mở lại',
+  progress:'Hoàn thành {d} / {n}', allDoneFlag:' — 🎉 xong hết rồi!',
+  curScore:'📊 Điểm hiện tại (có trọng số):', scoreNote:'(bài kiểm tra cuối được tính nhiều nhất — xem chi tiết trong báo cáo in)',
+  printBtn:'🖨 In phiếu điểm',
+  turnIn:'Nộp bài bất cứ lúc nào: in → <b>Lưu thành PDF</b> → tải lên cho giáo viên. Bạn có thể tiếp tục cải thiện và in lại.',
+  allDoneNote:'<b>Hoàn thành!</b> In phiếu điểm, chọn <b>"Lưu thành PDF"</b> và tải lên trang bài tập của lớp.',
+  excused:'🌐 được miễn — trang web bên ngoài bằng tiếng Anh; không ảnh hưởng điểm của bạn',
+  tip:'💡 Bài học, bài kiểm tra và trò chơi bằng tiếng Anh — tính năng dịch của trình duyệt hoạt động rất tốt với chúng.',
+  switchStudent:'đổi học sinh', exitLbl:'thoát',
+  rep_cat:'Phân tích theo hạng mục', rep_item:'Chi tiết từng mục', rep_topic:'Kết quả theo chủ đề (tính mọi lần làm)',
+  rep_coach:'Góc huấn luyện — nên học gì tiếp theo', rep_mastered:'Những gì bạn đã thành thạo 🌟',
+  rep_congrats:'🎉 Chúc mừng, {name}! Bạn đã thành thạo {n} chủ đề trong bài tập này. Thành quả đó đến từ nỗ lực của bạn — hãy tiếp tục!',
+  rep_masteredLine:'— chủ đề này đã là của bạn.',
+  rep_noMastered:'Chủ đề thành thạo sẽ xuất hiện khi bạn đạt 85% trở lên. Hãy chọn một chủ đề ở Góc huấn luyện, ôn lại rồi làm lại bài kiểm tra — phiếu điểm sau sẽ đẹp hơn.',
+  rep_practice:'Luyện tập ở đâu trên trang:', rep_thenRetake:'Sau đó làm lại bài kiểm tra — luôn tính điểm cao nhất.',
+  statQ:'trả lời đúng {r}/{n} câu hỏi tính mọi lần làm', statG:'lượt chơi tốt nhất đạt {p}% mục tiêu',
+  rep_attempts:'Dựa trên {n} lần làm được ghi lại — kiểm tra, trò chơi và luyện tập, không chỉ lần tốt nhất.',
+  rep_excusedRes:'được miễn (trang bên ngoài chỉ có tiếng Anh)'
+ }},
+ zh:{name:'中文', ui:{
+  tn_g:'学习指南', tn_m:'小游戏', tn_a:'练习活动', tn_v:'视频', tn_p:'PhET 实验', tn_q:'练习测验', tn_pr:'前测', tn_po:'后测',
+  vb_g:'阅读', vb_m:'开始游戏', vb_a:'开始练习', vb_v:'观看', vb_p:'打开实验', vb_q:'做测验', vb_pr:'做前测', vb_po:'做后测',
+  ag_g:'再读一遍', ag_m:'再玩一次', ag_a:'再练一次', ag_q:'重新测验', ag_po:'重新测验', ag_x:'重新打开',
+  progress:'已完成 {d} / {n}', allDoneFlag:' — 🎉 全部完成！',
+  curScore:'📊 当前加权分数：', scoreNote:'（后测占分最高 — 详情见打印的成绩报告）',
+  printBtn:'🖨 打印成绩报告',
+  turnIn:'随时交作业：打印 → <b>另存为 PDF</b> → 上传给老师。你可以继续提高，再次打印。',
+  allDoneNote:'<b>全部完成！</b>打印报告，选择<b>“另存为 PDF”</b>，然后上传到班级作业页面。',
+  excused:'🌐 免做 — 外部英文网站；不影响你的分数',
+  tip:'💡 课文、测验和游戏是英文的 — 浏览器的翻译功能对它们很有效。',
+  switchStudent:'切换学生', exitLbl:'退出',
+  rep_cat:'分类得分', rep_item:'逐项明细', rep_topic:'按主题的表现（计入每次尝试）',
+  rep_coach:'教练角 — 接下来学什么', rep_mastered:'你已掌握的内容 🌟',
+  rep_congrats:'🎉 恭喜你，{name}！你在这次作业中真正掌握了 {n} 个主题。这是你努力的成果 — 继续加油！',
+  rep_masteredLine:'— 这个主题你已经掌握了。',
+  rep_noMastered:'当某个主题达到 85% 以上时会显示在这里。从教练角选一个主题，学习后重新测验 — 下次的报告会更好看。',
+  rep_practice:'在网站上哪里练习：', rep_thenRetake:'然后重新做测验 — 永远计最高分。',
+  statQ:'在所有尝试中答对了 {n} 题中的 {r} 题', statG:'最佳游戏成绩达到目标的 {p}%',
+  rep_attempts:'基于记录的 {n} 次尝试 — 测验、游戏和练习，不只是最好的一次。',
+  rep_excusedRes:'免做（外部网站仅有英文）'
+ }},
+ ko:{name:'한국어', ui:{
+  tn_g:'학습 가이드', tn_m:'미니게임', tn_a:'연습 활동', tn_v:'동영상', tn_p:'PhET 실험', tn_q:'연습 퀴즈', tn_pr:'사전 평가', tn_po:'사후 평가',
+  vb_g:'읽기', vb_m:'게임하기', vb_a:'연습하기', vb_v:'시청하기', vb_p:'실험 열기', vb_q:'퀴즈 풀기', vb_pr:'사전 평가 보기', vb_po:'사후 평가 보기',
+  ag_g:'다시 읽기', ag_m:'다시 하기', ag_a:'다시 연습', ag_q:'다시 풀기', ag_po:'다시 풀기', ag_x:'다시 열기',
+  progress:'{n}개 중 {d}개 완료', allDoneFlag:' — 🎉 모두 완료!',
+  curScore:'📊 현재 가중 점수:', scoreNote:'(사후 평가의 비중이 가장 큽니다 — 자세한 내용은 인쇄된 성적표 참고)',
+  printBtn:'🖨 성적표 인쇄',
+  turnIn:'언제든 제출하세요: 인쇄 → <b>PDF로 저장</b> → 선생님께 업로드. 계속 향상시켜 다시 인쇄할 수 있어요.',
+  allDoneNote:'<b>모두 끝났어요!</b> 성적표를 인쇄하고 <b>"PDF로 저장"</b>을 선택해 학급 과제 페이지에 업로드하세요.',
+  excused:'🌐 면제 — 영어로 된 외부 사이트이며 점수에 영향을 주지 않습니다',
+  tip:'💡 수업 자료, 퀴즈, 게임은 영어로 되어 있어요 — 브라우저의 번역 기능이 잘 작동합니다.',
+  switchStudent:'학생 변경', exitLbl:'나가기',
+  rep_cat:'영역별 점수', rep_item:'항목별 내역', rep_topic:'주제별 성취도 (모든 시도 포함)',
+  rep_coach:'코치 코너 — 다음에 공부할 것', rep_mastered:'완전히 익힌 주제 🌟',
+  rep_congrats:'🎉 축하해요, {name}! 이번 과제에서 {n}개 주제를 확실히 익혔어요. 노력의 결과입니다 — 계속 힘내세요!',
+  rep_masteredLine:'— 이 주제는 이제 자신 있어요.',
+  rep_noMastered:'한 주제에서 85% 이상을 받으면 여기에 표시됩니다. 코치 코너에서 주제 하나를 골라 공부한 뒤 퀴즈를 다시 풀어 보세요 — 다음 성적표가 더 좋아질 거예요.',
+  rep_practice:'사이트에서 연습할 곳:', rep_thenRetake:'그다음 퀴즈를 다시 풀어 보세요 — 항상 최고 점수로 기록됩니다.',
+  statQ:'모든 시도에서 {n}문제 중 {r}문제 정답', statG:'최고 게임 기록이 목표의 {p}%에 도달',
+  rep_attempts:'기록된 {n}회의 시도 기준 — 퀴즈, 평가, 게임, 연습 모두 포함 (최고 기록만이 아님).',
+  rep_excusedRes:'면제 (영어로만 된 외부 사이트)'
+ }}
+};
+/* Coach's Corner teach text, translated (falls back to English) */
+LANGS.es.teach = {
+"S8P1.a":"Toda la materia se divide en sustancias puras y mezclas. Una sustancia pura tiene un solo ingrediente: un elemento (oro, oxígeno) o un compuesto, donde los elementos están unidos químicamente en una proporción fija (H<sub>2</sub>O). Una mezcla son ingredientes combinados físicamente (agua salada, aire) — sin enlaces, así que se puede separar por medios físicos como filtrar o evaporar.",
+"S8P1.b":"Todo está hecho de partículas en movimiento constante. En un sólido vibran en posiciones fijas; en un líquido se deslizan unas sobre otras; en un gas vuelan libremente; en el plasma hace tanto calor que los electrones se desprenden. El calor acelera las partículas — y durante la fusión o la ebullición la temperatura se detiene (la línea plana de la curva de calentamiento) mientras la energía rompe las atracciones entre partículas.",
+"S8P1.c":"Una propiedad física se observa sin cambiar la sustancia: color, densidad, punto de fusión, brillo. Una propiedad química describe cómo reacciona una sustancia y se convierte en algo nuevo, como la inflamabilidad o la oxidación. Pregúntate: ¿tengo que cambiar la sustancia para verla? Si la respuesta es sí, es química.",
+"S8P1.d":"Un cambio físico altera la forma o apariencia pero conserva la misma sustancia: derretir, cortar, disolver. Un cambio químico crea una sustancia totalmente nueva. Las pruebas: un cambio de color inesperado, burbujas de gas de una reacción, luz o calor liberados, o un sólido nuevo — y los cambios químicos son difíciles de revertir.",
+"S8P1.e":"Los átomos tienen un núcleo diminuto de protones (+) y neutrones (0), con electrones (−) girando alrededor. El número de protones — el número atómico — decide qué elemento es. En la tabla periódica, las filas son períodos y las columnas son grupos (familias): los elementos de un grupo se comportan parecido, con metales a la izquierda y no metales a la derecha.",
+"S8P1.f":"La ley de conservación de la materia: los átomos nunca se crean ni se destruyen en una reacción química — solo se reorganizan. Los reactivos (a la izquierda de la flecha) y los productos (a la derecha) deben tener exactamente la misma cantidad de cada átomo, así que la masa total nunca cambia. Comprueba cualquier reacción contando cada elemento en ambos lados.",
+"S8P2.a":"La energía cinética es la energía del movimiento: EC = ½mv². Más masa significa más EC, pero la velocidad importa aún más — duplicar la velocidad cuadruplica la EC, porque la velocidad está al cuadrado. La energía potencial gravitatoria es energía almacenada por la altura: EP = mgh; más masa o más altura significa más energía guardada.",
+"S8P2.b":"La energía cinética y la potencial se intercambian constantemente. En lo alto de una colina, columpio o montaña rusa, la energía es sobre todo EP; en el punto más bajo y rápido es sobre todo EC. El total se mantiene igual todo el camino — la energía se transforma, nunca desaparece.",
+"S8P2.c":"La energía cambia de forma constantemente — sigue la cadena. Una linterna va de química (batería) → eléctrica → luz. Tu cuerpo va de química (comida) → mecánica + térmica. La energía nunca se crea ni se destruye en estas cadenas; siempre se escapa un poco como calor, por eso los aparatos se calientan.",
+"S8P2.d":"El calor se mueve de tres maneras. Conducción = contacto: fluye entre objetos que se tocan, como una cuchara de metal en sopa caliente. Convección = corrientes: el líquido o gas caliente sube y el frío baja, formando circuitos (olla hirviendo, brisa marina). Radiación = rayos: la energía viaja como ondas electromagnéticas y no necesita materia — así calienta el Sol a la Tierra.",
+"S8P3.a":"Rapidez = distancia ÷ tiempo. La velocidad es rapidez más dirección, y la aceleración es CUALQUIER cambio de velocidad: acelerar, frenar o girar. En una gráfica distancia–tiempo la pendiente es la rapidez: plana significa detenido, una recta inclinada es rapidez constante, y una curva que se empina es aceleración.",
+"S8P3.b":"Las fuerzas equilibradas se cancelan a fuerza neta cero, y el movimiento no cambia — esa es la 1.ª Ley de Newton: los objetos siguen haciendo lo que hacían. Las fuerzas no equilibradas cambian el movimiento. Calcula la fuerza neta restando las fuerzas opuestas. Y la 3.ª Ley: toda acción tiene una reacción igual y opuesta, sobre el OTRO objeto.",
+"S8P3.c":"2.ª Ley de Newton: F = ma. La aceleración depende de la fuerza aplicada Y de la masa que se mueve — el mismo empujón acelera mucho más un balón de fútbol que una bola de boliche. La masa es inercia: resistencia a cambiar el movimiento. Puedes despejar cualquier parte: F = m × a, m = F ÷ a, a = F ÷ m.",
+"S8P4.a":"Las ondas mecánicas (sonido, agua, sísmicas) deben viajar por la materia: son partículas pasando una vibración. Las ondas electromagnéticas (luz, radio, rayos X) no necesitan medio y cruzan el espacio vacío. Por eso los astronautas en la Luna pueden verse pero no oírse sin radios.",
+"S8P4.b":"El espectro electromagnético va de las ondas de radio (mayor longitud de onda, menor energía) pasando por microondas, infrarrojo, luz visible y ultravioleta, hasta los rayos X y gamma (menor longitud, mayor energía). Menor longitud de onda siempre significa mayor frecuencia y más energía.",
+"S8P4.c":"Cada parte del espectro tiene un trabajo según su energía: la radio transmite señales, las microondas cocinan y llevan llamadas, el infrarrojo se siente como calor, el UV desinfecta (y quema la piel), los rayos X muestran huesos y equipaje, y los rayos gamma tratan el cáncer. Se elige la onda cuya energía y penetración convienen a la tarea.",
+"S8P4.d":"Cuando una onda encuentra un material nuevo puede reflejarse (rebotar, como un espejo), refractarse (doblarse al cambiar de velocidad, como un popote en agua), ser absorbida (su energía se vuelve calor — superficies oscuras), transmitirse (atravesar, como una ventana) o difractarse (extenderse por aberturas y esquinas). Cuál ocurre depende del material.",
+"S8P4.e":"La velocidad de una onda depende del medio. El sonido viaja más rápido en sólidos, más lento en líquidos y aún más lento en gases — las partículas muy juntas pasan la vibración más rápido — y en el vacío no viaja nada. La luz hace lo contrario: es más rápida en el espacio vacío y se frena en materiales densos (ese frenado causa la refracción).",
+"S8P4.f":"Conoce la anatomía de una onda. La amplitud es la altura desde el reposo: determina la energía (más fuerte, más brillante). La longitud de onda es la distancia entre crestas. La frecuencia es cuántas ondas pasan por segundo: determina el tono del sonido. Frecuencia y longitud se intercambian (v = f × λ).",
+"S8P4.g":"Los lentes funcionan por refracción. Un lente convexo se abomba hacia afuera y junta los rayos de luz para formar imágenes: es la lupa, la cámara y tu propio ojo. Un lente cóncavo se curva hacia adentro y separa los rayos. Donde se encuentran los rayos (el punto focal) decide si la imagen se ve más grande, más pequeña o invertida.",
+"S8P5.a":"La gravedad, el magnetismo y la carga eléctrica actúan mediante campos: regiones invisibles de fuerza que funcionan sin tocar, incluso a través del espacio vacío. Las fuerzas de campo crecen con la masa (gravedad) o la carga y fuerza del imán, y siempre se debilitan con la distancia: así sostiene la Tierra a la Luna a 384,000 km.",
+"S8P5.b":"Solo los electrones se mueven cuando los objetos se cargan: frotar los transfiere, acumulando carga estática. Las cargas iguales se repelen; las opuestas se atraen. En un conductor (metales como el cobre) la carga fluye libremente; en un aislante (caucho, plástico, vidrio) la carga se queda donde está. Por eso los cables son de cobre por dentro y plástico por fuera.",
+"S8P5.c":"Las fuerzas eléctricas y magnéticas tienen perillas de control. Un electroimán se fortalece con más vueltas de alambre, más corriente (más pilas) y un núcleo de hierro. Un generador produce más voltaje girando más rápido, con más bobinas y un imán más fuerte. Y toda fuerza de campo se debilita al crecer la distancia."
+};
+LANGS.vi.teach = {
+"S8P1.a":"Mọi vật chất chia thành chất tinh khiết và hỗn hợp. Chất tinh khiết chỉ có một thành phần: một nguyên tố (vàng, oxy) hoặc một hợp chất, nơi các nguyên tố liên kết hóa học theo tỉ lệ cố định (H<sub>2</sub>O). Hỗn hợp chỉ là các thành phần trộn vật lý (nước muối, không khí) — không có liên kết, nên có thể tách bằng cách lọc hoặc bay hơi.",
+"S8P1.b":"Mọi thứ đều gồm các hạt chuyển động không ngừng. Trong chất rắn, hạt rung tại chỗ; trong chất lỏng, hạt trượt qua nhau; trong chất khí, hạt bay tự do; trong plasma, nóng đến mức electron bị tách khỏi nguyên tử. Thêm nhiệt làm hạt nhanh hơn — khi nóng chảy hay sôi, nhiệt độ tạm dừng (đoạn phẳng trên đường cong nung nóng) vì năng lượng đang phá liên kết giữa các hạt.",
+"S8P1.c":"Tính chất vật lý quan sát được mà không làm thay đổi chất: màu sắc, khối lượng riêng, điểm nóng chảy, độ bóng. Tính chất hóa học mô tả cách chất phản ứng để tạo thành chất mới — như tính cháy hay gỉ sét. Hãy tự hỏi: có phải biến đổi chất mới thấy được không? Nếu có, đó là tính chất hóa học.",
+"S8P1.d":"Biến đổi vật lý thay đổi hình dạng nhưng giữ nguyên chất: nóng chảy, cắt, hòa tan. Biến đổi hóa học tạo ra chất hoàn toàn mới. Dấu hiệu: đổi màu bất ngờ, bọt khí từ phản ứng, phát sáng hay tỏa nhiệt, hoặc xuất hiện chất rắn mới — và biến đổi hóa học khó đảo ngược.",
+"S8P1.e":"Nguyên tử có hạt nhân nhỏ gồm proton (+) và neutron (0), với electron (−) bay quanh. Số proton — số hiệu nguyên tử — quyết định đó là nguyên tố nào. Trên bảng tuần hoàn, hàng là chu kỳ, cột là nhóm (họ): các nguyên tố cùng nhóm có tính chất giống nhau, kim loại bên trái, phi kim bên phải.",
+"S8P1.f":"Định luật bảo toàn vật chất: nguyên tử không bao giờ được tạo ra hay mất đi trong phản ứng hóa học — chúng chỉ sắp xếp lại. Chất phản ứng (bên trái mũi tên) và sản phẩm (bên phải) phải có đúng số lượng mỗi loại nguyên tử, nên tổng khối lượng không đổi. Kiểm tra bằng cách đếm từng nguyên tố ở hai bên.",
+"S8P2.a":"Động năng là năng lượng chuyển động: KE = ½mv². Khối lượng lớn hơn cho động năng lớn hơn, nhưng tốc độ quan trọng hơn — tăng gấp đôi tốc độ thì động năng tăng gấp bốn, vì tốc độ được bình phương. Thế năng trọng trường là năng lượng dự trữ theo độ cao: PE = mgh.",
+"S8P2.b":"Động năng và thế năng liên tục hoán đổi. Ở đỉnh đồi, xích đu hay tàu lượn, năng lượng chủ yếu là thế năng; ở điểm thấp nhất, nhanh nhất là động năng. Tổng năng lượng giữ nguyên suốt — năng lượng chuyển hóa, không bao giờ biến mất.",
+"S8P2.c":"Năng lượng liên tục đổi dạng — hãy theo dõi chuỗi. Đèn pin: hóa học (pin) → điện → ánh sáng. Cơ thể bạn: hóa học (thức ăn) → cơ học + nhiệt. Năng lượng không được tạo ra hay mất đi trong các chuỗi này; luôn có chút nhiệt thoát ra, vì thế thiết bị nóng lên.",
+"S8P2.d":"Nhiệt truyền theo ba cách. Dẫn nhiệt = tiếp xúc: qua vật chạm nhau, như thìa kim loại trong súp nóng. Đối lưu = dòng: chất lỏng/khí nóng bay lên, lạnh chìm xuống thành vòng (nồi sôi, gió biển). Bức xạ = tia: năng lượng đi dưới dạng sóng điện từ, không cần vật chất — Mặt Trời sưởi ấm Trái Đất như vậy.",
+"S8P3.a":"Tốc độ = quãng đường ÷ thời gian. Vận tốc là tốc độ kèm hướng, và gia tốc là BẤT KỲ thay đổi vận tốc nào: nhanh lên, chậm lại hay đổi hướng. Trên đồ thị quãng đường–thời gian, độ dốc là tốc độ: nằm ngang là đứng yên, thẳng nghiêng là tốc độ đều, cong dốc dần là đang tăng tốc.",
+"S8P3.b":"Lực cân bằng triệt tiêu nhau thành hợp lực bằng không, chuyển động không đổi — đó là Định luật 1 của Newton. Lực không cân bằng làm thay đổi chuyển động. Tìm hợp lực bằng cách trừ các lực ngược chiều. Và Định luật 3: mọi lực tác dụng đều có phản lực bằng và ngược chiều, tác dụng lên VẬT KHÁC.",
+"S8P3.c":"Định luật 2 của Newton: F = ma. Gia tốc phụ thuộc vào lực VÀ khối lượng — cùng một cú đẩy làm quả bóng đá tăng tốc nhanh hơn nhiều so với quả bóng bowling. Khối lượng là quán tính: sức cản với thay đổi chuyển động. Có thể tính bất kỳ đại lượng nào: F = m × a, m = F ÷ a, a = F ÷ m.",
+"S8P4.a":"Sóng cơ (âm thanh, nước, địa chấn) phải truyền qua vật chất — là các hạt truyền rung động cho nhau. Sóng điện từ (ánh sáng, radio, tia X) không cần môi trường và vượt qua không gian trống. Vì vậy phi hành gia trên Mặt Trăng nhìn thấy nhau nhưng không nghe được nếu thiếu radio.",
+"S8P4.b":"Phổ điện từ chạy từ sóng radio (bước sóng dài nhất, năng lượng thấp nhất) qua vi sóng, hồng ngoại, ánh sáng nhìn thấy, tử ngoại, đến tia X và tia gamma (bước sóng ngắn nhất, năng lượng cao nhất). Bước sóng ngắn hơn luôn nghĩa là tần số cao hơn và năng lượng lớn hơn.",
+"S8P4.c":"Mỗi phần của phổ điện từ có việc riêng theo năng lượng: radio phát sóng, vi sóng nấu ăn và truyền cuộc gọi, hồng ngoại cảm nhận như nhiệt, UV khử trùng (và gây cháy nắng), tia X chụp xương và soi hành lý, tia gamma điều trị ung thư. Chọn loại sóng có năng lượng và độ xuyên phù hợp với công việc.",
+"S8P4.d":"Khi sóng gặp vật liệu mới, nó có thể phản xạ (bật lại như gương), khúc xạ (gãy khi đổi tốc độ, như ống hút trong nước), bị hấp thụ (năng lượng thành nhiệt — bề mặt tối), truyền qua (như cửa kính) hoặc nhiễu xạ (lan qua khe hở và quanh góc). Điều nào xảy ra tùy thuộc vật liệu.",
+"S8P4.e":"Tốc độ sóng phụ thuộc môi trường. Âm thanh nhanh nhất trong chất rắn, chậm hơn trong chất lỏng, chậm nhất trong chất khí — các hạt sát nhau truyền rung động nhanh hơn — và hoàn toàn không truyền trong chân không. Ánh sáng thì ngược lại: nhanh nhất trong không gian trống và chậm lại trong vật liệu đặc (chính sự chậm lại đó gây ra khúc xạ).",
+"S8P4.f":"Hiểu cấu tạo của sóng. Biên độ là độ cao từ vị trí cân bằng — quyết định năng lượng (to hơn, sáng hơn). Bước sóng là khoảng cách giữa hai đỉnh. Tần số là số sóng đi qua mỗi giây — quyết định độ cao của âm. Tần số và bước sóng đánh đổi nhau (v = f × λ).",
+"S8P4.g":"Thấu kính hoạt động nhờ khúc xạ. Thấu kính lồi phồng ra ngoài và hội tụ các tia sáng để tạo ảnh — đó là kính lúp, máy ảnh và chính mắt bạn. Thấu kính lõm cong vào trong và phân kỳ tia sáng. Nơi các tia gặp nhau (tiêu điểm) quyết định ảnh trông to hơn, nhỏ hơn hay lộn ngược.",
+"S8P5.a":"Trọng lực, từ tính và điện tích đều tác dụng qua trường — vùng lực vô hình hoạt động không cần chạm, kể cả qua không gian trống. Lực trường mạnh lên theo khối lượng (trọng lực) hay độ mạnh của điện tích/nam châm, và luôn yếu đi theo khoảng cách: Trái Đất giữ Mặt Trăng từ 384.000 km là như vậy.",
+"S8P5.b":"Chỉ electron di chuyển khi vật tích điện — cọ xát chuyển electron, tạo tĩnh điện. Điện tích cùng dấu đẩy nhau; trái dấu hút nhau. Trong chất dẫn điện (kim loại như đồng) điện tích chảy tự do; trong chất cách điện (cao su, nhựa, thủy tinh) điện tích ở yên tại chỗ. Vì thế dây điện có lõi đồng và vỏ nhựa.",
+"S8P5.c":"Lực điện và lực từ có các 'núm điều chỉnh'. Nam châm điện mạnh hơn với nhiều vòng dây hơn, dòng điện lớn hơn (nhiều pin hơn) và lõi sắt. Máy phát điện cho hiệu điện thế cao hơn khi quay nhanh hơn, nhiều cuộn dây hơn và nam châm mạnh hơn. Và mọi lực trường đều yếu đi khi khoảng cách tăng."
+};
+LANGS.zh.teach = {
+"S8P1.a":"所有物质分为纯净物和混合物。纯净物只有一种成分：单质（金、氧气）或化合物——元素按固定比例化学结合（H<sub>2</sub>O）。混合物只是物理混合在一起的成分（盐水、空气）——没有化学键，所以可以用过滤、蒸发等物理方法分离。",
+"S8P1.b":"万物都由不停运动的微粒组成。固体中微粒在固定位置振动；液体中微粒相互滑动；气体中微粒自由飞行；等离子体温度极高，电子被剥离原子。加热让微粒运动更快——而熔化或沸腾时温度会暂停（加热曲线上的平线），因为能量在破坏微粒间的吸引力。",
+"S8P1.c":"物理性质不改变物质就能观察：颜色、密度、熔点、光泽。化学性质描述物质如何反应并变成新物质——如可燃性、生锈。问自己：必须改变这种物质才能看到这个性质吗？如果是，那就是化学性质。",
+"S8P1.d":"物理变化只改变形态或外观，物质本身不变：熔化、切割、溶解。化学变化产生全新的物质。证据：意外的颜色变化、反应产生气泡、放出光或热、生成新的固体——而且化学变化很难逆转。",
+"S8P1.e":"原子有一个由质子（+）和中子（0）组成的微小原子核，电子（−）在周围运动。质子数——原子序数——决定它是哪种元素。在元素周期表上，行是周期，列是族：同族元素性质相似，金属在左，非金属在右。",
+"S8P1.f":"物质守恒定律：化学反应中原子既不会产生也不会消失——只是重新排列。反应物（箭头左边）和生成物（右边）必须含有完全相同数量的每种原子，所以总质量不变。数一数两边的每种元素就能检验任何反应。",
+"S8P2.a":"动能是运动的能量：KE = ½mv²。质量越大动能越大，但速度更重要——速度翻倍，动能变成四倍，因为速度要平方。重力势能是高度储存的能量：PE = mgh，质量越大或位置越高，储存的能量越多。",
+"S8P2.b":"动能和势能不断互换。在山顶、秋千或过山车的最高点，能量主要是势能；在最低、最快的点主要是动能。整个过程中总能量保持不变——能量只会转化，永不消失。",
+"S8P2.c":"能量不断变换形式——跟着链条走。手电筒：化学能（电池）→ 电能 → 光能。你的身体：化学能（食物）→ 机械能 + 热能。链条中能量不会凭空产生或消失；总有一些以热的形式漏出，所以设备会发热。",
+"S8P2.d":"热有三种传递方式。传导 = 接触：热在相互接触的物体间流动，如热汤里的金属勺。对流 = 环流：热的液体或气体上升，冷的下沉，形成循环（沸腾的锅、海风）。辐射 = 射线：能量以电磁波传播，完全不需要物质——太阳就是这样隔着真空加热地球的。",
+"S8P3.a":"速率 = 距离 ÷ 时间。速度是带方向的速率，加速度是速度的任何变化——加快、减慢或转弯。在距离–时间图上，斜率就是速率：水平表示静止，直的斜线表示匀速，越来越陡的曲线表示在加速。",
+"S8P3.b":"平衡力相互抵消，合力为零，运动不变——这是牛顿第一定律：物体保持原有的运动状态。不平衡力改变运动。用相反方向的力相减求合力。牛顿第三定律：每个作用力都有大小相等、方向相反的反作用力，作用在另一个物体上。",
+"S8P3.c":"牛顿第二定律：F = ma。加速度取决于施加的力和被推动的质量——同样的推力让足球的加速远大于保龄球。质量就是惯性：抵抗运动变化的能力。三个量都能求：F = m × a，m = F ÷ a，a = F ÷ m。",
+"S8P4.a":"机械波（声音、水波、地震波）必须在物质中传播——是微粒把振动传给邻居。电磁波（光、无线电、X射线）不需要介质，能穿越真空。所以月球上的宇航员能互相看见，却必须用无线电才能交谈。",
+"S8P4.b":"电磁波谱从无线电波（波长最长、能量最低）经过微波、红外线、可见光、紫外线，一直到X射线和伽马射线（波长最短、能量最高）。波长越短，频率越高，能量越大。",
+"S8P4.c":"电磁波谱的每一段都有与其能量相配的工作：无线电传播广播，微波加热食物并传送电话信号，红外线让人感到热，紫外线消毒（也晒伤皮肤），X射线给骨头和行李成像，伽马射线治疗癌症。要选能量和穿透力适合任务的波。",
+"S8P4.d":"波遇到新材料时可能反射（弹回，像镜子）、折射（速度改变而弯曲，像水中的吸管）、被吸收（能量变成热——深色表面）、透射（穿过，像窗户）或衍射（穿过缝隙、绕过拐角扩散）。发生哪种取决于材料。",
+"S8P4.e":"波速取决于介质。声音在固体中最快，液体中较慢，气体中最慢——紧密排列的微粒传递振动更快——在真空中完全无法传播。光恰恰相反：在真空中最快，在水、玻璃等较密的材料中变慢（这种变慢正是折射的原因）。",
+"S8P4.f":"认识波的结构。振幅是离开平衡位置的高度——决定能量（更响、更亮）。波长是波峰到波峰的距离。频率是每秒经过的波数——决定声音的音调。频率和波长此消彼长（v = f × λ）。",
+"S8P4.g":"透镜靠折射工作。凸透镜向外鼓，把光线汇聚成像——放大镜、相机和你的眼睛都是它。凹透镜向内凹，使光线发散。光线相交的位置（焦点）决定了像看起来更大、更小还是倒立。",
+"S8P5.a":"重力、磁力和电荷都通过场来作用——看不见的力的区域，不需要接触，甚至能穿过真空。场力随质量（重力）或电荷、磁体强度增大，并且总是随距离减弱：地球就是这样从38.4万公里外拉住月球的。",
+"S8P5.b":"物体带电时只有电子在移动——摩擦转移电子，积累静电。同种电荷相斥，异种相吸。在导体（铜等金属）中电荷自由流动；在绝缘体（橡胶、塑料、玻璃）中电荷停在原地。所以电线里面是铜、外面是塑料。",
+"S8P5.c":"电力和磁力有'调节旋钮'。电磁铁的线圈越多、电流越大（电池越多）、加上铁芯就越强。发电机转得越快、线圈越多、磁铁越强，电压就越高。而所有场力都随距离增大而减弱。"
+};
+LANGS.ko.teach = {
+"S8P1.a":"모든 물질은 순물질과 혼합물로 나뉩니다. 순물질은 성분이 하나뿐으로, 원소(금, 산소)이거나 원소들이 일정한 비율로 화학 결합한 화합물(H<sub>2</sub>O)입니다. 혼합물은 성분이 물리적으로 섞인 것(소금물, 공기)으로 — 결합이 없어서 거르기나 증발 같은 물리적 방법으로 분리할 수 있어요.",
+"S8P1.b":"모든 것은 끊임없이 움직이는 입자로 이루어져 있습니다. 고체에서는 제자리에서 진동하고, 액체에서는 서로 미끄러지며, 기체에서는 자유롭게 날아다니고, 플라스마는 너무 뜨거워 전자가 떨어져 나갑니다. 열을 가하면 입자가 빨라지는데 — 녹거나 끓는 동안에는 온도가 멈춥니다(가열 곡선의 평평한 구간). 에너지가 입자 사이의 인력을 끊는 데 쓰이기 때문이죠.",
+"S8P1.c":"물리적 성질은 물질을 바꾸지 않고 관찰할 수 있어요: 색, 밀도, 녹는점, 광택. 화학적 성질은 물질이 어떻게 반응해 새로운 물질이 되는지를 말합니다 — 가연성, 녹슮 등. 스스로 물어보세요: 이 성질을 보려면 물질을 변화시켜야 하나? 그렇다면 화학적 성질입니다.",
+"S8P1.d":"물리 변화는 모양이나 겉모습만 바뀌고 물질은 그대로입니다: 녹기, 자르기, 녹이기. 화학 변화는 완전히 새로운 물질을 만듭니다. 증거: 뜻밖의 색 변화, 반응에서 나오는 기포, 빛이나 열 방출, 새로운 고체 생성 — 그리고 화학 변화는 되돌리기 어렵습니다.",
+"S8P1.e":"원자는 양성자(+)와 중성자(0)로 된 작은 핵과 그 주위를 도는 전자(−)로 이루어집니다. 양성자 수 — 원자 번호 — 가 어떤 원소인지를 결정해요. 주기율표에서 가로줄은 주기, 세로줄은 족(가족)입니다: 같은 족의 원소는 비슷하게 행동하고, 금속은 왼쪽, 비금속은 오른쪽에 있어요.",
+"S8P1.f":"질량 보존 법칙: 화학 반응에서 원자는 절대 생기거나 사라지지 않고 — 재배열될 뿐입니다. 반응물(화살표 왼쪽)과 생성물(오른쪽)은 모든 원자의 개수가 정확히 같아야 하므로 전체 질량은 변하지 않아요. 양쪽의 원소를 세어 보면 어떤 반응이든 확인할 수 있습니다.",
+"S8P2.a":"운동 에너지는 움직임의 에너지입니다: KE = ½mv². 질량이 클수록 운동 에너지가 크지만 속력이 더 중요해요 — 속력이 제곱이라 속력을 두 배로 하면 운동 에너지는 네 배가 됩니다. 중력 위치 에너지는 높이에 저장된 에너지입니다: PE = mgh.",
+"S8P2.b":"운동 에너지와 위치 에너지는 끊임없이 자리를 바꿉니다. 언덕, 그네, 롤러코스터의 꼭대기에서는 대부분 위치 에너지이고, 가장 낮고 빠른 지점에서는 대부분 운동 에너지예요. 내내 총량은 같습니다 — 에너지는 변환될 뿐 사라지지 않아요.",
+"S8P2.c":"에너지는 끊임없이 모습을 바꿉니다 — 사슬을 따라가 보세요. 손전등: 화학(전지) → 전기 → 빛. 우리 몸: 화학(음식) → 운동 + 열. 이 사슬에서 에너지는 생기거나 없어지지 않으며, 항상 일부가 열로 새어 나가서 기기가 따뜻해지는 거예요.",
+"S8P2.d":"열은 세 가지 방법으로 이동합니다. 전도 = 접촉: 뜨거운 국의 금속 숟가락처럼 맞닿은 물체 사이로 흐릅니다. 대류 = 순환: 따뜻한 액체나 기체는 올라가고 차가운 것은 내려와 고리를 만듭니다(끓는 냄비, 바닷바람). 복사 = 전자기파: 물질이 전혀 필요 없어요 — 태양이 우주를 건너 지구를 데우는 방법입니다.",
+"S8P3.a":"속력 = 거리 ÷ 시간. 속도는 방향이 있는 속력이고, 가속도는 속도의 모든 변화입니다 — 빨라지기, 느려지기, 방향 바꾸기. 거리–시간 그래프에서 기울기가 속력이에요: 수평이면 정지, 곧은 기울기면 일정한 속력, 점점 가팔라지면 가속 중입니다.",
+"S8P3.b":"균형 잡힌 힘은 합력이 0이 되어 운동이 변하지 않습니다 — 뉴턴의 제1법칙: 물체는 하던 대로 계속합니다. 불균형한 힘은 운동을 바꿉니다. 반대 방향의 힘을 빼서 합력을 구하세요. 그리고 제3법칙: 모든 작용에는 크기가 같고 방향이 반대인 반작용이 — 다른 물체에 — 작용합니다.",
+"S8P3.c":"뉴턴의 제2법칙: F = ma. 가속도는 가하는 힘과 움직이는 질량 모두에 달려 있어요 — 같은 힘이라도 축구공이 볼링공보다 훨씬 크게 가속됩니다. 질량은 관성, 즉 운동 변화에 대한 저항입니다. 어느 것이든 구할 수 있어요: F = m × a, m = F ÷ a, a = F ÷ m.",
+"S8P4.a":"역학파(소리, 물결, 지진파)는 물질 속을 지나야 합니다 — 입자가 진동을 옆으로 전달하는 거예요. 전자기파(빛, 전파, X선)는 매질이 필요 없어 빈 우주를 건넙니다. 그래서 달 위의 우주인은 서로 볼 수는 있지만 무전기 없이는 들을 수 없어요.",
+"S8P4.b":"전자기 스펙트럼은 전파(가장 긴 파장, 가장 낮은 에너지)에서 마이크로파, 적외선, 가시광선, 자외선을 지나 X선과 감마선(가장 짧은 파장, 가장 높은 에너지)까지 이어집니다. 파장이 짧을수록 진동수가 높고 에너지가 큽니다.",
+"S8P4.c":"스펙트럼의 각 부분은 에너지에 맞는 일을 합니다: 전파는 방송, 마이크로파는 조리와 전화 신호, 적외선은 열로 느껴지고, 자외선은 소독(과 햇볕 화상), X선은 뼈와 수하물 촬영, 감마선은 암 치료. 일에 맞는 에너지와 투과력을 가진 파를 고르는 거예요.",
+"S8P4.d":"파동이 새로운 물질을 만나면 반사(거울처럼 튕김), 굴절(속도가 바뀌며 꺾임 — 물속 빨대), 흡수(에너지가 열이 됨 — 어두운 표면), 투과(창문처럼 통과), 회절(틈과 모서리로 퍼짐)할 수 있습니다. 어떤 일이 일어날지는 물질에 달려 있어요.",
+"S8P4.e":"파동의 속력은 매질에 달려 있습니다. 소리는 고체에서 가장 빠르고 액체, 기체 순으로 느려져요 — 촘촘한 입자가 진동을 더 빨리 전달하니까요 — 진공에서는 아예 전달되지 않습니다. 빛은 반대입니다: 빈 공간에서 가장 빠르고 물이나 유리처럼 밀한 물질에서 느려져요(그 느려짐이 바로 굴절의 원인입니다).",
+"S8P4.f":"파동의 구조를 알아 두세요. 진폭은 평형 위치에서의 높이로 — 에너지를 결정합니다(더 크게, 더 밝게). 파장은 마루에서 마루까지의 거리. 진동수는 1초에 지나가는 파동 수로 — 소리의 높낮이를 정합니다. 진동수와 파장은 서로 반비례해요(v = f × λ).",
+"S8P4.g":"렌즈는 굴절로 작동합니다. 볼록 렌즈는 바깥으로 불룩해 빛을 모아 상을 만듭니다 — 돋보기, 카메라, 그리고 여러분의 눈이죠. 오목 렌즈는 안으로 굽어 빛을 퍼뜨립니다. 빛이 만나는 곳(초점)이 상이 더 크게, 작게, 또는 뒤집혀 보일지를 결정합니다.",
+"S8P5.a":"중력, 자기력, 전기력은 모두 장(field)을 통해 작용합니다 — 닿지 않아도, 심지어 빈 우주를 건너서도 힘이 미치는 보이지 않는 영역이죠. 장의 힘은 질량(중력)이나 전하·자석의 세기에 따라 커지고, 거리가 멀어지면 항상 약해집니다. 지구가 38만 4천 km 밖의 달을 붙잡는 방법입니다.",
+"S8P5.b":"물체가 대전될 때 움직이는 것은 전자뿐입니다 — 문지르면 전자가 옮겨 가 정전기가 쌓여요. 같은 전하끼리는 밀어내고 다른 전하끼리는 끌어당깁니다. 도체(구리 같은 금속)에서는 전하가 자유롭게 흐르고, 절연체(고무, 플라스틱, 유리)에서는 그 자리에 머뭅니다. 그래서 전선은 속은 구리, 겉은 플라스틱이에요.",
+"S8P5.c":"전기력과 자기력에는 '조절 손잡이'가 있습니다. 전자석은 코일을 더 감을수록, 전류가 클수록(전지가 많을수록), 철심을 넣을수록 강해져요. 발전기는 더 빨리 돌리고, 코일이 많고, 자석이 강할수록 전압이 높아집니다. 그리고 모든 장의 힘은 거리가 멀어지면 약해집니다."
+};
+
+function asnLang(){ return (ASN && store.get(`asn_${ASN.cfg.id}_${ASN.key}_lang`)) || 'en'; }
+function asnSetLang(l){
+  if(!ASN) return;
+  store.set(`asn_${ASN.cfg.id}_${ASN.key}_lang`, l);
+  renderAssign(); updateAsnBanner();
+}
+function L(key){ const lg=asnLang(); return ((LANGS[lg]||{}).ui||{})[key] || EN_UI[key] || ''; }
+function Lf(key, vals){ let s=L(key); Object.entries(vals||{}).forEach(([k,v])=>{ s=s.replace('{'+k+'}', v); }); return s; }
+function teachText(std){ const lg=asnLang(); return ((LANGS[lg]||{}).teach||{})[std] || (STD_TEACH[std]||{}).teach || ''; }
+/* videos & PhET are excused (don't count) when the student works in a non-English language */
+function asnExcused(type){ return (type==='v'||type==='p') && asnLang()!=='en'; }
+
 /* ---------- the checklist page ---------- */
 function renderAssign(){
   const box = document.getElementById('assigninfo');
@@ -4147,22 +4379,26 @@ function renderAssign(){
   if(!ASN){ box.innerHTML = `<p>No assignment is open. If your teacher gave you a link, open that link.</p><p><button class="gbtn" onclick="go('start')">← Back to start</button></p>`; return; }
   const cfg = ASN.cfg;
   const items = asnItems(cfg);
-  const countable = items;
+  const countable = items.filter(x=>!asnExcused(x.type));
   const done = countable.filter(x=>asnStatus(x).done).length;
   const pct = countable.length? Math.round(100*done/countable.length) : 0;
   const groups = ASN_TYPES.map(T=>{
     const rows = items.filter(x=>x.type===T.k);
     if(!rows.length) return '';
+    const exc = asnExcused(T.k);
+    const cnt = exc? '🌐' : rows.filter(x=>asnStatus(x).done).length+'/'+rows.length;
     return `<div class="asngroup">
-      <h3>${T.icon} ${T.name} <span class="asncount">${rows.filter(x=>asnStatus(x).done).length+'/'+rows.length}</span></h3>
+      <h3>${T.icon} ${L('tn_'+T.k)} <span class="asncount">${cnt}</span></h3>
       ${rows.map(x=>{
         const s = asnStatus(x);
+        const againKey = {g:'ag_g',m:'ag_m',a:'ag_a',q:'ag_q',po:'ag_po'}[x.type] || 'ag_x';
         const btn = x.type==='po'
-          ? `<button class="asngo" style="background:#1B2440" onclick="asnStartPosttest('${x.id}')">${s.done? 'Retake' : T.verb}</button>`
-          : `<button class="asngo" onclick="asnOpen('${x.type}','${x.id}')">${s.done? (x.type==='g'?'Reread':x.type==='m'?'Play again':x.type==='a'?'Practice again':x.type==='q'?'Retake':'Reopen') : T.verb}</button>`;
-        return `<div class="asnrow2 ${s.done?'done':''}">
-          <span class="asnchk">${s.done?'✅':'⬜'}</span>
-          <span class="asnlabel">U${UNITS[x.uid].num} · ${x.label}${x.kind==='search'? ' <em style="opacity:.7">(curated search)</em>':''}${s.meta? `<span class="asnmeta">${s.meta}</span>`:''}</span>
+          ? `<button class="asngo" style="background:#1B2440" onclick="asnStartPosttest('${x.id}')">${s.done? L('ag_po') : L('vb_po')}</button>`
+          : `<button class="asngo" onclick="asnOpen('${x.type}','${x.id}')">${s.done? L(againKey) : L('vb_'+x.type)}</button>`;
+        const meta = exc? `<span class="asnmeta">${L('excused')}</span>` : (s.meta? `<span class="asnmeta">${s.meta}</span>`:'');
+        return `<div class="asnrow2 ${s.done&&!exc?'done':''}">
+          <span class="asnchk">${exc? '🌐' : (s.done?'✅':'⬜')}</span>
+          <span class="asnlabel">U${UNITS[x.uid].num} · ${x.label}${x.kind==='search'? ' <em style="opacity:.7">(curated search)</em>':''}${meta}</span>
           ${btn}</div>`;
       }).join('')}</div>`;
   }).join('');
@@ -4173,21 +4409,23 @@ function renderAssign(){
         <p style="opacity:.75;font-family:var(--mono);font-size:.78rem;margin:3px 0 0">Standards: ${(cfg.std||[]).join(', ')}</p>
       </div>
       <div class="asnwho">👤 <b>${ASN.name}</b>
-        <button class="ghostlink" onclick="asnSwitchStudent()">switch student</button>
-        <button class="ghostlink" onclick="asnExit()">exit</button>
+        <select class="asnlangsel" onchange="asnSetLang(this.value)" title="Language / Idioma / Ngôn ngữ / 语言 / 언어">${Object.entries(LANGS).map(([k,v])=>`<option value="${k}" ${k===asnLang()?'selected':''}>🌐 ${v.name}</option>`).join('')}</select>
+        <button class="ghostlink" onclick="asnSwitchStudent()">${L('switchStudent')}</button>
+        <button class="ghostlink" onclick="asnExit()">${L('exitLbl')}</button>
       </div>
     </div>
     <div class="asnprog">
       <div class="asnbar"><i style="width:${pct}%"></i></div>
-      <p><b>${done} of ${countable.length}</b> complete · ${pct}%${pct===100? ' — 🎉 everything done!':''}</p>
-      <p class="asnscoreline">📊 Current weighted score: <b>${asnScore().pct}%</b> <span style="opacity:.65;font-size:.82rem">(posttest counts most — see your printed report for the breakdown)</span></p>
-      <p style="margin:12px 0 0"><button class="asnprintbtn ${pct===100?'ready':''}" onclick="asnPrintReport()">🖨 Print Score Report</button></p>
-      <p style="font-size:.82rem;opacity:.7;margin:7px 0 0">${pct===100? '<b>All done!</b> Print your report, choose <b>"Save as PDF"</b>, and upload it to the class assignment page.' : 'Turn in your work any time: print → <b>Save as PDF</b> → upload to your teacher. You can keep improving and print again.'}</p>
+      <p><b>${Lf('progress',{d:done,n:countable.length})}</b> · ${pct}%${pct===100? L('allDoneFlag'):''}</p>
+      <p class="asnscoreline">${L('curScore')} <b>${asnScore().pct}%</b> <span style="opacity:.65;font-size:.82rem">${L('scoreNote')}</span></p>
+      <p style="margin:12px 0 0"><button class="asnprintbtn ${pct===100?'ready':''}" onclick="asnPrintReport()">${L('printBtn')}</button></p>
+      <p style="font-size:.82rem;opacity:.7;margin:7px 0 0">${pct===100? L('allDoneNote') : L('turnIn')}</p>
+      ${asnLang()!=='en'? `<p style="font-size:.82rem;opacity:.8;margin:7px 0 0">${L('tip')}</p>`:''}
     </div>
     ${groups}
     <div class="asnfoot">
-      <button class="asnprintbtn ${pct===100?'ready':''}" onclick="asnPrintReport()">🖨 Print Score Report</button>
-      <p style="font-size:.82rem;opacity:.7;margin-top:8px">When you're done, print your report and <b>save it as a PDF</b> (choose "Save as PDF" as the printer), then upload it to your teacher's assignment page. Your work stays saved in this browser under your name, so you can keep improving and print again.</p>
+      <button class="asnprintbtn ${pct===100?'ready':''}" onclick="asnPrintReport()">${L('printBtn')}</button>
+      <p style="font-size:.82rem;opacity:.7;margin-top:8px">${L('turnIn')}</p>
     </div>`;
 }
 
@@ -4413,7 +4651,8 @@ function asnScore(){
   SCORE_WEIGHTS.forEach(W=>{
     let earned=null, detail='';
     if(W.k==='opened'){
-      const ids=[...(it.g||[]).map(i=>['g',i]), ...(it.v||[]).map(i=>['v',i]), ...(it.p||[]).map(i=>['p',i])];
+      const ext = asnLang()==='en'? [...(it.v||[]).map(i=>['v',i]), ...(it.p||[]).map(i=>['p',i])] : [];  // videos/PhET excused for non-English students
+      const ids=[...(it.g||[]).map(i=>['g',i]), ...ext];
       if(ids.length){ const done=ids.filter(([t,i])=>get(t,i)!=null).length;
         earned=done/ids.length; detail=`${done} of ${ids.length} opened`; }
     } else if(W.k==='m'){
@@ -4543,42 +4782,42 @@ function asnFeedbackHtml(){
   let html = '';
   const statLine = r=>{
     const bits=[];
-    if(r.asked) bits.push(`answered ${r.asked-r.miss} of ${r.asked} questions correctly across every attempt`);
-    if(r.gN) bits.push(`best game run reached ${Math.round(r.gBest*100)}% of the target score in ${r.gN} tr${r.gN>1?'ies':'y'}`);
+    if(r.asked) bits.push(Lf('statQ',{r:r.asked-r.miss, n:r.asked}));
+    if(r.gN) bits.push(Lf('statG',{p:Math.round(r.gBest*100)}));
     return bits.join(' · ');
   };
   /* chart */
-  html += `<h2>Performance by topic (every attempt counted)</h2>
+  html += `<h2>${L('rep_topic')}</h2>
     ${prBars(fb.rows.map(r=>({label:stdDisplayName(r.std), pct:Math.round(100*r.overall)})))}
-    <p style="font-size:.78rem;margin:2px 0 0;color:#444">Based on ${fb.attempts} recorded attempt${fb.attempts>1?'s':''} — quizzes, pretests, posttests, and games, not just the best ones.</p>`;
+    <p style="font-size:.78rem;margin:2px 0 0;color:#444">${Lf('rep_attempts',{n:fb.attempts})}</p>`;
   /* coach's corner */
   if(fb.weak.length){
-    html += `<h2>Coach's Corner — what to study next</h2>`;
+    html += `<h2>${L('rep_coach')}</h2>`;
     fb.weak.forEach(r=>{
       const info = STD_TEACH[r.std]||{};
       const study = stdStudyItems(r.std);
       html += `<div class="prtopic">
         <h3>📌 ${stdDisplayName(r.std)}</h3>
         <p class="prstat">${statLine(r)}</p>
-        <p style="font-size:.92rem;margin:0">${info.teach||''}</p>
+        <p style="font-size:.92rem;margin:0">${teachText(r.std)}</p>
         ${info.fig && FIG[info.fig]? FIG[info.fig]('#444') : ''}
-        <p style="font-size:.85rem;margin:8px 0 0"><b>Where to practice on the site:</b>
-          ${study.lessons.length? `Reread lesson${study.lessons.length>1?'s':''} ${study.lessons.slice(0,3).join(' · ')}.` : ''}
-          ${study.games.length? ` Play ${study.games.join(' and ')}.` : ''}
-          Then retake the quiz — best score always counts.</p>
+        <p style="font-size:.85rem;margin:8px 0 0"><b>${L('rep_practice')}</b>
+          ${study.lessons.length? `${study.lessons.slice(0,3).join(' · ')}.` : ''}
+          ${study.games.length? ` 🎮 ${study.games.join(' · ')}.` : ''}
+          ${L('rep_thenRetake')}</p>
       </div>`;
     });
   } else {
-    html += `<h2>Coach's Corner</h2><p style="font-size:.9rem">No major trouble spots found in the attempt data — keep doing what you're doing!</p>`;
+    html += `<h2>${L('rep_coach')}</h2><p style="font-size:.9rem">✔</p>`;
   }
   /* celebration */
-  html += `<h2>What you mastered 🌟</h2>`;
+  html += `<h2>${L('rep_mastered')}</h2>`;
   if(fb.strong.length){
     html += fb.strong.map(r=>`<div class="prgoodbox"><b>✔ ${stdDisplayName(r.std)}</b><br>
-      <span style="font-size:.88rem">${statLine(r)} — this topic is yours now.</span></div>`).join('');
-    html += `<p class="prcongrats">🎉 Congratulations, ${ASN.name}! You showed real mastery of ${fb.strong.length} topic${fb.strong.length>1?'s':''} on this assignment. That mastery came from your effort — every retake and every game run made you stronger. Keep it up!</p>`;
+      <span style="font-size:.88rem">${statLine(r)} ${L('rep_masteredLine')}</span></div>`).join('');
+    html += `<p class="prcongrats">${Lf('rep_congrats',{name:ASN.name, n:fb.strong.length})}</p>`;
   } else {
-    html += `<p style="font-size:.9rem">Mastered topics land here once a topic hits 85% or better across attempts. You're building toward it — pick one topic from Coach's Corner, study it, and retake the quiz. The next printout will look even better.</p>`;
+    html += `<p style="font-size:.9rem">${L('rep_noMastered')}</p>`;
   }
   return html;
 }
@@ -4607,20 +4846,21 @@ function asnPrintReport(){
       </tr></table>
     </div>
     <div class="prscore">FINAL SCORE: <b>${s.pct}%</b></div>
-    <h2>Category breakdown</h2>
+    <h2>${L('rep_cat')}</h2>
     <table class="prtable">
       <tr><th>Category</th><th>Weight</th><th>Earned</th><th>Detail</th></tr>
       ${s.parts.map(p=>`<tr><td>${p.name}</td><td>${Math.round(100*p.w/s.wsum)}%</td><td>${Math.round(p.earned*100)}%</td><td>${p.detail}</td></tr>`).join('')}
     </table>
     ${prBars(s.parts.map(p=>({label:p.name, pct:Math.round(p.earned*100)})))}
-    <h2>Item-by-item</h2>
+    <h2>${L('rep_item')}</h2>
     <table class="prtable">
       <tr><th></th><th>Type</th><th>Item</th><th>Result</th></tr>
       ${items.map(x=>{ const st=asnStatus(x);
-        const res = x.type==='po'
+        const res = asnExcused(x.type)? L('rep_excusedRes')
+          : x.type==='po'
           ? (()=>{ const r=store.get(asnItemKey(x)); return r? `${r.score}/${r.total}${r.attempts>1? ` (best of ${r.attempts} attempts)`:''}` : 'not taken'; })()
           : (st.done? (st.meta||'completed') : 'not completed');
-        return `<tr><td>${st.done||x.type==='po'&&store.get(asnItemKey(x))?'✔':'✗'}</td><td>${typeName[x.type]}</td><td>U${UNITS[x.uid].num} · ${x.label}</td><td>${res}</td></tr>`;}).join('')}
+        return `<tr><td>${asnExcused(x.type)?'🌐':(st.done||x.type==='po'&&store.get(asnItemKey(x))?'✔':'✗')}</td><td>${typeName[x.type]}</td><td>U${UNITS[x.uid].num} · ${x.label}</td><td>${res}</td></tr>`;}).join('')}
     </table>
     ${asnFeedbackHtml()}
     <p class="prfoot">Pretest scores never count against the student — completion only. Generated by Physical Science Hub · ${location.host || 'local'} · Teachers can verify this report's code in Educator Mode.</p>`;
