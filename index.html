@@ -495,6 +495,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
       </select>
       <select id="wu-type" style="min-width:200px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font-size:.95rem;font-family:inherit">
         <option value="disc">💬 Open discussion</option>
+        <option value="multi">🌈 Many right answers</option>
         <option value="blank">✏️ Fill in the blank</option>
         <option value="mc">✅ Multiple choice</option>
       </select>
@@ -3637,8 +3638,104 @@ const WARMUPS = {
  {q:"What's the full chain that turns stronger wind into a brighter lightbulb at a wind farm?", a:"Faster spin → magnets sweep coils faster → more induced voltage/current → brighter bulb. Speed, coils, and magnet strength are the dials."},
  {q:"Two fridge magnets: one holds ten photos, one barely holds one. What could explain the difference?", a:"Stronger magnetic material, bigger magnet, or distance (a thick photo stack weakens the grip — fields fade with distance)."}]
 };
+/* "many right answers" — any well-defended choice counts */
+const WARMUPS_MULTI = {
+"S8P1.a":[
+ {q:"What's the most useful MIXTURE in your daily life? Defend your pick.", a:"Air, concrete, soda, shampoo, salad — any defended answer works. Listen for: it's a mixture because the parts are combined physically, not bonded."},
+ {q:"If you could only keep ONE pure substance on Earth, which would you keep and why?", a:"Water, oxygen, iron, carbon… all fair. Listen for: correctly calling it an element or a compound, plus a survival-level reason."},
+ {q:"Name something you'd HATE to be a mixture instead of a pure substance. Why?", a:"Medicine (dose matters!), drinking water, gold jewelry, insulin. Listen for: purity = predictability."}],
+"S8P1.b":[
+ {q:"Which state of matter is the most useful to humans? Make your case.", a:"Liquid (drinking, blood), solid (buildings), gas (breathing!), even plasma (the Sun). Listen for: particle behavior backing the choice."},
+ {q:"If you could instantly change the state of one everyday substance, what would you pick — and what would happen?", a:"Creative answers welcome. Listen for: correct particle reasoning about what melting/freezing/evaporating would do."},
+ {q:"Which would be worse: a world where nothing ever melted, or one where nothing ever evaporated? Defend your pick.", a:"No melting = no fresh water from snow/ice, no metalworking. No evaporating = no rain cycle, no sweating to cool. Both defensible!"}],
+"S8P1.c":[
+ {q:"What's the single most important property to check before building a bridge out of a material? Why?", a:"Strength, density, flexibility (physical) or rust-resistance (chemical!) — any defended pick. Bonus: noticing which type of property it is."},
+ {q:"Invent a superhero material. Which TWO properties make it super?", a:"Anything goes — have them label each property as physical or chemical."},
+ {q:"Which property of water makes it most special? Defend your answer.", a:"Ice floats (density!), dissolves almost anything, high boiling point, sticks to itself. All defensible."}],
+"S8P1.d":[
+ {q:"What's the most useful chemical change humans ever learned to control? Why?", a:"Combustion/fire, cooking, baking, fermentation, photosynthesis (nature's). Listen for: evidence it's chemical — new substances form."},
+ {q:"Name a physical change that completely transforms how useful something is.", a:"Melting metal for casting, grinding wheat to flour, freezing food, dissolving drink mix — same substance, new usefulness."},
+ {q:"If you could BAN one chemical change forever, which one and why?", a:"Rusting, food spoiling, milk souring, browning apples… listen for why it qualifies as chemical."}],
+"S8P1.e":[
+ {q:"Which atom is the most useful, and why?", a:"Carbon (life's backbone), oxygen, hydrogen, iron, silicon (chips!), copper… any defended element wins."},
+ {q:"You discover a new element! What do you name it, and WHERE does it sit on the periodic table? Why there?", a:"Creative names welcome — listen for placement logic: metal vs nonmetal side, a group with similar behavior."},
+ {q:"Which element would be the WORST to lose from the universe? Defend your answer.", a:"Oxygen, carbon, hydrogen (stars!), iron… any reasoned catastrophe accepted."}],
+"S8P1.f":[
+ {q:"Where is conservation of matter quietly happening in your kitchen right now?", a:"Cooking, baking bread rising, ice melting, digestion — atoms rearranging into new substances, never vanishing."},
+ {q:"A magician claims to make matter disappear. Give the best scientific explanations for the trick.", a:"Hidden, dissolved, burned to gas, evaporated — listen for: the atoms WENT somewhere."},
+ {q:"What's the coolest example of atoms being recycled instead of destroyed?", a:"The water cycle, compost, carbon cycle, 'your body contains atoms from ancient stars' — all great."}],
+"S8P2.a":[
+ {q:"Describe where kinetic and potential energy battle for the lead at an amusement park.", a:"Coasters, drop towers, swings, pendulum ships — listen for: high = PE winning, fast = KE winning."},
+ {q:"Which has more total kinetic energy: a slow freight train or a speeding bullet? Argue either side.", a:"Both arguable! Train: enormous mass. Bullet: v² is mighty. Listen for KE = ½mv² used in the argument."},
+ {q:"Where's the biggest store of potential energy in your neighborhood? Defend it.", a:"Water tower, dam, tall building, gas station (chemical PE!), stretched power lines. Any defended store counts."}],
+"S8P2.b":[
+ {q:"What's the best playground equipment for showing KE ↔ PE transformations? Why?", a:"Swings (the classic), slides, seesaws — listen for where each energy peaks."},
+ {q:"Design your dream ride around energy transformation. Where does PE peak? Where does KE?", a:"Creative engineering welcome — check the physics: highest point = PE, fastest point = KE."},
+ {q:"Which sport shows the prettiest KE ↔ PE trade? Defend it.", a:"Skate halfpipe, pole vault, diving, ski jumping, a jump shot's arc — all gorgeous answers."}],
+"S8P2.c":[
+ {q:"Which energy transformation is most important for LIFE on Earth? Why?", a:"Photosynthesis (light → chemical) is the classic, but the Sun's nuclear → light, or digestion, are defensible too."},
+ {q:"Find the most impressive energy CHAIN in your house — the more links, the better. Trace it.", a:"Any chain works: e.g., power plant → electrical → battery chemical → phone light/sound/heat. Count the links!"},
+ {q:"You can make ONE energy transformation perfectly efficient (zero heat loss). Which do you pick and why?", a:"Car engines, light bulbs, chargers, your own body — listen for: where heat loss wastes the most."}],
+"S8P2.d":[
+ {q:"Which type of heat transfer is the most important for life on Earth, and why?", a:"Radiation (Sun's energy arrives that way!), convection (weather, ocean currents), conduction — all championable."},
+ {q:"What's the best example of your home being designed around heat transfer?", a:"Insulation, double windows (conduction), vents/fans (convection), light roofs (radiation) — any defended example."},
+ {q:"Conduction, convection, or radiation: which would be WORST to live without? Why?", a:"No radiation = no sunlight. No convection = no weather. No conduction = cooking gets weird. All defensible."}],
+"S8P3.a":[
+ {q:"Describe where you might see acceleration in sports.", a:"Sprint starts, braking, every turn (!), jumps, curveballs, tackles — listen for: speeding up, slowing down, OR changing direction."},
+ {q:"Which animal is the most impressive mover — top speed, quickest acceleration, or best direction-changer? Defend it.", a:"Cheetah (speed), peregrine falcon (dive), housefly/squirrel (direction). Any pick with motion vocabulary wins."},
+ {q:"Give the best example of HIGH speed with ZERO acceleration — and high acceleration with LOW speed.", a:"Cruising jet (fast, constant velocity); a drag racer's first instant, or you stepping off a curb (slow but changing)."}],
+"S8P3.b":[
+ {q:"Where are balanced forces secretly holding your world together right now?", a:"Chair vs gravity, buildings, bridges, a parked car, a boat floating — listen for: forces canceling to zero net force."},
+ {q:"What's the most dramatic example of unbalanced forces you've ever seen?", a:"Crashes, rocket launches, big tackles, demolitions, a home run — listen for: motion CHANGED, so forces were unbalanced."},
+ {q:"Which of Newton's three laws explains the most everyday moments? Defend your choice.", a:"1st (seatbelts, ketchup shaking), 2nd (everything that accelerates), 3rd (walking, swimming, rockets). All winnable."}],
+"S8P3.c":[
+ {q:"Where does F = ma decide who wins in sports?", a:"Tackles (mass), bat speed (acceleration), sprint starts (force vs body mass), lighter gymnasts flipping faster."},
+ {q:"What's the best real-world example of LOW mass making something quick?", a:"Gymnasts, drones, ping-pong balls, motorcycles vs trucks — a = F ÷ m, small m wins."},
+ {q:"You can double the force OR halve the mass of any one thing. What do you pick, and what happens?", a:"Either choice doubles acceleration (a = F/m) — listen for them noticing that equivalence!"}],
+"S8P4.a":[
+ {q:"Which wave do you depend on most before lunch — sound, light, radio, or something else? Why?", a:"Alarm (sound), sunlight, WiFi/radio, microwave breakfast — any defended wave; bonus for mechanical vs EM labels."},
+ {q:"What's the coolest mechanical wave in nature? Defend it.", a:"Earthquakes, ocean swells, thunder, a stadium wave — listen for: it needs a medium."},
+ {q:"If EM waves suddenly couldn't cross empty space, what's the FIRST thing you'd notice?", a:"No sunlight (within ~8 minutes!), dead GPS/satellites, dark stars. Any reasoned first-symptom counts."}],
+"S8P4.b":[
+ {q:"Which part of the EM spectrum is the most useful to humans? Defend your pick.", a:"Visible (seeing!), radio (communication), microwaves (phones/cooking), X-rays (medicine) — all championable."},
+ {q:"Which is scarier: too much UV or too much gamma radiation? Why?", a:"Gamma carries more energy per wave, but UV exposure is far more common (sunburn, skin damage). Both defensible with energy reasoning."},
+ {q:"If your eyes could see ONE extra band of the spectrum, which would you pick — and what would you see?", a:"Infrared (heat glow of everything), UV (patterns on flowers, sunburn forming), radio (towers blazing). Creative + correct band behavior."}],
+"S8P4.c":[
+ {q:"Which EM-wave job would be the hardest to replace? Why?", a:"X-ray imaging, GPS, radio broadcasting, microwave links — listen for: what makes that wave uniquely fit for the job."},
+ {q:"Invent a brand-new use for any wave on the spectrum. What wave, what job, and why THAT wave?", a:"Creative engineering — grade the match between the wave's energy/penetration and the job."},
+ {q:"Your phone loses ONE ability: calls (radio), WiFi (microwaves), or face-unlock IR. Which loss hurts most? Why?", a:"Any defended ranking — bonus for naming which wave does which job."}],
+"S8P4.d":[
+ {q:"Where do you see the most interesting wave behavior on the way to school — reflection, refraction, absorption, transmission, or diffraction?", a:"Puddle mirrors, bent straws, hot dark dashboards, windows, hearing around corners — any spotted behavior, correctly named."},
+ {q:"Which wave behavior makes the world most BEAUTIFUL? Defend it.", a:"Refraction (rainbows!), reflection (sunsets on lakes), diffraction (sound carrying music around corners) — all lovely and defensible."},
+ {q:"Design a dream bedroom using wave behaviors: what should it reflect, absorb, and transmit?", a:"Mirrors reflect, dark curtains absorb, windows transmit, soft walls absorb sound — listen for matched behavior + material."}],
+"S8P4.e":[
+ {q:"Where would the medium change what you hear the most: a stadium, a swimming pool, or a space station? Why?", a:"Pool (muffled, faster-but-weird sound), space station (no outside sound at all!), stadium (air + echoes). Any defended pick."},
+ {q:"Which is stranger: sound being impossible in space, or light slowing down in water? Defend your answer.", a:"Either! Listen for: sound needs particles; light changes speed with the medium (and that causes refraction)."},
+ {q:"To send a message one mile, would you rather shout through air, tap a steel pipe, or flash a light? Why?", a:"Light: fastest by far. Steel: sound travels fast and far in solids. Air: weakest case. Any reasoned trade-off counts."}],
+"S8P4.f":[
+ {q:"Which matters more in music: amplitude or frequency? Make your case.", a:"Frequency = melody/pitch; amplitude = dynamics/loudness. Both arguable — listen for correct pairings."},
+ {q:"Describe the wave anatomy of your favorite song at its loudest, highest moment.", a:"Big amplitude (loud) + high frequency (high notes) — any song, correct vocabulary."},
+ {q:"Where in nature does amplitude do the most impressive work? Where does frequency?", a:"Amplitude: tsunamis, thunder. Frequency: bird songs, whale calls, colors of light. Any defended pairing."}],
+"S8P4.g":[
+ {q:"Which lens-powered invention changed the world most: glasses, the microscope, the telescope, or the camera? Why?", a:"All four are championable — listen for what the convex lens DOES in their pick (bends rays to form images)."},
+ {q:"If you could give your eyes one lens upgrade, what would it be?", a:"Zoom, night vision, microscope-mode, wide angle — creative; bonus for convex/concave reasoning."},
+ {q:"Where do lenses secretly work for you every single day?", a:"Your own eyes (!), phone cameras, peepholes, backup cameras, projectors, glasses. Many right answers."}],
+"S8P5.a":[
+ {q:"Which field force runs your day the hardest: gravity, magnetism, or static electricity? Defend it.", a:"Gravity (everything!), magnetism (motors, speakers, compasses), static (less obvious). Any defended champion."},
+ {q:"Describe the weirdest 10 minutes if gravity suddenly weakened by half.", a:"Creative chaos — listen for: weight changes but mass doesn't; jumps higher; things fall slower."},
+ {q:"What's the most surprising place a force acts WITHOUT touching in your life?", a:"Wireless chargers, fridge magnets, compass needles, balloon-hair, the Moon pulling tides. Any field example."}],
+"S8P5.b":[
+ {q:"Which conductor or insulator does the most for you daily? Defend your pick.", a:"Copper wiring, rubber soles, plastic wire coating, the air gap in switches — any defended material + correct label."},
+ {q:"Static electricity: friend or foe? Argue your side with examples.", a:"Foe: zaps, lightning, fried electronics. Friend: photocopiers, paint spraying, air filters. Both sides win with examples."},
+ {q:"Design a completely shock-proof outfit. What materials, and why those?", a:"Rubber soles, wool-free layers, cotton, plastic frames — listen for insulator reasoning (charge can't flow)."}],
+"S8P5.c":[
+ {q:"Which electromagnet-powered device would be hardest to live without: speakers, electric motors, MRI machines, or junkyard cranes? Why?", a:"Motors are hidden EVERYWHERE (fans, fridges, cars) — but any defended pick counts."},
+ {q:"You must boost a generator's output but may change only ONE thing: spin speed, coil count, or magnet strength. Which and why?", a:"All three work! Listen for trade-off thinking: spin costs energy, coils cost wire, magnets cost money."},
+ {q:"If you could install one electromagnet anywhere in your house, where would it go and what would it do?", a:"Self-tidying LEGO floor, key finder, door locks, levitating bed — creative + the on/off superpower mentioned."}]
+};
 let WU = null;
 function warmupPool(type, std){
+  if(type==='multi') return (WARMUPS_MULTI[std]||[]).map((w,i)=>({key:`multi|${std}|${i}`, q:w.q, a:`<b>Many right answers!</b> ${w.a}`}));
   if(type==='disc') return (WARMUPS[std]||[]).map((w,i)=>({key:`disc|${std}|${i}`, q:w.q, a:`<b>Listen for:</b> ${w.a}`}));
   if(type==='blank') return ((ACTIVITIES[std]||{}).blank||[]).map((b,i)=>({key:`blank|${std}|${i}`,
     q:b.s.replace('___','<span style="border-bottom:3px solid #E08F0E;padding:0 14px">&nbsp;</span>') + `<div style="font-size:.85em;margin-top:10px;opacity:.8">Word bank: ${shuffle([...b.w]).join(' · ')}</div>`,
@@ -3665,7 +3762,7 @@ function warmupGo(){
   seen.push(item.key); if(seen.length>800) seen.splice(0, seen.length-800);
   store.set('warmup_seen', seen);
   WU = {item, std, type};
-  const typeName = {disc:'💬 Discussion', blank:'✏️ Fill in the blank', mc:'✅ Multiple choice'}[type];
+  const typeName = {disc:'💬 Discussion', multi:'🌈 Many right answers', blank:'✏️ Fill in the blank', mc:'✅ Multiple choice'}[type];
   document.getElementById('wu-tag').textContent = `${typeName} · ${stdDisplayName(std)}`;
   document.getElementById('wu-q').innerHTML = item.q;
   const aEl = document.getElementById('wu-a'); aEl.hidden = true; aEl.innerHTML = item.a;
