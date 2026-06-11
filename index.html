@@ -385,6 +385,16 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 .actsentence{font-size:1.15rem;background:rgba(255,255,255,.08);border-radius:12px;padding:16px;text-align:center}
 .actgap{border-bottom:3px solid #FFD166;padding:0 6px;letter-spacing:2px}
 .actword.wrong{background:var(--bad);color:#fff;opacity:.6}
+/* ---------- CHAIN REACTION + FIELD FORCE ---------- */
+.crslot{display:inline-flex;align-items:center;justify-content:center;min-width:96px;min-height:40px;border:2px dashed rgba(255,255,255,.5);border-radius:10px;padding:6px 10px;font-weight:800;opacity:.85}
+.crslot.ok{border-style:solid;border-color:#5ad08a;background:rgba(60,180,110,.25);opacity:1}
+.fftrack{position:relative;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.07);border-radius:14px;padding:18px 14px;font-size:1.6rem}
+.ffsrc{font-size:2.4rem;margin-right:6px}
+.ffdock{flex:1;text-align:center;border:2px dashed rgba(255,255,255,.4);border-radius:10px;padding:14px 4px;font-size:.75rem;font-weight:800;letter-spacing:1px;color:#C7D0E8}
+.ffdock.ok{border-style:solid;border-color:#5ad08a;background:rgba(60,180,110,.3)}
+.ffdock.no{animation:kshake .4s;border-color:#e06a6a}
+.ffprobe{position:relative;font-size:2rem;cursor:grab;touch-action:none;user-select:none;z-index:5}
+.ffprobe.dragging{cursor:grabbing}
 
 .pdfbtn{display:inline-block;background:var(--ac,#5B67E0);color:#fff;font-weight:800;font-size:.9rem;padding:9px 18px;border-radius:10px;text-decoration:none}
 .pdfbtn:hover{filter:brightness(1.1)}
@@ -910,6 +920,20 @@ FIG.gravity = c => `<svg viewBox="0 0 460 190" width="460" role="img" aria-label
 <text x="378" y="135" font-weight="bold">MORE distance → weaker pull</text>
 <text x="230" y="170" fill="#3A4566">Every object with mass pulls on every other object — you're pulling on Earth right now.</text></g></svg>`;
 
+FIG.lens = c => `<svg viewBox="0 0 480 220" width="480" role="img" aria-label="A convex lens refracting rays to form an image">
+<g font-size="12">
+<line x1="20" y1="110" x2="460" y2="110" stroke="#8b95b3" stroke-width="1.5" stroke-dasharray="5 5"/>
+<ellipse cx="240" cy="110" rx="14" ry="68" fill="${c}" opacity=".25" stroke="${c}" stroke-width="2.5"/>
+<line x1="80" y1="110" x2="80" y2="48" stroke="#1B2440" stroke-width="4"/><path d="M72,56 L80,42 L88,56z" fill="#1B2440"/>
+<text x="80" y="34" text-anchor="middle" font-weight="bold" fill="#1B2440">object</text>
+<line x1="80" y1="48" x2="240" y2="48" stroke="#E25555" stroke-width="2.5"/>
+<line x1="240" y1="48" x2="400" y2="156" stroke="#E25555" stroke-width="2.5"/>
+<line x1="80" y1="48" x2="400" y2="156" stroke="#E08F0E" stroke-width="2.5"/>
+<circle cx="297" cy="110" r="5" fill="${c}"/><text x="297" y="96" text-anchor="middle" fill="${c}" font-weight="bold">focal point</text>
+<line x1="400" y1="110" x2="400" y2="156" stroke="#1B2440" stroke-width="4"/><path d="M392,148 L400,162 L408,148z" fill="#1B2440"/>
+<text x="400" y="180" text-anchor="middle" font-weight="bold" fill="#1B2440">image (flipped)</text>
+<text x="240" y="206" text-anchor="middle" fill="#3A4566">A convex lens bends (refracts) rays together — they cross at the focal point and form an image.</text></g></svg>`;
+
 /* =========================================================
    UNIT DATA
    ========================================================= */
@@ -1135,7 +1159,11 @@ u4:{
     callout:["Memory Hook","Raging Martians Invaded Venus Using X-ray Guns — radio, micro, infrared, visible, UV, X-ray, gamma."]},
    {t:"Sound Waves", body:`Sound is a longitudinal mechanical wave made by <b>vibrations</b>. <b>Pitch</b> is how high or low — set by frequency. <b>Loudness</b> is set by amplitude, measured in decibels. The <b>Doppler effect</b> makes a siren sound higher coming toward you and lower going away.`},
    {t:"Wave Behaviors", body:`<b>Reflection</b>: bouncing off a surface (echo, mirror). <b>Refraction</b>: bending when entering a new medium at an angle (a straw looks broken in water). <b>Diffraction</b>: bending around obstacles or through openings (hearing around a corner). <b>Absorption</b>: the medium soaks up the energy (blackout curtains, foam panels).`},
-   {t:"Light, Lenses & Color", body:`When light hits an object it can reflect, refract, or be absorbed. We see the colors an object <b>reflects</b> — a green leaf reflects green and absorbs the rest. <b>Convex lenses</b> converge light (magnifiers, your eye); <b>concave lenses</b> spread it out. Transparent, translucent, and opaque describe how much light gets through.`}
+   {t:"Light, Lenses & Color", body:`When light hits an object it can reflect, refract, or be absorbed. We see the colors an object <b>reflects</b> — a green leaf reflects green and absorbs the rest. <b>Convex lenses</b> converge light (magnifiers, your eye); <b>concave lenses</b> spread it out. Transparent, translucent, and opaque describe how much light gets through.`},
+   {t:"How Lenses Form Images", fig:"lens", body:`A <b>convex lens</b> bulges outward and <b>refracts incoming light rays toward each other</b>. Rays from an object cross at the <b>focal point</b> and continue on to form an <b>image</b> — that's the whole trick behind cameras, projectors, magnifying glasses, microscopes, and your own eye. If the object is far away, the image forms small and upside-down (a camera); hold the lens close to small print and you get a magnified right-side-up image instead. A <b>concave lens</b> does the opposite: it spreads rays apart, making things look smaller — useful for correcting nearsightedness.`,
+    callout:["Try It Tonight","Hold a magnifying glass at arm's length toward a lamp across the room — you'll see the lamp's image, tiny and flipped, floating in the lens. You just built a camera."]},
+   {t:"Wave Speed: Reading the Data", body:`A wave's speed is set by its <b>medium</b>. Sound: about <b>343 m/s in air, 1,480 m/s in water, and 5,960 m/s in steel</b> — the more tightly packed and rigid the particles, the faster the vibration passes from neighbor to neighbor, so <b>solids &gt; liquids &gt; gases</b>, and a vacuum carries no sound at all. <b>Light plays by the opposite rule</b>: it's fastest in empty space (300,000 km/s) and slows down in denser materials like water and glass — and that slowdown at the boundary is exactly what causes refraction. When a question hands you a data table, look for the pattern first: which medium is fastest, and what does that say about its particles?`,
+    callout:["Classic Test Trap","'Sound travels fastest in a vacuum' — false! Sound NEEDS particles. It's light that wins in a vacuum; sound wins in steel."]}
   ],
   quiz:[
    {q:"Waves transfer ______ from place to place.", o:["Matter","Energy","Particles","Mass"], a:1, why:"The medium mostly stays put and vibrates — only the energy travels onward."},
@@ -2717,6 +2745,145 @@ GAMES.u4c = { title:"Light Bender", icon:"🔦", id:"u4c", unit:"u4",
  }};
 
 /* =========================================================
+   U2c · CHAIN REACTION — drag energy tiles to build each
+   device's transformation chain in order (S8P2.c)
+   ========================================================= */
+const CR_FORMS = {chem:'🧪 Chemical', elec:'⚡ Electrical', light:'💡 Light', therm:'🔥 Thermal', mech:'⚙️ Mechanical', sound:'🔊 Sound'};
+const CR_ROUNDS = [
+ {dev:'🔦 Flashlight', chain:['chem','elec','light'], why:'The battery stores chemical energy → the circuit carries electrical energy → the bulb shines light.'},
+ {dev:'🔦 Hand-crank flashlight', chain:['mech','elec','light'], why:'Your cranking (mechanical) spins a generator (electrical) that lights the bulb.'},
+ {dev:'🍞 Toaster', chain:['elec','therm'], why:'Electrical energy heats the coils — thermal energy toasts the bread.'},
+ {dev:'🌬️ Wind turbine powering a lamp', chain:['mech','elec','light'], why:'Moving air spins the blades (mechanical) → generator (electrical) → lamp (light).'},
+ {dev:'🚗 Gasoline engine', chain:['chem','mech'], why:'Burning fuel releases chemical energy that becomes the motion of the car.'},
+ {dev:'☀️ Solar-powered fan', chain:['light','elec','mech'], why:'Sunlight hits the panel (light → electrical) and the motor spins the blades (mechanical).'},
+ {dev:'🚴 You, riding a bike', chain:['chem','mech'], why:'Food is chemical energy; your muscles turn it into motion (plus some body heat).'},
+ {dev:'🔈 Speaker', chain:['elec','sound'], why:'Electrical signals vibrate the speaker cone, making sound waves.'}
+];
+GAMES.u2c = { title:"Chain Reaction", icon:"🔗", id:"u2c", unit:"u2",
+ desc:"Every device is an energy story. DRAG the energy tiles into the chain in the right order — first link to last.",
+ start(areaId){
+  kineShell(areaId,'u2c',this.title,this.desc,`<span>DEVICE <b id="${areaId}-r">1</b>/8</span>`);
+  const stage = document.getElementById(areaId+'-stage');
+  const rounds = shuffle([...CR_ROUNDS]);
+  let i=0, score=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=rounds.length){ kineDone(areaId,'u2c',score,'<div class="why">🔗 Energy is never created or destroyed — every device is just a chain of transformations, and almost every chain leaks a little heat.</div>'); return; }
+    document.getElementById(areaId+'-r').textContent=i+1;
+    const R = rounds[i];
+    let pos=0, missed=false;
+    const tray = shuffle([...new Set([...R.chain,'therm','sound'])].slice(0,5));
+    stage.innerHTML = `
+      <div class="bxeq">${R.dev}</div>
+      <div class="bxpan" id="${areaId}-chain" style="min-height:58px">${R.chain.map((c,j)=>`<span class="crslot" id="${areaId}-sl${j}">${j+1}</span>${j<R.chain.length-1?'<span style="opacity:.6">→</span>':''}`).join('')}</div>
+      <div class="bxtray">${tray.map(k=>`<div class="bxtile" data-k="${k}">${CR_FORMS[k]}</div>`).join('')}</div>`;
+    kineMsg(areaId, `Drag the <b>first</b> energy form into slot 1.`);
+    const pan = document.getElementById(areaId+'-chain');
+    stage.querySelectorAll('.bxtile').forEach(tile=>{
+      dragify(tile,{
+        onStart(){ tile.classList.add('dragging'); },
+        onMove(e,ctx){ tile.style.transform=`translate(${ctx.dx}px,${ctx.dy}px)`;
+          const r=pan.getBoundingClientRect(); pan.classList.toggle('hot', ctx.x>=r.left&&ctx.x<=r.right&&ctx.y>=r.top&&ctx.y<=r.bottom); },
+        onEnd(e,ctx){
+          tile.classList.remove('dragging'); pan.classList.remove('hot');
+          const r=pan.getBoundingClientRect();
+          const over = ctx.x>=r.left&&ctx.x<=r.right&&ctx.y>=r.top&&ctx.y<=r.bottom;
+          tile.style.transition='transform .2s'; tile.style.transform=''; setTimeout(()=>tile.style.transition='',210);
+          if(!over || tile.style.opacity==='0') return;
+          if(tile.dataset.k === R.chain[pos]){
+            document.getElementById(`${areaId}-sl${pos}`).innerHTML = CR_FORMS[tile.dataset.k];
+            document.getElementById(`${areaId}-sl${pos}`).classList.add('ok');
+            tile.style.opacity='0';
+            const pts = missed? 3 : 5; score+=pts; kineScore(areaId,score);
+            pos++; missed=false;
+            if(pos>=R.chain.length){
+              kineMsg(areaId,`✅ <b>Chain complete!</b> <span class="why">${R.why}</span>`);
+              i++; setTimeout(draw, 2300);
+            } else kineMsg(areaId, `✅ +${pts} — now the <b>next</b> link.`);
+          } else {
+            missed=true;
+            kineMsg(areaId, `❌ Not link ${pos+1}. <span class="why">Think: what form does the energy take at THIS step of the story?</span>`);
+          }
+        }
+      });
+    });
+  }
+  draw();
+ }};
+
+/* =========================================================
+   U5c · FIELD FORCE — drag the probe along the distance
+   track: fields act without contact & weaken with distance (S8P5.a)
+   ========================================================= */
+const FF_ROUNDS = [
+ {src:'🌍', probe:'🛰️', prompt:'Drag the satellite to where Earth’s gravity pulls it <b>STRONGEST</b>.', ans:0, why:'Closer = stronger. Gravity weakens fast as distance grows.'},
+ {src:'🌍', probe:'🛰️', prompt:'Drag the satellite to where Earth’s pull is <b>WEAKEST</b>.', ans:2, why:'The farther from the mass, the weaker its gravitational field.'},
+ {src:'🧲', probe:'🧷', prompt:'Drag the paper clip to where the magnet attracts it <b>most strongly</b>.', ans:0, why:'Magnetic fields are strongest right at the poles and fade with distance.'},
+ {src:'🧲', probe:'🧭', prompt:'Drag the compass to where the magnet <b>barely affects</b> it.', ans:2, why:'Far from the magnet, its field is too weak to swing the needle much.'},
+ {src:'🧥', probe:'🎈', prompt:'A charged balloon near a sweater: drag it to where the static pull is <b>strongest</b>.', ans:0, why:'Electric force also grows as charges get closer — same rule as gravity and magnets.'},
+ {src:'🌍', probe:'🌙', prompt:'Drag the Moon to the distance where Earth’s hold on it is <b>weakest</b>.', ans:2, why:'Even across 384,000 km the field still pulls — just more weakly with every kilometer.'},
+ {src:'🧲', probe:'🧷', prompt:'This magnet was swapped for a <b>weaker</b> one. Drag the clip to where it can still feel a strong pull.', ans:0, why:'A weaker source makes a weaker field everywhere — the clip must get closer to feel the same force.'},
+ {src:'🎈', probe:'🎈', prompt:'Two balloons with the <b>same charge</b> repel. Drag the second balloon to where the repulsion is <b>weakest</b>.', ans:2, why:'Repulsion follows the same distance rule as attraction: farther apart = weaker force.'}
+];
+GAMES.u5c = { title:"Field Force", icon:"🛰️", id:"u5c", unit:"u5",
+ desc:"No touching required! DRAG the probe along the track to where the invisible field force matches the prompt.",
+ start(areaId){
+  kineShell(areaId,'u5c',this.title,this.desc,`<span>FIELD <b id="${areaId}-r">1</b>/8</span>`);
+  const stage = document.getElementById(areaId+'-stage');
+  const rounds = shuffle([...FF_ROUNDS]);
+  let i=0, score=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=rounds.length){ kineDone(areaId,'u5c',score,'<div class="why">🛰️ Gravity, magnetism, and electric charge all act through FIELDS — no contact needed, and every one of them weakens as distance grows.</div>'); return; }
+    document.getElementById(areaId+'-r').textContent=i+1;
+    const R = rounds[i];
+    let tries=0, locked=false;
+    stage.innerHTML = `
+      <div style="font-size:1.02rem;margin-bottom:10px">${R.prompt}</div>
+      <div class="fftrack" id="${areaId}-tk">
+        <span class="ffsrc">${R.src}</span>
+        ${[0,1,2].map(j=>`<span class="ffdock" data-j="${j}">${['NEAR','MID','FAR'][j]}</span>`).join('')}
+        <span class="ffprobe" id="${areaId}-pb">${R.probe}</span>
+      </div>`;
+    kineMsg(areaId,'');
+    const probe = document.getElementById(areaId+'-pb');
+    const docks = [...stage.querySelectorAll('.ffdock')];
+    let baseX = 0;
+    dragify(probe,{
+      onStart(){ probe.classList.add('dragging'); },
+      onMove(e,ctx){ probe.style.transform=`translate(${baseX+ctx.dx}px, ${ctx.dy*0.2}px)`; },
+      onEnd(e,ctx){
+        probe.classList.remove('dragging');
+        if(locked) return;
+        const dock = docks.find(d=>{const r=d.getBoundingClientRect(); return ctx.x>=r.left-14&&ctx.x<=r.right+14;});
+        if(!dock){ probe.style.transform=''; baseX=0; return; }
+        const dr = dock.getBoundingClientRect(), tr=document.getElementById(areaId+'-tk').getBoundingClientRect();
+        const pr0 = probe.getBoundingClientRect();
+        baseX = baseX + (dr.left+dr.width/2) - (pr0.left+pr0.width/2-ctx.dx) - ctx.dx + ctx.dx;
+        probe.style.transform=`translate(${(dr.left+dr.width/2)-(tr.left+tr.width-34)}px,0)`;
+        if(+dock.dataset.j === R.ans){
+          locked=true;
+          dock.classList.add('ok');
+          const pts = tries===0?10:5; score+=pts; kineScore(areaId,score);
+          kineMsg(areaId,`✅ <b>Field found!</b> <span class="why">${R.why}</span> +${pts}`);
+          i++; setTimeout(draw, 2300);
+        } else {
+          tries++;
+          dock.classList.add('no'); setTimeout(()=>dock.classList.remove('no'),450);
+          if(tries>=2){
+            locked=true;
+            docks.find(d=>+d.dataset.j===R.ans).classList.add('ok');
+            kineMsg(areaId,`👀 <b>Here's the spot.</b> <span class="why">${R.why}</span>`);
+            i++; setTimeout(draw, 2600);
+          } else kineMsg(areaId,'❌ Not there — remember how distance changes a field’s strength.');
+        }
+      }
+    });
+  }
+  draw();
+ }};
+
+/* =========================================================
    PRACTICE ACTIVITIES — match · fill-in-the-blank · sort
    One set per sub-standard, three quick rounds, scored.
    match: [term, definition] pairs (tap to pair)
@@ -3181,6 +3348,7 @@ const STD_TAGS = {
  "u4:L4":["S8P4.f"],            "u4:L5":["S8P4.e"],
  "u4:L6":["S8P4.b","S8P4.c"],   "u4:L7":["S8P4.a","S8P4.e"],
  "u4:L8":["S8P4.d"],            "u4:L9":["S8P4.g"],
+ "u4:L10":["S8P4.g"],           "u4:L11":["S8P4.e"],
  /* --- Unit 5 lessons --- */
  "u5:L0":["S8P5.a"],            "u5:L1":["S8P5.a"],
  "u5:L2":["S8P5.a"],            "u5:L3":["S8P5.b"],
@@ -3189,10 +3357,10 @@ const STD_TAGS = {
  "u5:L8":["S8P5.c"],            "u5:L9":["S8P5.c"],
  /* --- Games --- */
  "u1":["S8P1.a"],  "u1b":["S8P1.b"], "u1c":["S8P1.d"], "u1d":["S8P1.f"],
- "u2":["S8P2.c"],  "u2b":["S8P2.d"],
+ "u2":["S8P2.c"],  "u2b":["S8P2.d"], "u2c":["S8P2.c"],
  "u3":["S8P3.b"],  "u3b":["S8P3.c"], "u3c":["S8P3.a"],
  "u4":["S8P4.f"],  "u4b":["S8P4.b","S8P4.c"], "u4c":["S8P4.d"],
- "u5":["S8P5.b"],  "u5b":["S8P5.c"],
+ "u5":["S8P5.b"],  "u5b":["S8P5.c"], "u5c":["S8P5.a"],
  /* --- Unit 1 videos & sims --- */
  "u1:V0":["S8P1.e"], "u1:V1":["S8P1.b"], "u1:V2":["S8P1.d"], "u1:V3":["S8P1.e"],
  "u1:V4":["S8P1.f"], "u1:V5":["S8P1.e"], "u1:V6":["S8P1.b"], "u1:V7":["S8P1.c"],
@@ -3811,7 +3979,7 @@ function ptAnswer(idx){
 }
 
 /* ---------- weighted scoring engine ---------- */
-const GAME_TARGETS = {u1:120,u1b:80,u1c:110,u1d:100,u2:100,u2b:110,u3:100,u3b:90,u3c:90,u4:100,u4b:70,u4c:70,u5:100,u5b:60};
+const GAME_TARGETS = {u1:120,u1b:80,u1c:110,u1d:100,u2:100,u2b:110,u2c:85,u3:100,u3b:90,u3c:90,u4:100,u4b:70,u4c:70,u5:100,u5b:60,u5c:70};
 const SCORE_WEIGHTS = [
   {k:'po',     w:40, name:'Posttest'},
   {k:'q',      w:20, name:'Practice quizzes'},
@@ -3891,7 +4059,7 @@ const STD_TEACH = {
  "S8P4.d":{fig:null, teach:"When a wave meets a new material it can reflect (bounce off, like a mirror), refract (bend as it changes speed, like a straw in water), be absorbed (its energy soaked up as heat — dark surfaces), be transmitted (pass straight through, like a window), or diffract (spread out through openings and around corners). Which one happens depends on the material."},
  "S8P4.e":{fig:null, teach:"Wave speed depends on the medium. Sound travels fastest through solids, slower through liquids, slowest through gases — tightly packed particles pass vibrations along faster — and not at all through a vacuum. Light does the opposite: fastest in empty space, slowing down in denser materials (that slowdown is what causes refraction)."},
  "S8P4.f":{fig:'wave', teach:"Know a wave's anatomy. Amplitude is the height from the rest position — it sets the energy (louder sound, brighter light). Wavelength is the distance from crest to crest. Frequency is how many waves pass per second — it sets the pitch of a sound. Frequency and wavelength trade off (v = f × λ): more waves per second means each wave is shorter."},
- "S8P4.g":{fig:null, teach:"Lenses work by refraction. A convex lens bulges outward and bends light rays together to form images — it is the magnifying glass, the camera, and your own eye. A concave lens curves inward and spreads rays apart. Where the rays meet (the focal point) determines whether the image looks bigger, smaller, or flipped."},
+ "S8P4.g":{fig:'lens', teach:"Lenses work by refraction. A convex lens bulges outward and bends light rays together to form images — it is the magnifying glass, the camera, and your own eye. A concave lens curves inward and spreads rays apart. Where the rays meet (the focal point) determines whether the image looks bigger, smaller, or flipped."},
  "S8P5.a":{fig:'gravity', teach:"Gravity, magnetism, and electric charge all act through fields — invisible regions of force that work without touching, even across empty space. Field forces grow with mass (for gravity) or charge and magnet strength, and they always weaken with distance. That is how Earth holds the Moon from 384,000 km away."},
  "S8P5.b":{fig:'charges', teach:"Only electrons move when objects charge up — rubbing transfers them, building static charge. Like charges repel; opposites attract. In a conductor (metals like copper) charge flows freely and spreads out; in an insulator (rubber, plastic, glass) charge stays right where it was put. That is why wires are copper on the inside and plastic on the outside."},
  "S8P5.c":{fig:'electromagnet', teach:"Electric and magnetic forces have control dials. An electromagnet gets stronger with more wire coils, more current (more battery cells), and an iron core. A generator makes more voltage by spinning faster, using more coils, and using a stronger magnet. And every field force weakens as distance grows."}
