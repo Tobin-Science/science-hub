@@ -374,6 +374,17 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 .pvq .pvopt{display:block;padding:2px 0 2px 10px}
 .pvq .pvopt.right{font-weight:800;color:#2f7a4d}
 .pvq .pvwhy{font-size:.85rem;opacity:.8;margin-top:4px;font-style:italic}
+/* ---------- PRACTICE ACTIVITIES ---------- */
+.actcols{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+@media(max-width:560px){.actcols{grid-template-columns:1fr}}
+.actterm,.actdef{display:block;width:100%;text-align:left;background:rgba(255,255,255,.1);color:#fff;border:2px solid rgba(255,255,255,.25);border-radius:10px;padding:10px 13px;margin-bottom:8px;font-size:.92rem;font-weight:600;cursor:pointer}
+.actterm.sel{border-color:#FFD166;background:rgba(255,209,102,.18)}
+.actterm.ok,.actdef.ok{border-color:#5ad08a;background:rgba(60,180,110,.25);opacity:.65}
+.actdef.no{animation:kshake .4s;border-color:#e06a6a}
+.actterm:disabled,.actdef:disabled{cursor:default}
+.actsentence{font-size:1.15rem;background:rgba(255,255,255,.08);border-radius:12px;padding:16px;text-align:center}
+.actgap{border-bottom:3px solid #FFD166;padding:0 6px;letter-spacing:2px}
+.actword.wrong{background:var(--bad);color:#fff;opacity:.6}
 
 .pdfbtn{display:inline-block;background:var(--ac,#5B67E0);color:#fff;font-weight:800;font-size:.9rem;padding:9px 18px;border-radius:10px;text-decoration:none}
 .pdfbtn:hover{filter:brightness(1.1)}
@@ -476,6 +487,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <div class="rtgrid">
       <label><input type="checkbox" id="rt-guides" checked> 📝 Study guides <span class="n" ><span id="rt-guides-n">0</span></span></label>
       <label><input type="checkbox" id="rt-games" checked> 🎮 Minigames <span class="n"><span id="rt-games-n">0</span></span></label>
+      <label><input type="checkbox" id="rt-act" checked> 🧩 Practice activities <span class="n"><span id="rt-act-n">0</span></span></label>
       <label><input type="checkbox" id="rt-vids" checked> ▶ Videos <span class="n"><span id="rt-vids-n">0</span></span></label>
       <label><input type="checkbox" id="rt-phet" checked> ⚛ PhET labs <span class="n"><span id="rt-phet-n">0</span></span></label>
       <label><input type="checkbox" id="rt-quiz" checked> ✅ Practice quizzes <span class="n"><span id="rt-quiz-n">0</span></span></label>
@@ -1364,12 +1376,14 @@ function buildUnit(id){
     <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','cards',this)">🃏 Flashcards</button>
     <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','quiz',this)">✅ Practice Quiz</button>
     <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','game',this)">🎮 Minigame</button>
+    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','act',this)">🧩 Practice</button>
     <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','videos',this)">▶ Videos &amp; Sims</button>
   </div>
   <div class="subpane show" id="${id}-study">${buildStudy(id,u)}</div>
   <div class="subpane" id="${id}-cards"><div id="${id}-cardsarea"></div></div>
   <div class="subpane" id="${id}-quiz"><div id="${id}-quizarea"></div></div>
   <div class="subpane" id="${id}-game"><div id="${id}-gamearea"></div></div>
+  <div class="subpane" id="${id}-act"></div>
   <div class="subpane" id="${id}-videos">${buildVideos(id,u)}</div>`;
 }
 
@@ -1382,6 +1396,7 @@ function sub(id, pane, btn){
   if(pane==='quiz') startQuiz(id);
   if(pane==='cards') startCards(id+'-cardsarea', UNITS[id].vocab, UNITS[id].hex);
   if(pane==='game') renderGamePicker(id);
+  if(pane==='act') renderActPicker(id);
 }
 
 /* multiple games per unit: picker row + shared play area */
@@ -2702,6 +2717,263 @@ GAMES.u4c = { title:"Light Bender", icon:"🔦", id:"u4c", unit:"u4",
  }};
 
 /* =========================================================
+   PRACTICE ACTIVITIES — match · fill-in-the-blank · sort
+   One set per sub-standard, three quick rounds, scored.
+   match: [term, definition] pairs (tap to pair)
+   blank: {s: sentence with ___, w: word bank, a: right index}
+   sort:  {b: bucket names, items: [[card, bucketIndex],…]} (drag)
+   ========================================================= */
+const ACTIVITIES = {
+"S8P1.a":{match:[["Element","Made of one type of atom only"],["Compound","Two+ elements chemically bonded in a fixed ratio"],["Mixture","Substances physically combined — no bonds"],["Homogeneous mixture","Same throughout, like saltwater"],["Heterogeneous mixture","Parts visibly different, like trail mix"]],
+ blank:[{s:"A mixture can be separated by ___ means.",w:["physical","chemical","nuclear"],a:0},{s:"A compound's elements are joined by chemical ___.",w:["bonds","magnets","strings"],a:0},{s:"Salt water looks the same throughout, so it is a ___ mixture.",w:["homogeneous","heterogeneous","pure"],a:0},{s:"To break a compound apart you need a ___ reaction.",w:["chemical","physical","gentle"],a:0}],
+ sort:{b:["Element","Compound","Mixture"],items:[["Gold",0],["Oxygen",0],["Iron",0],["Water (H<sub>2</sub>O)",1],["Carbon dioxide",1],["Saltwater",2],["Air",2],["Trail mix",2]]}},
+"S8P1.b":{match:[["Solid","Particles vibrate in fixed positions"],["Liquid","Particles slide past each other"],["Gas","Particles fly freely, filling all space"],["Plasma","Superheated — electrons ripped from atoms"],["Melting point","Temperature where solid becomes liquid"]],
+ blank:[{s:"During melting, the temperature ___ until all the solid is gone.",w:["stays constant","rises quickly","drops"],a:0},{s:"Adding thermal energy makes particles move ___.",w:["faster","slower","backward"],a:0},{s:"The flat parts of a heating curve show a ___ change.",w:["phase","chemical","mass"],a:0},{s:"Most of the visible universe is in the ___ state.",w:["plasma","solid","liquid"],a:0}],
+ sort:{b:["Solid","Liquid","Gas"],items:[["Definite shape and volume",0],["Ice cube",0],["Particles locked in place",0],["Takes its container's shape",1],["Juice in a glass",1],["Fills any space it's given",2],["Steam",2],["Particles completely free",2]]}},
+"S8P1.c":{match:[["Physical property","Observed without changing the substance"],["Chemical property","How a substance reacts to form something new"],["Density","Mass ÷ volume"],["Flammability","How easily something burns"],["Malleability","Can be hammered into sheets"]],
+ blank:[{s:"Melting point is a ___ property.",w:["physical","chemical","secret"],a:0},{s:"Flammability is a ___ property.",w:["chemical","physical","visual"],a:0},{s:"To observe a chemical property you must ___ the substance.",w:["change","weigh","freeze"],a:0},{s:"Density = mass ÷ ___.",w:["volume","weight","height"],a:0}],
+ sort:{b:["Physical property","Chemical property"],items:[["Color",0],["Density",0],["Melting point",0],["Shininess",0],["Flammability",1],["Reacts with acid",1],["Rusts in air",1],["Tarnishes over time",1]]}},
+"S8P1.d":{match:[["Physical change","Form changes, substance stays the same"],["Chemical change","A brand-new substance forms"],["Precipitate","New solid formed when liquids react"],["Gas bubbles from a reaction","Evidence of a chemical change"],["Melting and freezing","Always physical changes"]],
+ blank:[{s:"Melting ice is a ___ change.",w:["physical","chemical","dangerous"],a:0},{s:"Burning wood is a ___ change.",w:["chemical","physical","slow"],a:0},{s:"Bubbles in boiling water show a ___ change.",w:["physical","chemical","nuclear"],a:0},{s:"Rust is a ___ substance than the original iron.",w:["different","heavier","shinier"],a:0}],
+ sort:{b:["Physical change","Chemical change"],items:[["Ice melting",0],["Paper being shredded",0],["Sugar dissolving in tea",0],["Glass breaking",0],["Iron rusting",1],["Wood burning",1],["A cake baking",1],["Milk souring",1]]}},
+"S8P1.e":{match:[["Proton","Positive charge, lives in the nucleus"],["Neutron","No charge, lives in the nucleus"],["Electron","Negative charge, orbits the nucleus"],["Atomic number","The number of protons"],["Group (family)","Column — similar chemical behavior"],["Period","Row on the periodic table"]],
+ blank:[{s:"An element's identity is decided by its number of ___.",w:["protons","electrons","neutrons"],a:0},{s:"Neutrons ≈ atomic mass − ___.",w:["atomic number","electron count","density"],a:0},{s:"Elements in the same group behave ___.",w:["alike","randomly","oppositely"],a:0},{s:"Metals sit on the ___ of the periodic table.",w:["left","right","bottom row only"],a:0}],
+ sort:{b:["Metal","Nonmetal"],items:[["Copper",0],["Iron",0],["Gold",0],["Aluminum",0],["Oxygen",1],["Sulfur",1],["Helium",1],["Carbon",1]]}},
+"S8P1.f":{match:[["Reactants","Left of the arrow — what you start with"],["Products","Right of the arrow — what forms"],["Coefficient","Big number that multiplies a whole formula"],["Subscript","Small number counting atoms of one element"],["Conservation of matter","Atoms are never created or destroyed"]],
+ blank:[{s:"2H<sub>2</sub>O contains ___ hydrogen atoms.",w:["4","2","6"],a:0},{s:"In a balanced equation, atom counts on both sides are ___.",w:["equal","doubled","estimated"],a:0},{s:"The total mass after a reaction is ___ the mass before.",w:["the same as","more than","less than"],a:0},{s:"In a chemical reaction, atoms only get ___.",w:["rearranged","destroyed","created"],a:0}],
+ sort:{b:["Balanced","Not balanced"],items:[["2H<sub>2</sub> + O<sub>2</sub> → 2H<sub>2</sub>O",0],["C + O<sub>2</sub> → CO<sub>2</sub>",0],["2Na + Cl<sub>2</sub> → 2NaCl",0],["Fe + S → FeS",0],["H<sub>2</sub> + O<sub>2</sub> → H<sub>2</sub>O",1],["CH<sub>4</sub> + O<sub>2</sub> → CO<sub>2</sub> + H<sub>2</sub>O",1]]}},
+"S8P2.a":{match:[["Kinetic energy","Energy of motion"],["Potential energy","Stored energy of position"],["KE = ½mv²","Kinetic energy formula"],["PE = mgh","Gravitational potential energy formula"],["Joule (J)","The unit energy is measured in"]],
+ blank:[{s:"Doubling speed makes kinetic energy ___ times bigger.",w:["4","2","3"],a:0},{s:"Doubling mass (same speed) makes KE ___ times bigger.",w:["2","4","8"],a:0},{s:"Gravitational PE grows with mass, gravity, and ___.",w:["height","color","speed"],a:0},{s:"Kinetic energy depends on mass and ___.",w:["speed","height","temperature"],a:0}],
+ sort:{b:["Raises kinetic energy","Raises potential energy"],items:[["Pedaling faster",0],["Rolling downhill, speeding up",0],["A harder throw",0],["Climbing higher",1],["Stretching a slingshot",1],["Lifting a book to the top shelf",1]]}},
+"S8P2.b":{match:[["Top of the hill","Maximum potential energy"],["Bottom of the hill","Maximum kinetic energy"],["Halfway down","PE converting into KE"],["Total energy","Stays the same — conserved"],["Pendulum's lowest point","Fastest speed of the swing"]],
+ blank:[{s:"At the very top of a swing, kinetic energy is at its ___.",w:["minimum","maximum","average"],a:0},{s:"Energy is never created or ___.",w:["destroyed","stored","measured"],a:0},{s:"A falling apple converts potential energy into ___.",w:["kinetic energy","mass","sound only"],a:0},{s:"The fastest point on a roller coaster is the ___ point.",w:["lowest","highest","middle"],a:0}],
+ sort:{b:["Mostly kinetic","Mostly potential"],items:[["Coaster car at the bottom of the drop",0],["Sprinter at full speed",0],["Pendulum mid-swing",0],["Coaster car paused at the top",1],["A drawn bow, ready to fire",1],["Ball at the very peak of a toss",1]]}},
+"S8P2.c":{match:[["Flashlight","Chemical → electrical → light"],["Hand-crank generator","Mechanical → electrical"],["Your body","Chemical → mechanical + thermal"],["Toaster","Electrical → thermal"],["Solar panel","Light → electrical"]],
+ blank:[{s:"Almost every transformation leaks some ___ energy.",w:["thermal","nuclear","potential"],a:0},{s:"A match converts chemical energy into light and ___.",w:["heat","mass","gravity"],a:0},{s:"Batteries store ___ energy.",w:["chemical","kinetic","sound"],a:0},{s:"A microphone turns sound into ___ energy.",w:["electrical","chemical","nuclear"],a:0}],
+ sort:{b:["Moving energy (kinetic family)","Stored energy (potential family)"],items:[["Sound",0],["Motion",0],["Thermal (heat)",0],["Light",0],["Chemical (food, batteries)",1],["Nuclear",1],["Gravitational (height)",1],["Elastic (stretched spring)",1]]}},
+"S8P2.d":{match:[["Conduction","Heat transfer by direct contact"],["Convection","Heat carried by rising and sinking currents"],["Radiation","Heat by EM waves — needs no matter"],["Conductor","Material heat flows through easily"],["Insulator","Material that slows heat flow"]],
+ blank:[{s:"A metal spoon heating up in soup is ___.",w:["conduction","convection","radiation"],a:0},{s:"Warm air rising and cool air sinking is ___.",w:["convection","conduction","radiation"],a:0},{s:"The Sun heats Earth across empty space by ___.",w:["radiation","conduction","convection"],a:0},{s:"Heat always flows from ___ to cooler.",w:["warmer","smaller","darker"],a:0}],
+ sort:{b:["Conduction","Convection","Radiation"],items:[["Hand on a hot pan",0],["Spoon heating in soup",0],["Sea breeze forming",1],["Boiling water circulating",1],["Hot air balloon rising",1],["Campfire glow on your face",2],["Sunshine crossing space",2],["A heat lamp",2]]}},
+"S8P3.a":{match:[["Speed","Distance ÷ time"],["Velocity","Speed with a direction"],["Acceleration","Any change in velocity"],["Displacement","Straight-line distance, start to finish"],["Flat line on a distance–time graph","The object is stopped"]],
+ blank:[{s:"90 meters in 6 seconds = ___ m/s.",w:["15","12","540"],a:0},{s:"Turning at constant speed ___ acceleration.",w:["counts as","is not","prevents"],a:0},{s:"On a distance–time graph, slope = ___.",w:["speed","mass","force"],a:0},{s:"A curve getting steeper on a d–t graph means ___.",w:["speeding up","stopped","constant speed"],a:0}],
+ sort:{b:["Stopped","Constant speed","Speeding up"],items:[["Flat horizontal line",0],["Zero slope",0],["Straight slanted line",1],["Steady diagonal climb",1],["Curve getting steeper",2],["Slope keeps increasing",2]]}},
+"S8P3.b":{match:[["Balanced forces","Net force zero — motion doesn't change"],["Unbalanced force","Changes an object's motion"],["Newton's 1st Law","Objects keep doing what they're doing"],["Newton's 3rd Law","Equal and opposite reaction"],["Net force","All the forces combined into one"]],
+ blank:[{s:"500 N left vs 470 N right → net force of ___ N.",w:["30","970","0"],a:0},{s:"A book resting on a table has ___ forces.",w:["balanced","unbalanced","zero"],a:0},{s:"Friction is the unbalanced force that ___ a rolling ball.",w:["stops","speeds up","lifts"],a:0},{s:"Action–reaction force pairs act on ___ objects.",w:["different","the same","imaginary"],a:0}],
+ sort:{b:["Balanced forces","Unbalanced forces"],items:[["Book resting on a table",0],["Tug-of-war at a standstill",0],["Car cruising at constant velocity",0],["A parked bus",0],["Sprinter exploding off the blocks",1],["Car braking hard",1],["An apple falling",1],["Rocket lifting off",1]]}},
+"S8P3.c":{match:[["F = ma","Newton's 2nd Law"],["Inertia","Resistance to changes in motion"],["Mass","The measure of inertia"],["a = F ÷ m","Solving for acceleration"],["m = F ÷ a","Solving for mass"]],
+ blank:[{s:"F = 20 kg × 4 m/s² = ___ N.",w:["80","24","5"],a:0},{s:"Same force on less mass gives ___ acceleration.",w:["more","less","zero"],a:0},{s:"A loaded truck has ___ inertia than an empty one.",w:["more","less","the same"],a:0},{s:"60 N on a 10 kg cart gives a = ___ m/s².",w:["6","600","50"],a:0}],
+ sort:{b:["More acceleration","Less acceleration"],items:[["A stronger push",0],["A lighter cart",0],["Emptying the wagon first",0],["A bigger engine force",0],["A heavier load",1],["Extra friction",1],["A massive bowling ball",1],["Towing a trailer",1]]}},
+"S8P4.a":{match:[["Mechanical wave","Needs a medium (matter) to travel"],["Electromagnetic wave","Travels through empty space"],["Transverse wave","Medium moves perpendicular to the wave"],["Longitudinal wave","Medium moves parallel — compressions"],["Medium","The matter a wave travels through"]],
+ blank:[{s:"Sound ___ travel through a vacuum.",w:["cannot","can","must"],a:0},{s:"Light reaches Earth through ___ space.",w:["empty","solid","liquid"],a:0},{s:"In a longitudinal wave, the squeezed zones are ___.",w:["compressions","crests","troughs"],a:0},{s:"A slinky pushed end-to-end shows a ___ wave.",w:["longitudinal","transverse","light"],a:0}],
+ sort:{b:["Mechanical","Electromagnetic"],items:[["Sound",0],["Ocean waves",0],["Seismic waves",0],["A wave down a slinky",0],["Visible light",1],["Radio waves",1],["X-rays",1],["Microwaves",1]]}},
+"S8P4.b":{match:[["Radio waves","Longest wavelength, lowest energy"],["Gamma rays","Shortest wavelength, highest energy"],["Visible light","The only part our eyes detect"],["Shorter wavelength","Means higher frequency and energy"],["Ultraviolet","Just past violet — causes sunburn"]],
+ blank:[{s:"Energy ___ as wavelength gets shorter.",w:["increases","decreases","disappears"],a:0},{s:"Blue light has ___ energy than red light.",w:["more","less","the same"],a:0},{s:"___ have more energy than ultraviolet.",w:["X-rays","Radio waves","Microwaves"],a:0},{s:"Frequency and wavelength are ___ related.",w:["inversely","directly","never"],a:0}],
+ sort:{b:["Lower energy than visible light","Higher energy than visible light"],items:[["Radio waves",0],["Microwaves",0],["Infrared",0],["Ultraviolet",1],["X-rays",1],["Gamma rays",1]]}},
+"S8P4.c":{match:[["Radio waves","Broadcasting music and TV"],["Microwaves","Cooking food and cell signals"],["Infrared","Night vision and TV remotes"],["X-rays","Imaging bones and scanning luggage"],["Gamma rays","Treating cancer"],["Ultraviolet","Disinfecting surfaces"]],
+ blank:[{s:"A doctor images a broken bone with ___.",w:["X-rays","radio waves","infrared"],a:0},{s:"Night-vision cameras detect ___.",w:["infrared","gamma rays","UV"],a:0},{s:"Sunscreen protects your skin from ___.",w:["ultraviolet","radio waves","microwaves"],a:0},{s:"Cell phones communicate using ___ and radio waves.",w:["microwaves","gamma rays","X-rays"],a:0}],
+ sort:{b:["Everyday communication","Medical & security"],items:[["Radio broadcast",0],["Cell phone signal",0],["WiFi",0],["TV remote beam",0],["X-ray scan",1],["Cancer treatment",1],["Airport luggage scan",1],["Sterilizing hospital tools",1]]}},
+"S8P4.d":{match:[["Reflection","Wave bounces off a surface"],["Refraction","Wave bends as it changes speed"],["Absorption","Wave energy soaked up as heat"],["Transmission","Wave passes through a material"],["Diffraction","Wave spreads through openings, around corners"]],
+ blank:[{s:"A mirror works by ___.",w:["reflection","refraction","absorption"],a:0},{s:"A straw looks bent in water because of ___.",w:["refraction","reflection","diffraction"],a:0},{s:"Black asphalt gets hot by ___ light.",w:["absorbing","reflecting","transmitting"],a:0},{s:"Hearing someone around a corner is ___.",w:["diffraction","absorption","transmission"],a:0}],
+ sort:{b:["Reflection","Refraction","Absorption"],items:[["Mirror selfie",0],["Echo off a canyon wall",0],["Sunset on a glassy lake",0],["Straw bent in a glass",1],["A magnifying lens",1],["Pool looks shallower than it is",1],["Black t-shirt heating up",2],["Dark asphalt burning bare feet",2]]}},
+"S8P4.e":{match:[["Solids","Sound's fastest medium"],["Gases","Sound's slowest medium (of the three states)"],["Vacuum","Sound can't travel here at all"],["Light in empty space","The fastest speed there is"],["Denser medium","Slows light down"]],
+ blank:[{s:"Sound travels fastest through ___.",w:["steel","air","a vacuum"],a:0},{s:"Sound: 343 m/s in air, about ___ m/s in steel.",w:["5,960","34","350"],a:0},{s:"Light ___ when entering water.",w:["slows down","speeds up","stops"],a:0},{s:"Tightly packed particles pass vibrations along ___.",w:["faster","slower","never"],a:0}],
+ sort:{b:["Sound CAN travel here","Sound CANNOT travel here"],items:[["Air",0],["Water",0],["A steel rail",0],["A brick wall",0],["Outer space",1],["A perfect vacuum",1]]}},
+"S8P4.f":{match:[["Amplitude","Height from rest — sets the energy"],["Wavelength","Crest-to-crest distance"],["Frequency","Waves per second, measured in hertz"],["Crest","Highest point of a wave"],["Trough","Lowest point of a wave"]],
+ blank:[{s:"A louder sound has a bigger ___.",w:["amplitude","wavelength","trough"],a:0},{s:"A higher pitch means a higher ___.",w:["frequency","amplitude","brightness"],a:0},{s:"Wave speed: v = f × ___.",w:["λ (wavelength)","m (mass)","t (time)"],a:0},{s:"Doubling the amplitude gives the wave ___ energy.",w:["more","less","no"],a:0}],
+ sort:{b:["Controlled by amplitude","Controlled by frequency"],items:[["Loudness of a sound",0],["Brightness of light",0],["Height of an ocean wave",0],["Energy the wave carries",0],["Pitch of a sound",1],["Color of light",1],["Waves passing per second",1],["The number measured in hertz",1]]}},
+"S8P4.g":{match:[["Convex lens","Bulges out — bends rays together"],["Concave lens","Curves in — spreads rays apart"],["Focal point","Where the bent rays meet"],["Magnifying glass","A convex lens making images bigger"],["Your eye","Focuses with a convex lens"]],
+ blank:[{s:"Lenses bend light by ___.",w:["refraction","reflection","absorption"],a:0},{s:"A camera focuses with a ___ lens.",w:["convex","concave","flat"],a:0},{s:"A convex lens bends light rays ___.",w:["together","apart","backward"],a:0},{s:"The point where bent rays meet is the ___ point.",w:["focal","boiling","freezing"],a:0}],
+ sort:{b:["Convex lens","Concave lens"],items:[["Magnifying glass",0],["Camera lens",0],["The human eye",0],["A projector",0],["Spreads light rays apart",1],["Door peephole",1],["Corrects nearsightedness",1],["Curves inward",1]]}},
+"S8P5.a":{match:[["Field","Region where a force acts without contact"],["Gravity","Attraction between ALL masses"],["Magnetic field","Strongest at the poles"],["Greater distance","Weakens every field force"],["More mass","Increases gravitational pull"]],
+ blank:[{s:"Earth pulls on the Moon without ___ it.",w:["touching","seeing","heating"],a:0},{s:"Moving two magnets apart makes the force ___.",w:["weaker","stronger","reverse"],a:0},{s:"More mass means ___ gravity.",w:["stronger","weaker","sideways"],a:0},{s:"Field forces work even across empty ___.",w:["space","glasses","wires"],a:0}],
+ sort:{b:["Needs contact","Acts at a distance"],items:[["Friction",0],["Kicking a ball",0],["Pushing a cart",0],["A table holding up a book",0],["Gravity",1],["Magnet attracting a paper clip",1],["Charged balloon lifting hair",1],["Earth holding the Moon in orbit",1]]}},
+"S8P5.b":{match:[["Conductor","Charge flows freely through it"],["Insulator","Charge stays where it's placed"],["Static electricity","Charge built up by friction"],["Like charges","Repel each other"],["Opposite charges","Attract each other"]],
+ blank:[{s:"Only ___ move when objects charge up.",w:["electrons","protons","neutrons"],a:0},{s:"Two negatively charged balloons will ___.",w:["repel","attract","pop"],a:0},{s:"Wires are wrapped in plastic because plastic is an ___.",w:["insulator","conductor","element"],a:0},{s:"A carpet-shock zap is a ___ discharge.",w:["static","magnetic","nuclear"],a:0}],
+ sort:{b:["Conductor","Insulator"],items:[["Copper wire",0],["Aluminum foil",0],["Salt water",0],["Steel beam",0],["Rubber glove",1],["Glass rod",1],["Plastic ruler",1],["Dry wood",1]]}},
+"S8P5.c":{match:[["More wire coils","Stronger electromagnet"],["Iron core","Boosts an electromagnet's strength"],["More current (extra cells)","Stronger magnetic field"],["Spinning faster","More generator voltage"],["Greater distance","Weaker force between magnets"]],
+ blank:[{s:"Adding battery cells makes an electromagnet ___.",w:["stronger","weaker","slower"],a:0},{s:"Removing the iron core makes an electromagnet ___.",w:["weaker","stronger","louder"],a:0},{s:"Generator voltage rises with spin speed, coil turns, and ___ strength.",w:["magnet","sound","spring"],a:0},{s:"Doubling the distance makes field forces much ___.",w:["weaker","stronger","taller"],a:0}],
+ sort:{b:["Makes it stronger","Makes it weaker"],items:[["More wire coils",0],["An extra battery",0],["Adding an iron core",0],["Moving magnets closer",0],["Fewer coils",1],["A dying battery",1],["Swapping iron core for plastic",1],["Moving magnets apart",1]]}}
+};
+function stdUnit(std){ return STD_LIST[std.split('.')[0]].unit; }
+function unitActs(uid){ return Object.keys(ACTIVITIES).filter(s=>stdUnit(s)===uid); }
+function actTarget(std){ const A=ACTIVITIES[std]; return (A.match.length+A.blank.length+A.sort.items.length)*2; }
+
+function renderActPicker(uid, startStd){
+  const u = UNITS[uid];
+  const pane = document.getElementById(uid+'-act');
+  const stds = unitActs(uid);
+  pane.innerHTML = `
+    <p style="margin:0 0 10px;color:var(--ink2)">Three quick rounds per topic: <b>match</b> the pairs, <b>fill in</b> the blanks, then <b>drag to sort</b>. Pick your topic:</p>
+    <div class="subtabs" id="${uid}-acttabs" style="margin-bottom:14px"></div>
+    <div id="${uid}-actarea"></div>`;
+  const tabs = document.getElementById(uid+'-acttabs');
+  tabs.innerHTML = stds.map(s=>{
+    const best = store.get('act_'+s);
+    const [p,l] = s.split('.');
+    return `<button class="subtab" data-std="${s}" style="--ac:${u.hex}">${s}<br><span style="font-size:.68rem;opacity:.8;font-weight:400">${STD_LIST[p].subs[l].slice(0,30)}…${best? ` · best ${best.score}/${best.total}`:''}</span></button>`;
+  }).join('');
+  tabs.querySelectorAll('.subtab').forEach(b=>b.addEventListener('click',()=>{
+    tabs.querySelectorAll('.subtab').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    startActivity(b.dataset.std, uid+'-actarea');
+  }));
+  const first = startStd && stds.includes(startStd)? startStd : stds[0];
+  const firstBtn = tabs.querySelector(`.subtab[data-std="${first}"]`);
+  if(firstBtn) firstBtn.classList.add('active');
+  if(first) startActivity(first, uid+'-actarea');
+}
+
+function startActivity(std, areaId){
+  const A = ACTIVITIES[std];
+  const area = document.getElementById(areaId);
+  if(!A || !area) return;
+  const st = {std, areaId, score:0, missCount:0, total:actTarget(std)};
+  area.innerHTML = `<div class="gamebox" style="max-width:840px">
+    <h3>🧩 ${stdDisplayName(std)}</h3>
+    <div class="ghud"><span>ROUND <b id="${areaId}-ph">1</b>/3</span><span>SCORE <b id="${areaId}-s2">0</b>/${st.total}</span><span>BEST <b>${(store.get('act_'+std)||{score:'—'}).score}</b></span></div>
+    <div id="${areaId}-stage2"></div>
+    <div class="gmsg" id="${areaId}-m2"></div>
+  </div>`;
+  actMatch(st);
+}
+const actScore = st=>{ const el=document.getElementById(st.areaId+'-s2'); if(el) el.textContent = st.score; };
+const actMsg = (st,h)=>{ const el=document.getElementById(st.areaId+'-m2'); if(el) el.innerHTML = h; };
+const actAlive = st=>!!document.getElementById(st.areaId+'-stage2');
+
+/* round 1 — tap to pair terms and definitions */
+function actMatch(st){
+  if(!actAlive(st)) return;
+  const A = ACTIVITIES[st.std];
+  const stage = document.getElementById(st.areaId+'-stage2');
+  document.getElementById(st.areaId+'-ph').textContent = '1';
+  const defs = shuffle(A.match.map((p,i)=>({d:p[1], i})));
+  stage.innerHTML = `<p style="opacity:.85;margin:0 0 10px">🔗 <b>Match them up:</b> tap a term on the left, then tap its definition on the right.</p>
+    <div class="actcols">
+      <div>${A.match.map((p,i)=>`<button class="actterm" data-i="${i}">${p[0]}</button>`).join('')}</div>
+      <div>${defs.map(d=>`<button class="actdef" data-i="${d.i}">${d.d}</button>`).join('')}</div>
+    </div>`;
+  let selTerm = null, done = 0;
+  const missedTerms = new Set();
+  stage.querySelectorAll('.actterm').forEach(b=>b.addEventListener('click',()=>{
+    if(b.disabled) return;
+    stage.querySelectorAll('.actterm').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); selTerm = b;
+    actMsg(st,'Now tap its definition →');
+  }));
+  stage.querySelectorAll('.actdef').forEach(b=>b.addEventListener('click',()=>{
+    if(b.disabled || !selTerm) { if(!selTerm) actMsg(st,'Tap a term on the left first!'); return; }
+    if(b.dataset.i === selTerm.dataset.i){
+      const pts = missedTerms.has(selTerm.dataset.i)? 1 : 2;
+      st.score += pts; actScore(st);
+      selTerm.disabled = true; b.disabled = true;
+      selTerm.classList.remove('sel'); selTerm.classList.add('ok'); b.classList.add('ok');
+      actMsg(st, `✅ Matched! +${pts}`);
+      selTerm = null; done++;
+      if(done >= A.match.length) setTimeout(()=>actBlank(st), 800);
+    } else {
+      if(!missedTerms.has(selTerm.dataset.i)) st.missCount++;
+      missedTerms.add(selTerm.dataset.i);
+      b.classList.add('no'); setTimeout(()=>b.classList.remove('no'), 450);
+      actMsg(st, '❌ Not that one — look again.');
+    }
+  }));
+}
+/* round 2 — fill in the blank from a word bank */
+function actBlank(st){
+  if(!actAlive(st)) return;
+  const A = ACTIVITIES[st.std];
+  const stage = document.getElementById(st.areaId+'-stage2');
+  document.getElementById(st.areaId+'-ph').textContent = '2';
+  let i = 0;
+  function draw(){
+    if(!actAlive(st)) return;
+    if(i >= A.blank.length){ actSort(st); return; }
+    const q = A.blank[i];
+    let tries = 0;
+    stage.innerHTML = `<p style="opacity:.85;margin:0 0 10px">✏️ <b>Fill in the blank</b> (${i+1}/${A.blank.length}): tap the right word.</p>
+      <div class="actsentence">${q.s.replace('___','<span class="actgap">______</span>')}</div>
+      <div class="gbtns" style="margin-top:14px">${shuffle(q.w.map((w,j)=>({w,j}))).map(o=>`<button class="gbtn actword" data-j="${o.j}">${o.w}</button>`).join('')}</div>`;
+    actMsg(st,'');
+    stage.querySelectorAll('.actword').forEach(b=>b.addEventListener('click',()=>{
+      if(+b.dataset.j === q.a){
+        const pts = tries===0? 2 : 1;
+        st.score += pts; actScore(st);
+        stage.querySelector('.actgap').outerHTML = `<b style="color:#7EE3DC">${q.w[q.a]}</b>`;
+        stage.querySelectorAll('.actword').forEach(x=>x.disabled=true);
+        b.classList.add('correct');
+        actMsg(st, `✅ +${pts}`);
+        i++; setTimeout(draw, 900);
+      } else {
+        if(tries===0) st.missCount++;
+        tries++;
+        b.disabled = true; b.classList.add('wrong');
+        actMsg(st, '❌ Try another word.');
+      }
+    }));
+  }
+  draw();
+}
+/* round 3 — drag cards into buckets */
+function actSort(st){
+  if(!actAlive(st)) return;
+  const A = ACTIVITIES[st.std];
+  const stage = document.getElementById(st.areaId+'-stage2');
+  document.getElementById(st.areaId+'-ph').textContent = '3';
+  const deck = shuffle([...A.sort.items]);
+  let i = 0;
+  function draw(){
+    if(!actAlive(st)) return;
+    if(i >= deck.length){ actDone(st); return; }
+    const [label, bucket] = deck[i];
+    stage.innerHTML = `<p style="opacity:.85;margin:0 0 10px">🗂 <b>Sort the cards</b> (${i+1}/${deck.length}): drag the card to its bucket.</p>
+      <div class="kticket" id="${st.areaId}-card">${label}</div>
+      <div class="kpots">${A.sort.b.map((bn,j)=>`<div class="kpot" data-b="${j}">${bn}</div>`).join('')}</div>`;
+    actMsg(st,'');
+    const card = document.getElementById(st.areaId+'-card');
+    const pots = [...stage.querySelectorAll('.kpot')];
+    const potAt = (x,y)=>pots.find(p=>{const r=p.getBoundingClientRect(); return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;});
+    dragify(card,{
+      onStart(){ card.classList.add('dragging'); },
+      onMove(e,ctx){ card.style.transform=`translate(${ctx.dx}px,${ctx.dy}px)`; pots.forEach(p=>p.classList.toggle('hot', p===potAt(ctx.x,ctx.y))); },
+      onEnd(e,ctx){
+        card.classList.remove('dragging'); pots.forEach(p=>p.classList.remove('hot'));
+        const p = potAt(ctx.x, ctx.y);
+        if(!p){ card.style.transition='transform .25s'; card.style.transform=''; setTimeout(()=>card.style.transition='',260); return; }
+        if(+p.dataset.b === bucket){
+          st.score += 2; actScore(st);
+          p.classList.add('yes'); card.style.opacity='0';
+          actMsg(st,'✅ Sorted! +2');
+          i++; setTimeout(draw, 850);
+        } else {
+          st.missCount++;
+          p.classList.add('no');
+          pots.find(x=>+x.dataset.b===bucket).classList.add('yes');
+          actMsg(st,`❌ It belongs in <b>${A.sort.b[bucket]}</b>.`);
+          i++; setTimeout(draw, 1800);
+        }
+      }
+    });
+  }
+  draw();
+}
+function actDone(st){
+  const stage = document.getElementById(st.areaId+'-stage2');
+  if(!stage) return;
+  const best = store.get('act_'+st.std) || {score:0};
+  if(st.score > (best.score||0)) store.set('act_'+st.std, {score:st.score, total:st.total});
+  asnRecord('a', st.std, {score:st.score, total:st.total});
+  const items = st.total/2;
+  asnLogAttempt('a', st.std, st.score, st.total,
+    Array(Math.min(st.missCount, items)).fill(st.std), Array(items).fill(st.std));
+  awardCheck();
+  stage.innerHTML = `<div style="text-align:center;padding:24px 8px">
+    <div style="font-size:2rem">🏁</div>
+    <div style="font-size:1.25rem;margin:8px 0">Practice set complete: <b>${st.score}/${st.total}</b>${st.score>(best.score||0)? ' — NEW BEST! 🎉':''}</div>
+    <div style="margin-top:14px"><button class="gbtn" onclick="startActivity('${st.std}','${st.areaId}')">↻ Play again</button></div></div>`;
+  actMsg(st,'');
+}
+
+/* =========================================================
    ARCADE PAGE
    ========================================================= */
 function buildArcade(){
@@ -2962,6 +3234,7 @@ function resolveStandards(selected){ // selected: ["S8P1.a","S8P1.b",...]
   // quizzes & pretests resolve at unit level: any selected sub of that unit's parent standard
   out.units.forEach(uid=>{ out.quizzes.add(uid); out.pretests.add(uid); });
   out.quizzes=[...out.quizzes]; out.pretests=[...out.pretests]; out.units=[...out.units];
+  out.acts = selected.filter(s=>ACTIVITIES[s]);
   return out;
 }
 
@@ -3031,6 +3304,7 @@ function renderTeachPreview(){
     <p style="font-size:.85rem;opacity:.8;margin:0 0 8px">Every box starts checked — <b>uncheck anything you don't want</b>, and hit 👁 to see exactly what students will get.</p>
     <div class="tprev"><h4>📝 Study guides <span>${r.lessons.length}</span></h4>${li(r.lessons, x=>row(`g:${x.uid}:L${x.i}`, `U${UNITS[x.uid].num} · ${x.t}`, `pvLesson('${x.uid}',${x.i})`))}</div>
     <div class="tprev"><h4>🎮 Minigames <span>${r.games.length}</span></h4>${li(r.games, x=>row(`m:${x.gid}`, `U${UNITS[x.uid].num} · ${x.t}`, `pvGame('${x.gid}')`))}</div>
+    <div class="tprev"><h4>🧩 Practice activities <span>${r.acts.length}</span></h4>${li(r.acts, s=>row(`a:${s}`, `${s} — match · fill-in · sort`, `pvActivity('${s}')`))}</div>
     <div class="tprev"><h4>▶ Videos <span>${r.videos.length}</span></h4>${li(r.videos, x=>row(`v:${x.uid}:V${x.i}`, `U${UNITS[x.uid].num} · ${x.t}${x.kind==='search'?' <em>(curated search)</em>':''}`, `pvUrl('${x.uid}',${x.i})`))}</div>
     <div class="tprev"><h4>⚛ PhET labs <span>${r.phet.length}</span></h4>${li(r.phet, x=>row(`p:${x.uid}:V${x.i}`, `U${UNITS[x.uid].num} · ${x.t}`, `pvUrl('${x.uid}',${x.i})`))}</div>
     <div class="tprev"><h4>✅ Practice quiz <span>${r.quizzes.length}</span></h4>${li(r.quizzes, u=>row(`q:${u}`, `Unit ${UNITS[u].num} practice quiz (${UNITS[u].quiz.length} questions)`, `pvQuiz('${u}')`))}</div>
@@ -3065,6 +3339,10 @@ function pvUrl(uid, i){
   const v = UNITS[uid].videos[i];
   window.open(v.url, '_blank');
 }
+function pvActivity(std){
+  pvOpen(`🧩 Practice set — ${stdDisplayName(std)} <span style="font-weight:400;font-size:.85rem;opacity:.75">(try all three rounds yourself)</span>`, `<div id="pv-actarea"></div>`);
+  startActivity(std, 'pv-actarea');
+}
 function pvQList(qs, note){
   return (note? `<p style="font-size:.88rem;opacity:.8">${note}</p>` : '') + qs.map((q,n)=>`<div class="pvq"><b>Q${n+1}.</b> ${q.q}
     ${q.o.map((o,j)=>`<span class="pvopt ${j===q.a?'right':''}">${j===q.a?'✓':'·'} ${o}</span>`).join('')}
@@ -3090,6 +3368,7 @@ function pvPosttest(uid){
 const RESOURCE_TYPES = [
   {k:'g',  box:'rt-guides', icon:'📝', name:'Study guides',   from:r=>r.lessons.map(x=>`${x.uid}:L${x.i}`)},
   {k:'m',  box:'rt-games',  icon:'🎮', name:'Minigames',      from:r=>r.games.map(x=>x.gid)},
+  {k:'a',  box:'rt-act',    icon:'🧩', name:'Practice activities', from:r=>r.acts},
   {k:'v',  box:'rt-vids',   icon:'▶',  name:'Videos',         from:r=>r.videos.map(x=>`${x.uid}:V${x.i}`)},
   {k:'p',  box:'rt-phet',   icon:'⚛',  name:'PhET labs',      from:r=>r.phet.map(x=>`${x.uid}:V${x.i}`)},
   {k:'q',  box:'rt-quiz',   icon:'✅', name:'Practice quizzes', from:r=>r.quizzes},
@@ -3181,7 +3460,7 @@ let ASN_PENDING = null; // decoded link awaiting name pick
 
 function nameKey(n){ return n.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,24) || 'student'; }
 function openPane(uid, pane){
-  const order = {study:0, cards:1, quiz:2, game:3, videos:4};
+  const order = {study:0, cards:1, quiz:2, game:3, act:4, videos:5};
   const btn = document.querySelectorAll(`#page-${uid} > .subtabs .subtab`)[order[pane]];
   if(btn) btn.click();
 }
@@ -3190,6 +3469,7 @@ function openPane(uid, pane){
 const ASN_TYPES = [
   {k:'g',  icon:'📝', name:'Study guides',     verb:'Read'},
   {k:'m',  icon:'🎮', name:'Minigames',        verb:'Play'},
+  {k:'a',  icon:'🧩', name:'Practice activities', verb:'Practice'},
   {k:'v',  icon:'▶',  name:'Videos',           verb:'Watch'},
   {k:'p',  icon:'⚛',  name:'PhET labs',        verb:'Open lab'},
   {k:'q',  icon:'✅', name:'Practice quizzes', verb:'Take quiz'},
@@ -3203,6 +3483,8 @@ function asnItems(cfg){
     if(ls) out.push({type:'g', id, uid, label:ls.t}); });
   (it.m||[]).forEach(gid=>{ const g=GAMES[gid];
     if(g) out.push({type:'m', id:gid, uid:g.unit||gid, label:g.title}); });
+  (it.a||[]).forEach(std=>{ if(ACTIVITIES[std])
+    out.push({type:'a', id:std, uid:stdUnit(std), label:`${stdDisplayName(std)} — match · fill-in · sort`}); });
   ['v','p'].forEach(t=>(it[t]||[]).forEach(id=>{ const [uid,V]=id.split(':V'); const v=UNITS[uid]?.videos[+V];
     if(v) out.push({type:t, id, uid, label:v.t, url:v.url, kind:v.kind}); }));
   (it.q||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'q', id:uid, uid, label:`Unit ${UNITS[uid].num} practice quiz (10 questions)`}); });
@@ -3217,6 +3499,7 @@ function asnStatus(it){ // → {done, meta}
   const v = store.get(asnItemKey(it));
   if(v===null || v===undefined) return {done:false, meta:''};
   if(it.type==='m')  return {done:true, meta:`best score ${v}`};
+  if(it.type==='a')  return {done:true, meta:`best ${v.score}/${v.total}`};
   if(it.type==='q')  return {done:true, meta:`best ${v.score}/${v.total}`};
   if(it.type==='pr') return {done:true, meta:`completed — ${v.score}/${v.total} (doesn't count against you)`};
   return {done:true, meta:'opened'};
@@ -3240,7 +3523,7 @@ function asnRecord(type, id, val){
   const k = `asn_${ASN.cfg.id}_${ASN.key}_${type}:${id}`;
   if(type==='m'){ const prev=store.get(k); if(prev===null || val>prev) store.set(k,val);
     asnLogAttempt('m', id, val, GAME_TARGETS[id]||100, [], STD_TAGS[id]||[]); }
-  else if(type==='q'){ const prev=store.get(k); if(!prev || val.score>prev.score) store.set(k,val); }
+  else if(type==='q' || type==='a'){ const prev=store.get(k); if(!prev || val.score>prev.score) store.set(k,val); }
   else store.set(k, val);
   if(document.getElementById('page-assign').classList.contains('show')) renderAssign();
 }
@@ -3261,6 +3544,7 @@ function asnOpen(type, id){
     renderAssign();
   }
   if(type==='m'){ go(it.uid); openPane(it.uid,'game'); renderGamePicker(it.uid, id); }
+  if(type==='a'){ go(it.uid); openPane(it.uid,'act'); setTimeout(()=>renderActPicker(it.uid, id), 60); }
   if(type==='q'){ go(it.uid); openPane(it.uid,'quiz'); }
   if(type==='pr'){
     go(it.uid); openPane(it.uid,'study');
@@ -3338,7 +3622,7 @@ function renderAssign(){
         const s = asnStatus(x);
         const btn = x.type==='po'
           ? `<button class="asngo" style="background:#1B2440" onclick="asnStartPosttest('${x.id}')">${s.done? 'Retake' : T.verb}</button>`
-          : `<button class="asngo" onclick="asnOpen('${x.type}','${x.id}')">${s.done? (x.type==='g'?'Reread':x.type==='m'?'Play again':x.type==='q'?'Retake':'Reopen') : T.verb}</button>`;
+          : `<button class="asngo" onclick="asnOpen('${x.type}','${x.id}')">${s.done? (x.type==='g'?'Reread':x.type==='m'?'Play again':x.type==='a'?'Practice again':x.type==='q'?'Retake':'Reopen') : T.verb}</button>`;
         return `<div class="asnrow2 ${s.done?'done':''}">
           <span class="asnchk">${s.done?'✅':'⬜'}</span>
           <span class="asnlabel">U${UNITS[x.uid].num} · ${x.label}${x.kind==='search'? ' <em style="opacity:.7">(curated search)</em>':''}${s.meta? `<span class="asnmeta">${s.meta}</span>`:''}</span>
@@ -3531,7 +3815,7 @@ const GAME_TARGETS = {u1:120,u1b:80,u1c:110,u1d:100,u2:100,u2b:110,u3:100,u3b:90
 const SCORE_WEIGHTS = [
   {k:'po',     w:40, name:'Posttest'},
   {k:'q',      w:20, name:'Practice quizzes'},
-  {k:'m',      w:15, name:'Minigames'},
+  {k:'m',      w:15, name:'Minigames & practice'},
   {k:'opened', w:20, name:'Readings, videos & labs'},
   {k:'pr',     w:5,  name:'Pretest (completion)'}
 ];
@@ -3546,10 +3830,15 @@ function asnScore(){
       if(ids.length){ const done=ids.filter(([t,i])=>get(t,i)!=null).length;
         earned=done/ids.length; detail=`${done} of ${ids.length} opened`; }
     } else if(W.k==='m'){
-      if((it.m||[]).length){
-        const ratios=it.m.map(g=>{ const b=get('m',g); return b==null? 0 : Math.min(b/(GAME_TARGETS[g]||100),1); });
+      const gm = it.m||[], ac = it.a||[];
+      if(gm.length || ac.length){
+        const ratios=[
+          ...gm.map(g=>{ const b=get('m',g); return b==null? 0 : Math.min(b/(GAME_TARGETS[g]||100),1); }),
+          ...ac.map(s=>{ const r=get('a',s); return r? r.score/r.total : 0; })];
         earned=ratios.reduce((a,b)=>a+b,0)/ratios.length;
-        detail=it.m.map(g=>{ const b=get('m',g); return `${GAMES[g].title}: ${b==null?'—':b}`; }).join(' · ');
+        detail=[
+          ...gm.map(g=>{ const b=get('m',g); return `${GAMES[g].title}: ${b==null?'—':b}`; }),
+          ...ac.map(s=>{ const r=get('a',s); return `${s} practice: ${r? r.score+'/'+r.total : '—'}`; })].join(' · ');
       }
     } else if(W.k==='q' || W.k==='po'){
       if((it[W.k]||[]).length){
@@ -3714,7 +4003,7 @@ function asnPrintReport(){
   const today = new Date();
   const dateStr = today.toISOString().slice(0,10);
   const code = asnVerifyCode(ASN.cfg.id, ASN.key, s.pct, dateStr);
-  const typeName = {g:'Study guide', m:'Minigame', v:'Video', p:'PhET lab', q:'Practice quiz', pr:'Pretest', po:'Posttest'};
+  const typeName = {g:'Study guide', m:'Minigame', a:'Practice set', v:'Video', p:'PhET lab', q:'Practice quiz', pr:'Pretest', po:'Posttest'};
   let rep = document.getElementById('printreport');
   if(!rep){ rep = document.createElement('div'); rep.id='printreport'; document.body.appendChild(rep); }
   rep.innerHTML = `
