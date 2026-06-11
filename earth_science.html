@@ -1766,6 +1766,443 @@ const pick = a => a[Math.floor(Math.random()*a.length)];
 
 const GAMES = {};
 
+/* =========================================================
+   EARTH SCIENCE — 12 KINESTHETIC MINIGAMES (2 per unit)
+   Reuse the shared kine* helpers + dragify + svgXY.
+   Mechanics: dial-and-launch, drag-to-bin, swipe, reorder, tap.
+   ========================================================= */
+
+/* ---------- reusable mechanic: binary SWIPE ----------
+   deck = [ [label, 'L'|'R', why], ... ]   L/R = {emoji,label}  */
+function swipeGame(areaId,id,title,desc,deck,L,R){
+  kineShell(areaId,id,title,desc,`<span>CARD <b id="${areaId}-r">1</b>/${deck.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const cards=shuffle([...deck]); let i=0,score=0,streak=0,maxStreak=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=cards.length){ if(maxStreak>(store.get('streak_'+id)||0)) store.set('streak_'+id,maxStreak); kineDone(areaId,id,score); return; }
+    document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    const [label,side,why]=cards[i];
+    stage.innerHTML=`<div class="kswipewrap">
+      <div class="kzone left" id="${areaId}-zl"><span class="big">${L.emoji}</span>${L.label}</div>
+      <div class="kzone right" id="${areaId}-zr"><span class="big">${R.emoji}</span>${R.label}</div>
+      <div class="kcard" id="${areaId}-card">${label}</div>
+    </div><p style="text-align:center;font-size:.82rem;opacity:.7;margin:0">drag the card left or right</p>`;
+    const card=document.getElementById(areaId+'-card');
+    const zl=document.getElementById(areaId+'-zl'), zr=document.getElementById(areaId+'-zr');
+    dragify(card,{
+      onMove(e,ctx){ card.style.transform=`translateX(calc(-50% + ${ctx.dx}px)) rotate(${ctx.dx/14}deg)`;
+        zl.classList.toggle('hot',ctx.dx<-50); zr.classList.toggle('hot',ctx.dx>50); },
+      onEnd(e,ctx){
+        zl.classList.remove('hot'); zr.classList.remove('hot');
+        if(Math.abs(ctx.dx)<85){ card.style.transition='transform .25s'; card.style.transform='translateX(-50%)'; setTimeout(()=>card.style.transition='',260); return; }
+        const said=ctx.dx>0?'R':'L'; card.classList.add('flying');
+        card.style.transform=`translateX(calc(-50% + ${ctx.dx>0?420:-420}px)) rotate(${ctx.dx>0?28:-28}deg)`;
+        const right=said===side;
+        if(right){ streak++; maxStreak=Math.max(maxStreak,streak); const pts=10+Math.min(streak-1,5)*2; score+=pts; kineScore(areaId,score);
+          kineMsg(areaId,`✅ <b>Yes!</b> <span class="why">${why}</span> +${pts}`); }
+        else { streak=0; kineMsg(areaId,`❌ <b>That's ${side==='R'?R.label:L.label}.</b> <span class="why">${why}</span>`); }
+        i++; setTimeout(draw,right?1050:2300);
+      }
+    });
+  }
+  draw();
+}
+
+/* ---------- reusable mechanic: DRAG ticket into a bin ----------
+   deck = [ [label, type, why], ... ]   bins = [ {t,label,emoji,sub} ] */
+function binGame(areaId,id,title,desc,deck,bins){
+  kineShell(areaId,id,title,desc,`<span>ITEM <b id="${areaId}-r">1</b>/${deck.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const cards=shuffle([...deck]); let i=0,score=0,streak=0,maxStreak=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=cards.length){ if(maxStreak>(store.get('streak_'+id)||0)) store.set('streak_'+id,maxStreak); kineDone(areaId,id,score); return; }
+    document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    const [label,type,why]=cards[i];
+    stage.innerHTML=`<div class="kticket" id="${areaId}-tk">🏷️ ${label}</div>
+      <div class="kpots">${bins.map(b=>`<div class="kpot" data-t="${b.t}"><span class="big">${b.emoji}</span>${b.label}${b.sub?`<br><span style="opacity:.7;font-weight:400">${b.sub}</span>`:''}</div>`).join('')}</div>`;
+    const tk=document.getElementById(areaId+'-tk');
+    const pots=[...stage.querySelectorAll('.kpot')];
+    const potAt=(x,y)=>pots.find(p=>{const r=p.getBoundingClientRect();return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;});
+    dragify(tk,{
+      onStart(){ tk.classList.add('dragging'); },
+      onMove(e,ctx){ tk.style.transform=`translate(${ctx.dx}px,${ctx.dy}px)`; pots.forEach(p=>p.classList.toggle('hot',p===potAt(ctx.x,ctx.y))); },
+      onEnd(e,ctx){
+        tk.classList.remove('dragging'); pots.forEach(p=>p.classList.remove('hot'));
+        const p=potAt(ctx.x,ctx.y);
+        if(!p){ tk.style.transition='transform .25s'; tk.style.transform=''; setTimeout(()=>tk.style.transition='',260); return; }
+        const right=p.dataset.t===type;
+        if(right){ streak++; maxStreak=Math.max(maxStreak,streak); const pts=10+Math.min(streak-1,5)*2; score+=pts; kineScore(areaId,score);
+          p.classList.add('yes'); tk.style.opacity='0'; kineMsg(areaId,`✅ <b>Nice!</b> <span class="why">${why}</span> +${pts}`); }
+        else { streak=0; p.classList.add('no'); pots.find(x=>x.dataset.t===type).classList.add('yes'); kineMsg(areaId,`❌ <span class="why">${why}</span>`); }
+        i++; setTimeout(draw,right?1100:2400);
+      }
+    });
+  }
+  draw();
+}
+
+/* ---------- reusable mechanic: DRAG-TO-ORDER ----------
+   items in CORRECT order = [ [emoji,label], ... ] ; play `rounds` shuffles */
+function orderGame(areaId,id,title,desc,items,instr,winWhy,rounds){
+  rounds=rounds||3;
+  kineShell(areaId,id,title,desc,`<span>ROUND <b id="${areaId}-r">1</b>/${rounds}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  let round=0, score=0, order, checks;
+  function newRound(){
+    do{ order=shuffle(items.map((_,k)=>k)); } while(order.every((b,p)=>b===p));
+    checks=0; document.getElementById(areaId+'-r').textContent=round+1; drawOrder();
+  }
+  function drawOrder(locked){
+    if(!document.getElementById(areaId+'-stage')) return;
+    locked=locked||[];
+    stage.innerHTML=`<div style="font-size:1rem;margin-bottom:6px">${instr}</div>
+      <div class="kord" id="${areaId}-ord">${order.map((b,pos)=>`<div class="kordrow ${locked.includes(pos)?'lock':''}" data-i="${b}"><span class="grip">⠿</span> ${items[b][0]} ${items[b][1]}</div>`).join('')}</div>
+      <div style="text-align:center"><button class="gbtn" id="${areaId}-chk">⚖️ Check my order</button></div>`;
+    const wrap=document.getElementById(areaId+'-ord'); const rows=[...wrap.querySelectorAll('.kordrow')];
+    const rowH=()=>rows[0].offsetHeight+7;
+    rows.forEach((row,startPos)=>{
+      if(row.classList.contains('lock')) return;
+      dragify(row,{ onStart(){row.classList.add('dragging');},
+        onMove(e,ctx){ row.style.transform=`translateY(${ctx.dy}px)`; const shift=Math.round(ctx.dy/rowH());
+          rows.forEach((r,p)=>{ if(r===row||r.classList.contains('lock'))return; const from=startPos,to=Math.max(0,Math.min(rows.length-1,startPos+shift));
+            if(from<to&&p>from&&p<=to) r.style.transform=`translateY(${-rowH()}px)`; else if(from>to&&p>=to&&p<from) r.style.transform=`translateY(${rowH()}px)`; else r.style.transform=''; }); },
+        onEnd(e,ctx){ row.classList.remove('dragging'); const shift=Math.round(ctx.dy/rowH()); const to=Math.max(0,Math.min(order.length-1,startPos+shift));
+          const moved=order.splice(startPos,1)[0]; order.splice(to,0,moved); drawOrder(locked); } });
+    });
+    document.getElementById(areaId+'-chk').onclick=()=>{ checks++; const lockedNow=[]; let allRight=true;
+      rows.forEach((r,pos)=>{ if(order[pos]===pos) lockedNow.push(pos); else {allRight=false; r.classList.add('bad');} });
+      if(allRight){ const pts=Math.max(10,30-(checks-1)*6); score+=pts; kineScore(areaId,score);
+        kineMsg(areaId,`✅ <b>ORDERED!</b> <span class="why">${winWhy}</span> +${pts}`);
+        round++; setTimeout(()=>{ if(round>=rounds) kineDone(areaId,id,score); else newRound(); },1800); }
+      else { kineMsg(areaId,`🔁 <span class="why">Green rows are already in the right spot — keep dragging the rest.</span>`); setTimeout(()=>drawOrder(lockedNow),600); }
+    };
+  }
+  newRound();
+}
+
+/* ============ UNIT 1 · THE UNIVERSE & SOLAR SYSTEM ============ */
+/* u1 · ORBIT LAB — dial the orbital speed that balances gravity (S6E1.d) */
+const ORBITS=[
+ ["☿ <b>Mercury</b> orbits CLOSE to the sun, where gravity pulls hardest. Dial a HIGH speed so inertia can balance that strong pull.",82,"Close in, gravity is strong — only a fast sideways speed keeps the planet falling AROUND the sun instead of into it."],
+ ["♀ <b>Venus</b>, a little farther out. Gravity is slightly weaker — dial a fairly high speed.",66,"A bit less gravity than Mercury feels means a bit less speed keeps the orbit balanced."],
+ ["♁ <b>Earth</b>, in the habitable zone. Dial a medium orbital speed.",52,"At Earth's distance a medium speed (about 30 km/s in real life) balances the sun's pull."],
+ ["♂ <b>Mars</b>, farther from the sun. Gravity is weaker here — ease off the speed.",40,"Weaker pull this far out needs less sideways speed to stay in orbit."],
+ ["♃ <b>Jupiter</b>, far out where gravity is gentle. Dial a low-ish speed.",28,"Far from the sun the pull is gentle, so a slower orbit stays balanced."],
+ ["♆ <b>Neptune</b>, way out at the edge. Gravity is very weak — only a GENTLE speed is needed.",16,"Out here gravity barely tugs — too much speed and inertia flings the craft into deep space."]
+];
+GAMES.u1={title:"Orbit Lab",icon:"🛰️",id:"u1",unit:"u1",
+ desc:"Gravity pulls IN, inertia flies STRAIGHT. Dial the orbital speed that balances them and land the craft in the STABLE ORBIT band.",
+ start(areaId){
+  kineShell(areaId,'u1',this.title,this.desc,`<span>ORBIT <b id="${areaId}-r">1</b>/${ORBITS.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const probs=shuffle([...ORBITS]); let i=0,score=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=probs.length){ kineDone(areaId,'u1',score); return; }
+    document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    let firstTry=true; const [text,center,why]=probs[i]; const gw=12;
+    stage.innerHTML=`<div style="font-size:1.05rem">${text}</div>
+      <div class="ktrack"><div class="kgate" style="left:${center-gw/2}%;width:${gw}%"><label>STABLE ORBIT</label></div><div class="kcraft" id="${areaId}-cr">🛰️</div></div>
+      <input type="range" class="kslider" id="${areaId}-sl" min="0" max="100" step="1" value="0">
+      <div class="kdial">orbital speed: <b id="${areaId}-val">0</b></div>
+      <div style="text-align:center"><button class="gbtn" id="${areaId}-go">🚀 LAUNCH</button></div>`;
+    const sl=document.getElementById(areaId+'-sl'),val=document.getElementById(areaId+'-val');
+    const craft=document.getElementById(areaId+'-cr'),go=document.getElementById(areaId+'-go');
+    sl.oninput=()=>val.textContent=sl.value;
+    go.onclick=()=>{
+      go.disabled=true; sl.disabled=true;
+      const v=parseFloat(sl.value); const track=stage.querySelector('.ktrack');
+      craft.style.left=(v/100*(track.clientWidth-40))+'px';
+      setTimeout(()=>{
+        const hit=Math.abs(v-center)<=gw/2;
+        if(hit){ const pts=firstTry?14:7; score+=pts; kineScore(areaId,score);
+          kineMsg(areaId,`✅ <b>STABLE ORBIT!</b> <span class="why">${why}</span> +${pts}`); i++; setTimeout(draw,1600); }
+        else { firstTry=false;
+          kineMsg(areaId, v<center
+            ? `🌀 <b>Too slow — gravity wins!</b> <span class="why">Without enough speed the craft spirals INTO the sun. Dial it higher.</span>`
+            : `💫 <b>Too fast — inertia wins!</b> <span class="why">Too much speed flings the craft OFF into space. Dial it lower.</span>`);
+          setTimeout(()=>{ if(!document.body.contains(go))return; go.disabled=false; sl.disabled=false; craft.style.transition='none'; craft.style.left='0px'; setTimeout(()=>craft.style.transition='',30); },1100);
+        }
+      },1100);
+    };
+  }
+  draw();
+ }};
+
+/* u1b · SPACE ROCK SORT — comet / asteroid / meteoroid (S6E1.e) */
+GAMES.u1b={title:"Space Rock Sort",icon:"☄️",id:"u1b",unit:"u1",
+ desc:"Mission control needs every space rock filed correctly. DRAG each one onto comet, asteroid, or meteoroid.",
+ start(areaId){ binGame(areaId,'u1b',this.title,this.desc,[
+  ["Ice and dust that grows a glowing tail near the sun","C","Comets are 'dirty snowballs' — solar heat vaporizes their ice into a tail."],
+  ["Its tail always points AWAY from the sun","C","The solar wind blows a comet's gas and dust outward, away from the sun."],
+  ["A 'dirty snowball' from the cold outer solar system","C","Comets formed far out where ice survives; near the sun they light up."],
+  ["A rocky, metallic body orbiting between Mars and Jupiter","A","That region is the asteroid belt — home to most rocky leftovers."],
+  ["Ceres and Vesta are the largest of these","A","The biggest asteroids live in the belt; Ceres is even a dwarf planet."],
+  ["A dry, rocky chunk too small to be a planet","A","Asteroids are rocky/metallic and never grew big enough to be planets."],
+  ["A small rock or metal chunk drifting through space","M","A meteoroid is a small space rock — before it ever reaches our air."],
+  ["Smaller than an asteroid; it will glow as a meteor if it hits our air","M","In space it's a meteoroid; burning in the atmosphere it becomes a meteor."],
+  ["If a piece survives the fall and lands, it becomes a meteorite","M","Meteoroid in space → meteor in the air → meteorite on the ground."]
+ ],[
+  {t:"C",label:"COMET",emoji:"☄️",sub:"ice + tail"},
+  {t:"A",label:"ASTEROID",emoji:"🪨",sub:"rocky belt"},
+  {t:"M",label:"METEOROID",emoji:"✨",sub:"small chunk"}
+ ]); }};
+
+/* ============ UNIT 2 · SUN, EARTH & MOON ============ */
+/* u2 · PHASE DIAL — spin the moon to match a target phase (S6E2.a) */
+const PHASE_SEQ=['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
+const moonAt=pos=>PHASE_SEQ[Math.round(pos/100*8)%8];
+const PHASES=[
+ ["Waxing Crescent 🌒",12,"Just past new — a thin sliver lit on the RIGHT, growing toward first quarter."],
+ ["First Quarter 🌓",25,"A quarter of the way around — the RIGHT half is lit. ('Quarter' = quarter of the CYCLE.)"],
+ ["Waxing Gibbous 🌔",38,"Past first quarter, heading to full — more than half lit and still GROWING."],
+ ["Full Moon 🌕",50,"Halfway around: the moon sits opposite the sun, so we see its entire lit face."],
+ ["Waning Gibbous 🌖",62,"Just past full — more than half lit, but now SHRINKING (waning)."],
+ ["Third Quarter 🌗",75,"Three-quarters around — now the LEFT half is lit."],
+ ["Waning Crescent 🌘",88,"Almost back to new — a sliver lit on the LEFT, still shrinking."]
+];
+GAMES.u2={title:"Phase Dial",icon:"🌙",id:"u2",unit:"u2",
+ desc:"The moon shows phases as it orbits Earth. Dial it to the spot that makes the target phase — watch the moon change as you turn the wheel.",
+ start(areaId){
+  kineShell(areaId,'u2',this.title,this.desc,`<span>PHASE <b id="${areaId}-r">1</b>/${PHASES.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const probs=shuffle([...PHASES]); let i=0,score=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=probs.length){ kineDone(areaId,'u2',score); return; }
+    document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    let firstTry=true; const [name,center,why]=probs[i]; const gw=12;
+    stage.innerHTML=`<div style="font-size:1.05rem">Dial the moon to: <b>${name}</b></div>
+      <div style="text-align:center;font-size:3rem;margin:4px 0" id="${areaId}-moon">🌑</div>
+      <div class="ktrack"><div class="kgate" style="left:${center-gw/2}%;width:${gw}%"><label>here</label></div><div class="kcraft" id="${areaId}-cr">🌙</div></div>
+      <input type="range" class="kslider" id="${areaId}-sl" min="0" max="100" step="1" value="0">
+      <div class="kdial">position in orbit: <b id="${areaId}-val">0</b></div>
+      <div style="text-align:center"><button class="gbtn" id="${areaId}-go">🌙 LOCK IT IN</button></div>`;
+    const sl=document.getElementById(areaId+'-sl'),val=document.getElementById(areaId+'-val');
+    const craft=document.getElementById(areaId+'-cr'),go=document.getElementById(areaId+'-go'),moon=document.getElementById(areaId+'-moon');
+    const track=stage.querySelector('.ktrack');
+    sl.oninput=()=>{ val.textContent=sl.value; moon.textContent=moonAt(+sl.value); craft.style.left=(sl.value/100*(track.clientWidth-40))+'px'; };
+    go.onclick=()=>{
+      const v=parseFloat(sl.value); const hit=Math.abs(v-center)<=gw/2;
+      if(hit){ go.disabled=true; sl.disabled=true; const pts=firstTry?14:7; score+=pts; kineScore(areaId,score);
+        kineMsg(areaId,`✅ <b>${name}!</b> <span class="why">${why}</span> +${pts}`); i++; setTimeout(draw,1700); }
+      else { firstTry=false; kineMsg(areaId, v<center
+        ? `❌ <b>Not yet — turn the wheel FORWARD a bit.</b> <span class="why">You're earlier in the cycle than ${name.split(' ').slice(0,2).join(' ')}.</span>`
+        : `❌ <b>Too far — turn the wheel BACK a bit.</b> <span class="why">You've gone past ${name.split(' ').slice(0,2).join(' ')}.</span>`); }
+    };
+  }
+  draw();
+ }};
+
+/* u2b · ECLIPSE ALIGNER — slide the moon to make solar/lunar eclipses (S6E2.b) */
+const ECLIPSES=[
+ ["SOLAR eclipse",22,"Solar eclipse: the moon moves BETWEEN the sun and Earth (a NEW moon), casting its shadow on Earth.","☀️ → 🌑 → 🌍"],
+ ["LUNAR eclipse",78,"Lunar eclipse: EARTH is between the sun and moon (a FULL moon), so Earth's shadow falls on the moon.","☀️ → 🌍 → 🌕"],
+ ["SOLAR eclipse",22,"Remember: sun, then MOON, then Earth. The moon blocks the sun for a narrow strip of Earth.","☀️ → 🌑 → 🌍"],
+ ["LUNAR eclipse",78,"Remember: sun, then EARTH, then moon. The whole night side of Earth can watch it.","☀️ → 🌍 → 🌕"],
+ ["SOLAR eclipse",22,"Only possible at new moon, when the moon sits between us and the sun.","☀️ → 🌑 → 🌍"],
+ ["LUNAR eclipse",78,"Only possible at full moon, when Earth sits between the sun and the moon.","☀️ → 🌍 → 🌕"]
+];
+GAMES.u2b={title:"Eclipse Aligner",icon:"🌑",id:"u2b",unit:"u2",
+ desc:"The sun is on the left, Earth in the middle. SLIDE the moon along its orbit to line up the eclipse mission control asks for.",
+ start(areaId){
+  kineShell(areaId,'u2b',this.title,this.desc,`<span>ALIGN <b id="${areaId}-r">1</b>/${ECLIPSES.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const probs=shuffle([...ECLIPSES]); let i=0,score=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=probs.length){ kineDone(areaId,'u2b',score); return; }
+    document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    let firstTry=true; const [name,center,why,diagram]=probs[i]; const gw=16;
+    stage.innerHTML=`<div style="font-size:1.05rem">Line up a <b>${name}</b>.</div>
+      <div style="display:flex;justify-content:space-between;font-size:1.6rem;margin:6px 4px 0"><span>☀️ sun</span><span>🌍 Earth</span></div>
+      <div class="ktrack"><div class="kgate" style="left:${center-gw/2}%;width:${gw}%"><label>line up</label></div><div class="kcraft" id="${areaId}-cr">🌕</div></div>
+      <input type="range" class="kslider" id="${areaId}-sl" min="0" max="100" step="1" value="50">
+      <div class="kdial">moon position: <b id="${areaId}-val">50</b></div>
+      <div style="text-align:center"><button class="gbtn" id="${areaId}-go">🌑 ALIGN</button></div>`;
+    const sl=document.getElementById(areaId+'-sl'),val=document.getElementById(areaId+'-val');
+    const craft=document.getElementById(areaId+'-cr'),go=document.getElementById(areaId+'-go'),track=stage.querySelector('.ktrack');
+    const place=()=>craft.style.left=(sl.value/100*(track.clientWidth-40))+'px';
+    sl.oninput=()=>{ val.textContent=sl.value; place(); }; setTimeout(place,20);
+    go.onclick=()=>{
+      const v=parseFloat(sl.value); const hit=Math.abs(v-center)<=gw/2;
+      if(hit){ go.disabled=true; sl.disabled=true; const pts=firstTry?14:7; score+=pts; kineScore(areaId,score);
+        kineMsg(areaId,`✅ <b>Aligned!</b> ${diagram} <span class="why">${why}</span> +${pts}`); i++; setTimeout(draw,1900); }
+      else { firstTry=false; kineMsg(areaId,`❌ <b>Not lined up yet.</b> <span class="why">For a ${name}, the order must be ${diagram}. Slide the moon to the highlighted band.</span>`); }
+    };
+  }
+  draw();
+ }};
+
+/* ============ UNIT 3 · WATER ON EARTH ============ */
+/* u3 · RESERVOIR RUN — salt vs fresh (S6E3.a) */
+GAMES.u3={title:"Reservoir Run",icon:"💧",id:"u3",unit:"u3",
+ desc:"Almost all of Earth's water is salty. SWIPE each water source — left for salt, right for fresh.",
+ start(areaId){ swipeGame(areaId,'u3',this.title,this.desc,[
+  ["The Pacific Ocean","L","Oceans hold about 97% of Earth's water — all of it salty."],
+  ["A mountain glacier","R","Glaciers and ice caps are the single biggest store of FRESH water."],
+  ["An underground aquifer","R","Aquifers hold fresh groundwater that wells pump to the surface."],
+  ["The Atlantic Ocean","L","Another ocean basin — salt water like all the rest."],
+  ["A freshwater lake","R","Lakes and rivers are fresh — but only a tiny sliver of Earth's water."],
+  ["A sea","L","Seas are arms of the salty ocean."],
+  ["An iceberg","R","Icebergs are frozen FRESH water that broke off glaciers."],
+  ["Water in a swamp","R","Wetlands and swamps are fresh water."],
+  ["Salty ocean spray","L","Straight from the sea — salt water."],
+  ["Rain falling from a cloud","R","Evaporation leaves the salt behind, so rain is fresh."]
+ ],{emoji:"🌊",label:"SALT"},{emoji:"💧",label:"FRESH"}); }};
+
+/* u3b · WATER CYCLE STATIONS — evaporation / condensation / precipitation (S6E3.b) */
+GAMES.u3b={title:"Water Cycle Stations",icon:"🌧️",id:"u3b",unit:"u3",
+ desc:"The sun runs the water cycle. DRAG each event to the right step — evaporation, condensation, or precipitation.",
+ start(areaId){ binGame(areaId,'u3b',this.title,this.desc,[
+  ["The sun heats a lake and water rises as invisible vapor","E","Evaporation: the sun's energy turns liquid water into water vapor."],
+  ["Puddles vanishing on a hot afternoon","E","The sun evaporates the puddle — liquid becomes vapor and floats away."],
+  ["Liquid water turning into a gas","E","That state change, powered by the sun, is evaporation."],
+  ["Sweat off the ocean — water vapor leaving the sea surface","E","Ocean evaporation is the biggest source of water vapor on Earth."],
+  ["Water vapor cools and forms tiny cloud droplets","C","Condensation: rising vapor cools and turns back into liquid droplets."],
+  ["Dew forming on cool morning grass","C","Vapor condenses into liquid water on the cold surface."],
+  ["Fog forming over a cold lake","C","Condensation again — vapor becoming visible liquid droplets."],
+  ["Rain, snow, sleet, or hail falling to the ground","P","Precipitation: water falling from clouds back to Earth."],
+  ["A thunderstorm dumping heavy rain","P","Rain is precipitation — water returning to the surface."],
+  ["Snow piling up on a mountain","P","Snow is frozen precipitation."]
+ ],[
+  {t:"E",label:"EVAPORATION",emoji:"☀️",sub:"liquid → vapor"},
+  {t:"C",label:"CONDENSATION",emoji:"☁️",sub:"vapor → liquid"},
+  {t:"P",label:"PRECIPITATION",emoji:"🌧️",sub:"falls to Earth"}
+ ]); }};
+
+/* ============ UNIT 4 · WEATHER & CLIMATE ============ */
+/* u4 · ATMOSPHERE STACK — order the layers (S6E4.a) */
+GAMES.u4={title:"Atmosphere Stack",icon:"🌍",id:"u4",unit:"u4",
+ desc:"Build the atmosphere from space DOWN to the ground. Drag the four layers into the right order, highest at the top.",
+ start(areaId){ orderGame(areaId,'u4',this.title,this.desc,
+  [["🛰️","Thermosphere — highest, thinnest air; auroras glow here"],
+   ["☄️","Mesosphere — coldest layer; meteors burn up here"],
+   ["🛡️","Stratosphere — steady air; the ozone layer lives here"],
+   ["⛅","Troposphere — ground level; all our weather happens here"]],
+  "Drag so the <b>HIGHEST layer (space) is on top</b> and <b>ground level is at the bottom</b>:",
+  "From the top down: thermosphere → mesosphere → stratosphere → troposphere. Weather lives in the bottom layer, the troposphere."); }};
+
+/* u4b · FRONT FORECASTER — cold vs warm front (S6E4.d) */
+GAMES.u4b={title:"Front Forecaster",icon:"⛈️",id:"u4b",unit:"u4",
+ desc:"You're on the air as the meteorologist. SWIPE each clue — left for a cold front, right for a warm front.",
+ start(areaId){ swipeGame(areaId,'u4b',this.title,this.desc,[
+  ["Brief, violent thunderstorms, then cooler, clearing skies","L","Cold fronts shove warm air up FAST — quick storms, then cooler and clear."],
+  ["Long hours of steady, gentle rain, then it turns warmer","R","Warm fronts slide up gently — drizzle and steady rain, then warmth."],
+  ["Temperature DROPS after it passes","L","Cold air moving in behind the front drops the temperature."],
+  ["Temperature RISES after it passes","R","Warm air takes over behind a warm front."],
+  ["A steep boundary that shoves air upward quickly","L","The cold front's steep edge forces rapid lifting — and tall storm clouds."],
+  ["A gentle, gradual slope of advancing warm air","R","Warm fronts rise slowly, spreading wide sheets of light rain."],
+  ["Can spark tornadoes along its sharp leading edge","L","The fast, violent lift of a cold front can trigger severe storms."],
+  ["Brings drizzle and high wispy clouds well ahead of it","R","Warm fronts announce themselves early with high clouds and drizzle."]
+ ],{emoji:"❄️",label:"COLD FRONT"},{emoji:"🌡️",label:"WARM FRONT"}); }};
+
+/* ============ UNIT 5 · EARTH'S SURFACE ============ */
+/* u5 · CORE DESCENT — tap Earth's layers (S6E5.a) */
+GAMES.u5={title:"Core Descent",icon:"🌋",id:"u5",unit:"u5",
+ desc:"No multiple choice — TAP Earth's layers directly on the cross-section. Find each one from its clue.",
+ start(areaId){
+  const PR=[
+   [0,"Tap the <b>CRUST</b> — the thin rocky layer we live on.","The crust is Earth's thin, cool outer skin; oceans and continents ride on it."],
+   [1,"Tap the <b>MANTLE</b> — Earth's thickest layer.","The mantle is hot rock that flows very slowly, and it's by far the thickest layer."],
+   [2,"Tap the <b>LIQUID</b> layer of molten metal.","The outer core is liquid iron and nickel — the only liquid layer."],
+   [3,"Tap the <b>solid metal center</b>.","The inner core is solid iron-nickel, squeezed solid by immense pressure."],
+   [1,"Tap the layer where hot rock <b>flows slowly</b> and drives the plates.","The mantle — solid rock that creeps along over millions of years."],
+   [3,"Tap the <b>HOTTEST</b> layer of all.","The inner core is the hottest layer, yet stays solid under crushing pressure."],
+   [0,"Tap the <b>thinnest, coolest</b> layer.","The crust — thin, cool, and home to everything we know."],
+   [2,"Tap the layer whose churning creates Earth's <b>magnetic field</b>.","The liquid outer core — swirling molten metal generates the magnetic field."]
+  ];
+  kineShell(areaId,'u5',this.title,this.desc,`<span>FIND <b id="${areaId}-r">1</b>/${PR.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const order=shuffle([...PR]); let i=0,score=0,tries=0;
+  const W=300,H=300,cx=150,cy=150;
+  const bandOf=d=> d<=35?3 : d<=70?2 : d<=122?1 : d<=150?0 : -1;
+  stage.innerHTML=`<div id="${areaId}-q" style="font-size:1.05rem;margin-bottom:6px"></div>
+    <svg id="${areaId}-svg" viewBox="0 0 ${W} ${H}" style="max-width:320px;width:100%;cursor:crosshair;touch-action:none;display:block;margin:4px auto">
+      <circle cx="${cx}" cy="${cy}" r="150" fill="#6f6048"/>
+      <circle cx="${cx}" cy="${cy}" r="122" fill="#c0612e"/>
+      <circle cx="${cx}" cy="${cy}" r="70" fill="#e8a33d"/>
+      <circle cx="${cx}" cy="${cy}" r="35" fill="#ffe06b"/>
+      <circle cx="${cx}" cy="${cy}" r="150" fill="none" stroke="#1B2440" stroke-width="2"/>
+      <g id="${areaId}-mk"></g>
+    </svg>`;
+  const svg=document.getElementById(areaId+'-svg'), qEl=document.getElementById(areaId+'-q'), mk=document.getElementById(areaId+'-mk');
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=order.length){ kineDone(areaId,'u5',score); return; }
+    tries=0; qEl.innerHTML=`<b>${i+1} of ${order.length}:</b> ${order[i][1]}`;
+    document.getElementById(areaId+'-r').textContent=i+1; mk.innerHTML=''; kineMsg(areaId,'');
+  }
+  svg.addEventListener('pointerdown',e=>{
+    if(i>=order.length) return;
+    const [px,py]=svgXY(svg,e,W,H); const d=Math.hypot(px-cx,py-cy); const b=bandOf(d);
+    tries++;
+    mk.innerHTML+=`<circle cx="${px}" cy="${py}" r="6" fill="${b===order[i][0]?'#5ad08a':'#f08c8c'}" stroke="#fff" stroke-width="2"/>`;
+    if(b===order[i][0]){ const pts=tries===1?12:tries===2?7:4; score+=pts; kineScore(areaId,score);
+      kineMsg(areaId,`✅ <b>Found it!</b> <span class="why">${order[i][2]}</span> +${pts}`);
+      i++; setTimeout(draw,1500);
+    } else { kineMsg(areaId,`❌ <b>Not that layer.</b> <span class="why">${tries>=2?order[i][2]+' Look '+(order[i][0]>b?'deeper toward the center':'nearer the surface')+'.':'Try again — look '+(order[i][0]>b?'deeper toward the center.':'nearer the surface.')}</span>`); }
+  });
+  draw();
+ }};
+
+/* u5b · ROCK CYCLE SORT — igneous / sedimentary / metamorphic (S6E5.c) */
+GAMES.u5b={title:"Rock Cycle Sort",icon:"🪨",id:"u5b",unit:"u5",
+ desc:"Rocks are filed by how they FORM. Drag each clue onto igneous, sedimentary, or metamorphic.",
+ start(areaId){ binGame(areaId,'u5b',this.title,this.desc,[
+  ["Cooled and hardened from melted magma or lava","I","Igneous rock forms when molten rock cools and solidifies."],
+  ["Granite, formed by slow cooling deep underground","I","Slow cooling grows big crystals — that's igneous granite."],
+  ["Basalt, formed when lava cools quickly at the surface","I","Fast-cooling lava makes fine-grained igneous basalt."],
+  ["Made of compacted, cemented layers of sediment","S","Sedimentary rock builds up from pressed and glued sediment layers."],
+  ["The rock type where fossils are usually found","S","Fossils are preserved in sedimentary layers, not melted igneous rock."],
+  ["Sandstone, formed from pressed-together sand","S","Layers of sand cemented over time make sedimentary sandstone."],
+  ["Changed by intense heat and pressure underground","M","Metamorphic rock is existing rock transformed by heat and pressure."],
+  ["Marble, transformed from limestone","M","Heat and pressure turn sedimentary limestone into metamorphic marble."],
+  ["Slate, transformed from shale","M","Squeezed shale becomes hard, flat metamorphic slate."]
+ ],[
+  {t:"I",label:"IGNEOUS",emoji:"🌋",sub:"cooled magma"},
+  {t:"S",label:"SEDIMENTARY",emoji:"🏖️",sub:"pressed layers"},
+  {t:"M",label:"METAMORPHIC",emoji:"💎",sub:"heat + pressure"}
+ ]); }};
+
+/* ============ UNIT 6 · NATURAL RESOURCES ============ */
+/* u6 · POWER GRID — renewable vs nonrenewable (S6E6.a) */
+GAMES.u6={title:"Power Grid",icon:"⚡",id:"u6",unit:"u6",
+ desc:"You're powering a city. SWIPE each energy source — left for renewable, right for nonrenewable.",
+ start(areaId){ swipeGame(areaId,'u6',this.title,this.desc,[
+  ["Solar panels on a rooftop","L","Sunlight is renewable — it won't run out on any human timescale."],
+  ["A coal-burning power plant","R","Coal is a fossil fuel — millions of years to form, and it won't come back."],
+  ["A wind farm","L","Wind is renewable; the air keeps moving as long as the sun shines."],
+  ["Natural gas piped from underground","R","Natural gas is a nonrenewable fossil fuel."],
+  ["A hydroelectric dam","L","Falling water is renewable — the water cycle refills the reservoir."],
+  ["Oil (petroleum) from a well","R","Oil is a fossil fuel — limited and nonrenewable."],
+  ["Geothermal heat from deep underground","L","Earth's interior heat is effectively endless — a renewable source."],
+  ["Uranium for a nuclear reactor","R","Uranium is mined and limited — a nonrenewable fuel."],
+  ["Tidal energy from ocean tides","L","Tides come from the moon's gravity — renewable and reliable."],
+  ["Biomass burned from replanted crops","L","Biomass regrows when replanted, so it counts as renewable."]
+ ],{emoji:"♻️",label:"RENEWABLE"},{emoji:"🛢️",label:"NONRENEWABLE"}); }};
+
+/* u6b · CONSERVATION CREW — match the solution to the resource (S6E6.b) */
+GAMES.u6b={title:"Conservation Crew",icon:"🌱",id:"u6b",unit:"u6",
+ desc:"Every solution protects a resource. Drag each conservation method onto water, soil, or air.",
+ start(areaId){ binGame(areaId,'u6b',this.title,this.desc,[
+  ["Installing low-flow faucets and showerheads","W","Low-flow fixtures cut how much water we use — a water-saving solution."],
+  ["Collecting rain in a rain barrel","W","Catching rainwater saves treated water for the garden — protects water."],
+  ["Protecting wetlands and watersheds","W","Healthy wetlands filter and store fresh water."],
+  ["Planting cover crops between harvests","So","Cover crops hold soil in place and rebuild its nutrients."],
+  ["Terracing a hillside to slow erosion","So","Terraces stop rain from washing soil down the slope."],
+  ["No-till farming that leaves roots in the ground","So","Leaving roots and stalks shields soil from washing or blowing away."],
+  ["Putting scrubbers on factory smokestacks","A","Scrubbers strip pollutants out of exhaust before it reaches the air."],
+  ["Using catalytic converters in cars","A","Converters clean harmful gases from a car's exhaust — protects air."],
+  ["Switching to cleaner electric buses","A","Electric transport cuts the exhaust that pollutes the air."]
+ ],[
+  {t:"W",label:"WATER",emoji:"💧",sub:""},
+  {t:"So",label:"SOIL",emoji:"🌱",sub:""},
+  {t:"A",label:"AIR",emoji:"💨",sub:""}
+ ]); }};
+
 /* ---------- shared kinesthetic helpers ---------- */
 function kineShell(areaId,id,title,desc,hud){
   document.getElementById(areaId).innerHTML = `
@@ -2404,7 +2841,14 @@ const STD_TAGS = {
  /* --- Unit 6 lessons --- */
  "u6:L0":["S6E6.a"], "u6:L1":["S6E6.a"], "u6:L2":["S6E6.b"], "u6:L3":["S6E6.c"], "u6:L4":["S6E6.c"],
  /* --- Unit 6 videos --- */
- "u6:V0":["S6E6.a"], "u6:V1":["S6E6.a"], "u6:V2":["S6E6.b"], "u6:V3":["S6E6.c"], "u6:V4":["S6E6.c"]
+ "u6:V0":["S6E6.a"], "u6:V1":["S6E6.a"], "u6:V2":["S6E6.b"], "u6:V3":["S6E6.c"], "u6:V4":["S6E6.c"],
+ /* --- Minigames (keyed by game id) --- */
+ "u1":["S6E1.d"], "u1b":["S6E1.e"],
+ "u2":["S6E2.a"], "u2b":["S6E2.b"],
+ "u3":["S6E3.a"], "u3b":["S6E3.b"],
+ "u4":["S6E4.a"], "u4b":["S6E4.d"],
+ "u5":["S6E5.a"], "u5b":["S6E5.c"],
+ "u6":["S6E6.a"], "u6b":["S6E6.b"]
 };
 
 /* ---------- per-question sub-standard tags for the practice quizzes
