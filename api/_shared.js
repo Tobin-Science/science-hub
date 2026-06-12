@@ -20,12 +20,14 @@ export function pickOrigin(request) {
   return ALLOWED_ORIGINS.includes(o) ? o : SITE_ORIGIN;
 }
 
-// subject + interval  ->  Stripe price id (set as Vercel env vars; never secret).
+// subject + interval  ->  LIVE Stripe price id (price ids are not secret).
+// Hardcoded at go-live so it didn't require re-entering 8 Vercel env vars;
+// the old STRIPE_PRICE_* env vars are no longer read.
 export const PRICE = {
-  physical: { month: process.env.STRIPE_PRICE_PHYSICAL_MONTH, year: process.env.STRIPE_PRICE_PHYSICAL_YEAR },
-  earth:    { month: process.env.STRIPE_PRICE_EARTH_MONTH,    year: process.env.STRIPE_PRICE_EARTH_YEAR },
-  life:     { month: process.env.STRIPE_PRICE_LIFE_MONTH,     year: process.env.STRIPE_PRICE_LIFE_YEAR },
-  bundle:   { month: process.env.STRIPE_PRICE_BUNDLE_MONTH,   year: process.env.STRIPE_PRICE_BUNDLE_YEAR },
+  physical: { month: 'price_1ThcLtAe6srL0hOFHRHkZplH', year: 'price_1ThcLtAe6srL0hOFDuJ92UB1' },
+  earth:    { month: 'price_1ThcLsAe6srL0hOF5RyvTiRk', year: 'price_1ThcLsAe6srL0hOF5y3x5FsR' },
+  life:     { month: 'price_1ThcLtAe6srL0hOFdnACCjKP', year: 'price_1ThcLsAe6srL0hOFD9oH9PNb' },
+  bundle:   { month: 'price_1ThcLtAe6srL0hOFCic7ccEE', year: 'price_1ThcLtAe6srL0hOF55RcJl0T' },
 };
 
 // Service-role client: trusted server-side writes (bypasses row-level security).
