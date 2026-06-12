@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- Supabase client (teacher accounts) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
   --ink:#1B2440; --ink2:#3A4566; --paper:#F4F7FB; --card:#FFFFFF; --line:#DEE5F0;
@@ -250,6 +252,34 @@ tr:nth-child(even) td{background:#F7FAFD}
 body.onstart nav{display:none}
 #page-start .startnote{margin-top:26px;font-size:.85rem;opacity:.65}
 /* educator */
+.teachacct{display:flex;align-items:center;justify-content:flex-end;gap:10px;font-size:.85rem;color:var(--ink2);margin:0 0 6px;flex-wrap:wrap}
+.teachacct b{color:var(--ink)}
+.teachacct button{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:5px 12px;font:inherit;font-size:.82rem;cursor:pointer;color:var(--ink2)}
+.teachacct button:hover{border-color:var(--ac);color:var(--ac)}
+.asncol{display:flex;flex-direction:column;gap:14px}
+.aglabel{display:flex;flex-direction:column;gap:6px;font-size:.9rem;font-weight:700;color:var(--ink2)}
+.aglabel input{border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font:inherit;font-size:1rem;font-weight:400}
+.aglabel input:focus{outline:none;border-color:var(--ac)}
+.agmsg{margin:0;font-size:.9rem;min-height:1.2em}
+.agmsg.err{color:#c0392b}
+.agmsg.ok{color:#2f7a4d}
+.agtoggle{margin:0;font-size:.9rem;color:var(--ink2)}
+.agtoggle a{font-weight:700}
+.storegrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:760px;margin:10px 0 0}
+@media(max-width:680px){.storegrid{grid-template-columns:1fr}}
+.storecard{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:24px 20px;display:flex;flex-direction:column;gap:8px}
+.storecard--bundle{border:2px solid var(--ac);background:#EDEFFD}
+.storecard h3{margin:0;font-size:1.25rem}
+.storesub{margin:0 0 8px;font-size:.9rem;color:var(--ink2)}
+.storecard .genbtn{margin-top:auto;font-size:1.2rem}
+.storecard .genbtn span{font-size:.82rem;font-weight:600;opacity:.85}
+.storealt{background:none;border:none;color:var(--ac);font:inherit;font-size:.86rem;font-weight:700;cursor:pointer;padding:6px 2px 0;text-decoration:underline;align-self:flex-start}
+.storebadge{position:absolute;top:-11px;right:16px;background:var(--ac);color:#fff;font-size:.72rem;font-weight:800;padding:3px 11px;border-radius:99px;letter-spacing:.02em}
+.trialcta{background:#EAF6EF;border:2px solid #2f7a4d;border-radius:14px;padding:18px 20px;margin:0 0 18px;max-width:760px}
+.trialcta .trialbtn{background:#2f7a4d;font-size:1.05rem}
+.trialfine{margin:10px 0 0;font-size:.8rem;color:var(--ink2)}
+.trialnote{background:#FFF7E8;border:1.5px solid #E8C558;border-radius:12px;padding:12px 16px;margin:0 0 18px;max-width:760px;font-size:.92rem;line-height:1.5}
+.trialnote.ok{background:#EAF6EF;border-color:#2f7a4d}
 .stdgroup{background:#fff;color:#1B2440;border-radius:14px;padding:14px 16px;margin:12px 0;border-left:6px solid var(--ac)}
 .stdparent{display:block;font-size:1.02rem;margin-bottom:6px;cursor:pointer}
 .stdunit{font-family:var(--mono);font-size:.72rem;background:var(--ac);color:#fff;border-radius:99px;padding:2px 9px;margin-left:6px;vertical-align:middle}
@@ -342,6 +372,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 @media print{
   body.printing > *:not(#printreport){display:none !important}
   body.printing #asnbanner{display:none !important}
+  body.onstart #asnbanner{display:none !important}
   body.printing{background:#fff}
 }
 #printreport h1{font-size:1.5rem;margin:0 0 10px;border-bottom:3px solid #000;padding-bottom:8px}
@@ -482,6 +513,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 
 <!-- ============ PHASE 1: EDUCATOR (standards picker + live preview) ============ -->
 <section class="page" id="page-teach">
+  <div id="teachacct" class="teachacct"></div>
   <p class="eyebrow">Educator Mode</p>
   <h1>Build an assignment for your class.</h1>
   <p class="lead">Step 1: check every standard your current unit covers. The panel on the right shows exactly which study guides, games, videos, and PhET labs match — live.</p>
@@ -615,6 +647,40 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
   <p style="margin-top:8px"><a href="#" onclick="go('start');return false" style="font-size:.9rem">← Back to start</a></p>
 </section>
 
+<!-- ============ TEACHER SIGN-IN GATE (wraps Educator Mode) ============ -->
+<section class="page" id="page-teachgate">
+  <p class="eyebrow">Educator Mode</p>
+  <h1 id="ag-title">Teacher sign-in</h1>
+  <p class="lead" id="ag-lead">Your teacher tools — assignment builder, gradebook, and printable library — live behind a free account. Sign in, or create one in a few seconds.</p>
+
+  <div class="card" style="max-width:460px;border:2px solid var(--ac)">
+    <div class="asncol">
+      <label class="aglabel">Email
+        <input id="ag-email" type="email" autocomplete="email" placeholder="you@school.org">
+      </label>
+      <label class="aglabel">Password
+        <input id="ag-pass" type="password" autocomplete="current-password" placeholder="••••••••">
+      </label>
+      <button class="genbtn" id="ag-submit" onclick="authSubmit()">Sign in</button>
+      <p id="ag-msg" class="agmsg"></p>
+      <p class="agtoggle">
+        <span id="ag-switchtxt">New here?</span>
+        <a href="#" id="ag-switch" onclick="authToggleMode();return false">Create an account →</a>
+      </p>
+    </div>
+  </div>
+
+  <p class="startnote" style="margin-top:18px">👩‍🎓 <b>Students never need an account.</b> They just open the assignment link you send — this sign-in is only for teacher tools.</p>
+  <p style="margin-top:6px"><a href="#" onclick="go('start');return false" style="font-size:.9rem">← Back to start</a></p>
+</section>
+
+<!-- ============ STOREFRONT (subscribe to unlock Educator Mode) ============ -->
+<section class="page" id="page-store">
+  <div id="storeacct" class="teachacct"></div>
+  <div id="storebody"></div>
+  <p style="margin-top:14px"><a href="#" onclick="go('start');return false" style="font-size:.9rem">← Back to start</a></p>
+</section>
+
 <!-- ============ PHASE 1: ASSIGNMENT-LINK LANDING (full mode = Phase 3) ============ -->
 <section class="page" id="page-assign">
   <p class="eyebrow">Class Assignment</p>
@@ -633,7 +699,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <div class="card"><h3>1 · Study</h3><p>Open a unit and read the study guide. Each lesson card has the key idea, the formula if there is one, and the classic mistake to avoid.</p></div>
     <div class="card"><h3>2 · Drill</h3><p>Flip through the flashcards until you can define every term without peeking. Shuffle them so you're not just memorizing the order.</p></div>
     <div class="card"><h3>3 · Test yourself</h3><p>Take the practice quiz. You get instant feedback and an explanation on every single question — wrong answers teach you the most.</p></div>
-    <div class="card"><h3>4 · Play</h3><p>Hit the Arcade. Beat your high score in the unit minigame, then take on the full Science Quest adventure.</p></div>
+    <div class="card"><h3>4 · Play</h3><p>Hit the Arcade. Beat your high score in every unit minigame.</p></div>
   </div>
 
   <h2>Your progress</h2>
@@ -657,13 +723,6 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
   <h1>Play your way to an A.</h1>
   <p class="lead">Every game here drills a skill straight off the unit test. Chase a streak, beat your high score, and you'll be studying without noticing.</p>
   <div class="arcadegrid" id="arcadegrid"></div>
-
-  <h2>⚔️ Science Quest — the full adventure</h2>
-  <div class="card">
-    <p><b>Science Quest</b> is the complete RPG: explore zones, battle in arenas, earn gear, and clear minigames covering all five standards — element sorting, heating curves, motion graph racing, the conservation Ferris wheel, wave tuning, circuit sorting, turbine building, and more.</p>
-    <p style="margin-top:8px"><button class="bigbtn" style="--ac:var(--ink)" onclick="launchQuest()">▶ Launch Science Quest</button></p>
-    <p id="questnote" style="font-size:.85rem;color:var(--ink2);margin-top:8px">Teacher note: place <span style="font-family:var(--mono)">science_quest.html</span> in the same folder as this page (or update the filename in the launch button) and the button will open it in a new tab.</p>
-  </div>
 </section>
 
 <!-- ================= VOCAB ================= -->
@@ -1395,6 +1454,17 @@ function toast(msg){
    ROUTER
    ========================================================= */
 function go(id){
+  /* teacher tools + printables require a paid (or district) account */
+  if(id==='teach' || id==='print'){
+    if(id==='teach') go.mode='teach';
+    if(typeof teacherSignedIn==='function'){
+      if(!teacherSignedIn()) id='teachgate';                                   // not signed in → sign-in gate
+      else if(typeof entHasAccess==='function'){
+        const ok = (id==='print') ? entPrintAccess(HUB_SUBJECT) : entHasAccess(HUB_SUBJECT);
+        if(!ok) id='store';                                                    // signed in, no access → storefront
+      }
+    }
+  }
   if(!document.getElementById('page-'+id)) return;
   /* remember which side of the chooser the visitor is on: entering Educator Mode
      sets teacher mode; entering the student home (via the chooser card) clears it */
@@ -1408,6 +1478,7 @@ function go(id){
   if(id==='home'){ renderProgress(); renderBadges(); }
   if(id==='vocab') updateMissedCount();
   if(id==='teach') buildTeach();
+  if(id==='store' && typeof buildStore==='function') buildStore();
   document.body.classList.toggle('onstart', id==='start');
   if(typeof updateAsnBanner==='function') updateAsnBanner();
 }
@@ -1526,8 +1597,7 @@ function renderGamePicker(uid, startKey){
     <div class="subtabs" style="margin-bottom:14px">${games.map(([k,g])=>
       `<button class="subtab ${k===key?'active':''}" style="--ac:${u.hex}" onclick="renderGamePicker('${uid}','${k}')">${g.icon} ${g.title}</button>`).join('')}
     </div>
-    <div id="${uid}-gamearea"></div>
-    <p style="font-size:.88rem;color:var(--ink2);margin-top:14px">🗺️ <b>Want the full adventure versions?</b> In <b>Science Quest</b>, head to ${SQ_SIGNPOSTS[uid]}. <a href="#" onclick="go('arcade');return false">Launch it from the Arcade →</a></p>`;
+    <div id="${uid}-gamearea"></div>`;
   GAMES[key].start(uid+'-gamearea');
 }
 
@@ -5123,13 +5193,289 @@ if(savedAsn && savedAsn.code){
   if(c) ASN = {cfg:c, code:savedAsn.code, name:savedAsn.name, key:nameKey(savedAsn.name)};
 }
 const startHash = location.hash.slice(1);
-if(startHash.startsWith('a=')) handleAssignmentHash();
-else if(ASN) updateAsnBanner();
-else if(startHash && document.getElementById('page-'+startHash)) go(startHash);
-else { document.getElementById('page-home').classList.remove('show'); go('start'); }
+if(startHash.startsWith('a=')) handleAssignmentHash();                         // student assignment link → straight to checklist
+else if(startHash && document.getElementById('page-'+startHash)) go(startHash); // explicit deep link → that page
+else { if(ASN) updateAsnBanner(); document.getElementById('page-home').classList.remove('show'); go('start'); } // plain visit → student/teacher chooser
 window.addEventListener('hashchange', ()=>{ const h=location.hash.slice(1);
   if(h.startsWith('a=')) handleAssignmentHash();
   else if(h && document.getElementById('page-'+h)) go(h); });
+/* =========================================================
+   TEACHER ACCOUNTS (Supabase auth)
+   Students never touch this — it only gates Educator Mode.
+   ========================================================= */
+const SB_URL = 'https://fmbdoxfkjldvpkyryqlx.supabase.co';
+const SB_KEY = 'sb_publishable_oH7IbuY19NAjSW9MKmykkw_be4aDuAw';
+const API_BASE = 'https://science-hub.vercel.app/api';
+const HUB_SUBJECT = 'physical';            // which subject this hub unlocks
+const HUB_NAME = 'Physical Science';
+let sbClient = null, SB_USER = null, authMode = 'in', ENT = null;
+try{ sbClient = window.supabase.createClient(SB_URL, SB_KEY); }
+catch(e){ console.error('Supabase init failed', e); }
+
+function teacherSignedIn(){ return !!SB_USER; }
+
+function renderTeachAcct(){
+  const html = SB_USER
+    ? `<span>Signed in as <b>${SB_USER.email||'teacher'}</b></span>`
+      + ((ENT && ENT.hasCustomer) ? `<button onclick="openBillingPortal()">Manage subscription</button>` : '')
+      + `<button onclick="teacherSignOut()">Sign out</button>`
+    : '';
+  ['teachacct','storeacct'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML = html; });
+}
+
+/* ----- entitlements: who is allowed into the teacher tools ----- */
+async function fetchEntitlements(){
+  if(!sbClient || !SB_USER){ ENT = null; return; }
+  try{
+    const [{ data: prof }, { data: subs }] = await Promise.all([
+      sbClient.from('profiles').select('is_district,trial_started,trial_ends,stripe_customer_id').eq('id', SB_USER.id).single(),
+      sbClient.from('subscriptions').select('subject,status,current_period_end').eq('owner', SB_USER.id),
+    ]);
+    ENT = {
+      isDistrict:   !!(prof && prof.is_district),
+      trialStarted: prof && prof.trial_started,
+      trialEnds:    prof && prof.trial_ends,
+      hasCustomer:  !!(prof && prof.stripe_customer_id),
+      subs: subs || [],
+    };
+  }catch(e){ console.error('entitlements load failed', e); ENT = { isDistrict:false, subs:[], hasCustomer:false }; }
+  renderTeachAcct();
+  reevaluateTeachView();
+}
+
+function subActive(s){
+  if(!['active','trialing'].includes(s.status)) return false;
+  if(s.current_period_end && new Date(s.current_period_end).getTime() < Date.now()) return false;
+  return true;
+}
+function trialActive(){
+  return !!(ENT && ENT.trialEnds && new Date(ENT.trialEnds).getTime() > Date.now());
+}
+function paidFor(subject){
+  return !!(ENT && ENT.subs.some(s => subActive(s) && (s.subject===subject || s.subject==='bundle')));
+}
+// Tool access (assignment builder, gradebook): district, an active subscription, OR the free week.
+function entHasAccess(subject){
+  if(!ENT) return false;
+  if(ENT.isDistrict) return true;                         // Cherokee County = free forever
+  if(paidFor(subject)) return true;
+  if(trialActive()) return true;                          // free week = all subjects' tools (not printables)
+  return false;
+}
+// Printables are stricter — district or a paid subscription only, never the free week.
+function entPrintAccess(subject){
+  if(!ENT) return false;
+  if(ENT.isDistrict) return true;
+  return paidFor(subject);
+}
+
+// When entitlements finish loading, make sure the visible page matches access.
+function reevaluateTeachView(){
+  const onTeach = document.getElementById('page-teach').classList.contains('show');
+  const onStore = document.getElementById('page-store').classList.contains('show');
+  if(!onTeach && !onStore) return;
+  if(entHasAccess(HUB_SUBJECT)){ if(onStore) go('teach'); }
+  else { go('store'); }
+}
+
+function setAuthMsg(text, kind){
+  const m = document.getElementById('ag-msg');
+  if(!m) return;
+  m.textContent = text || '';
+  m.className = 'agmsg' + (kind ? ' '+kind : '');
+}
+
+function authToggleMode(){
+  authMode = authMode==='in' ? 'up' : 'in';
+  const up = authMode==='up';
+  document.getElementById('ag-title').textContent     = up ? 'Create your teacher account' : 'Teacher sign-in';
+  document.getElementById('ag-submit').textContent    = up ? 'Create account' : 'Sign in';
+  document.getElementById('ag-switchtxt').textContent = up ? 'Already have an account?' : 'New here?';
+  document.getElementById('ag-switch').textContent    = up ? '← Sign in instead' : 'Create an account →';
+  document.getElementById('ag-pass').setAttribute('autocomplete', up ? 'new-password' : 'current-password');
+  setAuthMsg('');
+}
+
+async function authSubmit(){
+  if(!sbClient){ setAuthMsg('Account system is still loading — try again in a moment.', 'err'); return; }
+  const email = (document.getElementById('ag-email').value||'').trim();
+  const pass  = document.getElementById('ag-pass').value||'';
+  if(!email || !pass){ setAuthMsg('Please enter your email and a password.', 'err'); return; }
+  const btn = document.getElementById('ag-submit');
+  btn.disabled = true;
+  try{
+    if(authMode==='up'){
+      if(pass.length < 6){ setAuthMsg('Password must be at least 6 characters.', 'err'); btn.disabled=false; return; }
+      const { data, error } = await sbClient.auth.signUp({ email, password: pass });
+      if(error){ setAuthMsg(error.message, 'err'); }
+      else if(!data.session){ setAuthMsg('Account created! Check your email for a confirmation link, then come back and sign in.', 'ok'); }
+      /* if a session came back, onAuthStateChange walks them into the tools */
+    } else {
+      const { error } = await sbClient.auth.signInWithPassword({ email, password: pass });
+      if(error){ setAuthMsg(error.message, 'err'); }
+    }
+  }catch(e){ setAuthMsg('Something went wrong — please try again.', 'err'); console.error(e); }
+  btn.disabled = false;
+}
+
+async function teacherSignOut(){
+  if(sbClient){ try{ await sbClient.auth.signOut(); }catch(e){ console.error(e); } }
+  SB_USER = null; ENT = null; renderTeachAcct(); go('start');
+}
+
+/* ----- storefront + checkout ----- */
+function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString(undefined,{month:'long',day:'numeric'}); }catch(e){ return ''; } }
+
+async function startFreeWeek(){
+  try{
+    const { data:{ session } } = await sbClient.auth.getSession();
+    if(!session){ go('teachgate'); return; }
+    const btn = document.querySelector('.trialbtn'); if(btn){ btn.disabled=true; btn.textContent='Starting your free week…'; }
+    const res = await fetch(API_BASE + '/start-trial', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + session.access_token },
+    });
+    const data = await res.json();
+    if(res.ok){ await fetchEntitlements(); go('teach'); }
+    else { alert(data.error || 'Could not start your free week.'); buildStore(); }
+  }catch(e){ console.error(e); alert('Could not reach the service. Please try again.'); buildStore(); }
+}
+
+function buildStore(){
+  renderTeachAcct();
+  const body = document.getElementById('storebody');
+  if(!body) return;
+  if(ENT === null){
+    body.innerHTML = `<p class="eyebrow">Educator Mode</p><h1>Checking your account…</h1><p class="lead">One moment while we load your access.</p>`;
+    return;
+  }
+  let trialBlock;
+  if(trialActive()){
+    trialBlock = `<div class="trialnote ok">✅ Your free week is active through <b>${fmtDate(ENT.trialEnds)}</b> — full access to all three subjects' tools. <b>Printables aren't part of the free week</b>; subscribe below to unlock them and keep going after your week ends.</div>`;
+  } else if(ENT.trialStarted){
+    trialBlock = `<div class="trialnote">Your free week has ended — but your work is saved. Choose a plan below to pick right back up.</div>`;
+  } else {
+    trialBlock = `<div class="trialcta">
+      <button class="genbtn trialbtn" onclick="startFreeWeek()">🎁 Start your free week — all three subjects</button>
+      <p class="trialfine">No credit card needed. Printables aren't included in the free week. After 7 days it simply locks — you're never charged automatically.</p>
+    </div>`;
+  }
+  body.innerHTML = `
+    <p class="eyebrow">Educator Mode</p>
+    <h1>Unlock your ${HUB_NAME} teacher tools</h1>
+    <p class="lead">Your assignment builder, gradebook, and printable library for ${HUB_NAME} are part of a subscription. Students never pay and never sign in.</p>
+    ${trialBlock}
+    <div class="storegrid">
+      <div class="storecard">
+        <h3>${HUB_NAME}</h3>
+        <p class="storesub">Full teacher access to this one subject.</p>
+        <button class="genbtn" onclick="startCheckout('${HUB_SUBJECT}','month')">$4.99 <span>/ month</span></button>
+        <button class="storealt" onclick="startCheckout('${HUB_SUBJECT}','year')">or $39.99 / year — save ~33%</button>
+      </div>
+      <div class="storecard storecard--bundle">
+        <div class="storebadge">Best value</div>
+        <h3>All three subjects</h3>
+        <p class="storesub">Physical, Earth &amp; Space, and Life Science — one subscription.</p>
+        <button class="genbtn" onclick="startCheckout('bundle','month')">$9.99 <span>/ month</span></button>
+        <button class="storealt" onclick="startCheckout('bundle','year')">or $79.99 / year — save ~33%</button>
+      </div>
+    </div>
+    <p class="startnote" style="margin-top:18px">🍎 <b>Cherokee County teachers:</b> your <b>@cherokeek12.net</b> account includes everything free, forever. If you're seeing this page, sign out and sign back in with your district email.</p>
+    <p class="startnote" style="margin-top:10px;opacity:.8">By subscribing you agree to our <a href="legal.html" target="_blank" style="font-weight:700">Terms &amp; Privacy Policy</a>.</p>`;
+}
+
+async function startCheckout(subject, interval){
+  try{
+    const { data:{ session } } = await sbClient.auth.getSession();
+    if(!session){ go('teachgate'); return; }
+    const res = await fetch(API_BASE + '/create-checkout-session', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + session.access_token },
+      body: JSON.stringify({ subject, interval, returnTo: location.origin + location.pathname }),
+    });
+    const data = await res.json();
+    if(data.url){ location.href = data.url; }
+    else { alert(data.error || 'Sorry — could not start checkout. Please try again.'); }
+  }catch(e){ console.error(e); alert('Could not reach the payment service. Please try again in a moment.'); }
+}
+
+async function openBillingPortal(){
+  try{
+    const { data:{ session } } = await sbClient.auth.getSession();
+    if(!session){ go('teachgate'); return; }
+    const res = await fetch(API_BASE + '/create-portal-session', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + session.access_token },
+      body: JSON.stringify({ returnTo: location.origin + location.pathname }),
+    });
+    const data = await res.json();
+    if(data.url){ location.href = data.url; }
+    else { alert(data.error || 'No billing account yet.'); }
+  }catch(e){ console.error(e); alert('Could not open the billing page. Please try again.'); }
+}
+
+// ----- gated printables: fetch a short-lived signed link, then open it -----
+async function openPrintable(subject, file){
+  try{
+    const { data:{ session } } = await sbClient.auth.getSession();
+    if(!session){ go('teachgate'); return; }
+    const res = await fetch(API_BASE + '/printable', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + session.access_token },
+      body: JSON.stringify({ subject, file }),
+    });
+    const data = await res.json();
+    if(data.url){ window.open(data.url, '_blank', 'noopener'); }
+    else { alert(data.error || 'Could not open that printable.'); }
+  }catch(e){ console.error(e); alert('Could not open the printable. Please try again.'); }
+}
+// Route any printable-library link through the gatekeeper instead of the (now private) file.
+document.addEventListener('click', function(e){
+  const a = e.target.closest('a');
+  if(!a) return;
+  const href = a.getAttribute('href') || '';
+  if(!href.startsWith('pdfs/') || !href.toLowerCase().endsWith('.pdf')) return;
+  e.preventDefault();
+  openPrintable(HUB_SUBJECT, href.split('/').pop());
+});
+
+// After returning from Stripe Checkout (?checkout=success|cancel).
+function handleCheckoutReturn(){
+  const p = new URLSearchParams(location.search);
+  if(!p.has('checkout')) return;
+  const status = p.get('checkout');
+  try{ history.replaceState(null,'',location.pathname); }catch(e){}
+  if(status !== 'success'){ go('store'); return; }
+  // The webhook can lag a second or two — poll entitlements until access lands.
+  go.mode = 'teach';
+  let tries = 0;
+  const poll = ()=> fetchEntitlements().then(()=>{
+    if(entHasAccess(HUB_SUBJECT)){ go('teach'); }
+    else if(tries++ < 6){ setTimeout(poll, 1500); }
+    else { go('store'); }
+  });
+  poll();
+}
+
+if(sbClient){
+  sbClient.auth.getSession().then(async ({data})=>{
+    SB_USER = data.session ? data.session.user : null;
+    renderTeachAcct();
+    await fetchEntitlements();
+    handleCheckoutReturn();
+  });
+  sbClient.auth.onAuthStateChange((_ev, session)=>{
+    const wasOut = !SB_USER;
+    SB_USER = session ? session.user : null;
+    if(!SB_USER) ENT = null;
+    renderTeachAcct();
+    fetchEntitlements();
+    /* just signed in while sitting on the gate → walk them into the tools */
+    if(SB_USER && wasOut && document.getElementById('page-teachgate').classList.contains('show')){
+      setAuthMsg(''); go('teach');
+    }
+  });
+}
 </script>
 </body>
 </html>
