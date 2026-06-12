@@ -17,11 +17,12 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
--- A teacher can see and update ONLY their own profile.
+-- A teacher can only READ their own profile. All writes (trial dates, district
+-- flag, stripe customer id) happen server-side via the service role, so nobody
+-- can grant themselves a trial or the district-free flag from the browser.
 drop policy if exists "own profile read"   on public.profiles;
-drop policy if exists "own profile update" on public.profiles;
-create policy "own profile read"   on public.profiles for select using (auth.uid() = id);
-create policy "own profile update" on public.profiles for update using (auth.uid() = id);
+drop policy if exists "own profile update" on public.profiles;  -- remove old editable policy if present
+create policy "own profile read" on public.profiles for select using (auth.uid() = id);
 
 -- 2) SUBSCRIPTIONS: one row per paid subject (or the bundle) ------------------
 -- Written only by the server (Stripe webhook). Teachers may read their own.
