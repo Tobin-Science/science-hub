@@ -4643,10 +4643,15 @@ if(savedAsn && savedAsn.code){
   const c = decodeAssignment(savedAsn.code);
   if(c) ASN = {cfg:c, code:savedAsn.code, name:savedAsn.name, key:nameKey(savedAsn.name)};
 }
-const startHash = location.hash.slice(1);
-if(startHash.startsWith('a=')) handleAssignmentHash();                         // student assignment link → straight to checklist
-else if(startHash && document.getElementById('page-'+startHash)) go(startHash); // explicit deep link → that page
-else { if(ASN) updateAsnBanner(); document.getElementById('page-home').classList.remove('show'); go('start'); } // plain visit → student/teacher chooser
+function bootRoute(){
+  const startHash = location.hash.slice(1);
+  if(startHash.startsWith('a=')) handleAssignmentHash();                         // student assignment link → straight to checklist
+  else if(startHash && document.getElementById('page-'+startHash)) go(startHash); // explicit deep link → that page
+  else { if(ASN) updateAsnBanner(); document.getElementById('page-home').classList.remove('show'); go('start'); } // plain visit → student/teacher chooser
+}
+/* NOTE: bootRoute() is invoked at the very end of the script, after the auth
+   globals (SB_USER, ENT, …) are initialized — otherwise routing to #teach
+   touches those before they exist and silently falls back to the home page. */
 window.addEventListener('hashchange', ()=>{ const h=location.hash.slice(1);
   if(h.startsWith('a=')) handleAssignmentHash();
   else if(h && document.getElementById('page-'+h)) go(h); });
@@ -4927,6 +4932,8 @@ if(sbClient){
     }
   });
 }
+
+bootRoute();   // initial route — runs now that the auth globals are initialized
 </script>
 </body>
 </html>
