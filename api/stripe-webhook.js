@@ -17,7 +17,7 @@ export async function POST(request) {
 
   try {
     if (event.type.startsWith('customer.subscription.')) {
-      const sub = event.data.object;
+      let sub = event.data.object;
       const uid = sub.metadata && sub.metadata.supabase_uid;
       const subject = (sub.metadata && sub.metadata.subject) || null;
 
@@ -26,17 +26,22 @@ export async function POST(request) {
         if (event.type === 'customer.subscription.deleted') {
           await db.from('subscriptions').update({ status: 'canceled' }).eq('id', sub.id);
         } else {
+          // Webhook events can arrive out of order (e.g. a stale "incomplete"
+          // landing after the "active" update). Re-fetch the authoritative
+          // current state from Stripe so we never record a stale status.
+          try { sub = await stripe.subscriptions.retrieve(sub.id); } catch (e) { /* fall back to event copy */ }
           // current_period_end is top-level on older API versions and on the
           // first item on newer ones — accept either.
           const cpe = sub.current_period_end
             || (sub.items && sub.items.data && sub.items.data[0] && sub.items.data[0].current_period_end);
-          await db.from('subscriptions').upsert({
+          const { error } = await db.from('subscriptions').upsert({
             id: sub.id,
             owner: uid,
             subject,
             status: sub.status,
             current_period_end: cpe ? new Date(cpe * 1000).toISOString() : null,
           });
+          if (error) return new Response('DB error: ' + error.message, { status: 500 });
         }
       }
     }
