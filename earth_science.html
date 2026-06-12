@@ -497,6 +497,12 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <p style="margin-top:10px"><a class="pdfbtn" href="#print" onclick="go('print');return false">Open the printable library →</a></p>
   </div>
 
+  <div class="card" style="border:2px solid #2f7a4d;background:#EAF6EF;margin:0 0 24px;max-width:780px">
+    <h3>📘 New here? Grab the Teacher's Guide</h3>
+    <p>A plain-English walkthrough of everything: building assignments, setting posttest attempts, the paperless gradebook, Warmup of the Day, printables and more. Downloads as a Word document you can keep or print.</p>
+    <p style="margin-top:10px"><a class="pdfbtn" style="background:#2f7a4d" href="Tobin_Science_Hub_Teacher_Guide.docx" download>📥 Download the Teacher's Guide</a></p>
+  </div>
+
   <div class="card" style="border:2px solid #E08F0E;background:#FFF7E8;margin:0 0 24px;max-width:780px">
     <h3>🌅 Warmup of the Day</h3>
     <p>A bell-ringer in two clicks: pick a topic (or roll the dice), pick a question type, and project it. Questions never repeat until the whole pool has been used.</p>
@@ -551,6 +557,17 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <div class="asnrow">
       <input id="asn-title" placeholder="Assignment title (e.g., Forces & Motion Mini-Unit)" maxlength="80">
       <input id="asn-teacher" placeholder="Teacher name (optional, shows on student view & report)" maxlength="60">
+    </div>
+    <div class="asnrow" style="margin-top:10px;align-items:center">
+      <label style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.92rem;color:var(--ink2)">🏁 Posttest attempts allowed:
+        <select id="asn-pomax" style="border:1.5px solid var(--line);border-radius:8px;padding:7px 11px;font:inherit;font-size:.92rem">
+          <option value="1">1 attempt</option>
+          <option value="2" selected>2 attempts</option>
+          <option value="3">3 attempts</option>
+          <option value="0">Unlimited</option>
+        </select>
+      </label>
+      <span style="font-size:.82rem;color:var(--ink2);opacity:.85">Each attempt pulls a fresh random set of questions, so retakes — and neighbors — never match.</span>
     </div>
     <button class="genbtn" onclick="generateAssignment()">⚙️ Generate assignment link</button><span id="genmsg"></span>
   </div>
@@ -3503,7 +3520,8 @@ function generateAssignment(){
     t: (document.getElementById('asn-title').value || 'Class Assignment').slice(0,80),
     by: (document.getElementById('asn-teacher').value || '').slice(0,60),
     std: sel,
-    it: items
+    it: items,
+    pom: parseInt(document.getElementById('asn-pomax')?.value, 10) || 0
   };
   const code = encodeAssignment(cfg);
   const link = location.href.split('#')[0] + '#a=' + code;
@@ -3586,7 +3604,10 @@ function asnItems(cfg){
 const asnItemKey = it => `asn_${ASN.cfg.id}_${ASN.key}_${it.type}:${it.id}`;
 function asnStatus(it){ // → {done, meta}
   if(it.type==='po'){ const r=store.get(asnItemKey(it));
-    return r? {done:true, meta:`best ${r.score}/${r.total}${r.attempts>1? ' ('+r.attempts+' attempts)':''}`} : {done:false, meta:'scored — counts most toward your grade'}; }
+    const max=(ASN&&ASN.cfg.pom)||0; const used=r?.attempts||0;
+    const leftTxt = max>0 ? (max-used>0? ` · ${max-used} attempt${max-used>1?'s':''} left` : ' · no attempts left') : '';
+    if(r) return {done:true, meta:`best ${r.score}/${r.total}${r.attempts>1? ' ('+r.attempts+' attempts)':''}${leftTxt}`};
+    return {done:false, meta: max>0? `scored — counts most · ${max} attempt${max>1?'s':''} allowed` : 'scored — counts most toward your grade'}; }
   const v = store.get(asnItemKey(it));
   if(v===null || v===undefined) return {done:false, meta:''};
   if(it.type==='m')  return {done:true, meta:`best score ${v}`};
@@ -3906,8 +3927,11 @@ function renderAssign(){
       ${rows.map(x=>{
         const s = asnStatus(x);
         const againKey = {g:'ag_g',m:'ag_m',a:'ag_a',q:'ag_q',po:'ag_po'}[x.type] || 'ag_x';
+        const poMax=(ASN&&ASN.cfg.pom)||0, poRec=store.get(asnItemKey(x)), poLocked = x.type==='po' && poMax>0 && (poRec?.attempts||0)>=poMax;
         const btn = x.type==='po'
-          ? `<button class="asngo" style="background:#1B2440" onclick="asnStartPosttest('${x.id}')">${s.done? L('ag_po') : L('vb_po')}</button>`
+          ? (poLocked
+              ? `<button class="asngo" style="background:#9aa3bd;cursor:default" disabled>🔒 No attempts left</button>`
+              : `<button class="asngo" style="background:#1B2440" onclick="asnStartPosttest('${x.id}')">${s.done? L('ag_po') : L('vb_po')}</button>`)
           : `<button class="asngo" onclick="asnOpen('${x.type}','${x.id}')">${s.done? L(againKey) : L('vb_'+x.type)}</button>`;
         const meta = exc? `<span class="asnmeta">${L('excused')}</span>` : (s.meta? `<span class="asnmeta">${s.meta}</span>`:'');
         return `<div class="asnrow2 ${s.done&&!exc?'done':''}">
@@ -4070,20 +4094,101 @@ u6:[
 ]
 };
 
+/* ---- Supplemental posttest bank (merged in) — doubles each unit's pool so every
+   attempt draws a different random set and neighbors rarely match. ---- */
+const POSTTESTS_X = {
+u1:[
+ {std:"S6E1.a", q:"The Big Bang theory has been refined many times as telescopes improved. In science, a theory that gets revised is…", o:["A failure","Normal — theories sharpen as new evidence arrives","Just a guess","Always wrong"], a:1, why:"Revision is how science works: explanations improve as evidence accumulates."},
+ {std:"S6E1.b", q:"Which is the correct order from smallest to largest?", o:["Solar system → planet → galaxy → universe","Planet → solar system → galaxy → universe","Galaxy → universe → planet → solar system","Universe → galaxy → solar system → planet"], a:1, why:"A planet sits in a solar system, in a galaxy, in the universe."},
+ {std:"S6E1.c", q:"A newly found planet is small, rocky, and dense with a thin atmosphere. It is most like…", o:["Jupiter","Saturn","Mars","Neptune"], a:2, why:"Small, rocky, and dense describes a terrestrial (inner) planet like Mars."},
+ {std:"S6E1.c", q:"Which factor matters MOST when judging whether a planet could support life?", o:["Its color","Whether liquid water could exist there","Number of moons","Having rings"], a:1, why:"Liquid water is the top requirement — that's why the habitable zone matters."},
+ {std:"S6E1.d", q:"If the sun's gravity suddenly disappeared, Earth would…", o:["Stop instantly","Fly off in a straight line because of inertia","Fall into the sun","Spin faster"], a:1, why:"With no inward pull, inertia carries Earth straight off (Newton's first law)."},
+ {std:"S6E1.d", q:"Planets closer to the sun orbit faster than far ones. This shows that gravity…", o:["Is stronger closer to the sun","Is weaker closer to the sun","Doesn't affect orbits","Pushes planets"], a:0, why:"A stronger pull close in requires faster motion to keep the orbit balanced."},
+ {std:"S6E1.e", q:"Most asteroids in our solar system orbit…", o:["Around Earth","In the belt between Mars and Jupiter","Beyond Neptune only","Inside the sun"], a:1, why:"The asteroid belt between Mars and Jupiter holds most of them."},
+ {std:"S6E1.e", q:"A streak of light flashes across the night sky and burns up. It is a…", o:["Comet","Meteor","Asteroid","Planet"], a:1, why:"A meteoroid burning in the atmosphere appears as a meteor ('shooting star')."}
+],
+u2:[
+ {std:"S6E2.a", q:"A student says moon phases are caused by Earth's shadow on the moon. The best correction is…", o:["They're right","Earth's shadow only causes lunar eclipses; phases come from our view of the moon's lit half","Phases are caused by clouds","The moon makes its own light"], a:1, why:"Half the moon is always lit; the phase is how much of that lit half we see."},
+ {std:"S6E2.a", q:"About how long does one full cycle of moon phases take?", o:["1 day","1 week","About 29.5 days","1 year"], a:2, why:"The ~29.5-day cycle is where the word 'month' comes from."},
+ {std:"S6E2.a", q:"The lit part of the moon is shrinking each night and lit on the left side. The moon is…", o:["Waxing","Waning","Full","New"], a:1, why:"Shrinking = waning; waning phases are lit on the left."},
+ {std:"S6E2.b", q:"A solar eclipse can only happen during which moon phase?", o:["Full moon","New moon","First quarter","Waning gibbous"], a:1, why:"A solar eclipse needs the moon between Earth and the sun — the new moon."},
+ {std:"S6E2.b", q:"Why don't we get an eclipse every month?", o:["The moon stops orbiting","The moon's orbit is tilted ~5°, so the lineup usually misses","Eclipses only happen in summer","The sun moves out of the way"], a:1, why:"The slight tilt means the shadow usually passes above or below the target."},
+ {std:"S6E2.c", q:"Earth is actually CLOSEST to the sun in January. This shows that seasons are caused by…", o:["Distance from the sun","Earth's axial tilt, not distance","The moon","Ocean currents"], a:1, why:"If distance ruled, January would be northern summer — it's the 23.5° tilt."},
+ {std:"S6E2.c", q:"When the Northern Hemisphere is tilted toward the sun, it is…", o:["Winter there","Summer there","Fall there","The same season everywhere"], a:1, why:"Tilted toward the sun = direct light and long days = summer."},
+ {std:"S6E2.c", q:"On an equinox…", o:["Day and night are nearly equal everywhere","The north pole has 24-hour sun","It's the longest day of the year","The moon is always full"], a:0, why:"Equinox means 'equal night' — neither hemisphere tilts toward the sun."}
+],
+u3:[
+ {std:"S6E3.a", q:"About what fraction of Earth's water is fresh water?", o:["About 3%","About 50%","About 75%","About 97%"], a:0, why:"~97% is salty ocean water; only ~3% is fresh, and most of that is frozen."},
+ {std:"S6E3.a", q:"A town pumps its drinking water from underground. That water comes from a(n)…", o:["Ocean","Aquifer","Cloud","Surface glacier"], a:1, why:"Wells tap aquifers — underground layers of water-saturated rock."},
+ {std:"S6E3.b", q:"What is the main energy source that drives the water cycle?", o:["The moon","The sun","Wind","Earth's core"], a:1, why:"Solar energy evaporates water, powering the whole cycle."},
+ {std:"S6E3.b", q:"Which step turns water vapor back into liquid cloud droplets?", o:["Evaporation","Condensation","Precipitation","Runoff"], a:1, why:"Condensation is vapor cooling into liquid droplets."},
+ {std:"S6E3.c", q:"The deepest features of the ocean floor are called…", o:["Continental shelves","Trenches","Mid-ocean ridges","Beaches"], a:1, why:"Trenches are the deepest sea-floor features."},
+ {std:"S6E3.c", q:"The amount of dissolved salt in ocean water is its…", o:["Density","Salinity","Current","Tide"], a:1, why:"Salinity is the saltiness — about 3.5% dissolved salts."},
+ {std:"S6E3.d", q:"Tides are caused mainly by the gravity of the…", o:["Sun only","Moon","Wind","Earth's core"], a:1, why:"The moon's gravity is the main driver of the tides."},
+ {std:"S6E3.d", q:"The biggest tides (spring tides) happen when…", o:["The moon is at first quarter","The sun, Earth, and moon line up","Wind is strongest","Earth is closest to the sun"], a:1, why:"Aligned sun and moon combine their pull for the largest tidal range."}
+],
+u4:[
+ {std:"S6E4.a", q:"Which atmospheric layer holds the ozone layer that absorbs UV radiation?", o:["Troposphere","Stratosphere","Mesosphere","Thermosphere"], a:1, why:"The ozone layer lives in the stratosphere."},
+ {std:"S6E4.a", q:"Which list contains greenhouse gases that trap heat?", o:["Oxygen and nitrogen","Carbon dioxide, methane, and water vapor","Helium and neon","Argon only"], a:1, why:"CO₂, methane, and water vapor are the classic heat-trappers."},
+ {std:"S6E4.b", q:"On a sunny afternoon, which heats up faster?", o:["The ocean","Beach sand (land)","They heat exactly equally","Neither heats at all"], a:1, why:"Land heats and cools faster than water."},
+ {std:"S6E4.b", q:"Coastal cities have milder temperatures than inland cities because…", o:["They get more sun","The slow-heating ocean moderates their temperature","They sit higher up","Salt air traps cold"], a:1, why:"Water's slow temperature change cushions coastal climates."},
+ {std:"S6E4.c", q:"Wind is air moving from areas of…", o:["Low to high pressure","High to low pressure","Cold to hot only","No pressure difference"], a:1, why:"Air flows from high to low pressure; unequal heating creates the difference."},
+ {std:"S6E4.c", q:"Earth's rotation curves global wind patterns. This is the…", o:["Coriolis effect","Greenhouse effect","Water cycle","Rock cycle"], a:0, why:"The Coriolis effect deflects long-range winds because Earth spins."},
+ {std:"S6E4.d", q:"A cold front usually brings…", o:["Long gentle rain, then warming","Brief heavy storms, then cooler and clearing","No weather change","Only fog"], a:1, why:"Cold fronts shove warm air up fast — quick storms, then cooler and clear."},
+ {std:"S6E4.e", q:"Hurricanes get their energy from…", o:["Cold ocean water","Warm ocean water evaporating","Desert sand","Mountain ranges"], a:1, why:"Evaporation from warm ocean water (above ~80°F) fuels hurricanes."}
+],
+u5:[
+ {std:"S6E5.a", q:"Which is Earth's thickest layer?", o:["Crust","Mantle","Outer core","Inner core"], a:1, why:"The mantle is by far the thickest layer."},
+ {std:"S6E5.b", q:"A mineral's streak is…", o:["Its hardness","The color of its powder","How shiny it is","Its shape"], a:1, why:"Streak is the color of the powder a mineral leaves when scraped."},
+ {std:"S6E5.c", q:"Fossils are most often found in which type of rock?", o:["Igneous","Sedimentary","Metamorphic","Melted"], a:1, why:"Fossils form in sedimentary layers, not in melted or heat-pressed rock."},
+ {std:"S6E5.d", q:"A river carrying sand and pebbles downstream is an example of…", o:["Weathering","Erosion","Deposition","Condensation"], a:1, why:"Erosion is the transport of weathered material to a new place."},
+ {std:"S6E5.e", q:"Which human activity speeds up soil erosion the most?", o:["Planting cover crops","Removing trees and plants (deforestation)","Building terraces","Leaving roots in the ground"], a:1, why:"Stripping the plants whose roots hold soil leaves it exposed to wind and water."},
+ {std:"S6E5.f", q:"Earthquakes and volcanoes occur most often…", o:["In the middle of plates","Along plate boundaries","Only at the equator","Only underwater"], a:1, why:"Plate edges, like the Pacific Ring of Fire, are where the action concentrates."},
+ {std:"S6E5.g", q:"Marine fossils found on a mountaintop are evidence that…", o:["Fish climb mountains","That rock was once under the sea before being uplifted","The fossils are fake","Mountains create fossils"], a:1, why:"Fossils record how Earth's surface and climate have changed over time."},
+ {std:"S6E5.h", q:"Soil is made of…", o:["Only sand","Weathered rock plus decomposed organic material","Pure water","Solid bedrock"], a:1, why:"Soil blends weathered rock with humus — decomposed organic matter."}
+],
+u6:[
+ {std:"S6E6.a", q:"Which is a renewable resource?", o:["Coal","Oil","Solar energy","Natural gas"], a:2, why:"Sunlight is renewable; the fossil fuels are nonrenewable."},
+ {std:"S6E6.a", q:"Which list contains only NONrenewable resources?", o:["Wind, solar, hydro","Coal, oil, natural gas","Geothermal, tidal, biomass","Solar, wind, geothermal"], a:1, why:"The fossil fuels take millions of years to form and won't refill on our timescale."},
+ {std:"S6E6.a", q:"Why are fossil fuels considered nonrenewable?", o:["They are dirty","They take millions of years to form and we use them far faster","They are expensive","They are heavy"], a:1, why:"They can't be replaced on a human timescale."},
+ {std:"S6E6.b", q:"Which practice helps conserve SOIL?", o:["Smokestack scrubbers","Cover crops and no-till farming","Low-flow faucets","Catalytic converters"], a:1, why:"Cover crops and no-till keep soil in place and healthy."},
+ {std:"S6E6.b", q:"Which practice helps protect AIR quality?", o:["Crop rotation","Rain barrels","Catalytic converters on cars","Terracing hillsides"], a:2, why:"Catalytic converters clean harmful gases from car exhaust."},
+ {std:"S6E6.b", q:"Designing a solution and then judging it by how well it works and its trade-offs is part of…", o:["Guessing","Engineering","Reading","Memorizing"], a:1, why:"Engineering means designing a solution and evaluating it against criteria."},
+ {std:"S6E6.c", q:"Which is the STRONGEST kind of evidence for a century of warming?", o:["One hot day","Many independent records (thermometers, ice, sea level) that agree","A warm afternoon","A single photograph"], a:1, why:"Multiple independent lines of evidence agreeing make the strongest case."},
+ {std:"S6E6.c", q:"Ice cores help scientists study past climate because they…", o:["Are cold","Trap ancient air bubbles that show past CO₂ levels","Are easy to find","Float on water"], a:1, why:"Ice cores preserve a record of the ancient atmosphere."}
+]
+};
+Object.keys(POSTTESTS_X).forEach(u=>{ POSTTESTS[u] = (POSTTESTS[u]||[]).concat(POSTTESTS_X[u]); });
 
+
+const POSTTEST_LEN = 10; // questions shown per posttest attempt (drawn at random from the bank)
 function asnPosttestQs(uid, stds){
   const bank = POSTTESTS[uid] || [];
   const sel = new Set(stds || (ASN? ASN.cfg.std : []) || []);
-  let qs = bank.filter(q => sel.has(q.std));
-  if(qs.length < 5){ // pad with the rest of the unit bank so the test isn't trivial
-    const extra = bank.filter(q => !sel.has(q.std));
-    qs = qs.concat(extra.slice(0, 5 - qs.length));
+  // draw a fresh random subset each attempt so no two attempts (or students) match
+  let pool = shuffle(bank.filter(q => sel.has(q.std)));
+  if(pool.length < POSTTEST_LEN){ // pad with the rest of the unit bank so the test stays substantial
+    pool = pool.concat(shuffle(bank.filter(q => !sel.has(q.std))));
   }
-  return qs;
+  return pool.slice(0, Math.min(POSTTEST_LEN, pool.length));
 }
 let PT = null; // live posttest state
 function asnStartPosttest(uid){
-  const qs = shuffle([...asnPosttestQs(uid)]);
+  const max = (ASN && ASN.cfg.pom) || 0; // 0 = unlimited
+  if(max > 0){
+    const rec = store.get(`asn_${ASN.cfg.id}_${ASN.key}_po:${uid}`);
+    const used = rec?.attempts || 0;
+    if(used >= max){
+      go('assign');
+      document.getElementById('assigninfo').innerHTML = `<div style="text-align:center;padding:24px 8px">
+        <div style="font-size:2.2rem">🔒</div>
+        <p style="font-size:1.18rem;margin:8px 0"><b>No posttest attempts left</b></p>
+        <p style="color:var(--ink2);max-width:460px;margin:0 auto">Your teacher allowed <b>${max} attempt${max>1?'s':''}</b> on this posttest, and you've used ${used}.${rec? ` Your best score (<b>${rec.score}/${rec.total}</b>) is saved.`:''}</p>
+        <p style="margin-top:16px"><button class="gbtn" onclick="renderAssign()">← Back to checklist</button></p></div>`;
+      return;
+    }
+  }
+  const qs = asnPosttestQs(uid);
   PT = {uid, qs, i:0, score:0, picks:[]};
   renderPosttest();
 }

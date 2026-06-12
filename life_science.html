@@ -496,6 +496,12 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <p style="margin-top:10px"><a class="pdfbtn" href="#print" onclick="go('print');return false">Open the printable library →</a></p>
   </div>
 
+  <div class="card" style="border:2px solid #2f7a4d;background:#EAF6EF;margin:0 0 24px;max-width:780px">
+    <h3>📘 New here? Grab the Teacher's Guide</h3>
+    <p>A plain-English walkthrough of everything: building assignments, setting posttest attempts, the paperless gradebook, Warmup of the Day, printables and more. Downloads as a Word document you can keep or print.</p>
+    <p style="margin-top:10px"><a class="pdfbtn" style="background:#2f7a4d" href="Tobin_Science_Hub_Teacher_Guide.docx" download>📥 Download the Teacher's Guide</a></p>
+  </div>
+
   <div class="card" style="border:2px solid #E08F0E;background:#FFF7E8;margin:0 0 24px;max-width:780px">
     <h3>🌅 Warmup of the Day</h3>
     <p>A bell-ringer in two clicks: pick a topic (or roll the dice), pick a question type, and project it. Questions never repeat until the whole pool has been used.</p>
@@ -550,6 +556,17 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <div class="asnrow">
       <input id="asn-title" placeholder="Assignment title (e.g., Forces & Motion Mini-Unit)" maxlength="80">
       <input id="asn-teacher" placeholder="Teacher name (optional, shows on student view & report)" maxlength="60">
+    </div>
+    <div class="asnrow" style="margin-top:10px;align-items:center">
+      <label style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.92rem;color:var(--ink2)">🏁 Posttest attempts allowed:
+        <select id="asn-pomax" style="border:1.5px solid var(--line);border-radius:8px;padding:7px 11px;font:inherit;font-size:.92rem">
+          <option value="1">1 attempt</option>
+          <option value="2" selected>2 attempts</option>
+          <option value="3">3 attempts</option>
+          <option value="0">Unlimited</option>
+        </select>
+      </label>
+      <span style="font-size:.82rem;color:var(--ink2);opacity:.85">Each attempt pulls a fresh random set of questions, so retakes — and neighbors — never match.</span>
     </div>
     <button class="genbtn" onclick="generateAssignment()">⚙️ Generate assignment link</button><span id="genmsg"></span>
   </div>
@@ -3219,7 +3236,8 @@ function generateAssignment(){
     t: (document.getElementById('asn-title').value || 'Class Assignment').slice(0,80),
     by: (document.getElementById('asn-teacher').value || '').slice(0,60),
     std: sel,
-    it: items
+    it: items,
+    pom: parseInt(document.getElementById('asn-pomax')?.value, 10) || 0
   };
   const code = encodeAssignment(cfg);
   const link = location.href.split('#')[0] + '#a=' + code;
@@ -3302,7 +3320,10 @@ function asnItems(cfg){
 const asnItemKey = it => `asn_${ASN.cfg.id}_${ASN.key}_${it.type}:${it.id}`;
 function asnStatus(it){ // → {done, meta}
   if(it.type==='po'){ const r=store.get(asnItemKey(it));
-    return r? {done:true, meta:`best ${r.score}/${r.total}${r.attempts>1? ' ('+r.attempts+' attempts)':''}`} : {done:false, meta:'scored — counts most toward your grade'}; }
+    const max=(ASN&&ASN.cfg.pom)||0; const used=r?.attempts||0;
+    const leftTxt = max>0 ? (max-used>0? ` · ${max-used} attempt${max-used>1?'s':''} left` : ' · no attempts left') : '';
+    if(r) return {done:true, meta:`best ${r.score}/${r.total}${r.attempts>1? ' ('+r.attempts+' attempts)':''}${leftTxt}`};
+    return {done:false, meta: max>0? `scored — counts most · ${max} attempt${max>1?'s':''} allowed` : 'scored — counts most toward your grade'}; }
   const v = store.get(asnItemKey(it));
   if(v===null || v===undefined) return {done:false, meta:''};
   if(it.type==='m')  return {done:true, meta:`best score ${v}`};
@@ -3622,8 +3643,11 @@ function renderAssign(){
       ${rows.map(x=>{
         const s = asnStatus(x);
         const againKey = {g:'ag_g',m:'ag_m',a:'ag_a',q:'ag_q',po:'ag_po'}[x.type] || 'ag_x';
+        const poMax=(ASN&&ASN.cfg.pom)||0, poRec=store.get(asnItemKey(x)), poLocked = x.type==='po' && poMax>0 && (poRec?.attempts||0)>=poMax;
         const btn = x.type==='po'
-          ? `<button class="asngo" style="background:#1B2440" onclick="asnStartPosttest('${x.id}')">${s.done? L('ag_po') : L('vb_po')}</button>`
+          ? (poLocked
+              ? `<button class="asngo" style="background:#9aa3bd;cursor:default" disabled>🔒 No attempts left</button>`
+              : `<button class="asngo" style="background:#1B2440" onclick="asnStartPosttest('${x.id}')">${s.done? L('ag_po') : L('vb_po')}</button>`)
           : `<button class="asngo" onclick="asnOpen('${x.type}','${x.id}')">${s.done? L(againKey) : L('vb_'+x.type)}</button>`;
         const meta = exc? `<span class="asnmeta">${L('excused')}</span>` : (s.meta? `<span class="asnmeta">${s.meta}</span>`:'');
         return `<div class="asnrow2 ${s.done&&!exc?'done':''}">
@@ -3772,19 +3796,90 @@ u5:[
  {std:"S7L5.c", q:"In one undisturbed cliff: fish fossils in the deepest layer, amphibians above them, reptiles above that. The best conclusion?", o:["Fish appeared on Earth before amphibians and reptiles","Reptiles are the oldest","All three appeared at the same time","The cliff is upside down"], a:0, why:"Deeper = older, so the stack records the order these groups appeared."},
  {std:"S7L5.c", q:"Tiktaalik is a fossil fish with wrist-like bones in its fins. Fossils like this matter because they…", o:["Prove fish can't swim","Show relationships linking ancient groups to modern ones — fins on the way to walking limbs","Are the largest fossils ever found","Show fossils form quickly"], a:1, why:"Transitional fossils are the bridges in life's family tree, connecting past organisms to their modern relatives."}
 ]};
+
+/* ---- Supplemental posttest bank (merged in) — doubles each unit's pool so every
+   attempt draws a different random set and neighbors rarely match. ---- */
+const POSTTESTS_X = {
+u1:[
+ {std:"S7L1.a", q:"Which is a characteristic of ALL living things?", o:["They can move","They are made of cells and use energy","They are green","They breathe air"], a:1, why:"All organisms are made of cells and use energy; the others aren't universal."},
+ {std:"S7L1.a", q:"A dichotomous key identifies an organism using…", o:["Color matching","A series of paired either-or questions about traits","Size order, biggest first","Random guessing"], a:1, why:"Each step splits the options by an observable characteristic."},
+ {std:"S7L1.a", q:"An organism that makes its own food using sunlight is a(n)…", o:["Heterotroph","Autotroph","Predator","Decomposer"], a:1, why:"Autotrophs make their own food; heterotrophs must eat others."},
+ {std:"S7L1.a", q:"In the scientific name Canis lupus, the first word (Canis) is the…", o:["Species","Genus","Kingdom","Nickname"], a:1, why:"Scientific names are Genus + species; the genus comes first."},
+ {std:"S7L1.b", q:"What discovery forced scientists to add kingdoms beyond plants and animals?", o:["New continents","The microscope revealing unicellular life","Dinosaur fossils","Larger telescopes"], a:1, why:"Microbes fit neither old kingdom — new evidence changed the model."},
+ {std:"S7L1.b", q:"Bacteria and archaea sit in separate kingdoms because…", o:["They live in different places","Genetic and chemical evidence shows they are deeply different","Archaea are larger","Bacteria are all harmful"], a:1, why:"They look alike but their genes and chemistry differ greatly."},
+ {std:"S7L1.b", q:"A mushroom belongs to which kingdom?", o:["Plants","Animals","Fungi","Bacteria"], a:2, why:"Fungi absorb nutrients and can't make their own food, so they aren't plants."},
+ {std:"S7L1.b", q:"Which kingdoms contain ONLY prokaryotes (cells with no nucleus)?", o:["Plants and fungi","Bacteria and archaea","Protists and animals","Fungi and protists"], a:1, why:"Bacteria and archaea are prokaryotes; the other four kingdoms are eukaryotes."}
+],
+u2:[
+ {std:"S7L2.a", q:"Which organelle is the control center that holds the cell's DNA?", o:["Mitochondria","Nucleus","Cell membrane","Lysosome"], a:1, why:"The nucleus directs the cell and holds its DNA."},
+ {std:"S7L2.a", q:"Which structures are found in plant cells but NOT animal cells?", o:["Nucleus and membrane","Cell wall and chloroplasts","Mitochondria and cytoplasm","Lysosomes only"], a:1, why:"Cell walls and chloroplasts are plant-only."},
+ {std:"S7L2.a", q:"The mitochondria are best described as the cell's…", o:["Control center","Powerhouse that releases energy from food","Gatekeeper","Waste bin"], a:1, why:"Mitochondria release usable energy from food."},
+ {std:"S7L2.b", q:"Which order is correct from smallest to largest?", o:["Organ → tissue → cell → organism","Cell → tissue → organ → organ system","Tissue → cell → organism → organ","Organism → organ → tissue → cell"], a:1, why:"Cells build tissues, tissues build organs, organs build systems."},
+ {std:"S7L2.b", q:"A group of similar cells working together forms a(n)…", o:["Organ","Tissue","System","Organism"], a:1, why:"Similar cells with one job make a tissue."},
+ {std:"S7L2.c", q:"Which two systems work together to deliver oxygen to the body's cells?", o:["Digestive and muscular","Respiratory and cardiovascular","Excretory and immune","Nervous and digestive"], a:1, why:"The lungs load oxygen; the heart and blood deliver it."},
+ {std:"S7L2.c", q:"The kidneys filter wastes from the blood. They are part of the ___ system.", o:["Digestive","Excretory","Respiratory","Immune"], a:1, why:"The excretory system removes wastes."},
+ {std:"S7L2.c", q:"During exercise your heart rate and breathing rate both rise. This shows that body systems…", o:["Work alone","Interact to meet the body's needs","Compete with each other","Shut down"], a:1, why:"Muscles demand more oxygen, so two systems respond together."}
+],
+u3:[
+ {std:"S7L3.a", q:"Genes are carried on structures called…", o:["Chromosomes","Mitochondria","Tissues","Membranes"], a:0, why:"Chromosomes are bundles of many genes."},
+ {std:"S7L3.a", q:"How many chromosomes are in each human body cell?", o:["23","46","2","100"], a:1, why:"46 chromosomes in 23 pairs — half from each parent."},
+ {std:"S7L3.a", q:"A scar from an injury is NOT passed to offspring because it is a(n)…", o:["Inherited trait","Acquired trait","Gene","Chromosome"], a:1, why:"Acquired traits are gained during life and aren't carried in genes."},
+ {std:"S7L3.b", q:"Offspring from asexual reproduction are…", o:["Genetically identical to one parent","A mix of two parents","Always stronger","A brand-new species"], a:0, why:"One parent, no gene mixing — identical clones."},
+ {std:"S7L3.b", q:"Which type of reproduction creates the MOST genetic variation?", o:["Asexual","Sexual","Cloning","Budding"], a:1, why:"Two parents mixing genes creates variation."},
+ {std:"S7L3.b", q:"Why is genetic variation helpful when the environment changes?", o:["It isn't helpful","Some individuals may already have traits that fit the new conditions","It makes everyone identical","It stops all mutations"], a:1, why:"Variation is a species' insurance policy."},
+ {std:"S7L3.c", q:"Breeding only the highest-milk cows over many generations is called…", o:["Natural selection","Selective breeding","Mutation","Cloning"], a:1, why:"Humans choosing the parents is selective breeding."},
+ {std:"S7L3.c", q:"A risk of selective breeding is…", o:["Too much variation","Reduced variation and inherited health problems","Faster natural selection","No effect at all"], a:1, why:"Narrow breeding for looks can lock in weaknesses — just ask a pug."}
+],
+u4:[
+ {std:"S7L4.a", q:"A bee gets nectar while pollinating a flower, and both benefit. This is…", o:["Parasitism","Mutualism","Commensalism","Competition"], a:1, why:"Both species benefit = mutualism."},
+ {std:"S7L4.a", q:"Which is an ABIOTIC factor in an ecosystem?", o:["A deer","Sunlight","A mushroom","Bacteria"], a:1, why:"Abiotic means nonliving — sunlight, water, temperature."},
+ {std:"S7L4.b", q:"In a food chain, the arrows show the direction that ___ flows.", o:["Water","Energy","Air","Soil"], a:1, why:"Arrows point the way energy moves, from the eaten to the eater."},
+ {std:"S7L4.b", q:"About how much energy passes from one level of an energy pyramid to the next?", o:["About 10%","About 50%","About 90%","All of it"], a:0, why:"Only ~10% passes up; the rest runs the organism or escapes as heat."},
+ {std:"S7L4.c", q:"Kudzu spreads unchecked in Georgia because, as an invasive species, it…", o:["Has many predators here","Lacks the predators and competitors that controlled it back home","Needs no sunlight","Is actually native"], a:1, why:"No natural enemies plus natives with no defenses means unchecked spread."},
+ {std:"S7L4.c", q:"The largest population an ecosystem can support long-term is its…", o:["Limiting factor","Carrying capacity","Biome","Food web"], a:1, why:"Limiting factors cap growth at the carrying capacity."},
+ {std:"S7L4.d", q:"Which biome is hot and wet, with more species than anywhere on Earth?", o:["Tundra","Desert","Tropical rain forest","Taiga"], a:2, why:"Warmth plus constant water makes it the biodiversity champion."},
+ {std:"S7L4.d", q:"Where a river meets the sea and fresh water mixes with salt water is a(n)…", o:["Estuary","Lake","Coral reef","Aquifer"], a:0, why:"Estuaries are brackish 'nurseries of the sea.'"}
+],
+u5:[
+ {std:"S7L5.a", q:"In natural selection, which individuals leave the most offspring?", o:["The biggest","Those whose traits best fit the environment","The oldest","The rarest"], a:1, why:"Best-suited to the environment — not biggest — wins the odds."},
+ {std:"S7L5.a", q:"A moth population shifts from 10% dark to 85% dark over many generations. This is…", o:["A coincidence","Natural selection changing trait frequencies","Moths choosing their color","Individual moths changing color"], a:1, why:"Camouflaged moths survive more, so the population's mix shifts."},
+ {std:"S7L5.a", q:"Natural selection takes many generations because…", o:["Individuals slowly change their own genes","The population's mix of traits shifts a little each generation","Animals learn the new traits","It actually happens in one day"], a:1, why:"Populations evolve over generations; individuals don't change their traits."},
+ {std:"S7L5.b", q:"White fur helps an Arctic hare mainly by…", o:["Keeping it warmer","Improving its chance to hide from predators in the snow","Making it run faster","Helping in every habitat"], a:1, why:"Camouflage raises survival odds — the environment decides a trait's value."},
+ {std:"S7L5.b", q:"After antibiotics are used, resistant bacteria become common because…", o:["Antibiotics teach resistance","The few naturally resistant bacteria survive and multiply","Bacteria choose to resist","Doctors add resistance"], a:1, why:"The antibiotic selects the bacteria that were already resistant."},
+ {std:"S7L5.b", q:"Where does the variation that natural selection acts on come from?", o:["Practice and effort","Gene shuffling in reproduction and random mutations","The weather","Nowhere"], a:1, why:"Sexual reproduction and mutations create the variation."},
+ {std:"S7L5.c", q:"In undisturbed rock layers, the OLDEST fossils are found…", o:["At the top","At the bottom","Spread evenly","Only in mountains"], a:1, why:"Deeper layers formed first, so they are older."},
+ {std:"S7L5.c", q:"Fossil whales with small leg bones are evidence that whales…", o:["Always lived in water","Descended from land-walking ancestors","Are really fish","Used legs to swim faster"], a:1, why:"Leftover leg and hip bones link modern whales to four-legged ancestors."}
+]
+};
+Object.keys(POSTTESTS_X).forEach(u=>{ POSTTESTS[u] = (POSTTESTS[u]||[]).concat(POSTTESTS_X[u]); });
+const POSTTEST_LEN = 10; // questions shown per posttest attempt (drawn at random from the bank)
 function asnPosttestQs(uid, stds){
   const bank = POSTTESTS[uid] || [];
   const sel = new Set(stds || (ASN? ASN.cfg.std : []) || []);
-  let qs = bank.filter(q => sel.has(q.std));
-  if(qs.length < 5){ // pad with the rest of the unit bank so the test isn't trivial
-    const extra = bank.filter(q => !sel.has(q.std));
-    qs = qs.concat(extra.slice(0, 5 - qs.length));
+  // draw a fresh random subset each attempt so no two attempts (or students) match
+  let pool = shuffle(bank.filter(q => sel.has(q.std)));
+  if(pool.length < POSTTEST_LEN){ // pad with the rest of the unit bank so the test stays substantial
+    pool = pool.concat(shuffle(bank.filter(q => !sel.has(q.std))));
   }
-  return qs;
+  return pool.slice(0, Math.min(POSTTEST_LEN, pool.length));
 }
 let PT = null; // live posttest state
 function asnStartPosttest(uid){
-  const qs = shuffle([...asnPosttestQs(uid)]);
+  const max = (ASN && ASN.cfg.pom) || 0; // 0 = unlimited
+  if(max > 0){
+    const rec = store.get(`asn_${ASN.cfg.id}_${ASN.key}_po:${uid}`);
+    const used = rec?.attempts || 0;
+    if(used >= max){
+      go('assign');
+      document.getElementById('assigninfo').innerHTML = `<div style="text-align:center;padding:24px 8px">
+        <div style="font-size:2.2rem">🔒</div>
+        <p style="font-size:1.18rem;margin:8px 0"><b>No posttest attempts left</b></p>
+        <p style="color:var(--ink2);max-width:460px;margin:0 auto">Your teacher allowed <b>${max} attempt${max>1?'s':''}</b> on this posttest, and you've used ${used}.${rec? ` Your best score (<b>${rec.score}/${rec.total}</b>) is saved.`:''}</p>
+        <p style="margin-top:16px"><button class="gbtn" onclick="renderAssign()">← Back to checklist</button></p></div>`;
+      return;
+    }
+  }
+  const qs = asnPosttestQs(uid);
   PT = {uid, qs, i:0, score:0, picks:[]};
   renderPosttest();
 }

@@ -492,6 +492,12 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <p style="margin-top:10px"><a class="pdfbtn" href="#print" onclick="go('print');return false">Open the printable library →</a></p>
   </div>
 
+  <div class="card" style="border:2px solid #2f7a4d;background:#EAF6EF;margin:0 0 24px;max-width:780px">
+    <h3>📘 New here? Grab the Teacher's Guide</h3>
+    <p>A plain-English walkthrough of everything: building assignments, setting posttest attempts, the paperless gradebook, Warmup of the Day, printables and more. Downloads as a Word document you can keep or print.</p>
+    <p style="margin-top:10px"><a class="pdfbtn" style="background:#2f7a4d" href="Tobin_Science_Hub_Teacher_Guide.docx" download>📥 Download the Teacher's Guide</a></p>
+  </div>
+
   <div class="card" style="border:2px solid #E08F0E;background:#FFF7E8;margin:0 0 24px;max-width:780px">
     <h3>🌅 Warmup of the Day</h3>
     <p>A bell-ringer in two clicks: pick a topic (or roll the dice), pick a question type, and project it. Questions never repeat until the whole pool has been used.</p>
@@ -546,6 +552,17 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <div class="asnrow">
       <input id="asn-title" placeholder="Assignment title (e.g., Forces & Motion Mini-Unit)" maxlength="80">
       <input id="asn-teacher" placeholder="Teacher name (optional, shows on student view & report)" maxlength="60">
+    </div>
+    <div class="asnrow" style="margin-top:10px;align-items:center">
+      <label style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:.92rem;color:var(--ink2)">🏁 Posttest attempts allowed:
+        <select id="asn-pomax" style="border:1.5px solid var(--line);border-radius:8px;padding:7px 11px;font:inherit;font-size:.92rem">
+          <option value="1">1 attempt</option>
+          <option value="2" selected>2 attempts</option>
+          <option value="3">3 attempts</option>
+          <option value="0">Unlimited</option>
+        </select>
+      </label>
+      <span style="font-size:.82rem;color:var(--ink2);opacity:.85">Each attempt pulls a fresh random set of questions, so retakes — and neighbors — never match.</span>
     </div>
     <button class="genbtn" onclick="generateAssignment()">⚙️ Generate assignment link</button><span id="genmsg"></span>
   </div>
@@ -3988,7 +4005,8 @@ function generateAssignment(){
     t: (document.getElementById('asn-title').value || 'Class Assignment').slice(0,80),
     by: (document.getElementById('asn-teacher').value || '').slice(0,60),
     std: sel,
-    it: items
+    it: items,
+    pom: parseInt(document.getElementById('asn-pomax')?.value, 10) || 0
   };
   const code = encodeAssignment(cfg);
   const link = location.href.split('#')[0] + '#a=' + code;
@@ -4071,7 +4089,10 @@ function asnItems(cfg){
 const asnItemKey = it => `asn_${ASN.cfg.id}_${ASN.key}_${it.type}:${it.id}`;
 function asnStatus(it){ // → {done, meta}
   if(it.type==='po'){ const r=store.get(asnItemKey(it));
-    return r? {done:true, meta:`best ${r.score}/${r.total}${r.attempts>1? ' ('+r.attempts+' attempts)':''}`} : {done:false, meta:'scored — counts most toward your grade'}; }
+    const max=(ASN&&ASN.cfg.pom)||0; const used=r?.attempts||0;
+    const leftTxt = max>0 ? (max-used>0? ` · ${max-used} attempt${max-used>1?'s':''} left` : ' · no attempts left') : '';
+    if(r) return {done:true, meta:`best ${r.score}/${r.total}${r.attempts>1? ' ('+r.attempts+' attempts)':''}${leftTxt}`};
+    return {done:false, meta: max>0? `scored — counts most · ${max} attempt${max>1?'s':''} allowed` : 'scored — counts most toward your grade'}; }
   const v = store.get(asnItemKey(it));
   if(v===null || v===undefined) return {done:false, meta:''};
   if(it.type==='m')  return {done:true, meta:`best score ${v}`};
@@ -4490,8 +4511,11 @@ function renderAssign(){
       ${rows.map(x=>{
         const s = asnStatus(x);
         const againKey = {g:'ag_g',m:'ag_m',a:'ag_a',q:'ag_q',po:'ag_po'}[x.type] || 'ag_x';
+        const poMax=(ASN&&ASN.cfg.pom)||0, poRec=store.get(asnItemKey(x)), poLocked = x.type==='po' && poMax>0 && (poRec?.attempts||0)>=poMax;
         const btn = x.type==='po'
-          ? `<button class="asngo" style="background:#1B2440" onclick="asnStartPosttest('${x.id}')">${s.done? L('ag_po') : L('vb_po')}</button>`
+          ? (poLocked
+              ? `<button class="asngo" style="background:#9aa3bd;cursor:default" disabled>🔒 No attempts left</button>`
+              : `<button class="asngo" style="background:#1B2440" onclick="asnStartPosttest('${x.id}')">${s.done? L('ag_po') : L('vb_po')}</button>`)
           : `<button class="asngo" onclick="asnOpen('${x.type}','${x.id}')">${s.done? L(againKey) : L('vb_'+x.type)}</button>`;
         const meta = exc? `<span class="asnmeta">${L('excused')}</span>` : (s.meta? `<span class="asnmeta">${s.meta}</span>`:'');
         return `<div class="asnrow2 ${s.done&&!exc?'done':''}">
@@ -4699,19 +4723,34 @@ u5:[
    ========================================================= */
 
 /* ---------- posttest: filtered to the assignment's standards ---------- */
+const POSTTEST_LEN = 10; // questions shown per posttest attempt (drawn at random from the bank)
 function asnPosttestQs(uid, stds){
   const bank = POSTTESTS[uid] || [];
   const sel = new Set(stds || (ASN? ASN.cfg.std : []) || []);
-  let qs = bank.filter(q => sel.has(q.std));
-  if(qs.length < 5){ // pad with the rest of the unit bank so the test isn't trivial
-    const extra = bank.filter(q => !sel.has(q.std));
-    qs = qs.concat(extra.slice(0, 5 - qs.length));
+  // draw a fresh random subset each attempt so no two attempts (or students) match
+  let pool = shuffle(bank.filter(q => sel.has(q.std)));
+  if(pool.length < POSTTEST_LEN){ // pad with the rest of the unit bank so the test stays substantial
+    pool = pool.concat(shuffle(bank.filter(q => !sel.has(q.std))));
   }
-  return qs;
+  return pool.slice(0, Math.min(POSTTEST_LEN, pool.length));
 }
 let PT = null; // live posttest state
 function asnStartPosttest(uid){
-  const qs = shuffle([...asnPosttestQs(uid)]);
+  const max = (ASN && ASN.cfg.pom) || 0; // 0 = unlimited
+  if(max > 0){
+    const rec = store.get(`asn_${ASN.cfg.id}_${ASN.key}_po:${uid}`);
+    const used = rec?.attempts || 0;
+    if(used >= max){
+      go('assign');
+      document.getElementById('assigninfo').innerHTML = `<div style="text-align:center;padding:24px 8px">
+        <div style="font-size:2.2rem">🔒</div>
+        <p style="font-size:1.18rem;margin:8px 0"><b>No posttest attempts left</b></p>
+        <p style="color:var(--ink2);max-width:460px;margin:0 auto">Your teacher allowed <b>${max} attempt${max>1?'s':''}</b> on this posttest, and you've used ${used}.${rec? ` Your best score (<b>${rec.score}/${rec.total}</b>) is saved.`:''}</p>
+        <p style="margin-top:16px"><button class="gbtn" onclick="renderAssign()">← Back to checklist</button></p></div>`;
+      return;
+    }
+  }
+  const qs = asnPosttestQs(uid);
   PT = {uid, qs, i:0, score:0, picks:[]};
   renderPosttest();
 }
