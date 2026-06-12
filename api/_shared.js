@@ -64,11 +64,12 @@ export function jsonResponse(status, obj, origin) {
   });
 }
 
-// Only ever bounce the browser back to our own site, never an attacker's URL.
+// Only ever bounce the browser back to a trusted origin (live site or local
+// preview), never an attacker's URL.
 export function safeReturnTo(raw) {
   try {
     const url = new URL(raw);
-    if (url.origin === SITE_ORIGIN) return url.origin + url.pathname;
+    if (ALLOWED_ORIGINS.includes(url.origin)) return url.origin + url.pathname;
   } catch (_) { /* ignore */ }
   return SITE_ORIGIN + '/science-hub/physical_science.html';
 }
