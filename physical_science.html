@@ -295,6 +295,10 @@ body.onstart nav{display:none}
 /* ---------- PHASE 3: ASSIGNMENT MODE ---------- */
 #asnbanner{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;background:#FFD466;color:#1B2440;padding:9px 18px;font-size:.92rem;box-shadow:0 2px 10px rgba(27,36,64,.18)}
 #asnbanner button{margin-left:auto;background:#1B2440;color:#fff;border:0;border-radius:99px;padding:7px 16px;font-weight:800;cursor:pointer;font-size:.85rem}
+#asnbanner .asnbtitle{flex:1;min-width:0}
+#asnbanner .asnnav{margin-left:auto;display:flex;gap:8px;flex:none}
+#asnbanner .asnnav button{margin-left:0}
+#asnbanner button:disabled{opacity:.4;cursor:default}
 .asngate{background:#f4f6fb;border:2px solid #e3e7f2;border-radius:14px;padding:18px 20px;margin-top:6px}
 .asngate h3{margin:0}
 .asnroster{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
@@ -4039,18 +4043,19 @@ function openPane(uid, pane){
 
 /* ---------- item registry: cfg → flat renderable list ---------- */
 const ASN_TYPES = [
+  {k:'pr', icon:'🩺', name:'Pretest',          verb:'Take pretest'},
   {k:'g',  icon:'📝', name:'Study guides',     verb:'Read'},
   {k:'m',  icon:'🎮', name:'Minigames',        verb:'Play'},
   {k:'a',  icon:'🧩', name:'Practice activities', verb:'Practice'},
   {k:'v',  icon:'▶',  name:'Videos',           verb:'Watch'},
   {k:'p',  icon:'⚛',  name:'PhET labs',        verb:'Open lab'},
   {k:'q',  icon:'✅', name:'Practice quizzes', verb:'Take quiz'},
-  {k:'pr', icon:'🩺', name:'Pretest',          verb:'Take pretest'},
   {k:'po', icon:'🏁', name:'Posttest',         verb:'Take posttest'}
 ];
 function asnItems(cfg){
   const out = [];
   const it = cfg.it || {};
+  (it.pr||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'pr', id:uid, uid, label:`Unit ${UNITS[uid].num} pretest (5 questions — completion only)`}); });
   (it.g||[]).forEach(id=>{ const [uid,L]=id.split(':L'); const ls=UNITS[uid]?.lessons[+L];
     if(ls) out.push({type:'g', id, uid, label:ls.t}); });
   (it.m||[]).forEach(gid=>{ const g=GAMES[gid];
@@ -4060,7 +4065,6 @@ function asnItems(cfg){
   ['v','p'].forEach(t=>(it[t]||[]).forEach(id=>{ const [uid,V]=id.split(':V'); const v=UNITS[uid]?.videos[+V];
     if(v) out.push({type:t, id, uid, label:v.t, url:v.url, kind:v.kind}); }));
   (it.q||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'q', id:uid, uid, label:`Unit ${UNITS[uid].num} practice quiz (10 questions)`}); });
-  (it.pr||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'pr', id:uid, uid, label:`Unit ${UNITS[uid].num} pretest (5 questions — completion only)`}); });
   (it.po||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'po', id:uid, uid, label:`Unit ${UNITS[uid].num} posttest`}); });
   return out;
 }
@@ -4102,8 +4106,11 @@ function asnRecord(type, id, val){
 
 /* ---------- open actions from the checklist ---------- */
 function asnOpen(type, id){
-  const it = asnItems(ASN.cfg).find(x=>x.type===type && x.id===id);
+  const _items = asnItems(ASN.cfg);
+  const _idx = _items.findIndex(x=>x.type===type && x.id===id);
+  const it = _items[_idx];
   if(!it) return;
+  if(ASN) ASN.idx = _idx;
   if(type==='g'){
     store.set(asnItemKey(it), Date.now());
     go(it.uid); openPane(it.uid,'study');
@@ -4122,6 +4129,7 @@ function asnOpen(type, id){
     go(it.uid); openPane(it.uid,'study');
     setTimeout(()=>{ const el=document.getElementById(it.uid+'-prebox'); if(el) el.scrollIntoView({behavior:'smooth', block:'center'}); }, 120);
   }
+  if(typeof updateAsnBanner==='function') updateAsnBanner();
 }
 
 /* ---------- entry: #a= link ---------- */
@@ -4525,6 +4533,24 @@ function renderAssign(){
     </div>`;
 }
 
+/* ---------- next / back navigation through the checklist ---------- */
+function asnGoIndex(i){
+  if(!ASN) return;
+  const items = asnItems(ASN.cfg);
+  if(i<0 || i>=items.length) return;
+  ASN.idx = i;
+  const it = items[i];
+  if(it.type==='po'){ go('assign'); asnStartPosttest(it.id); }
+  else asnOpen(it.type, it.id);
+  updateAsnBanner();
+}
+function asnNav(dir){
+  if(!ASN) return;
+  const items = asnItems(ASN.cfg);
+  const cur = (ASN.idx==null? -1 : ASN.idx);
+  asnGoIndex(Math.max(0, Math.min(items.length-1, cur+dir)));
+}
+
 /* ---------- persistent banner while studying ---------- */
 function updateAsnBanner(){
   let bar = document.getElementById('asnbanner');
@@ -4536,8 +4562,14 @@ function updateAsnBanner(){
   }
   const items = asnItems(ASN.cfg);
   const done = items.filter(x=>asnStatus(x).done).length;
-  bar.innerHTML = `📋 <b>${ASN.cfg.t||'Assignment'}</b> · ${ASN.name} · ${done}/${items.length} done
-    <button onclick="renderAssign();go('assign')">My checklist →</button>`;
+  const idx = (ASN.idx==null? -1 : ASN.idx);
+  const pos = idx>=0? `Task ${idx+1} of ${items.length}` : `${done}/${items.length} done`;
+  bar.innerHTML = `<span class="asnbtitle">📋 <b>${ASN.cfg.t||'Assignment'}</b> · ${ASN.name} · ${pos}</span>
+    <span class="asnnav">
+      <button ${idx<=0?'disabled':''} onclick="asnNav(-1)">← Back</button>
+      <button onclick="renderAssign();go('assign')">Checklist</button>
+      <button ${idx>=items.length-1?'disabled':''} onclick="asnNav(1)">Next →</button>
+    </span>`;
   bar.style.display = document.getElementById('page-assign').classList.contains('show')? 'none':'flex';
 }
 

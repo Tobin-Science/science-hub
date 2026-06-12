@@ -295,6 +295,10 @@ body.onstart nav{display:none}
 /* ---------- PHASE 3: ASSIGNMENT MODE ---------- */
 #asnbanner{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;background:#FFD466;color:#1B2440;padding:9px 18px;font-size:.92rem;box-shadow:0 2px 10px rgba(27,36,64,.18)}
 #asnbanner button{margin-left:auto;background:#1B2440;color:#fff;border:0;border-radius:99px;padding:7px 16px;font-weight:800;cursor:pointer;font-size:.85rem}
+#asnbanner .asnbtitle{flex:1;min-width:0}
+#asnbanner .asnnav{margin-left:auto;display:flex;gap:8px;flex:none}
+#asnbanner .asnnav button{margin-left:0}
+#asnbanner button:disabled{opacity:.4;cursor:default}
 .asngate{background:#f4f6fb;border:2px solid #e3e7f2;border-radius:14px;padding:18px 20px;margin-top:6px}
 .asngate h3{margin:0}
 .asnroster{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0}
@@ -2203,6 +2207,147 @@ GAMES.u6b={title:"Conservation Crew",icon:"🌱",id:"u6b",unit:"u6",
   {t:"A",label:"AIR",emoji:"💨",sub:""}
  ]); }};
 
+/* =========================================================
+   EARTH SCIENCE — THIRD GAME PER UNIT (6 more)
+   Adds an "odd one out" tap mechanic (DOM chips, no SVG).
+   ========================================================= */
+
+/* ---------- reusable mechanic: ODD ONE OUT (tap the misfit) ----------
+   rounds = [ {prompt, items:[[emoji,label],...], odd:index, why}, ... ] */
+function oddGame(areaId,id,title,desc,rounds){
+  kineShell(areaId,id,title,desc,`<span>ROUND <b id="${areaId}-r">1</b>/${rounds.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const deck=shuffle([...rounds]); let i=0,score=0,tries=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=deck.length){ kineDone(areaId,id,score); return; }
+    tries=0; document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    const rd=deck[i]; const shown=shuffle(rd.items.map((_,k)=>k));
+    stage.innerHTML=`<div style="font-size:1.04rem;margin-bottom:10px">${rd.prompt}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center">${shown.map(k=>
+        `<button class="gbtn koc" data-k="${k}" style="min-width:130px;max-width:180px;white-space:normal;line-height:1.3">${rd.items[k][0]}<br>${rd.items[k][1]}</button>`).join('')}</div>`;
+    stage.querySelectorAll('.koc').forEach(b=>b.onclick=()=>{
+      const k=+b.dataset.k; tries++;
+      if(k===rd.odd){ b.style.boxShadow='0 0 0 3px #5ad08a';
+        stage.querySelectorAll('.koc').forEach(x=>x.disabled=true);
+        const pts=tries===1?12:tries===2?7:4; score+=pts; kineScore(areaId,score);
+        kineMsg(areaId,`✅ <b>That's the odd one!</b> <span class="why">${rd.why}</span> +${pts}`);
+        i++; setTimeout(draw,1800);
+      } else { b.style.boxShadow='0 0 0 3px #f08c8c'; b.style.opacity='.5'; b.disabled=true;
+        kineMsg(areaId,`❌ <b>That one fits the group.</b> <span class="why">Look again — which one is different?</span>`); }
+    });
+  }
+  draw();
+}
+
+/* u1c · PLANET ODDBALL — tap the planet that doesn't belong (S6E1.c) */
+GAMES.u1c={title:"Planet Oddball",icon:"🪐",id:"u1c",unit:"u1",
+ desc:"Three planets share a trait; one doesn't. TAP the planet that does NOT belong.",
+ start(areaId){ oddGame(areaId,'u1c',this.title,this.desc,[
+  {prompt:"Three are INNER (small, rocky) planets. Tap the one that is NOT.",items:[["🪐","Mercury"],["🪐","Venus"],["🪐","Earth"],["🪐","Jupiter"]],odd:3,why:"Jupiter is a giant gas planet; the others are small, rocky inner planets."},
+  {prompt:"Three are GIANT outer planets. Tap the one that is NOT.",items:[["🪐","Jupiter"],["🪐","Saturn"],["🪐","Neptune"],["🪐","Mars"]],odd:3,why:"Mars is a small rocky planet; the others are giant outer planets."},
+  {prompt:"Three have NO solid surface to stand on. Tap the odd one.",items:[["🪐","Jupiter"],["🪐","Saturn"],["🪐","Neptune"],["🪐","Mercury"]],odd:3,why:"Mercury is solid rock; the gas and ice giants have no solid surface."},
+  {prompt:"Three orbit BEYOND the asteroid belt. Tap the one that orbits closer to the sun.",items:[["🪐","Jupiter"],["🪐","Saturn"],["🪐","Uranus"],["🪐","Earth"]],odd:3,why:"Earth orbits inside the asteroid belt, close to the sun; the giants are far beyond it."},
+  {prompt:"Three are MUCH larger than Earth. Tap the one about Earth's size or smaller.",items:[["🪐","Jupiter"],["🪐","Saturn"],["🪐","Neptune"],["🪐","Mars"]],odd:3,why:"Mars is smaller than Earth; the giant planets are far larger."}
+ ]); }};
+
+/* u2c · SEASON SWING — summer vs winter from the tilt (S6E2.c) */
+GAMES.u2c={title:"Season Swing",icon:"🍂",id:"u2c",unit:"u2",
+ desc:"Seasons come from Earth's tilt, not its distance. SWIPE each clue — left for summer, right for winter.",
+ start(areaId){ swipeGame(areaId,'u2c',this.title,this.desc,[
+  ["Your hemisphere is tilted TOWARD the sun","L","Tilted toward the sun = direct light and long days = summer."],
+  ["Your hemisphere is tilted AWAY from the sun","R","Tilted away = slanted light and short days = winter."],
+  ["Sunlight hits you most directly and days are longest","L","Direct, concentrated light and long days = summer."],
+  ["The sun stays low and the days are shortest","R","Low, slanted sun and short days = winter."],
+  ["It's January in Georgia (Northern Hemisphere)","R","Northern winter — even though Earth is actually closest to the sun in January!"],
+  ["It's July in Georgia","L","Northern summer — the north is tilted toward the sun."],
+  ["It's July in Australia (Southern Hemisphere)","R","The hemispheres have OPPOSITE seasons — July is winter down south."],
+  ["Direct, concentrated sunlight strongly warms the ground","L","Concentrated light = strong heating = summer."],
+  ["Slanted sunlight is spread thin over a large area","R","Spread-out light = weak heating = winter."]
+ ],{emoji:"☀️",label:"SUMMER"},{emoji:"❄️",label:"WINTER"}); }};
+
+/* u3c · TIDE ALIGNER — line up spring vs neap tides (S6E3.d) */
+const TIDES=[
+ ["SPRING tide (biggest)",50,"Spring tide: the sun, Earth, and moon line up (full or new moon), so their gravity pulls TOGETHER for the biggest tides."],
+ ["NEAP tide (smallest)",25,"Neap tide: the moon is at a RIGHT ANGLE to the sun (quarter moon), so their pulls partly cancel — the smallest tides."],
+ ["SPRING tide (biggest)",50,"Lined up = pulls combine = the largest difference between high and low tide."],
+ ["NEAP tide (smallest)",75,"Right angle = pulls work against each other = the smallest tidal range."],
+ ["SPRING tide (biggest)",50,"Sun + moon in a line stack their gravity for extra-high and extra-low tides."]
+];
+GAMES.u3c={title:"Tide Aligner",icon:"🌊",id:"u3c",unit:"u3",
+ desc:"Tides come from the moon's gravity. The sun is on the left, Earth in the middle — SLIDE the moon to line up the tide mission control asks for.",
+ start(areaId){
+  kineShell(areaId,'u3c',this.title,this.desc,`<span>ALIGN <b id="${areaId}-r">1</b>/${TIDES.length}</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  const probs=shuffle([...TIDES]); let i=0,score=0;
+  function draw(){
+    if(!document.getElementById(areaId+'-stage')) return;
+    if(i>=probs.length){ kineDone(areaId,'u3c',score); return; }
+    document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
+    let firstTry=true; const [name,center,why]=probs[i]; const gw=15;
+    stage.innerHTML=`<div style="font-size:1.05rem">Line up a <b>${name}</b>.</div>
+      <div style="display:flex;justify-content:space-between;font-size:1.5rem;margin:6px 4px 0"><span>☀️ sun</span><span>🌍 Earth</span></div>
+      <div class="ktrack"><div class="kgate" style="left:${center-gw/2}%;width:${gw}%"><label>here</label></div><div class="kcraft" id="${areaId}-cr">🌙</div></div>
+      <input type="range" class="kslider" id="${areaId}-sl" min="0" max="100" step="1" value="0">
+      <div class="kdial">moon position: <b id="${areaId}-val">0</b></div>
+      <div style="text-align:center"><button class="gbtn" id="${areaId}-go">🌊 ALIGN</button></div>`;
+    const sl=document.getElementById(areaId+'-sl'),val=document.getElementById(areaId+'-val');
+    const craft=document.getElementById(areaId+'-cr'),go=document.getElementById(areaId+'-go'),track=stage.querySelector('.ktrack');
+    const place=()=>craft.style.left=(sl.value/100*(track.clientWidth-40))+'px';
+    sl.oninput=()=>{ val.textContent=sl.value; place(); }; setTimeout(place,20);
+    go.onclick=()=>{
+      const v=parseFloat(sl.value); const hit=Math.abs(v-center)<=gw/2;
+      if(hit){ go.disabled=true; sl.disabled=true; const pts=firstTry?14:7; score+=pts; kineScore(areaId,score);
+        kineMsg(areaId,`✅ <b>${name.split(' ')[0]} tide aligned!</b> <span class="why">${why}</span> +${pts}`); i++; setTimeout(draw,1900); }
+      else { firstTry=false; kineMsg(areaId,`❌ <b>Not lined up yet.</b> <span class="why">Slide the moon to the highlighted band to make a ${name.split(' ')[0].toLowerCase()} tide.</span>`); }
+    };
+  }
+  draw();
+ }};
+
+/* u4c · HEATS FAST OR SLOW — land vs water heating (S6E4.b) */
+GAMES.u4c={title:"Heats Fast or Slow?",icon:"🌡️",id:"u4c",unit:"u4",
+ desc:"The sun heats land and water at different rates. SWIPE each one — left if it heats and cools FAST, right if SLOWLY.",
+ start(areaId){ swipeGame(areaId,'u4c',this.title,this.desc,[
+  ["Beach sand at noon","L","Land heats up fast — and cools off fast too."],
+  ["The open ocean","R","Water heats and cools slowly; it takes far more energy to change its temperature."],
+  ["A parking lot in summer","L","Pavement (land) heats quickly in the sun."],
+  ["A deep lake","R","Large bodies of water change temperature slowly."],
+  ["Desert ground at night","L","Land cools fast — deserts get cold at night after a hot day."],
+  ["A coastal city's mild air","R","The slow-changing ocean moderates the temperature along the coast."],
+  ["Bare soil in a field","L","Land heats and cools quickly."],
+  ["A swimming pool still cold in spring","R","Water warms up slowly, lagging behind the air."]
+ ],{emoji:"🏖️",label:"FAST (land)"},{emoji:"🌊",label:"SLOW (water)"}); }};
+
+/* u5c · BREAK IT DOWN — weathering / erosion / deposition (S6E5.d) */
+GAMES.u5c={title:"Break It Down",icon:"🪨",id:"u5c",unit:"u5",
+ desc:"Weathering breaks it, erosion moves it, deposition drops it. DRAG each event to the right process.",
+ start(areaId){ binGame(areaId,'u5c',this.title,this.desc,[
+  ["Ice freezes in a crack and splits the rock apart","W","Weathering breaks rock in place — this is ice wedging."],
+  ["Acid rain slowly dissolves a limestone statue","W","Chemical weathering breaks rock down right where it sits."],
+  ["Plant roots pry apart a sidewalk","W","Roots weather (break) the material in place."],
+  ["A river carries sand and pebbles downstream","E","Erosion is the TRANSPORT of weathered pieces to a new place."],
+  ["Wind blows desert sand across the dunes","E","Wind erosion moves the loose material along."],
+  ["A glacier drags rocks along as it flows","E","Glaciers are powerful agents of erosion."],
+  ["Sand piles up to build a beach","D","Deposition is the DROPPING of sediment in a new spot."],
+  ["A river slows and drops silt to form a delta","D","When the water slows, sediment settles out — deposition."],
+  ["The wind dies down and dumps its sand into a dune","D","As the wind slows it deposits the sand it carried."]
+ ],[
+  {t:"W",label:"WEATHERING",emoji:"🔨",sub:"breaks it"},
+  {t:"E",label:"EROSION",emoji:"💨",sub:"moves it"},
+  {t:"D",label:"DEPOSITION",emoji:"⛰️",sub:"drops it"}
+ ]); }};
+
+/* u6c · CLIMATE DETECTIVE — tap the one that is NOT real evidence (S6E6.c) */
+GAMES.u6c={title:"Climate Detective",icon:"🔎",id:"u6c",unit:"u6",
+ desc:"Scientists weigh real evidence and rule out the rest. TAP the one that does NOT belong with the others.",
+ start(areaId){ oddGame(areaId,'u6c',this.title,this.desc,[
+  {prompt:"Three are real, measured records used to track Earth's temperature over the past century. Tap the one that is NOT.",items:[["🌡️","Thermometer records worldwide"],["🧊","Shrinking glaciers and ice"],["🌊","Rising sea levels"],["📺","Tomorrow's TV weather forecast"]],odd:3,why:"Tomorrow's forecast is short-term WEATHER, not long-term climate evidence. The other three are measured records."},
+  {prompt:"Three are tools scientists use to study PAST climate. Tap the odd one.",items:[["🧊","Ice cores with ancient air bubbles"],["🌳","Tree rings"],["🪨","Ocean sediment layers"],["📱","A brand-new smartphone"]],odd:3,why:"A smartphone reveals nothing about ancient climate; the other three are genuine climate records."},
+  {prompt:"Three are greenhouse gases that trap heat. Tap the gas that does NOT trap heat.",items:[["💨","Carbon dioxide (CO₂)"],["🔥","Methane"],["💧","Water vapor"],["🎈","Helium"]],odd:3,why:"Helium doesn't trap heat. CO₂, methane, and water vapor are the greenhouse gases."},
+  {prompt:"Scientists test each possible cause against the data. Three are real factors they measure. Tap the made-up one.",items:[["🌋","Volcanic eruptions"],["☀️","Changes in the sun's brightness"],["🏭","Greenhouse gases from burning fuels"],["🧙","Magic spells"]],odd:3,why:"Magic isn't measurable! Volcanoes, the sun's output, and greenhouse gases are all real factors scientists weigh against the evidence."}
+ ]); }};
+
 /* ---------- shared kinesthetic helpers ---------- */
 function kineShell(areaId,id,title,desc,hud){
   document.getElementById(areaId).innerHTML = `
@@ -2843,12 +2988,12 @@ const STD_TAGS = {
  /* --- Unit 6 videos --- */
  "u6:V0":["S6E6.a"], "u6:V1":["S6E6.a"], "u6:V2":["S6E6.b"], "u6:V3":["S6E6.c"], "u6:V4":["S6E6.c"],
  /* --- Minigames (keyed by game id) --- */
- "u1":["S6E1.d"], "u1b":["S6E1.e"],
- "u2":["S6E2.a"], "u2b":["S6E2.b"],
- "u3":["S6E3.a"], "u3b":["S6E3.b"],
- "u4":["S6E4.a"], "u4b":["S6E4.d"],
- "u5":["S6E5.a"], "u5b":["S6E5.c"],
- "u6":["S6E6.a"], "u6b":["S6E6.b"]
+ "u1":["S6E1.d"], "u1b":["S6E1.e"], "u1c":["S6E1.c"],
+ "u2":["S6E2.a"], "u2b":["S6E2.b"], "u2c":["S6E2.c"],
+ "u3":["S6E3.a"], "u3b":["S6E3.b"], "u3c":["S6E3.d"],
+ "u4":["S6E4.a"], "u4b":["S6E4.d"], "u4c":["S6E4.b"],
+ "u5":["S6E5.a"], "u5b":["S6E5.c"], "u5c":["S6E5.d"],
+ "u6":["S6E6.a"], "u6b":["S6E6.b"], "u6c":["S6E6.c"]
 };
 
 /* ---------- per-question sub-standard tags for the practice quizzes
@@ -3399,18 +3544,19 @@ function openPane(uid, pane){
 
 /* ---------- item registry: cfg → flat renderable list ---------- */
 const ASN_TYPES = [
+  {k:'pr', icon:'🩺', name:'Pretest',          verb:'Take pretest'},
   {k:'g',  icon:'📝', name:'Study guides',     verb:'Read'},
   {k:'m',  icon:'🎮', name:'Minigames',        verb:'Play'},
   {k:'a',  icon:'🧩', name:'Practice activities', verb:'Practice'},
   {k:'v',  icon:'▶',  name:'Videos',           verb:'Watch'},
   {k:'p',  icon:'⚛',  name:'PhET labs',        verb:'Open lab'},
   {k:'q',  icon:'✅', name:'Practice quizzes', verb:'Take quiz'},
-  {k:'pr', icon:'🩺', name:'Pretest',          verb:'Take pretest'},
   {k:'po', icon:'🏁', name:'Posttest',         verb:'Take posttest'}
 ];
 function asnItems(cfg){
   const out = [];
   const it = cfg.it || {};
+  (it.pr||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'pr', id:uid, uid, label:`Unit ${UNITS[uid].num} pretest (5 questions — completion only)`}); });
   (it.g||[]).forEach(id=>{ const [uid,L]=id.split(':L'); const ls=UNITS[uid]?.lessons[+L];
     if(ls) out.push({type:'g', id, uid, label:ls.t}); });
   (it.m||[]).forEach(gid=>{ const g=GAMES[gid];
@@ -3420,7 +3566,6 @@ function asnItems(cfg){
   ['v','p'].forEach(t=>(it[t]||[]).forEach(id=>{ const [uid,V]=id.split(':V'); const v=UNITS[uid]?.videos[+V];
     if(v) out.push({type:t, id, uid, label:v.t, url:v.url, kind:v.kind}); }));
   (it.q||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'q', id:uid, uid, label:`Unit ${UNITS[uid].num} practice quiz (10 questions)`}); });
-  (it.pr||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'pr', id:uid, uid, label:`Unit ${UNITS[uid].num} pretest (5 questions — completion only)`}); });
   (it.po||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'po', id:uid, uid, label:`Unit ${UNITS[uid].num} posttest`}); });
   return out;
 }
@@ -3462,8 +3607,11 @@ function asnRecord(type, id, val){
 
 /* ---------- open actions from the checklist ---------- */
 function asnOpen(type, id){
-  const it = asnItems(ASN.cfg).find(x=>x.type===type && x.id===id);
+  const _items = asnItems(ASN.cfg);
+  const _idx = _items.findIndex(x=>x.type===type && x.id===id);
+  const it = _items[_idx];
   if(!it) return;
+  if(ASN) ASN.idx = _idx;
   if(type==='g'){
     store.set(asnItemKey(it), Date.now());
     go(it.uid); openPane(it.uid,'study');
@@ -3482,6 +3630,7 @@ function asnOpen(type, id){
     go(it.uid); openPane(it.uid,'study');
     setTimeout(()=>{ const el=document.getElementById(it.uid+'-prebox'); if(el) el.scrollIntoView({behavior:'smooth', block:'center'}); }, 120);
   }
+  if(typeof updateAsnBanner==='function') updateAsnBanner();
 }
 
 /* ---------- entry: #a= link ---------- */
@@ -3786,6 +3935,24 @@ function renderAssign(){
     </div>`;
 }
 
+/* ---------- next / back navigation through the checklist ---------- */
+function asnGoIndex(i){
+  if(!ASN) return;
+  const items = asnItems(ASN.cfg);
+  if(i<0 || i>=items.length) return;
+  ASN.idx = i;
+  const it = items[i];
+  if(it.type==='po'){ go('assign'); asnStartPosttest(it.id); }
+  else asnOpen(it.type, it.id);
+  updateAsnBanner();
+}
+function asnNav(dir){
+  if(!ASN) return;
+  const items = asnItems(ASN.cfg);
+  const cur = (ASN.idx==null? -1 : ASN.idx);
+  asnGoIndex(Math.max(0, Math.min(items.length-1, cur+dir)));
+}
+
 /* ---------- persistent banner while studying ---------- */
 function updateAsnBanner(){
   let bar = document.getElementById('asnbanner');
@@ -3797,8 +3964,14 @@ function updateAsnBanner(){
   }
   const items = asnItems(ASN.cfg);
   const done = items.filter(x=>asnStatus(x).done).length;
-  bar.innerHTML = `📋 <b>${ASN.cfg.t||'Assignment'}</b> · ${ASN.name} · ${done}/${items.length} done
-    <button onclick="renderAssign();go('assign')">My checklist →</button>`;
+  const idx = (ASN.idx==null? -1 : ASN.idx);
+  const pos = idx>=0? `Task ${idx+1} of ${items.length}` : `${done}/${items.length} done`;
+  bar.innerHTML = `<span class="asnbtitle">📋 <b>${ASN.cfg.t||'Assignment'}</b> · ${ASN.name} · ${pos}</span>
+    <span class="asnnav">
+      <button ${idx<=0?'disabled':''} onclick="asnNav(-1)">← Back</button>
+      <button onclick="renderAssign();go('assign')">Checklist</button>
+      <button ${idx>=items.length-1?'disabled':''} onclick="asnNav(1)">Next →</button>
+    </span>`;
   bar.style.display = document.getElementById('page-assign').classList.contains('show')? 'none':'flex';
 }
 
