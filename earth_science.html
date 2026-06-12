@@ -4757,7 +4757,7 @@ async function authSubmit(){
   try{
     if(authMode==='up'){
       if(pass.length < 6){ setAuthMsg('Password must be at least 6 characters.', 'err'); btn.disabled=false; return; }
-      const { data, error } = await sbClient.auth.signUp({ email, password: pass });
+      const { data, error } = await sbClient.auth.signUp({ email, password: pass, options:{ emailRedirectTo: location.origin + location.pathname } });
       if(error){ setAuthMsg(error.message, 'err'); }
       else if(!data.session){ setAuthMsg('Account created! Check your email for a confirmation link, then come back and sign in.', 'ok'); }
       /* if a session came back, onAuthStateChange walks them into the tools */
