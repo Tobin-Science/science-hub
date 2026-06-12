@@ -1,0 +1,11 @@
+{
+  "name": "science-hub-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Serverless payment helpers (Stripe + Supabase) for the Tobin Science Hub. The hub site itself is static and served by GitHub Pages; only the /api functions run on Vercel.",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "stripe": "^17.5.0"
+  }
+}
