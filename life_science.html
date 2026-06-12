@@ -445,6 +445,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <button class="navbtn" data-go="u5">Evolution</button>
     <button class="navbtn" data-go="arcade">🎮 Arcade</button>
     <button class="navbtn" data-go="vocab">Vocabulary</button>
+    <button class="navbtn" data-go="print">🖨 Printables</button>
     <button class="navbtn switchview" data-go="start">🔄 Switch view</button>
   </div>
 </nav>
@@ -473,7 +474,8 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
       </div>
     </div>
     <p class="startnote">Students with an assignment link from their teacher: just open that link — it brings you straight to your checklist.</p>
-    <p class="startnote"><a href="index.html" style="font-weight:700">🏠 All classes</a> &nbsp;·&nbsp; Life Science content is rolling out unit by unit. The full <a href="physical_science.html" style="font-weight:700">⚛️ Physical Science Hub</a> is finished — games, printables, and all.</p>
+    <p class="startnote">Teachers: print-ready PDFs (textbook chapters in English, Spanish &amp; scaffolded editions, activity packets, and 2-page reviews) live in the <a href="#print" onclick="go('print');return false" style="font-weight:700">🖨 printable library</a>.</p>
+    <p class="startnote"><a href="index.html" style="font-weight:700">🏠 All classes</a> &nbsp;·&nbsp; Teach another grade? <a href="physical_science.html" style="font-weight:700">⚛️ Physical Science (8th)</a> &nbsp;·&nbsp; <a href="earth_science.html" style="font-weight:700">🌍 Earth &amp; Space Science (6th)</a></p>
   </div>
 </section>
 
@@ -484,8 +486,14 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
   <p class="lead">Step 1: check every standard your current unit covers. The panel on the right shows exactly which study guides, games, videos, and PhET labs match — live.</p>
 
   <div class="card" style="border:2px solid var(--ac);background:#EDEFFD;margin:0 0 24px;max-width:780px">
-    <h3>🧬 Life Science — rolling out unit by unit</h3>
-    <p>The standards tree below is complete and the full assignment engine is ready. Lessons, quizzes, activities, and games unlock as each unit is finished — assignments you generate stay frozen and safe.</p>
+    <h3>🧬 Life Science — all five units live</h3>
+    <p>Every unit is fully loaded: study guides, 15 minigames, practice quizzes, pretests, posttests, practice activities, warmups, and personalized report feedback across all 15 sub-standards.</p>
+  </div>
+
+  <div class="card" style="border:2px solid var(--ac);background:#EDEFFD;margin:0 0 24px;max-width:780px">
+    <h3>🖨 Printable library — ready to copy</h3>
+    <p>All five textbook chapters in <b>English, Spanish, and scaffolded reading-support editions</b>, plus chapter activity packets, 2-page review guides, and the vocabulary list. Free to print for your classroom.</p>
+    <p style="margin-top:10px"><a class="pdfbtn" href="#print" onclick="go('print');return false">Open the printable library →</a></p>
   </div>
 
   <div class="card" style="border:2px solid #E08F0E;background:#FFF7E8;margin:0 0 24px;max-width:780px">
@@ -698,55 +706,56 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 <section class="page" id="page-print">
   <p class="eyebrow">Printable Library · Free for classroom use</p>
   <h1>Print it, copy it, teach with it.</h1>
-  <p class="lead">Every document below is a print-ready PDF aligned to the Georgia Standards of Excellence (S8P1–S8P5). Textbook chapters come in <b>English, Spanish, and scaffolded reading-support editions</b>, with activity &amp; lab sheets and review sheets to match. Teachers: print classroom sets, post them to your LMS, or send them home — no permission needed. Students: these make great offline study packets.</p>
+  <p class="lead">Every document below is a print-ready PDF aligned to the Georgia Standards of Excellence (S7L1–S7L5). Textbook chapters come in <b>English, Spanish, and scaffolded reading-support editions</b>, with activity packets and 2-page review guides to match. Teachers: print classroom sets, post them to your LMS, or send them home — no permission needed. Students: these make great offline study packets.</p>
 
   <h2>📖 Textbook chapters</h2>
   <div class="cardgrid">
-    <div class="card"><h3>Chapter 1 · Matter, Atoms &amp; the Periodic Table</h3><p>Unit 1 · S8P1 — elements, compounds &amp; mixtures, states of matter, physical vs. chemical changes, atomic structure, the periodic table.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_1_Matter_Atoms_Periodic_Table.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 2 · Energy</h3><p>Unit 2 · S8P2 — kinetic &amp; potential energy, energy transformations, conduction, convection &amp; radiation.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_2_Energy.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 3 · Force, Mass &amp; Motion</h3><p>Unit 3 · S8P3 — speed, velocity &amp; acceleration, motion graphs, Newton's laws, F&nbsp;=&nbsp;ma.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_3_Force_Mass_Motion.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 4 · Waves</h3><p>Unit 4 · S8P4 — mechanical vs. electromagnetic waves, the EM spectrum, wave behaviors, lenses &amp; light.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_4_Waves.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 5 · Forces in Nature</h3><p>Unit 5 · S8P5 — gravity, electricity &amp; magnetism, fields, conductors &amp; insulators, electromagnets.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_5_Forces_in_Nature.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Vocabulary — all five units</h3><p>The complete 8th-grade physical science vocabulary list, ready to print as a study reference or word wall.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Science_Vocabulary.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 1 · Classifying Life</h3><p>Unit 1 · S7L1 — the characteristics of life, sorting by shared traits, dichotomous keys, and the six kingdoms.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch1_Classifying_Life_REGULAR.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 2 · Cells &amp; Body Systems</h3><p>Unit 2 · S7L2 — organelles, plant vs. animal cells, levels of organization, and how body systems work together.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch2_Cells_Body_Systems_REGULAR.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 3 · Reproduction &amp; Heredity</h3><p>Unit 3 · S7L3 — DNA, genes &amp; chromosomes, asexual vs. sexual reproduction, and selective breeding.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch3_Reproduction_Heredity_REGULAR.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 4 · Ecology &amp; Ecosystems</h3><p>Unit 4 · S7L4 — food webs, energy flow, symbiosis, limiting factors, biomes &amp; aquatic ecosystems.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch4_Ecology_Ecosystems_REGULAR.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 5 · Evolution &amp; Natural Selection</h3><p>Unit 5 · S7L5 — natural selection, variation &amp; the environment, and reading the fossil record.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch5_Evolution_Natural_Selection_REGULAR.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Vocabulary — all five units</h3><p>The complete 7th-grade life science vocabulary list, ready to print as a study reference or word wall.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/7th_Grade_Life_Science_Vocabulary.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
   </div>
 
   <h2>🧗 Scaffolded editions — built-in reading support</h2>
   <p style="color:var(--ink2);max-width:760px">The same five chapters with reading supports built in — a great fit for students who need the content in smaller, more guided bites (IEP, 504, and developing readers).</p>
   <div class="cardgrid">
-    <div class="card"><h3>Chapter 1 · Matter, Atoms &amp; the Periodic Table</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_1_Matter_Atoms_Periodic_Table_Scaffold.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 2 · Energy</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_2_Energy_Scaffold.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 3 · Force, Mass &amp; Motion</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_3_Force_Mass_Motion_Scaffold.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 4 · Waves</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_4_Waves_Scaffold.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 5 · Forces in Nature</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_5_Forces_in_Nature_Scaffold.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 1 · Classifying Life</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch1_Classifying_Life_SCAFFOLDED.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 2 · Cells &amp; Body Systems</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch2_Cells_Body_Systems_SCAFFOLDED.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 3 · Reproduction &amp; Heredity</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch3_Reproduction_Heredity_SCAFFOLDED.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 4 · Ecology &amp; Ecosystems</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch4_Ecology_Ecosystems_SCAFFOLDED.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 5 · Evolution &amp; Natural Selection</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch5_Evolution_Natural_Selection_SCAFFOLDED.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
   </div>
 
   <h2>🇪🇸 Ediciones en español — Spanish editions</h2>
   <p style="color:var(--ink2);max-width:760px">All five textbook chapters fully translated into Spanish — hand them to your Spanish-speaking students so the science, not the English, is the challenge.</p>
   <div class="cardgrid">
-    <div class="card"><h3>Capítulo 1 · Materia, Átomos y la Tabla Periódica</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Capitulo_1_Materia_Atomos_Tabla_Periodica.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></p></div>
-    <div class="card"><h3>Capítulo 2 · Energía</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Capitulo_2_Energia.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></p></div>
-    <div class="card"><h3>Capítulo 3 · Fuerza, Masa y Movimiento</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Capitulo_3_Fuerza_Masa_Movimiento.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></p></div>
-    <div class="card"><h3>Capítulo 4 · Ondas</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Capitulo_4_Ondas.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></p></div>
-    <div class="card"><h3>Capítulo 5 · Fuerzas en la Naturaleza</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Capitulo_5_Fuerzas_en_la_Naturaleza.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></p></div>
+    <div class="card"><h3>Capítulo 1 · Clasificando la Vida</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch1_Clasificando_la_Vida_ESPANOL.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></p></div>
+    <div class="card"><h3>Capítulo 2 · Células y Sistemas del Cuerpo</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch2_Celulas_Sistemas_ESPANOL.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></p></div>
+    <div class="card"><h3>Capítulo 3 · Reproducción y Herencia</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch3_Reproduccion_Herencia_ESPANOL.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></p></div>
+    <div class="card"><h3>Capítulo 4 · Ecología y Ecosistemas</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch4_Ecologia_Ecosistemas_ESPANOL.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></p></div>
+    <div class="card"><h3>Capítulo 5 · Evolución y Selección Natural</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch5_Evolucion_Seleccion_Natural_ESPANOL.pdf" target="_blank" rel="noopener">📄 Abrir PDF</a></p></div>
   </div>
 
-  <h2>🧪 Chapter activities &amp; labs</h2>
-  <p style="color:var(--ink2);max-width:760px">Printable activity and lab sheets that pair with each textbook chapter — ready for stations, sub days, or hands-on class time.</p>
+  <h2>🧪 Chapter activity packets</h2>
+  <p style="color:var(--ink2);max-width:760px">Printable activity packets that pair with each textbook chapter — ready for stations, sub days, or hands-on class time.</p>
   <div class="cardgrid">
-    <div class="card"><h3>Chapter 1 Activities · Matter, Atoms &amp; the Periodic Table</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_1_Activities.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 2 Activities · Energy</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_2_Activities.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 3 Activities · Force, Mass &amp; Motion</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_3_Activities.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 4 Activities · Waves</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_4_Activities.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Chapter 5 Activities · Forces in Nature</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/Chapter_5_Activities.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 1 Activities · Classifying Life</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch1_Activities_Packet.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 2 Activities · Cells &amp; Body Systems</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch2_Activities_Packet.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 3 Activities · Reproduction &amp; Heredity</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch3_Activities_Packet.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 4 Activities · Ecology &amp; Ecosystems</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch4_Activities_Packet.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 5 Activities · Evolution &amp; Natural Selection</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch5_Activities_Packet.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
   </div>
 
-  <h2>📝 Unit review sheets</h2>
+  <h2>📝 2-page review guides</h2>
+  <p style="color:var(--ink2);max-width:760px">A two-page cheat-sheet review of each chapter — perfect before the unit test.</p>
   <div class="cardgrid">
-    <div class="card"><h3>Chemistry Review</h3><p>Unit 1 · S8P1 — one-stop review of matter for the unit test.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Chemistry_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Energy Review</h3><p>Unit 2 · S8P2 — energy forms, transformations &amp; heat transfer.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Energy_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Motion &amp; Newton's Laws Review</h3><p>Unit 3 · S8P3 — motion math, graphs &amp; the three laws.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Motion_Newtons_Laws_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Waves Review</h3><p>Unit 4 · S8P4 — wave anatomy, the spectrum &amp; wave behaviors.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Waves_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
-    <div class="card"><h3>Gravity, Electricity &amp; Magnetism Review</h3><p>Unit 5 · S8P5 — fields, charge, circuits &amp; electromagnets.</p><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/8th_Grade_Gravity_Electricity_Magnetism_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 1 Review · Classifying Life</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch1_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 2 Review · Cells &amp; Body Systems</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch2_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 3 Review · Reproduction &amp; Heredity</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch3_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 4 Review · Ecology &amp; Ecosystems</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch4_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
+    <div class="card"><h3>Chapter 5 Review · Evolution &amp; Natural Selection</h3><p style="margin-top:10px"><a class="pdfbtn" href="pdfs/life/Ch5_Review.pdf" target="_blank" rel="noopener">📄 Open PDF</a></p></div>
   </div>
 
   <h2>🖨 Printing tips</h2>
