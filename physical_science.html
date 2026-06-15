@@ -252,6 +252,12 @@ tr:nth-child(even) td{background:#F7FAFD}
 body.onstart nav{display:none}
 #page-start .startnote{margin-top:26px;font-size:.85rem;opacity:.65}
 /* educator */
+.featurestrip{display:flex;gap:18px;overflow-x:auto;align-items:flex-start;padding:2px 2px 14px;margin:6px 0 10px}
+.featurestrip::-webkit-scrollbar{height:8px}
+.featurestrip::-webkit-scrollbar-thumb{background:rgba(27,36,64,.2);border-radius:99px}
+.featurestrip > .card{flex:0 0 330px;max-width:330px!important;margin:0!important;border-radius:14px;padding:16px 18px}
+.featurestrip > .card h3{font-size:1.02rem}
+.featurestrip > .card p{font-size:.88rem}
 .teachacct{display:flex;align-items:center;justify-content:flex-end;gap:10px;font-size:.85rem;color:var(--ink2);margin:0 0 6px;flex-wrap:wrap}
 .teachacct b{color:var(--ink)}
 .teachacct button{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:5px 12px;font:inherit;font-size:.82rem;cursor:pointer;color:var(--ink2)}
@@ -525,8 +531,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 <section class="page" id="page-teach">
   <div id="teachacct" class="teachacct"></div>
   <p class="eyebrow">Educator Mode</p>
-  <h1>Build an assignment for your class.</h1>
-  <p class="lead">Step 1: check every standard your current unit covers. The panel on the right shows exactly which study guides, games, videos, and PhET labs match — live.</p>
+  <div class="featurestrip" id="featurestrip">
 
   <div class="card" style="border:2px solid #b8862b;background:#FBF4E0;margin:0 0 24px;max-width:780px">
     <h3>⚔️ Science Quest — the full RPG adventure game</h3>
@@ -573,6 +578,28 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
       </p>
     </div>
   </div>
+  </div>
+
+  <script>
+  (function(){
+    var s = document.getElementById('featurestrip'); if(!s) return;
+    var acc = 0, dir = 1, paused = false;
+    s.addEventListener('mouseenter', function(){ paused = true; });
+    s.addEventListener('mouseleave', function(){ paused = false; });
+    s.addEventListener('touchstart', function(){ paused = true; }, {passive:true});
+    setInterval(function(){
+      if(paused) return;
+      var max = s.scrollWidth - s.clientWidth; if(max <= 0) return;
+      acc += dir * 0.5;
+      if(acc >= max){ acc = max; dir = -1; }
+      if(acc <= 0){ acc = 0; dir = 1; }
+      s.scrollLeft = acc;
+    }, 16);
+  })();
+  </script>
+
+  <h1>Build an assignment for your class.</h1>
+  <p class="lead">Step 1: check every standard your current unit covers. The panel on the right shows exactly which study guides, games, videos, and PhET labs match — live.</p>
 
   <div class="teachcols">
     <div id="stdtree"></div>
