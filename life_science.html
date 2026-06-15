@@ -4375,6 +4375,7 @@ if(savedAsn && savedAsn.code){
 }
 function bootRoute(){
   const startHash = location.hash.slice(1);
+  if(/(^|&)type=recovery(&|$)/.test(startHash)){ go('reset'); return; }   // password-reset link landing → show the new-password screen
   if(startHash.startsWith('a=')) handleAssignmentHash();                         // student assignment link → straight to checklist
   else if(startHash && document.getElementById('page-'+startHash)) go(startHash); // explicit deep link → that page
   else { if(ASN) updateAsnBanner(); document.getElementById('page-home').classList.remove('show'); go('start'); } // plain visit → student/teacher chooser
@@ -4395,7 +4396,7 @@ const API_BASE = 'https://science-hub.vercel.app/api';
 const HUB_SUBJECT = 'life';             // which subject this hub unlocks
 const HUB_NAME = 'Life Science';
 let sbClient = null, SB_USER = null, authMode = 'in', ENT = null;
-try{ sbClient = window.supabase.createClient(SB_URL, SB_KEY); }
+try{ sbClient = window.supabase.createClient(SB_URL, SB_KEY, { auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true, autoRefreshToken:true } }); }
 catch(e){ console.error('Supabase init failed', e); }
 
 function teacherSignedIn(){ return !!SB_USER; }
