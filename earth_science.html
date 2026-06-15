@@ -706,11 +706,29 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
         <span id="ag-switchtxt">New here?</span>
         <a href="#" id="ag-switch" onclick="authToggleMode();return false">Create an account →</a>
       </p>
+      <p class="agtoggle"><a href="#" id="ag-forgot" onclick="authForgot();return false">Forgot your password?</a></p>
     </div>
   </div>
 
   <p class="startnote" style="margin-top:18px">👩‍🎓 <b>Students never need an account.</b> They just open the assignment link you send — this sign-in is only for teacher tools.</p>
   <p style="margin-top:6px"><a href="#" onclick="go('start');return false" style="font-size:.9rem">← Back to start</a></p>
+</section>
+
+<!-- ============ PASSWORD RESET (lands here after clicking the email link) ============ -->
+<section class="page" id="page-reset">
+  <p class="eyebrow">Educator Mode</p>
+  <h1>Set a new password</h1>
+  <p class="lead">Choose a new password for your teacher account, then you'll go straight to your tools.</p>
+  <div class="card" style="max-width:460px;border:2px solid var(--ac)">
+    <div class="asncol">
+      <label class="aglabel">New password
+        <input id="rs-pass" type="password" autocomplete="new-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')authSetNewPassword()">
+      </label>
+      <button class="genbtn" id="rs-submit" onclick="authSetNewPassword()">Save new password</button>
+      <p id="rs-msg" class="agmsg"></p>
+    </div>
+  </div>
+  <p style="margin-top:6px"><a href="#" onclick="go('teachgate');return false" style="font-size:.9rem">← Back to sign-in</a></p>
 </section>
 
 <!-- ============ STOREFRONT (subscribe to unlock Educator Mode) ============ -->
@@ -4798,6 +4816,12 @@ async function authSubmit(){
       if(pass.length < 6){ setAuthMsg('Password must be at least 6 characters.', 'err'); btn.disabled=false; return; }
       const { data, error } = await sbClient.auth.signUp({ email, password: pass, options:{ emailRedirectTo: location.origin + location.pathname } });
       if(error){ setAuthMsg(error.message, 'err'); }
+      else if(data && data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0){
+        /* Supabase returns an obfuscated user with NO identities when the email already has an account
+           (it stays silent so strangers can't probe for accounts). Don't tell them to check their email — say so. */
+        if(authMode==='up') authToggleMode();   // flip the form to Sign in mode
+        setAuthMsg('You already have an account with this email. Sign in below, or use the Forgot your password link if you forgot it.', 'err');
+      }
       else if(!data.session){ setAuthMsg('Account created! Check your email for a confirmation link, then come back and sign in.', 'ok'); }
       /* if a session came back, onAuthStateChange walks them into the tools */
     } else {
@@ -4805,6 +4829,34 @@ async function authSubmit(){
       if(error){ setAuthMsg(error.message, 'err'); }
     }
   }catch(e){ setAuthMsg('Something went wrong — please try again.', 'err'); console.error(e); }
+  btn.disabled = false;
+}
+
+async function authForgot(){
+  if(!sbClient){ setAuthMsg('Account system is still loading — try again in a moment.', 'err'); return; }
+  const email = (document.getElementById('ag-email').value||'').trim();
+  if(!email){ setAuthMsg('Type your email above first, then tap Forgot your password.', 'err'); return; }
+  const btn = document.getElementById('ag-submit'); btn.disabled = true;
+  try{
+    const { error } = await sbClient.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+    if(error){ setAuthMsg(error.message, 'err'); }
+    else { setAuthMsg('Done — check your email for a link to reset your password.', 'ok'); }
+  }catch(e){ setAuthMsg('Something went wrong — please try again.', 'err'); console.error(e); }
+  btn.disabled = false;
+}
+
+async function authSetNewPassword(){
+  if(!sbClient) return;
+  const pass = document.getElementById('rs-pass').value||'';
+  const msg = document.getElementById('rs-msg');
+  const setMsg = (t,k)=>{ if(msg){ msg.textContent=t; msg.className='agmsg'+(k?' '+k:''); } };
+  if(pass.length < 6){ setMsg('Password must be at least 6 characters.','err'); return; }
+  const btn = document.getElementById('rs-submit'); btn.disabled = true;
+  try{
+    const { error } = await sbClient.auth.updateUser({ password: pass });
+    if(error){ setMsg(error.message,'err'); }
+    else { setMsg('Password updated! Taking you to your tools…','ok'); setTimeout(()=>go('teach'), 1200); }
+  }catch(e){ setMsg('Something went wrong — please try again.','err'); console.error(e); }
   btn.disabled = false;
 }
 
@@ -4955,6 +5007,7 @@ if(sbClient){
     handleCheckoutReturn();
   });
   sbClient.auth.onAuthStateChange((_ev, session)=>{
+    if(_ev === 'PASSWORD_RECOVERY'){ SB_USER = session ? session.user : null; renderTeachAcct(); go('reset'); return; }
     const wasOut = !SB_USER;
     SB_USER = session ? session.user : null;
     if(!SB_USER) ENT = null;
