@@ -3418,6 +3418,7 @@ function openPane(uid, pane){
   const order = {study:0, cards:1, quiz:2, game:3, act:4, videos:5};
   const btn = document.querySelectorAll(`#page-${uid} > .subtabs .subtab`)[order[pane]];
   if(btn) btn.click();
+  if(pane==='study' && ASN) setTimeout(()=>asnWatchLessonScroll(uid), 60);  // credit study guides as they scroll into view
 }
 
 /* ---------- item registry: cfg → flat renderable list ---------- */
@@ -3512,6 +3513,45 @@ function asnOpen(type, id){
     setTimeout(()=>{ const el=document.getElementById(it.uid+'-prebox'); if(el) el.scrollIntoView({behavior:'smooth', block:'center'}); }, 120);
   }
   if(typeof updateAsnBanner==='function') updateAsnBanner();
+}
+
+/* ---------- auto-credit study guides as the student scrolls through them ---------- */
+let _asnLessonObserver = null;
+let _asnScrollHooked = false;
+function _asnCreditLesson(elId){
+  if(!ASN) return false;
+  const m = (elId||'').match(/^(.*)-L(\d+)$/);
+  if(!m) return false;
+  const itemId = `${m[1]}:L${+m[2]-1}`;                       // card "u4-L2" → assignment item "u4:L1"
+  if(!((ASN.cfg.it||{}).g||[]).includes(itemId)) return false; // only study guides that are part of THIS assignment
+  const key = `asn_${ASN.cfg.id}_${ASN.key}_g:${itemId}`;
+  if(store.get(key)!=null) return false;                       // already credited
+  store.set(key, Date.now());
+  return true;
+}
+function asnWatchLessonScroll(uid){
+  if(!ASN || !('IntersectionObserver' in window)) return;
+  if(!_asnLessonObserver){
+    _asnLessonObserver = new IntersectionObserver(entries=>{
+      let changed = false;
+      entries.forEach(en=>{ if(en.isIntersecting && _asnCreditLesson(en.target.id)) changed = true; });
+      if(changed && typeof renderAssign==='function') renderAssign();
+    }, {rootMargin:'-45% 0px -45% 0px', threshold:0});         // fires when a card reaches the vertical center of the screen
+  }
+  document.querySelectorAll(`#page-${uid} .lessoncard`).forEach(el=>_asnLessonObserver.observe(el));
+  if(!_asnScrollHooked){
+    _asnScrollHooked = true;
+    window.addEventListener('scroll', ()=>{                    // safety net: reaching the bottom credits anything still on screen (last/short cards)
+      if(!ASN) return;
+      if(window.innerHeight + window.scrollY < document.body.scrollHeight - 80) return;
+      let changed = false;
+      document.querySelectorAll('.lessoncard').forEach(el=>{
+        const r = el.getBoundingClientRect();
+        if(r.bottom > 0 && r.top < window.innerHeight && _asnCreditLesson(el.id)) changed = true;
+      });
+      if(changed && typeof renderAssign==='function') renderAssign();
+    }, {passive:true});
+  }
 }
 
 /* ---------- entry: #a= link ---------- */
