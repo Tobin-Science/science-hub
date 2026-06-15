@@ -252,12 +252,11 @@ tr:nth-child(even) td{background:#F7FAFD}
 body.onstart nav{display:none}
 #page-start .startnote{margin-top:26px;font-size:.85rem;opacity:.65}
 /* educator */
-.featurestrip{display:flex;gap:18px;overflow-x:auto;align-items:flex-start;padding:2px 2px 14px;margin:6px 0 10px}
-.featurestrip::-webkit-scrollbar{height:8px}
-.featurestrip::-webkit-scrollbar-thumb{background:rgba(27,36,64,.2);border-radius:99px}
-.featurestrip > .card{flex:0 0 330px;max-width:330px!important;margin:0!important;border-radius:14px;padding:16px 18px}
-.featurestrip > .card h3{font-size:1.02rem}
-.featurestrip > .card p{font-size:.88rem}
+.featurestrip{overflow:hidden;padding:2px 2px 14px;margin:6px 0 10px}
+.featuretrack{display:flex;gap:18px;align-items:flex-start;width:max-content;will-change:transform}
+.featuretrack > .card{flex:0 0 330px;max-width:330px!important;margin:0!important;border-radius:14px;padding:16px 18px}
+.featuretrack > .card h3{font-size:1.02rem}
+.featuretrack > .card p{font-size:.88rem}
 .teachacct{display:flex;align-items:center;justify-content:flex-end;gap:10px;font-size:.85rem;color:var(--ink2);margin:0 0 6px;flex-wrap:wrap}
 .teachacct b{color:var(--ink)}
 .teachacct button{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:5px 12px;font:inherit;font-size:.82rem;cursor:pointer;color:var(--ink2)}
@@ -534,6 +533,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
   <div id="teachacct" class="teachacct"></div>
   <p class="eyebrow">Educator Mode</p>
   <div class="featurestrip" id="featurestrip">
+  <div class="featuretrack" id="featuretrack">
 
   <div class="card" style="border:2px solid #b8862b;background:#FBF4E0;margin:0 0 24px;max-width:780px">
     <img src="science-quest-cover-sm.jpg" alt="Science Quest" style="width:100%;max-height:150px;object-fit:cover;border-radius:8px;margin-bottom:8px">
@@ -582,22 +582,28 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     </div>
   </div>
   </div>
+  </div>
 
   <script>
   (function(){
-    var s = document.getElementById('featurestrip'); if(!s) return;
-    var acc = 0, dir = 1, paused = false;
-    s.addEventListener('mouseenter', function(){ paused = true; });
-    s.addEventListener('mouseleave', function(){ paused = false; });
-    s.addEventListener('touchstart', function(){ paused = true; }, {passive:true});
-    setInterval(function(){
-      if(paused) return;
-      var max = s.scrollWidth - s.clientWidth; if(max <= 0) return;
-      acc += dir * 0.5;
-      if(acc >= max){ acc = max; dir = -1; }
-      if(acc <= 0){ acc = 0; dir = 1; }
-      s.scrollLeft = acc;
-    }, 16);
+    var wrap = document.getElementById('featurestrip');
+    var track = document.getElementById('featuretrack');
+    if(!wrap || !track) return;
+    var x = 0, paused = false, gap = 18;
+    wrap.addEventListener('mouseenter', function(){ paused = true; });
+    wrap.addEventListener('mouseleave', function(){ paused = false; });
+    wrap.addEventListener('touchstart', function(){ paused = true; }, {passive:true});
+    wrap.addEventListener('touchend', function(){ paused = false; }, {passive:true});
+    function step(){
+      if(wrap.offsetParent !== null && !paused && track.firstElementChild){
+        x -= 0.5;
+        var fw = track.firstElementChild.offsetWidth + gap;
+        if(fw > gap && -x >= fw){ x += fw; track.appendChild(track.firstElementChild); }
+        track.style.transform = 'translateX(' + x + 'px)';
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
   })();
   </script>
 
