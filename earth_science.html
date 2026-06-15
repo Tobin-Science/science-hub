@@ -285,6 +285,11 @@ body.onstart nav{display:none}
 .stdunit{font-family:var(--mono);font-size:.72rem;background:var(--ac);color:#fff;border-radius:99px;padding:2px 9px;margin-left:6px;vertical-align:middle}
 .stdsub{display:block;font-size:.9rem;padding:5px 0 5px 26px;cursor:pointer;border-top:1px solid #eef0f6}
 .stdgroup input{accent-color:var(--ac);width:17px;height:17px;vertical-align:-3px;margin-right:6px}
+.featurestrip{overflow:hidden;padding:2px 2px 14px;margin:6px 0 10px}
+.featuretrack{display:flex;gap:18px;align-items:flex-start;width:max-content;will-change:transform}
+.featuretrack > .card{flex:0 0 330px;max-width:330px!important;margin:0!important;border-radius:14px;padding:16px 18px}
+.featuretrack > .card h3{font-size:1.02rem}
+.featuretrack > .card p{font-size:.88rem}
 .teachcols{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
 @media(max-width:860px){.teachcols{grid-template-columns:1fr}}
 #teachpreview{position:sticky;top:90px}
@@ -488,7 +493,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 <!-- ============ PHASE 1: LANDING CHOOSER ============ -->
 <section class="page" id="page-start">
   <div class="startwrap">
-    <div style="font-size:2.4rem">🌍</div>
+    <img src="earth-cover.jpg" alt="Earth &amp; Space Science textbook cover" style="height:90px;width:auto;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.2)">
     <h1>Earth &amp; Space Science Hub</h1>
     <p class="startsub">Georgia Standards of Excellence · S6E1–S6E6 · 6th Grade</p>
     <div class="startcards">
@@ -515,8 +520,8 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 <section class="page" id="page-teach">
   <div id="teachacct" class="teachacct"></div>
   <p class="eyebrow">Educator Mode</p>
-  <h1>Build an assignment for your class.</h1>
-  <p class="lead">Step 1: check every standard your current unit covers. The panel on the right shows exactly which study guides, games, videos, and PhET labs match — live.</p>
+  <div class="featurestrip" id="featurestrip">
+  <div class="featuretrack" id="featuretrack">
 
   <div class="card" style="border:2px solid var(--ac);background:#EDEFFD;margin:0 0 24px;max-width:780px">
     <h3>🌍 Earth &amp; Space Science — all six units live</h3>
@@ -561,6 +566,35 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
       </p>
     </div>
   </div>
+
+  </div>
+  </div>
+
+  <script>
+  (function(){
+    var wrap = document.getElementById('featurestrip');
+    var track = document.getElementById('featuretrack');
+    if(!wrap || !track) return;
+    var x = 0, paused = false, gap = 18;
+    wrap.addEventListener('mouseenter', function(){ paused = true; });
+    wrap.addEventListener('mouseleave', function(){ paused = false; });
+    wrap.addEventListener('touchstart', function(){ paused = true; }, {passive:true});
+    wrap.addEventListener('touchend', function(){ paused = false; }, {passive:true});
+    function step(){
+      if(wrap.offsetParent !== null && !paused && track.firstElementChild){
+        x -= 0.5;
+        var fw = track.firstElementChild.offsetWidth + gap;
+        if(fw > gap && -x >= fw){ x += fw; track.appendChild(track.firstElementChild); }
+        track.style.transform = 'translateX(' + x + 'px)';
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
+  </script>
+
+  <h1>Build an assignment for your class.</h1>
+  <p class="lead">Step 1: check every standard your current unit covers. The panel on the right shows exactly which study guides, games, videos, and PhET labs match — live.</p>
 
   <div class="teachcols">
     <div id="stdtree"></div>
