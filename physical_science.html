@@ -2390,7 +2390,7 @@ const FMA_PROBLEMS = [
  ['m',30,6,  "A <b>30 N</b> push gives <b>6 m/s²</b>. Dial in the cart's mass."]
 ];
 GAMES.u3b = { title:"Launch Control", icon:"🚀", id:"u3b", unit:"u3",
- desc:"F = ma, three ways. Work it out, DRAG the dial to your answer, and hit LAUNCH — land the craft on the gate.",
+ desc:"F = ma, three ways. Work it out, DRAG the dial to your answer, and hit LAUNCH!",
  start(areaId){
   kineShell(areaId,'u3b',this.title,this.desc,`<span>LAUNCH <b id="${areaId}-r">1</b>/8</span>`);
   const stage = document.getElementById(areaId+'-stage');
@@ -2411,7 +2411,7 @@ GAMES.u3b = { title:"Launch Control", icon:"🚀", id:"u3b", unit:"u3",
     stage.innerHTML = `
       <div style="font-size:1.05rem">${text}</div>
       <div style="font-family:var(--mono);opacity:.75;font-size:.85rem;margin-top:4px">F = m × a · solve for <b>${sv}</b></div>
-      <div class="ktrack"><div class="kgate" style="left:${gateL}%;width:${gateW}%"><label>GATE</label></div><div class="kcraft" id="${areaId}-cr">🚀</div></div>
+      <div class="ktrack"><div class="kcraft" id="${areaId}-cr">🚀</div></div>
       <input type="range" class="kslider" id="${areaId}-sl" min="0" max="${dialMax}" step="${step}" value="0">
       <div class="kdial"><b id="${areaId}-val">0</b> ${unit}</div>
       <div style="text-align:center"><button class="gbtn" id="${areaId}-go">🚀 LAUNCH</button></div>`;
@@ -2428,7 +2428,7 @@ GAMES.u3b = { title:"Launch Control", icon:"🚀", id:"u3b", unit:"u3",
         if(hit){
           const pts = firstTry? 14 : 7;
           score+=pts; kineScore(areaId,score);
-          kineMsg(areaId,`✅ <b>ON THE GATE!</b> <span class="why">${eq} = <b>${Math.round(ans*10)/10} ${unit}</b></span> +${pts}`);
+          kineMsg(areaId,`✅ <b>NAILED IT!</b> <span class="why">${eq} = <b>${Math.round(ans*10)/10} ${unit}</b></span> +${pts}`);
           i++; setTimeout(draw, 1500);
         } else {
           firstTry = false;
