@@ -19,7 +19,9 @@ body{font-family:Georgia,'Times New Roman',serif;background:linear-gradient(160d
 .logo{display:flex;align-items:center;gap:12px;font-size:1.15rem;font-weight:800;letter-spacing:.4px;margin-bottom:6px}
 h1{font-size:clamp(1.7rem,4.5vw,2.6rem);text-align:center;margin:6px 0 8px}
 .sub{color:#C7D0E8;text-align:center;max-width:640px;font-size:1.02rem;line-height:1.55;margin-bottom:34px}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;width:100%;max-width:960px}
+.cards{display:grid;grid-template-columns:1fr;gap:18px;width:100%;max-width:1180px}
+@media(min-width:560px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.cards{grid-template-columns:repeat(4,1fr)}}
 .card{background:#fff;color:var(--ink);border-radius:18px;padding:28px 24px;text-decoration:none;display:flex;flex-direction:column;gap:10px;border-top:6px solid var(--tc);box-shadow:0 14px 40px rgba(0,0,0,.3);transition:transform .15s ease, box-shadow .15s ease}
 .card:hover{transform:translateY(-5px);box-shadow:0 22px 54px rgba(0,0,0,.4)}
 .card .big{font-size:2.6rem}
@@ -56,14 +58,14 @@ h1{font-size:clamp(1.7rem,4.5vw,2.6rem);text-align:center;margin:6px 0 8px}
     <img class="cover" src="ps-cover.jpg" alt="Physical Science textbook cover">
     <h2>Physical Science — 8th Grade</h2>
     <p class="grades">8TH GRADE · S8P1–S8P5</p>
-    <p>Matter, energy, motion, waves, electricity &amp; magnetism — 60+ lessons, 16 games, printables, and the full assignment system.</p>
+    <p>Matter, energy, motion, waves, electricity &amp; magnetism — 60+ lessons, 16 games, printables, and the full assignment system. <b>Your subscription also unlocks the High School Physical Science hub.</b></p>
     <span class="go">Enter →</span>
   </a>
   <a class="card" style="--tc:#8E44AD" href="physical_science_hs.html">
     <img class="cover" src="ps-hs-cover.jpg" alt="High School Physical Science Hub">
     <h2>Physical Science — High School</h2>
     <p class="grades">9TH–12TH · SPS1–SPS10</p>
-    <p>Atoms &amp; bonding, nuclear chemistry, gases, solutions, energy, motion, waves, electricity &amp; magnetism — the full high school course. Units are rolling out now; one Physical Science subscription unlocks <b>both</b> grade levels.</p>
+    <p>Atoms &amp; bonding, nuclear chemistry, gases, solutions, energy, motion, waves, electricity &amp; magnetism — the full high school course. One Physical Science subscription unlocks <b>both</b> grade levels.</p>
     <span class="go">Enter →</span>
   </a>
 </div>
