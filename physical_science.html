@@ -590,25 +590,38 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     var wrap = document.getElementById('featurestrip');
     var track = document.getElementById('featuretrack');
     if(!wrap || !track) return;
-    var x = 0, paused = false, userPaused = false, gap = 18;
-    var fsBtn = document.createElement('button');
-    fsBtn.type = 'button'; fsBtn.className = 'pveye'; fsBtn.textContent = '⏸ Pause';
-    fsBtn.setAttribute('aria-label', 'Pause or play the scrolling features');
-    var fsBtnWrap = document.createElement('div');
-    fsBtnWrap.style.cssText = 'text-align:center;margin:2px 0 14px';
-    fsBtnWrap.appendChild(fsBtn);
-    wrap.insertAdjacentElement('afterend', fsBtnWrap);
+    var x = 0, paused = false, userPaused = false, gap = 18, base = 0.5, hold = 0;
+    function mkBtn(txt, label){ var b = document.createElement('button'); b.type='button'; b.className='pveye'; b.textContent=txt; b.setAttribute('aria-label',label); b.style.margin='0 5px'; b.style.touchAction='none'; b.style.userSelect='none'; return b; }
+    var fsLeft  = mkBtn('⏪', 'Hold to speed up the scrolling');
+    var fsBtn   = mkBtn('⏸ Pause', 'Pause or play the scrolling features');
+    var fsRight = mkBtn('⏩', 'Hold to scroll the other way');
+    var fsBar = document.createElement('div');
+    fsBar.style.cssText = 'text-align:center;margin:0 0 12px';
+    fsBar.appendChild(fsLeft); fsBar.appendChild(fsBtn); fsBar.appendChild(fsRight);
+    wrap.insertAdjacentElement('beforebegin', fsBar);   // controls sit ABOVE the strip
     fsBtn.addEventListener('click', function(){ userPaused = !userPaused; fsBtn.textContent = userPaused ? '▶ Play' : '⏸ Pause'; });
+    function holdStart(v){ return function(e){ e.preventDefault(); hold = v; }; }
+    function holdEnd(){ hold = 0; }
+    fsLeft.addEventListener('pointerdown', holdStart(base * 10));    // speed up (same direction)
+    fsRight.addEventListener('pointerdown', holdStart(-base * 10));  // reverse
+    fsLeft.addEventListener('pointerleave', holdEnd);
+    fsRight.addEventListener('pointerleave', holdEnd);
+    document.addEventListener('pointerup', holdEnd);
+    document.addEventListener('pointercancel', holdEnd);
     wrap.addEventListener('mouseenter', function(){ paused = true; });
     wrap.addEventListener('mouseleave', function(){ paused = false; });
     wrap.addEventListener('touchstart', function(){ paused = true; }, {passive:true});
     wrap.addEventListener('touchend', function(){ paused = false; }, {passive:true});
     function step(){
-      if(wrap.offsetParent !== null && !paused && !userPaused && track.firstElementChild){
-        x -= 0.5;
-        var fw = track.firstElementChild.offsetWidth + gap;
-        if(fw > gap && -x >= fw){ x += fw; track.appendChild(track.firstElementChild); }
-        track.style.transform = 'translateX(' + x + 'px)';
+      if(wrap.offsetParent !== null && track.firstElementChild){
+        var sp = hold !== 0 ? hold : ((paused || userPaused) ? 0 : base);
+        if(sp !== 0){
+          x -= sp;
+          var fw = track.firstElementChild.offsetWidth + gap;
+          if(fw > gap && -x >= fw){ x += fw; track.appendChild(track.firstElementChild); }                 // scrolling left → wrap first card to the end
+          if(x > 0){ var last = track.lastElementChild; x -= (last.offsetWidth + gap); track.insertBefore(last, track.firstElementChild); }  // scrolling right → wrap last card to the front
+          track.style.transform = 'translateX(' + x + 'px)';
+        }
       }
       requestAnimationFrame(step);
     }
