@@ -574,13 +574,21 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     var wrap = document.getElementById('featurestrip');
     var track = document.getElementById('featuretrack');
     if(!wrap || !track) return;
-    var x = 0, paused = false, gap = 18;
+    var x = 0, paused = false, userPaused = false, gap = 18;
+    var fsBtn = document.createElement('button');
+    fsBtn.type = 'button'; fsBtn.className = 'pveye'; fsBtn.textContent = '⏸ Pause';
+    fsBtn.setAttribute('aria-label', 'Pause or play the scrolling features');
+    var fsBtnWrap = document.createElement('div');
+    fsBtnWrap.style.cssText = 'text-align:center;margin:2px 0 14px';
+    fsBtnWrap.appendChild(fsBtn);
+    wrap.insertAdjacentElement('afterend', fsBtnWrap);
+    fsBtn.addEventListener('click', function(){ userPaused = !userPaused; fsBtn.textContent = userPaused ? '▶ Play' : '⏸ Pause'; });
     wrap.addEventListener('mouseenter', function(){ paused = true; });
     wrap.addEventListener('mouseleave', function(){ paused = false; });
     wrap.addEventListener('touchstart', function(){ paused = true; }, {passive:true});
     wrap.addEventListener('touchend', function(){ paused = false; }, {passive:true});
     function step(){
-      if(wrap.offsetParent !== null && !paused && track.firstElementChild){
+      if(wrap.offsetParent !== null && !paused && !userPaused && track.firstElementChild){
         x -= 0.5;
         var fw = track.firstElementChild.offsetWidth + gap;
         if(fw > gap && -x >= fw){ x += fw; track.appendChild(track.firstElementChild); }
