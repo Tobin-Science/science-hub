@@ -2079,7 +2079,7 @@ const ORBITS=[
  ["♆ <b>Neptune</b>, way out at the edge. Gravity is very weak — only a GENTLE speed is needed.",16,"Out here gravity barely tugs — too much speed and inertia flings the craft into deep space."]
 ];
 GAMES.u1={title:"Orbit Lab",icon:"🛰️",id:"u1",unit:"u1",
- desc:"Gravity pulls IN, inertia flies STRAIGHT. Dial the orbital speed that balances them and land the craft in the STABLE ORBIT band.",
+ desc:"Gravity pulls IN, inertia flies STRAIGHT. Dial the orbital speed that balances them to hold a stable orbit.",
  start(areaId){
   kineShell(areaId,'u1',this.title,this.desc,`<span>ORBIT <b id="${areaId}-r">1</b>/${ORBITS.length}</span>`);
   const stage=document.getElementById(areaId+'-stage');
@@ -2090,7 +2090,7 @@ GAMES.u1={title:"Orbit Lab",icon:"🛰️",id:"u1",unit:"u1",
     document.getElementById(areaId+'-r').textContent=i+1; kineMsg(areaId,'');
     let firstTry=true; const [text,center,why]=probs[i]; const gw=12;
     stage.innerHTML=`<div style="font-size:1.05rem">${text}</div>
-      <div class="ktrack"><div class="kgate" style="left:${center-gw/2}%;width:${gw}%"><label>STABLE ORBIT</label></div><div class="kcraft" id="${areaId}-cr">🛰️</div></div>
+      <div class="ktrack"><div class="kcraft" id="${areaId}-cr">🛰️</div></div>
       <input type="range" class="kslider" id="${areaId}-sl" min="0" max="100" step="1" value="0">
       <div class="kdial">orbital speed: <b id="${areaId}-val">0</b></div>
       <div style="text-align:center"><button class="gbtn" id="${areaId}-go">🚀 LAUNCH</button></div>`;
@@ -2162,7 +2162,7 @@ GAMES.u2={title:"Phase Dial",icon:"🌙",id:"u2",unit:"u2",
     let firstTry=true; const [name,center,why]=probs[i]; const gw=12;
     stage.innerHTML=`<div style="font-size:1.05rem">Dial the moon to: <b>${name}</b></div>
       <div style="text-align:center;font-size:3rem;margin:4px 0" id="${areaId}-moon">🌑</div>
-      <div class="ktrack"><div class="kgate" style="left:${center-gw/2}%;width:${gw}%"><label>here</label></div><div class="kcraft" id="${areaId}-cr">🌙</div></div>
+      <div class="ktrack"><div class="kcraft" id="${areaId}-cr">🌙</div></div>
       <input type="range" class="kslider" id="${areaId}-sl" min="0" max="100" step="1" value="0">
       <div class="kdial">position in orbit: <b id="${areaId}-val">0</b></div>
       <div style="text-align:center"><button class="gbtn" id="${areaId}-go">🌙 LOCK IT IN</button></div>`;
@@ -2204,7 +2204,7 @@ GAMES.u2b={title:"Eclipse Aligner",icon:"🌑",id:"u2b",unit:"u2",
     let firstTry=true; const [name,center,why,diagram]=probs[i]; const gw=16;
     stage.innerHTML=`<div style="font-size:1.05rem">Line up a <b>${name}</b>.</div>
       <div style="display:flex;justify-content:space-between;font-size:1.6rem;margin:6px 4px 0"><span>☀️ sun</span><span>🌍 Earth</span></div>
-      <div class="ktrack"><div class="kgate" style="left:${center-gw/2}%;width:${gw}%"><label>line up</label></div><div class="kcraft" id="${areaId}-cr">🌕</div></div>
+      <div class="ktrack"><div class="kcraft" id="${areaId}-cr">🌕</div></div>
       <input type="range" class="kslider" id="${areaId}-sl" min="0" max="100" step="1" value="50">
       <div class="kdial">moon position: <b id="${areaId}-val">50</b></div>
       <div style="text-align:center"><button class="gbtn" id="${areaId}-go">🌑 ALIGN</button></div>`;
@@ -2216,7 +2216,7 @@ GAMES.u2b={title:"Eclipse Aligner",icon:"🌑",id:"u2b",unit:"u2",
       const v=parseFloat(sl.value); const hit=Math.abs(v-center)<=gw/2;
       if(hit){ go.disabled=true; sl.disabled=true; const pts=firstTry?14:7; score+=pts; kineScore(areaId,score);
         kineMsg(areaId,`✅ <b>Aligned!</b> ${diagram} <span class="why">${why}</span> +${pts}`); i++; setTimeout(draw,1900); }
-      else { firstTry=false; kineMsg(areaId,`❌ <b>Not lined up yet.</b> <span class="why">For a ${name}, the order must be ${diagram}. Slide the moon to the highlighted band.</span>`); }
+      else { firstTry=false; kineMsg(areaId,`❌ <b>Not lined up yet.</b> <span class="why">For a ${name}, the order must be ${diagram}. ${v<center?'Nudge the moon to the right →':'← Nudge the moon to the left'}.</span>`); }
     };
   }
   draw();
@@ -2469,7 +2469,7 @@ GAMES.u3c={title:"Tide Aligner",icon:"🌊",id:"u3c",unit:"u3",
     let firstTry=true; const [name,center,why]=probs[i]; const gw=15;
     stage.innerHTML=`<div style="font-size:1.05rem">Line up a <b>${name}</b>.</div>
       <div style="display:flex;justify-content:space-between;font-size:1.5rem;margin:6px 4px 0"><span>☀️ sun</span><span>🌍 Earth</span></div>
-      <div class="ktrack"><div class="kgate" style="left:${center-gw/2}%;width:${gw}%"><label>here</label></div><div class="kcraft" id="${areaId}-cr">🌙</div></div>
+      <div class="ktrack"><div class="kcraft" id="${areaId}-cr">🌙</div></div>
       <input type="range" class="kslider" id="${areaId}-sl" min="0" max="100" step="1" value="0">
       <div class="kdial">moon position: <b id="${areaId}-val">0</b></div>
       <div style="text-align:center"><button class="gbtn" id="${areaId}-go">🌊 ALIGN</button></div>`;
@@ -2481,7 +2481,7 @@ GAMES.u3c={title:"Tide Aligner",icon:"🌊",id:"u3c",unit:"u3",
       const v=parseFloat(sl.value); const hit=Math.abs(v-center)<=gw/2;
       if(hit){ go.disabled=true; sl.disabled=true; const pts=firstTry?14:7; score+=pts; kineScore(areaId,score);
         kineMsg(areaId,`✅ <b>${name.split(' ')[0]} tide aligned!</b> <span class="why">${why}</span> +${pts}`); i++; setTimeout(draw,1900); }
-      else { firstTry=false; kineMsg(areaId,`❌ <b>Not lined up yet.</b> <span class="why">Slide the moon to the highlighted band to make a ${name.split(' ')[0].toLowerCase()} tide.</span>`); }
+      else { firstTry=false; kineMsg(areaId,`❌ <b>Not lined up yet.</b> <span class="why">${/spring/i.test(name)?'A SPRING tide needs the sun, Earth and moon in a straight line.':'A NEAP tide needs the moon at a right angle to the sun.'} ${v<center?'Nudge the moon right →':'← Nudge the moon left'}.</span>`); }
     };
   }
   draw();
