@@ -69,9 +69,10 @@ h3{font-size:1.13rem;font-weight:800;margin-bottom:6px}
 .callout{border-left:5px solid var(--ac,var(--u1));background:var(--acsoft,var(--u1soft));border-radius:0 12px 12px 0;padding:12px 16px;margin:12px 0;font-size:.97rem}
 .callout b:first-child{display:block;font-family:var(--disp);margin-bottom:2px}
 .formula{font-family:var(--mono);background:var(--ink);color:#9FE8D2;padding:10px 16px;border-radius:10px;display:inline-block;margin:8px 8px 4px 0;font-size:.95rem}
-.unithead{border-radius:18px;padding:30px;color:#fff;background:var(--ac);display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
+.unithead{border-radius:18px;padding:30px;color:#fff;background:var(--ac);background:linear-gradient(135deg,var(--ac) 0%,#1c1d33 100%);display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:24px;box-shadow:0 10px 30px rgba(28,29,51,.18)}
 .unithead .bigsym{font-family:var(--disp);font-weight:800;font-size:3.6rem;background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.55);border-radius:16px;width:108px;height:108px;display:flex;align-items:center;justify-content:center;flex:none}
 .unithead p{opacity:.92;max-width:60ch}
+.unithead .eyebrow{display:inline-block;font-family:var(--mono);font-size:.7rem;font-weight:800;background:#f5a623;color:#1c1d33;border-radius:99px;padding:3px 12px;margin-bottom:10px;letter-spacing:.16em}
 .pill{display:inline-block;font-family:var(--mono);font-size:.74rem;background:rgba(255,255,255,.2);border-radius:99px;padding:3px 11px;margin-bottom:6px;letter-spacing:.12em}
 .secnum{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:var(--ac);color:#fff;font-family:var(--mono);font-size:.85rem;margin-right:9px;flex:none}
 .lessoncard h3{display:flex;align-items:center}
@@ -81,6 +82,10 @@ figcaption{font-size:.85rem;color:var(--ink2);margin-top:6px;font-style:italic}
 
 /* ---------- TABS within unit ---------- */
 .subtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.subtabs.unitnav{justify-content:flex-end}
+@media(max-width:560px){.subtabs.unitnav{justify-content:flex-start}}
+.lessonwrap{border-radius:16px;overflow:hidden;box-shadow:0 6px 22px rgba(28,29,51,.16);margin-bottom:10px;background:#14112e}
+.lessonframe{width:100%;border:0;display:block;height:80vh;background:#14112e;transition:opacity .3s}
 .subtab{border:2px solid var(--ac);background:#fff;color:var(--ac);font-weight:800;padding:9px 18px;border-radius:99px;font-size:.95rem}
 .subtab.active{background:var(--ac);color:#fff}
 .subpane{display:none}.subpane.show{display:block;animation:fade .3s ease}
@@ -632,6 +637,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <h3>Step 2 · Choose what to include</h3>
     <p class="stepsub">Counts update live from your Step 1 selection. Grayed-out types have no matching content yet.</p>
     <div class="rtgrid">
+      <label><input type="checkbox" id="rt-lesson" checked> 📘 Lessons <span class="n"><span id="rt-lesson-n">0</span></span></label>
       <label><input type="checkbox" id="rt-guides" checked> 📝 Study guides <span class="n" ><span id="rt-guides-n">0</span></span></label>
       <label><input type="checkbox" id="rt-games" checked> 🎮 Minigames <span class="n"><span id="rt-games-n">0</span></span></label>
       <label><input type="checkbox" id="rt-act" checked> 🧩 Practice activities <span class="n"><span id="rt-act-n">0</span></span></label>
@@ -1158,6 +1164,7 @@ FIG.lens = c => `<svg viewBox="0 0 480 220" width="480" role="img" aria-label="A
 const UNITS = {
 u1:{
   sym:"☀️", num:1, name:"The Universe & Solar System", std:"S6E1", color:"var(--u1)", soft:"var(--u1soft)", hex:"#5B67E0",
+  lessonurl:"lessons/earth/ch1.html",
   blurb:"Where exactly ARE you? On a planet, circling a star, riding a spiral arm of a galaxy with billions of others. This unit is the map — and the story of how scientists figured it out.",
   lessons:[
    {t:"Science Changes Its Mind: Models of the Sky", body:`For about 1,400 years, most people accepted the <b>geocentric model</b> — Earth at the center, with the sun and planets circling us (the astronomer Ptolemy made it famous). Then <b>Copernicus</b> proposed the <b>heliocentric model</b> — the sun at the center — and when <b>Galileo</b> pointed the newly invented telescope at the sky, the evidence piled up: moons orbiting Jupiter (so not everything circles Earth!) and phases of Venus that only made sense if Venus circles the sun.`,
@@ -1222,7 +1229,7 @@ u1:{
    {q:"A 'shooting star' you see streak across the sky is really a…", o:["Star falling","Meteor","Comet landing","Planet"], a:1, lesson:8, why:"It's a meteoroid burning up in our atmosphere — a meteor."}
   ]
 },
-u2:{ sym:"🌙", num:2, name:"Sun, Earth & Moon", std:"S6E2", color:"var(--u2)", soft:"var(--u2soft)", hex:"#E08F0E",
+u2:{ sym:"🌙", num:2, name:"Sun, Earth & Moon", std:"S6E2", color:"var(--u2)", soft:"var(--u2soft)", hex:"#E08F0E", lessonurl:"lessons/earth/ch2.html",
   blurb:"Moon phases, eclipses, and why summer even exists — it all comes down to the three-body dance of sun, Earth, and moon, plus one famous 23.5° tilt.",
   lessons:[
    {t:"Why the Moon Has Phases", body:`The moon makes no light of its own — it <b>reflects sunlight</b>, and <b>half of the moon is ALWAYS lit</b> (the half facing the sun). A <b>phase</b> is simply how much of that lit half WE can see from Earth, and it changes as the moon orbits us. Lit side facing away = <b>new moon</b> (we see nothing). Lit side facing us = <b>full moon</b>. The whole cycle takes about <b>29.5 days</b> — that's where "month" comes from!`,
@@ -1283,7 +1290,7 @@ u2:{ sym:"🌙", num:2, name:"Sun, Earth & Moon", std:"S6E2", color:"var(--u2)",
    {q:"When it's summer in Georgia, in Australia it is…", o:["Summer","Winter","Fall","Always raining"], a:1, lesson:6, why:"Opposite hemispheres, opposite tilt, opposite seasons."}
   ]
 },
-u3:{ sym:"💧", num:3, name:"Water on Earth", std:"S6E3", color:"var(--u3)", soft:"var(--u3soft)", hex:"#1E7FB8",
+u3:{ sym:"💧", num:3, name:"Water on Earth", std:"S6E3", color:"var(--u3)", soft:"var(--u3soft)", hex:"#1E7FB8", lessonurl:"lessons/earth/ch3.html",
   blurb:"We live on a water planet — but almost none of it is drinkable. Find out where the water hides, how the sun keeps it moving, and what pushes the waves, currents, and tides.",
   lessons:[
    {t:"Where Is Earth's Water?", body:`About <b>97%</b> of Earth's water is <b>salt water</b> in the oceans. Of the ~3% that's fresh, <b>most is frozen</b> in ice caps and glaciers. The rest hides as <b>groundwater</b>, with only a tiny sliver in <b>rivers, lakes, and swamps</b> — the water we see every day is the rarest kind! Know the locations: oceans, rivers, lakes, swamps, groundwater, aquifers, and ice.`,
@@ -1345,7 +1352,7 @@ u3:{ sym:"💧", num:3, name:"Water on Earth", std:"S6E3", color:"var(--u3)", so
    {q:"Tides are mainly caused by…", o:["Storms","The moon's gravity","Boats","Rivers"], a:1, lesson:7, why:"The moon's pull creates the ocean bulges we ride through twice a day."}
   ]
 },
-u4:{ sym:"🌪️", num:4, name:"Weather & Climate", std:"S6E4", color:"var(--u4)", soft:"var(--u4soft)", hex:"#159E96",
+u4:{ sym:"🌪️", num:4, name:"Weather & Climate", std:"S6E4", color:"var(--u4)", soft:"var(--u4soft)", hex:"#159E96", lessonurl:"lessons/earth/ch4.html",
   blurb:"Why does the sky do what it does? It's a story of layered air, uneven heating, colliding air masses, and an ocean that loads the atmosphere with fuel.",
   lessons:[
    {t:"Layers of the Atmosphere", body:`Going up: the <b>troposphere</b> (where we live — and where ALL weather happens; temperature drops with height), the <b>stratosphere</b> (home of the <b>ozone layer</b>, which absorbs the sun's harmful UV — temperature rises here because of it), the <b>mesosphere</b> (coldest layer — where meteors burn up), and the <b>thermosphere</b> (super thin, technically scorching — where auroras glow and the ISS orbits).`,
@@ -1406,7 +1413,7 @@ u4:{ sym:"🌪️", num:4, name:"Weather & Climate", std:"S6E4", color:"var(--u4
    {q:"Hurricanes form over…", o:["Deserts","Warm ocean water","Mountains","Ice caps"], a:1, lesson:7, why:"Warm water evaporating is the storm's fuel supply."}
   ]
 },
-u5:{ sym:"🌋", num:5, name:"Earth's Surface", std:"S6E5", color:"var(--u5)", soft:"var(--u5soft)", hex:"#8B5A2B",
+u5:{ sym:"🌋", num:5, name:"Earth's Surface", std:"S6E5", color:"var(--u5)", soft:"var(--u5soft)", hex:"#8B5A2B", lessonurl:"lessons/earth/ch5.html",
   blurb:"The ground under your feet has a biography: layers, minerals, recycling rocks, drifting plates, buried fossils, and slow-built soil. Time to read it.",
   lessons:[
    {t:"Journey to the Center of the Earth", body:`Four main layers, and every one gets <b>hotter and denser</b> as you go down. The <b>crust</b>: thin, rocky, where we live (thinnest under oceans). The <b>mantle</b>: the THICKEST layer — hot rock that flows very slowly. The <b>outer core</b>: <em>liquid</em> iron and nickel (its churning creates Earth's magnetic field). The <b>inner core</b>: solid iron and nickel — hottest of all, kept solid by crushing pressure.`,
@@ -1472,7 +1479,7 @@ u5:{ sym:"🌋", num:5, name:"Earth's Surface", std:"S6E5", color:"var(--u5)", s
    {q:"Soil contains weathered rock plus…", o:["Plastic","Decomposed organic material","Pure sand","Lava"], a:1, lesson:9, why:"The organic half — humus — is what makes soil alive and fertile."}
   ]
 },
-u6:{ sym:"♻️", num:6, name:"Natural Resources", std:"S6E6", color:"var(--u1)", soft:"var(--u1soft)", hex:"#2f7a4d",
+u6:{ sym:"♻️", num:6, name:"Natural Resources", std:"S6E6", color:"var(--u1)", soft:"var(--u1soft)", hex:"#2f7a4d", lessonurl:"lessons/earth/ch6.html",
   blurb:"Everything you used today came from Earth. Which resources refill themselves, which run out, and how do we keep the water, soil, and air in working order?",
   lessons:[
    {t:"Renewable Energy Resources", body:`<b>Renewable (sustainable) resources</b> are replaced naturally about as fast as we use them. The lineup: <b>solar</b> (panels turning sunlight into electricity), <b>wind</b> (turbines), <b>hydroelectric</b> (falling water spinning generators behind dams), <b>geothermal</b> (Earth's internal heat), <b>tidal</b> (the moon's twice-daily ocean pull), and <b>biomass</b> (plant material and waste burned or turned into fuel). You use them every day: solar calculators, wind-powered grids, hydro electricity.`,
@@ -1665,25 +1672,59 @@ function buildUnit(id){
     return;
   }
   page.innerHTML = `
-  <div class="unithead" style="--ac:${u.hex};background:${u.hex}">
+  <div class="unithead" style="--ac:${u.hex}">
     <div class="bigsym">${u.sym}</div>
-    <div><span class="pill">UNIT ${u.num} · GEORGIA ${u.std}</span>
+    <div><span class="eyebrow">📘 LESSON</span><br><span class="pill">UNIT ${u.num} · GEORGIA ${u.std}</span>
       <h1 style="color:#fff">${u.name}</h1><p>${u.blurb}</p></div>
   </div>
-  <div class="subtabs">
-    <button class="subtab active" style="--ac:${u.hex}" onclick="sub('${id}','study',this)">📖 Study Guide</button>
-    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','cards',this)">🃏 Flashcards</button>
-    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','quiz',this)">✅ Practice Quiz</button>
-    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','game',this)">🎮 Minigame</button>
-    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','act',this)">🧩 Practice</button>
-    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','videos',this)">▶ Videos &amp; Sims</button>
+  <div class="subtabs unitnav">
+    ${u.lessonurl? `<button class="subtab active" style="--ac:${u.hex}" data-pane="lesson" onclick="sub('${id}','lesson',this)">📖 Lesson</button>`:''}
+    <button class="subtab ${u.lessonurl?'':'active'}" style="--ac:${u.hex}" data-pane="study" onclick="sub('${id}','study',this)">📝 Study Guide</button>
+    <button class="subtab" style="--ac:${u.hex}" data-pane="cards" onclick="sub('${id}','cards',this)">🃏 Flashcards</button>
+    <button class="subtab" style="--ac:${u.hex}" data-pane="quiz" onclick="sub('${id}','quiz',this)">✅ Practice Quiz</button>
+    <button class="subtab" style="--ac:${u.hex}" data-pane="game" onclick="sub('${id}','game',this)">🎮 Minigame</button>
+    <button class="subtab" style="--ac:${u.hex}" data-pane="act" onclick="sub('${id}','act',this)">🧩 Practice</button>
+    <button class="subtab" style="--ac:${u.hex}" data-pane="videos" onclick="sub('${id}','videos',this)">▶ Videos &amp; Sims</button>
   </div>
-  <div class="subpane show" id="${id}-study">${buildStudy(id,u)}</div>
+  ${u.lessonurl? `<div class="subpane show" id="${id}-lesson"><div class="lessonwrap"><iframe class="lessonframe" id="${id}-lessonframe" title="${u.name} — Lesson" scrolling="yes"></iframe></div></div>`:''}
+  <div class="subpane ${u.lessonurl?'':'show'}" id="${id}-study">${buildStudy(id,u)}</div>
   <div class="subpane" id="${id}-cards"><div id="${id}-cardsarea"></div></div>
   <div class="subpane" id="${id}-quiz"><div id="${id}-quizarea"></div></div>
   <div class="subpane" id="${id}-game"><div id="${id}-gamearea"></div></div>
   <div class="subpane" id="${id}-act"></div>
   <div class="subpane" id="${id}-videos">${buildVideos(id,u)}</div>`;
+  if(u.lessonurl) mountLesson(id);
+}
+
+/* ---- embedded design Lesson: fixed-height iframe with its OWN internal scroll.
+   NO auto-resize / NO ResizeObserver — the iframe height never reacts to its
+   content, so there is no feedback loop. We only inject CSS once to hide the
+   leftover Earth Quest game bar, then fade the frame in. ---- */
+function mountLesson(id){
+  const f = document.getElementById(id+'-lessonframe');
+  if(!f || f.dataset.mounted) return;
+  f.dataset.mounted = '1';
+  f.style.opacity = '0';
+  f.src = UNITS[id].lessonurl;
+  let tries = 0;
+  const tick = ()=>{
+    let doc; try{ doc=f.contentDocument; }catch(e){ return; }
+    if(doc){
+      const host = doc.querySelector('.sc-host');
+      if(host){
+        if(!doc.getElementById('hub-lesson-css')){
+          const st=doc.createElement('style'); st.id='hub-lesson-css';
+          st.textContent='.sc-host > div > div:first-child{display:none!important}';
+          (doc.head||doc.documentElement).appendChild(st);
+        }
+        f.style.opacity='1';
+        return;   // settled — do NOT touch the iframe height ever again
+      }
+    }
+    if(++tries < 80) setTimeout(tick, 150);
+  };
+  f.addEventListener('load', ()=>{ tries=0; tick(); });
+  tick();
 }
 
 function sub(id, pane, btn){
@@ -3567,6 +3608,7 @@ function renderTeachPreview(){
   const li = (arr,fmt)=> arr.length? arr.map(fmt).join('') : `<p style="opacity:.6;margin:4px 0">— none mapped yet —</p>`;
   box.innerHTML = `
     <p style="font-size:.85rem;opacity:.8;margin:0 0 8px">Every box starts checked — <b>uncheck anything you don't want</b>, and hit 👁 to see exactly what students will get.</p>
+    <div class="tprev"><h4>📘 Lessons <span>${r.units.filter(u=>UNITS[u].lessonurl).length}</span></h4>${li(r.units.filter(u=>UNITS[u].lessonurl), u=>row(`L:${u}`, `Unit ${UNITS[u].num} Lesson — ${UNITS[u].name}`, `window.open(UNITS['${u}'].lessonurl,'_blank')`))}</div>
     <div class="tprev"><h4>📝 Study guides <span>${r.lessons.length}</span></h4>${li(r.lessons, x=>row(`g:${x.uid}:L${x.i}`, `U${UNITS[x.uid].num} · ${x.t}`, `pvLesson('${x.uid}',${x.i})`))}</div>
     <div class="tprev"><h4>🎮 Minigames <span>${r.games.length}</span></h4>${li(r.games, x=>row(`m:${x.gid}`, `U${UNITS[x.uid].num} · ${x.t}`, `pvGame('${x.gid}')`))}</div>
     <div class="tprev"><h4>🧩 Practice activities <span>${r.acts.length}</span></h4>${li(r.acts, s=>row(`a:${s}`, `${s} — match · fill-in · sort`, `pvActivity('${s}')`))}</div>
@@ -3631,6 +3673,7 @@ function pvPosttest(uid){
    PHASE 2 — ASSIGNMENT BUILDER (resource picker + generate)
    ========================================================= */
 const RESOURCE_TYPES = [
+  {k:'L',  box:'rt-lesson', icon:'📘', name:'Lessons',       from:r=>r.units.filter(uid=>UNITS[uid].lessonurl)},
   {k:'g',  box:'rt-guides', icon:'📝', name:'Study guides',   from:r=>r.lessons.map(x=>`${x.uid}:L${x.i}`)},
   {k:'m',  box:'rt-games',  icon:'🎮', name:'Minigames',      from:r=>r.games.map(x=>x.gid)},
   {k:'a',  box:'rt-act',    icon:'🧩', name:'Practice activities', from:r=>r.acts},
@@ -3726,8 +3769,7 @@ let ASN_PENDING = null; // decoded link awaiting name pick
 
 function nameKey(n){ return n.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,24) || 'student'; }
 function openPane(uid, pane){
-  const order = {study:0, cards:1, quiz:2, game:3, act:4, videos:5};
-  const btn = document.querySelectorAll(`#page-${uid} > .subtabs .subtab`)[order[pane]];
+  const btn = document.querySelector(`#page-${uid} > .subtabs .subtab[data-pane="${pane}"]`);
   if(btn) btn.click();
   if(pane==='study' && ASN) setTimeout(()=>asnWatchLessonScroll(uid), 60);  // credit study guides as they scroll into view
 }
@@ -3735,6 +3777,7 @@ function openPane(uid, pane){
 /* ---------- item registry: cfg → flat renderable list ---------- */
 const ASN_TYPES = [
   {k:'pr', icon:'🩺', name:'Pretest',          verb:'Take pretest'},
+  {k:'L',  icon:'📘', name:'Lessons',          verb:'Open lesson'},
   {k:'g',  icon:'📝', name:'Study guides',     verb:'Read'},
   {k:'m',  icon:'🎮', name:'Minigames',        verb:'Play'},
   {k:'a',  icon:'🧩', name:'Practice activities', verb:'Practice'},
@@ -3747,6 +3790,7 @@ function asnItems(cfg){
   const out = [];
   const it = cfg.it || {};
   (it.pr||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'pr', id:uid, uid, label:`Unit ${UNITS[uid].num} pretest (5 questions — completion only)`}); });
+  (it.L||[]).forEach(uid=>{ if(UNITS[uid]?.lessonurl) out.push({type:'L', id:uid, uid, label:`Unit ${UNITS[uid].num} Lesson — ${UNITS[uid].name}`}); });
   (it.g||[]).forEach(id=>{ const [uid,L]=id.split(':L'); const ls=UNITS[uid]?.lessons[+L];
     if(ls) out.push({type:'g', id, uid, label:ls.t}); });
   (it.m||[]).forEach(gid=>{ const g=GAMES[gid];
@@ -3805,6 +3849,10 @@ function asnOpen(type, id){
   const it = _items[_idx];
   if(!it) return;
   if(ASN) ASN.idx = _idx;
+  if(type==='L'){
+    store.set(asnItemKey(it), Date.now());
+    go(it.uid); openPane(it.uid,'lesson');
+  }
   if(type==='g'){
     store.set(asnItemKey(it), Date.now());
     go(it.uid); openPane(it.uid,'study');
@@ -3922,8 +3970,8 @@ function asnExit(){
    and Coach's Corner teach text in 5 languages
    ========================================================= */
 const EN_UI = {
- tn_g:'Study guides', tn_m:'Minigames', tn_a:'Practice activities', tn_v:'Videos', tn_p:'PhET labs', tn_q:'Practice quizzes', tn_pr:'Pretest', tn_po:'Posttest',
- vb_g:'Read', vb_m:'Play', vb_a:'Practice', vb_v:'Watch', vb_p:'Open lab', vb_q:'Take quiz', vb_pr:'Take pretest', vb_po:'Take posttest',
+ tn_L:'Lessons', tn_g:'Study guides', tn_m:'Minigames', tn_a:'Practice activities', tn_v:'Videos', tn_p:'PhET labs', tn_q:'Practice quizzes', tn_pr:'Pretest', tn_po:'Posttest',
+ vb_L:'Open lesson', vb_g:'Read', vb_m:'Play', vb_a:'Practice', vb_v:'Watch', vb_p:'Open lab', vb_q:'Take quiz', vb_pr:'Take pretest', vb_po:'Take posttest',
  ag_g:'Reread', ag_m:'Play again', ag_a:'Practice again', ag_q:'Retake', ag_po:'Retake', ag_x:'Reopen',
  progress:'{d} of {n} complete', allDoneFlag:' — 🎉 everything done!',
  curScore:'📊 Current weighted score:', scoreNote:'(posttest counts most — see your printed report for the breakdown)',
@@ -3947,8 +3995,8 @@ const EN_UI = {
 const LANGS = {
  en:{name:'English'},
  es:{name:'Español', ui:{
-  tn_g:'Guías de estudio', tn_m:'Minijuegos', tn_a:'Actividades de práctica', tn_v:'Videos', tn_p:'Laboratorios PhET', tn_q:'Cuestionarios de práctica', tn_pr:'Prueba previa', tn_po:'Prueba final',
-  vb_g:'Leer', vb_m:'Jugar', vb_a:'Practicar', vb_v:'Ver', vb_p:'Abrir laboratorio', vb_q:'Hacer cuestionario', vb_pr:'Hacer prueba previa', vb_po:'Hacer prueba final',
+  tn_L:'Lecciones', tn_g:'Guías de estudio', tn_m:'Minijuegos', tn_a:'Actividades de práctica', tn_v:'Videos', tn_p:'Laboratorios PhET', tn_q:'Cuestionarios de práctica', tn_pr:'Prueba previa', tn_po:'Prueba final',
+  vb_L:'Abrir lección', vb_g:'Leer', vb_m:'Jugar', vb_a:'Practicar', vb_v:'Ver', vb_p:'Abrir laboratorio', vb_q:'Hacer cuestionario', vb_pr:'Hacer prueba previa', vb_po:'Hacer prueba final',
   ag_g:'Releer', ag_m:'Jugar otra vez', ag_a:'Practicar otra vez', ag_q:'Repetir', ag_po:'Repetir', ag_x:'Reabrir',
   progress:'{d} de {n} completados', allDoneFlag:' — 🎉 ¡todo listo!',
   curScore:'📊 Calificación ponderada actual:', scoreNote:'(la prueba final cuenta más — mira el desglose en tu reporte impreso)',
@@ -3970,8 +4018,8 @@ const LANGS = {
   resBtn:'📋 Copiar código de resultados', resNote:'Pega este código en la página de la tarea de tu maestro — lleva tu calificación, período y progreso.', copied:'✅ ¡Copiado! Ahora pégalo en la página de la tarea.', periodShort:'Período'
  }},
  vi:{name:'Tiếng Việt', ui:{
-  tn_g:'Bài học', tn_m:'Trò chơi nhỏ', tn_a:'Hoạt động luyện tập', tn_v:'Video', tn_p:'Thí nghiệm PhET', tn_q:'Bài kiểm tra luyện tập', tn_pr:'Bài kiểm tra đầu', tn_po:'Bài kiểm tra cuối',
-  vb_g:'Đọc', vb_m:'Chơi', vb_a:'Luyện tập', vb_v:'Xem', vb_p:'Mở thí nghiệm', vb_q:'Làm bài kiểm tra', vb_pr:'Làm kiểm tra đầu', vb_po:'Làm kiểm tra cuối',
+  tn_L:'Bài học tương tác', tn_g:'Bài học', tn_m:'Trò chơi nhỏ', tn_a:'Hoạt động luyện tập', tn_v:'Video', tn_p:'Thí nghiệm PhET', tn_q:'Bài kiểm tra luyện tập', tn_pr:'Bài kiểm tra đầu', tn_po:'Bài kiểm tra cuối',
+  vb_L:'Mở bài học', vb_g:'Đọc', vb_m:'Chơi', vb_a:'Luyện tập', vb_v:'Xem', vb_p:'Mở thí nghiệm', vb_q:'Làm bài kiểm tra', vb_pr:'Làm kiểm tra đầu', vb_po:'Làm kiểm tra cuối',
   ag_g:'Đọc lại', ag_m:'Chơi lại', ag_a:'Luyện tập lại', ag_q:'Làm lại', ag_po:'Làm lại', ag_x:'Mở lại',
   progress:'Hoàn thành {d} / {n}', allDoneFlag:' — 🎉 xong hết rồi!',
   curScore:'📊 Điểm hiện tại (có trọng số):', scoreNote:'(bài kiểm tra cuối được tính nhiều nhất — xem chi tiết trong báo cáo in)',
@@ -3993,8 +4041,8 @@ const LANGS = {
   resBtn:'📋 Sao chép mã kết quả', resNote:'Dán mã này vào trang bài tập của giáo viên — mã chứa điểm, tiết học và tiến độ của bạn.', copied:'✅ Đã sao chép! Hãy dán vào trang bài tập của lớp.', periodShort:'Tiết'
  }},
  zh:{name:'中文', ui:{
-  tn_g:'学习指南', tn_m:'小游戏', tn_a:'练习活动', tn_v:'视频', tn_p:'PhET 实验', tn_q:'练习测验', tn_pr:'前测', tn_po:'后测',
-  vb_g:'阅读', vb_m:'开始游戏', vb_a:'开始练习', vb_v:'观看', vb_p:'打开实验', vb_q:'做测验', vb_pr:'做前测', vb_po:'做后测',
+  tn_L:'课程', tn_g:'学习指南', tn_m:'小游戏', tn_a:'练习活动', tn_v:'视频', tn_p:'PhET 实验', tn_q:'练习测验', tn_pr:'前测', tn_po:'后测',
+  vb_L:'打开课程', vb_g:'阅读', vb_m:'开始游戏', vb_a:'开始练习', vb_v:'观看', vb_p:'打开实验', vb_q:'做测验', vb_pr:'做前测', vb_po:'做后测',
   ag_g:'再读一遍', ag_m:'再玩一次', ag_a:'再练一次', ag_q:'重新测验', ag_po:'重新测验', ag_x:'重新打开',
   progress:'已完成 {d} / {n}', allDoneFlag:' — 🎉 全部完成！',
   curScore:'📊 当前加权分数：', scoreNote:'（后测占分最高 — 详情见打印的成绩报告）',
@@ -4016,8 +4064,8 @@ const LANGS = {
   resBtn:'📋 复制成绩代码', resNote:'把这个代码粘贴到老师的作业页面 — 它包含你的分数、节次和进度。', copied:'✅ 已复制！现在粘贴到班级作业页面。', periodShort:'第…节'
  }},
  ko:{name:'한국어', ui:{
-  tn_g:'학습 가이드', tn_m:'미니게임', tn_a:'연습 활동', tn_v:'동영상', tn_p:'PhET 실험', tn_q:'연습 퀴즈', tn_pr:'사전 평가', tn_po:'사후 평가',
-  vb_g:'읽기', vb_m:'게임하기', vb_a:'연습하기', vb_v:'시청하기', vb_p:'실험 열기', vb_q:'퀴즈 풀기', vb_pr:'사전 평가 보기', vb_po:'사후 평가 보기',
+  tn_L:'레슨', tn_g:'학습 가이드', tn_m:'미니게임', tn_a:'연습 활동', tn_v:'동영상', tn_p:'PhET 실험', tn_q:'연습 퀴즈', tn_pr:'사전 평가', tn_po:'사후 평가',
+  vb_L:'레슨 열기', vb_g:'읽기', vb_m:'게임하기', vb_a:'연습하기', vb_v:'시청하기', vb_p:'실험 열기', vb_q:'퀴즈 풀기', vb_pr:'사전 평가 보기', vb_po:'사후 평가 보기',
   ag_g:'다시 읽기', ag_m:'다시 하기', ag_a:'다시 연습', ag_q:'다시 풀기', ag_po:'다시 풀기', ag_x:'다시 열기',
   progress:'{n}개 중 {d}개 완료', allDoneFlag:' — 🎉 모두 완료!',
   curScore:'📊 현재 가중 점수:', scoreNote:'(사후 평가의 비중이 가장 큽니다 — 자세한 내용은 인쇄된 성적표 참고)',
@@ -4454,7 +4502,7 @@ function asnScore(){
     let earned=null, detail='';
     if(W.k==='opened'){
       const ext = asnLang()==='en'? [...(it.v||[]).map(i=>['v',i]), ...(it.p||[]).map(i=>['p',i])] : [];  // videos/PhET excused for non-English students
-      const ids=[...(it.g||[]).map(i=>['g',i]), ...ext];
+      const ids=[...(it.L||[]).map(i=>['L',i]), ...(it.g||[]).map(i=>['g',i]), ...ext];
       if(ids.length){ const done=ids.filter(([t,i])=>get(t,i)!=null).length;
         earned=done/ids.length; detail=`${done} of ${ids.length} opened`; }
     } else if(W.k==='m'){
