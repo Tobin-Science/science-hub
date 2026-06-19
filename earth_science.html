@@ -1709,17 +1709,21 @@ function mountLesson(id){
   let tries = 0;
   const tick = ()=>{
     let doc; try{ doc=f.contentDocument; }catch(e){ return; }
-    if(doc){
-      const host = doc.querySelector('.sc-host');
-      if(host){
-        if(!doc.getElementById('hub-lesson-css')){
-          const st=doc.createElement('style'); st.id='hub-lesson-css';
-          st.textContent='.sc-host > div > div:first-child{display:none!important}';
-          (doc.head||doc.documentElement).appendChild(st);
-        }
-        f.style.opacity='1';
-        return;   // settled — do NOT touch the iframe height ever again
+    const host = doc && doc.querySelector('.sc-host');
+    if(host){
+      // Inject ONCE (after the bundle has swapped in its real document, i.e. once
+      // .sc-host exists). This CSS hides a leftover game status bar IF present: the
+      // Earth Quest bar is a first-child block with inline `position: sticky`. A real
+      // lesson's first block is NOT sticky, so non-game lessons are left fully intact.
+      // It's declarative, so it applies whenever the bar renders (no timing race), and
+      // it NEVER touches the iframe height → no resize loop.
+      if(!doc.getElementById('hub-lesson-css')){
+        const st=doc.createElement('style'); st.id='hub-lesson-css';
+        st.textContent='.sc-host>div>div:first-child[style*="position: sticky"],.sc-host>div>div:first-child[style*="position:sticky"]{display:none!important}';
+        (doc.head||doc.documentElement).appendChild(st);
       }
+      f.style.opacity='1';
+      return;
     }
     if(++tries < 80) setTimeout(tick, 150);
   };
