@@ -4,7 +4,7 @@
 // a PRIVATE Supabase Storage bucket, so they're never publicly reachable.
 import { adminDb, userFromRequest, jsonResponse, corsHeaders, pickOrigin } from './_shared.js';
 
-const SUBJECTS = ['physical', 'earth', 'life'];
+const SUBJECTS = ['physical', 'earth', 'life', 'math'];
 
 export async function OPTIONS(request) {
   return new Response(null, { status: 204, headers: corsHeaders(pickOrigin(request)) });

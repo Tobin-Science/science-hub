@@ -28,6 +28,7 @@ export const PRICE = {
   earth:    { month: 'price_1ThcLsAe6srL0hOF5RyvTiRk', year: 'price_1ThcLsAe6srL0hOF5y3x5FsR' },
   life:     { month: 'price_1ThcLtAe6srL0hOFdnACCjKP', year: 'price_1ThcLsAe6srL0hOFD9oH9PNb' },
   bundle:   { month: 'price_1ThcLtAe6srL0hOFCic7ccEE', year: 'price_1ThcLtAe6srL0hOF55RcJl0T' },
+  math:     { month: 'price_1TkW2jAe6srL0hOFnYie6Pum', year: 'price_1TkW3cAe6srL0hOFtyl0TUFo' },
 };
 
 // Service-role client: trusted server-side writes (bypasses row-level security).

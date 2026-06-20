@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tobin Math Hub — Pick Your Grade</title>
+<style>
+:root{--ink:#1B2440;--ink2:#5A6480;--bg:#F4F6FB;--line:#DDE3F0}
+*{box-sizing:border-box;margin:0}
+body{font-family:Georgia,'Times New Roman',serif;background:linear-gradient(160deg,#16321f 0%,#1f5136 55%,#2f7a4d 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 18px}
+.logo{display:flex;align-items:center;gap:12px;font-size:1.15rem;font-weight:800;letter-spacing:.4px;margin-bottom:6px}
+h1{font-size:clamp(1.7rem,4.5vw,2.6rem);text-align:center;margin:6px 0 8px}
+.sub{color:#D6E8DC;text-align:center;max-width:640px;font-size:1.02rem;line-height:1.55;margin-bottom:34px}
+.cards{display:grid;grid-template-columns:1fr;gap:18px;width:100%;max-width:980px}
+@media(min-width:560px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{background:#fff;color:var(--ink);border-radius:18px;padding:28px 24px;text-decoration:none;display:flex;flex-direction:column;gap:10px;border-top:6px solid var(--tc);box-shadow:0 14px 40px rgba(0,0,0,.3);transition:transform .15s ease, box-shadow .15s ease}
+.card:hover{transform:translateY(-5px);box-shadow:0 22px 54px rgba(0,0,0,.4)}
+.card .big{font-size:2.6rem}
+.card h2{font-size:1.3rem}
+.card p{color:var(--ink2);font-size:.95rem;line-height:1.5;flex:1}
+.grades{font-family:Consolas,monospace;font-size:.75rem;color:var(--ink2);letter-spacing:1px}
+.go{font-weight:800;color:var(--tc)}
+.foot{margin-top:38px;color:#BFE0CC;font-size:.82rem;text-align:center;line-height:1.7}
+.foot a{color:#D6E8DC}
+</style>
+</head>
+<body>
+<div class="logo"><svg width="32" height="32" viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="6" width="28" height="28" rx="6" fill="none" stroke="#7FD1A8" stroke-width="2.5"/><text x="20" y="27" font-size="20" text-anchor="middle" fill="#FFD166" font-family="Georgia,serif">√</text></svg> Tobin Math Hub</div>
+<h1>Pick your grade.</h1>
+<p class="sub">Lessons, quizzes, practice activities, vocabulary, printables, and a complete teacher assignment system &amp; gradebook — aligned to the Georgia Standards of Excellence for mathematics, grades 6–8. One subscription covers all three grades.</p>
+<div class="cards">
+  <a class="card" style="--tc:#5B67E0" href="math_6.html">
+    <div class="big">6️⃣</div>
+    <h2>6th Grade Math</h2>
+    <p class="grades">6.NR · 6.GSR · 6.PAR</p>
+    <p>Fractions &amp; decimals, statistics, integers, ratios &amp; percent, area &amp; volume, expressions, equations, and the coordinate plane.</p>
+    <span class="go">Enter →</span>
+  </a>
+  <a class="card" style="--tc:#2f7a4d" href="math_7.html">
+    <div class="big">7️⃣</div>
+    <h2>7th Grade Math</h2>
+    <p class="grades">7.NR · 7.PAR · 7.GSR · 7.PR</p>
+    <p>Rational-number operations, algebraic expressions, equations &amp; inequalities, proportional relationships, geometry &amp; volume, and probability.</p>
+    <span class="go">Enter →</span>
+  </a>
+  <a class="card" style="--tc:#9C4DC4" href="math_8.html">
+    <div class="big">8️⃣</div>
+    <h2>8th Grade Math</h2>
+    <p class="grades">8.NR · 8.PAR · 8.FGR · 8.GSR</p>
+    <p>Irrational numbers, exponents &amp; scientific notation, linear equations, functions, scatter plots, systems, and the Pythagorean Theorem.</p>
+    <span class="go">Enter →</span>
+  </a>
+</div>
+<p class="foot">© Tobin Math Hub · aligned to the Georgia Standards of Excellence · <a href="https://www.tobinscience.com/home.html">← All Tobin resources</a></p>
+</body>
+</html>
