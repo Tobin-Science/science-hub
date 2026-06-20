@@ -527,7 +527,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 
   <div class="card" style="border:2px solid var(--ac);background:#EDEFFD;margin:0 0 24px;max-width:780px">
     <h3>🖨 Printable library — ready to copy</h3>
-    <p>All five textbook chapters in <b>English, Spanish, and scaffolded reading-support editions</b>, plus chapter activity &amp; lab sheets, unit review sheets, and the vocabulary list. Free to print for your classroom.</p>
+    <p>A print-ready <b>student packet and answer key for every standard</b>, plus a complete <b>review book</b> for the whole grade — black &amp; white and ready to copy. Free for your classroom.</p>
     <p style="margin-top:10px"><a class="pdfbtn" href="#print" onclick="go('print');return false">Open the printable library →</a></p>
   </div>
 
@@ -2549,8 +2549,11 @@ function warmupGo(){
   const stdSel = document.getElementById('wu-std').value;
   const type = document.getElementById('wu-type').value;
   const allStds = Object.keys(WARMUPS);
-  const std = stdSel==='random'? allStds[Math.floor(Math.random()*allStds.length)] : stdSel;
+  let std = stdSel==='random'? allStds[Math.floor(Math.random()*allStds.length)] : stdSel;
+  let servedType = type;
   let pool = warmupPool(type, std);
+  if(!pool.length){ pool = warmupPool('mc', std); servedType = 'mc'; }                                            // every standard has practice questions
+  if(!pool.length){ std = allStds[Math.floor(Math.random()*allStds.length)]; servedType = type; pool = warmupPool(type, std); }  // fall back to a covered standard
   if(!pool.length){ document.getElementById('wu-out').hidden=false; document.getElementById('wu-q').textContent='No questions for that combination yet.'; return; }
   let seen = store.get('warmup_seen') || [];
   let fresh = pool.filter(p=>!seen.includes(p.key));
@@ -2559,7 +2562,7 @@ function warmupGo(){
   seen.push(item.key); if(seen.length>800) seen.splice(0, seen.length-800);
   store.set('warmup_seen', seen);
   WU = {item, std, type};
-  const typeName = {disc:'💬 Discussion', multi:'🌈 Many right answers', blank:'✏️ Fill in the blank', mc:'✅ Multiple choice'}[type];
+  const typeName = {disc:'💬 Discussion', multi:'🌈 Many right answers', blank:'✏️ Fill in the blank', mc:'✅ Multiple choice'}[servedType];
   document.getElementById('wu-tag').textContent = `${typeName} · ${stdDisplayName(std)}`;
   document.getElementById('wu-q').innerHTML = item.q;
   const aEl = document.getElementById('wu-a'); aEl.hidden = true; aEl.innerHTML = item.a;
