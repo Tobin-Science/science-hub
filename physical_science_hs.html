@@ -69,7 +69,8 @@ h3{font-size:1.13rem;font-weight:800;margin-bottom:6px}
 .callout{border-left:5px solid var(--ac,var(--u1));background:var(--acsoft,var(--u1soft));border-radius:0 12px 12px 0;padding:12px 16px;margin:12px 0;font-size:.97rem}
 .callout b:first-child{display:block;font-family:var(--disp);margin-bottom:2px}
 .formula{font-family:var(--mono);background:var(--ink);color:#9FE8D2;padding:10px 16px;border-radius:10px;display:inline-block;margin:8px 8px 4px 0;font-size:.95rem}
-.unithead{border-radius:18px;padding:30px;color:#fff;background:var(--ac);display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:24px}
+.unithead{border-radius:18px;padding:30px;color:#fff;background:var(--ac);background:linear-gradient(135deg,var(--ac) 0%,#1c1d33 100%);display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-bottom:24px;box-shadow:0 10px 30px rgba(28,29,51,.18)}
+.unithead .eyebrow{display:inline-block;font-family:var(--mono);font-size:.7rem;font-weight:800;background:#f5a623;color:#1c1d33;border-radius:99px;padding:3px 12px;margin-bottom:10px;letter-spacing:.16em}
 .unithead .bigsym{font-family:var(--disp);font-weight:800;font-size:3.6rem;background:rgba(255,255,255,.16);border:2px solid rgba(255,255,255,.55);border-radius:16px;width:108px;height:108px;display:flex;align-items:center;justify-content:center;flex:none}
 .unithead p{opacity:.92;max-width:60ch}
 .pill{display:inline-block;font-family:var(--mono);font-size:.74rem;background:rgba(255,255,255,.2);border-radius:99px;padding:3px 11px;margin-bottom:6px;letter-spacing:.12em}
@@ -81,6 +82,8 @@ figcaption{font-size:.85rem;color:var(--ink2);margin-top:6px;font-style:italic}
 
 /* ---------- TABS within unit ---------- */
 .subtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.lessonwrap{border-radius:16px;overflow:hidden;box-shadow:0 6px 22px rgba(28,29,51,.16);margin-bottom:10px;background:#14112e}
+.lessonframe{width:100%;border:0;display:block;height:80vh;background:#14112e;transition:opacity .3s}
 .subtab{border:2px solid var(--ac);background:#fff;color:var(--ac);font-weight:800;padding:9px 18px;border-radius:99px;font-size:.95rem}
 .subtab.active{background:var(--ac);color:#fff}
 .subpane{display:none}.subpane.show{display:block;animation:fade .3s ease}
@@ -648,6 +651,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
     <h3>Step 2 · Choose what to include</h3>
     <p class="stepsub">Counts update live from your Step 1 selection. Grayed-out types have no matching content yet.</p>
     <div class="rtgrid">
+      <label><input type="checkbox" id="rt-lesson" checked> 📘 Lessons <span class="n"><span id="rt-lesson-n">0</span></span></label>
       <label><input type="checkbox" id="rt-guides" checked> 📝 Study guides <span class="n" ><span id="rt-guides-n">0</span></span></label>
       <label><input type="checkbox" id="rt-games" checked> 🎮 Minigames <span class="n"><span id="rt-games-n">0</span></span></label>
       <label><input type="checkbox" id="rt-act" checked> 🧩 Practice activities <span class="n"><span id="rt-act-n">0</span></span></label>
@@ -1181,25 +1185,25 @@ FIG.lens = c => `<svg viewBox="0 0 480 220" width="480" role="img" aria-label="A
    UNIT DATA
    ========================================================= */
 const UNITS = {
-u1:{ sym:"At", num:1, name:"Atoms, Ions & the Periodic Table", std:"SPS1", color:"#5B67E0", soft:"#EDEFFD", hex:"#5B67E0", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
+u1:{ sym:"At", num:1, name:"Atoms, Ions & the Periodic Table", std:"SPS1", lessonurl:"lessons/physical_hs/ch1.html", color:"#5B67E0", soft:"#EDEFFD", hex:"#5B67E0", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
   blurb:"Build atoms, ions, and isotopes — then use the periodic table to predict how elements behave." },
-u2:{ sym:"Bd", num:2, name:"Chemical Bonding & Formulas", std:"SPS2", color:"#8E44AD", soft:"#F3EAFA", hex:"#8E44AD", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
+u2:{ sym:"Bd", num:2, name:"Chemical Bonding & Formulas", std:"SPS2", lessonurl:"lessons/physical_hs/ch2.html", color:"#8E44AD", soft:"#F3EAFA", hex:"#8E44AD", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
   blurb:"How atoms join into stable compounds — ionic vs. covalent, writing formulas, and naming with IUPAC rules." },
-u3:{ sym:"Eq", num:3, name:"Conservation of Matter & Balancing Equations", std:"SPS3", color:"#16A085", soft:"#E6F7F3", hex:"#16A085", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
+u3:{ sym:"Eq", num:3, name:"Conservation of Matter & Balancing Equations", std:"SPS3", lessonurl:"lessons/physical_hs/ch3.html", color:"#16A085", soft:"#E6F7F3", hex:"#16A085", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
   blurb:"Matter is never lost in a reaction — prove it, then balance equations by adjusting the coefficients." },
-u4:{ sym:"Nu", num:4, name:"Nuclear Chemistry", std:"SPS4", color:"#C0392B", soft:"#FBEAE8", hex:"#C0392B", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
+u4:{ sym:"Nu", num:4, name:"Nuclear Chemistry", std:"SPS4", lessonurl:"lessons/physical_hs/ch4.html", color:"#C0392B", soft:"#FBEAE8", hex:"#C0392B", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
   blurb:"Fission, fusion, and radioactive decay — half-life math and the pros and cons of nuclear power." },
-u5:{ sym:"Gs", num:5, name:"States of Matter & Gas Behavior", std:"SPS5", color:"#2980B9", soft:"#E8F2FB", hex:"#2980B9", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
+u5:{ sym:"Gs", num:5, name:"States of Matter & Gas Behavior", std:"SPS5", lessonurl:"lessons/physical_hs/ch5.html", color:"#2980B9", soft:"#E8F2FB", hex:"#2980B9", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
   blurb:"Particle motion in solids, liquids, gases and plasmas — plus how temperature, pressure, volume and density connect." },
-u6:{ sym:"pH", num:6, name:"Solutions, Acids & Bases", std:"SPS6", color:"#27AE60", soft:"#E8F8EF", hex:"#27AE60", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
+u6:{ sym:"pH", num:6, name:"Solutions, Acids & Bases", std:"SPS6", lessonurl:"lessons/physical_hs/ch6.html", color:"#27AE60", soft:"#E8F8EF", hex:"#27AE60", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
   blurb:"Solutes and solvents, solubility curves, and the chemistry of acids and bases — pH, indicators and more." },
-u7:{ sym:"Ht", num:7, name:"Energy & Heat Transfer", std:"SPS7", color:"#E67E22", soft:"#FDF0E3", hex:"#E67E22", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
+u7:{ sym:"Ht", num:7, name:"Energy & Heat Transfer", std:"SPS7", lessonurl:"lessons/physical_hs/ch7.html", color:"#E67E22", soft:"#FDF0E3", hex:"#E67E22", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
   blurb:"Energy transformations, conduction/convection/radiation, specific heat, and heating & cooling curves." },
-u8:{ sym:"Fm", num:8, name:"Force, Motion & Simple Machines", std:"SPS8", color:"#34495E", soft:"#EAEDF0", hex:"#34495E", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
+u8:{ sym:"Fm", num:8, name:"Force, Motion & Simple Machines", std:"SPS8", lessonurl:"lessons/physical_hs/ch8.html", color:"#34495E", soft:"#EAEDF0", hex:"#34495E", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
   blurb:"Speed, velocity and acceleration math, Newton\u2019s three laws, gravity, and work with simple machines." },
-u9:{ sym:"Wv", num:9, name:"Waves, Sound & Light", std:"SPS9", color:"#16A0C7", soft:"#E5F6FB", hex:"#16A0C7", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
+u9:{ sym:"Wv", num:9, name:"Waves, Sound & Light", std:"SPS9", lessonurl:"lessons/physical_hs/ch9.html", color:"#16A0C7", soft:"#E5F6FB", hex:"#16A0C7", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
   blurb:"Electromagnetic vs. mechanical waves, reflection/refraction/interference/diffraction, and the Doppler effect." },
-u10:{ sym:"\u2126", num:10, name:"Electricity & Magnetism", std:"SPS10", color:"#D4AC0D", soft:"#FBF6E0", hex:"#D4AC0D", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
+u10:{ sym:"\u2126", num:10, name:"Electricity & Magnetism", std:"SPS10", lessonurl:"lessons/physical_hs/ch10.html", color:"#D4AC0D", soft:"#FBF6E0", hex:"#D4AC0D", soon:true, lessons:[], quiz:[], vocab:[], videos:[], pretest:[],
   blurb:"Ohm\u2019s law, series and parallel circuits, and the deep link between magnetism and moving charge." }
 };
 
@@ -1340,25 +1344,58 @@ function buildUnit(id){
     return;
   }
   page.innerHTML = `
-  <div class="unithead" style="--ac:${u.hex};background:${u.hex}">
+  <div class="unithead" style="--ac:${u.hex}">
     <div class="bigsym">${u.sym}</div>
-    <div><span class="pill">UNIT ${u.num} · GEORGIA ${u.std}</span>
+    <div><span class="eyebrow">📘 LESSON</span><br><span class="pill">UNIT ${u.num} · GEORGIA ${u.std}</span>
       <h1 style="color:#fff">${u.name}</h1><p>${u.blurb}</p></div>
   </div>
-  <div class="subtabs">
-    <button class="subtab active" style="--ac:${u.hex}" onclick="sub('${id}','study',this)">📖 Study Guide</button>
-    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','cards',this)">🃏 Flashcards</button>
-    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','quiz',this)">✅ Practice Quiz</button>
-    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','game',this)">🎮 Minigame</button>
-    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','act',this)">🧩 Practice</button>
-    <button class="subtab" style="--ac:${u.hex}" onclick="sub('${id}','videos',this)">▶ Videos &amp; Sims</button>
+  <div class="subtabs unitnav">
+    ${u.lessonurl? `<button class="subtab active" style="--ac:${u.hex}" data-pane="lesson" onclick="sub('${id}','lesson',this)">📖 Lesson</button>`:''}
+    <button class="subtab ${u.lessonurl?'':'active'}" style="--ac:${u.hex}" data-pane="study" onclick="sub('${id}','study',this)">📝 Study Guide</button>
+    <button class="subtab" style="--ac:${u.hex}" data-pane="cards" onclick="sub('${id}','cards',this)">🃏 Flashcards</button>
+    <button class="subtab" style="--ac:${u.hex}" data-pane="quiz" onclick="sub('${id}','quiz',this)">✅ Practice Quiz</button>
+    <button class="subtab" style="--ac:${u.hex}" data-pane="game" onclick="sub('${id}','game',this)">🎮 Minigame</button>
+    <button class="subtab" style="--ac:${u.hex}" data-pane="act" onclick="sub('${id}','act',this)">🧩 Practice</button>
+    <button class="subtab" style="--ac:${u.hex}" data-pane="videos" onclick="sub('${id}','videos',this)">▶ Videos &amp; Sims</button>
   </div>
-  <div class="subpane show" id="${id}-study">${buildStudy(id,u)}</div>
+  ${u.lessonurl? `<div class="subpane show" id="${id}-lesson"><div class="lessonwrap"><iframe class="lessonframe" id="${id}-lessonframe" title="${u.name} — Lesson" scrolling="yes"></iframe></div></div>`:''}
+  <div class="subpane ${u.lessonurl?'':'show'}" id="${id}-study">${buildStudy(id,u)}</div>
   <div class="subpane" id="${id}-cards"><div id="${id}-cardsarea"></div></div>
   <div class="subpane" id="${id}-quiz"><div id="${id}-quizarea"></div></div>
   <div class="subpane" id="${id}-game"><div id="${id}-gamearea"></div></div>
   <div class="subpane" id="${id}-act"></div>
   <div class="subpane" id="${id}-videos">${buildVideos(id,u)}</div>`;
+  if(u.lessonurl) mountLesson(id);
+}
+
+/* ---- embedded design Lesson: fixed-height iframe with its OWN internal scroll.
+   NO auto-resize / NO ResizeObserver — the iframe height never reacts to its
+   content, so there is no feedback loop. Injects CSS once (after the bundle swaps
+   in its real document) to hide a leftover game status bar IF present (a first-child
+   block with inline position:sticky). Non-game lessons keep ALL content. ---- */
+function mountLesson(id){
+  const f = document.getElementById(id+'-lessonframe');
+  if(!f || f.dataset.mounted) return;
+  f.dataset.mounted = '1';
+  f.style.opacity = '0';
+  f.src = UNITS[id].lessonurl;
+  let tries = 0;
+  const tick = ()=>{
+    let doc; try{ doc=f.contentDocument; }catch(e){ return; }
+    const host = doc && doc.querySelector('.sc-host');
+    if(host){
+      if(!doc.getElementById('hub-lesson-css')){
+        const st=doc.createElement('style'); st.id='hub-lesson-css';
+        st.textContent='.sc-host>div>div:first-child[style*="position: sticky"],.sc-host>div>div:first-child[style*="position:sticky"]{display:none!important}';
+        (doc.head||doc.documentElement).appendChild(st);
+      }
+      f.style.opacity='1';
+      return;
+    }
+    if(++tries < 80) setTimeout(tick, 150);
+  };
+  f.addEventListener('load', ()=>{ tries=0; tick(); });
+  tick();
 }
 
 function sub(id, pane, btn){
@@ -3465,7 +3502,12 @@ function resolveStandards(selected){ // selected: ["S8P1.a","S8P1.b",...]
   out.units.forEach(uid=>{ out.quizzes.add(uid); out.pretests.add(uid); });
   out.quizzes=[...out.quizzes]; out.pretests=[...out.pretests]; out.units=[...out.units];
   out.acts = selected.filter(s=>ACTIVITIES[s]);
+  out.selected = selected;   // raw selection, so lesson-only (content-shell) units can be resolved by standard→unit
   return out;
+}
+/* content-shell units have no tagged lessons, so resolve Lesson units straight from the selected standards via STD_LIST */
+function lessonUnits(r){
+  return [...new Set((r.selected||[]).map(s=>STD_LIST[s.split('.')[0]] && STD_LIST[s.split('.')[0]].unit).filter(uid=>uid && UNITS[uid] && UNITS[uid].lessonurl))];
 }
 
 /* ---------- Assignment link encode/decode (base64url JSON in #a=) ---------- */
@@ -3781,6 +3823,7 @@ function renderTeachPreview(){
   const li = (arr,fmt)=> arr.length? arr.map(fmt).join('') : `<p style="opacity:.6;margin:4px 0">— none mapped yet —</p>`;
   box.innerHTML = `
     <p style="font-size:.85rem;opacity:.8;margin:0 0 8px">Every box starts checked — <b>uncheck anything you don't want</b>, and hit 👁 to see exactly what students will get.</p>
+    <div class="tprev"><h4>📘 Lessons <span>${lessonUnits(r).length}</span></h4>${li(lessonUnits(r), u=>row(`L:${u}`, `Unit ${UNITS[u].num} Lesson — ${UNITS[u].name}`, `window.open(UNITS['${u}'].lessonurl,'_blank')`))}</div>
     <div class="tprev"><h4>📝 Study guides <span>${r.lessons.length}</span></h4>${li(r.lessons, x=>row(`g:${x.uid}:L${x.i}`, `U${UNITS[x.uid].num} · ${x.t}`, `pvLesson('${x.uid}',${x.i})`))}</div>
     <div class="tprev"><h4>🎮 Minigames <span>${r.games.length}</span></h4>${li(r.games, x=>row(`m:${x.gid}`, `U${UNITS[x.uid].num} · ${x.t}`, `pvGame('${x.gid}')`))}</div>
     <div class="tprev"><h4>🧩 Practice activities <span>${r.acts.length}</span></h4>${li(r.acts, s=>row(`a:${s}`, `${s} — match · fill-in · sort`, `pvActivity('${s}')`))}</div>
@@ -3845,6 +3888,7 @@ function pvPosttest(uid){
    PHASE 2 — ASSIGNMENT BUILDER (resource picker + generate)
    ========================================================= */
 const RESOURCE_TYPES = [
+  {k:'L',  box:'rt-lesson', icon:'📘', name:'Lessons',       from:r=>lessonUnits(r)},
   {k:'g',  box:'rt-guides', icon:'📝', name:'Study guides',   from:r=>r.lessons.map(x=>`${x.uid}:L${x.i}`)},
   {k:'m',  box:'rt-games',  icon:'🎮', name:'Minigames',      from:r=>r.games.map(x=>x.gid)},
   {k:'a',  box:'rt-act',    icon:'🧩', name:'Practice activities', from:r=>r.acts},
@@ -3940,8 +3984,7 @@ let ASN_PENDING = null; // decoded link awaiting name pick
 
 function nameKey(n){ return n.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,24) || 'student'; }
 function openPane(uid, pane){
-  const order = {study:0, cards:1, quiz:2, game:3, act:4, videos:5};
-  const btn = document.querySelectorAll(`#page-${uid} > .subtabs .subtab`)[order[pane]];
+  const btn = document.querySelector(`#page-${uid} > .subtabs .subtab[data-pane="${pane}"]`);
   if(btn) btn.click();
   if(pane==='study' && ASN) setTimeout(()=>asnWatchLessonScroll(uid), 60);  // credit study guides as they scroll into view
 }
@@ -3949,6 +3992,7 @@ function openPane(uid, pane){
 /* ---------- item registry: cfg → flat renderable list ---------- */
 const ASN_TYPES = [
   {k:'pr', icon:'🩺', name:'Pretest',          verb:'Take pretest'},
+  {k:'L',  icon:'📘', name:'Lessons',          verb:'Open lesson'},
   {k:'g',  icon:'📝', name:'Study guides',     verb:'Read'},
   {k:'m',  icon:'🎮', name:'Minigames',        verb:'Play'},
   {k:'a',  icon:'🧩', name:'Practice activities', verb:'Practice'},
@@ -3961,6 +4005,7 @@ function asnItems(cfg){
   const out = [];
   const it = cfg.it || {};
   (it.pr||[]).forEach(uid=>{ if(UNITS[uid]) out.push({type:'pr', id:uid, uid, label:`Unit ${UNITS[uid].num} pretest (5 questions — completion only)`}); });
+  (it.L||[]).forEach(uid=>{ if(UNITS[uid]?.lessonurl) out.push({type:'L', id:uid, uid, label:`Unit ${UNITS[uid].num} Lesson — ${UNITS[uid].name}`}); });
   (it.g||[]).forEach(id=>{ const [uid,L]=id.split(':L'); const ls=UNITS[uid]?.lessons[+L];
     if(ls) out.push({type:'g', id, uid, label:ls.t}); });
   (it.m||[]).forEach(gid=>{ const g=GAMES[gid];
@@ -4019,6 +4064,10 @@ function asnOpen(type, id){
   const it = _items[_idx];
   if(!it) return;
   if(ASN) ASN.idx = _idx;
+  if(type==='L'){
+    store.set(asnItemKey(it), Date.now());
+    go(it.uid); openPane(it.uid,'lesson');
+  }
   if(type==='g'){
     store.set(asnItemKey(it), Date.now());
     go(it.uid); openPane(it.uid,'study');
@@ -4136,8 +4185,8 @@ function asnExit(){
    and Coach's Corner teach text in 5 languages
    ========================================================= */
 const EN_UI = {
- tn_g:'Study guides', tn_m:'Minigames', tn_a:'Practice activities', tn_v:'Videos', tn_p:'PhET labs', tn_q:'Practice quizzes', tn_pr:'Pretest', tn_po:'Posttest',
- vb_g:'Read', vb_m:'Play', vb_a:'Practice', vb_v:'Watch', vb_p:'Open lab', vb_q:'Take quiz', vb_pr:'Take pretest', vb_po:'Take posttest',
+ tn_L:'Lessons', tn_g:'Study guides', tn_m:'Minigames', tn_a:'Practice activities', tn_v:'Videos', tn_p:'PhET labs', tn_q:'Practice quizzes', tn_pr:'Pretest', tn_po:'Posttest',
+ vb_L:'Open lesson', vb_g:'Read', vb_m:'Play', vb_a:'Practice', vb_v:'Watch', vb_p:'Open lab', vb_q:'Take quiz', vb_pr:'Take pretest', vb_po:'Take posttest',
  ag_g:'Reread', ag_m:'Play again', ag_a:'Practice again', ag_q:'Retake', ag_po:'Retake', ag_x:'Reopen',
  progress:'{d} of {n} complete', allDoneFlag:' — 🎉 everything done!',
  curScore:'📊 Current weighted score:', scoreNote:'(posttest counts most — see your printed report for the breakdown)',
@@ -4161,8 +4210,8 @@ const EN_UI = {
 const LANGS = {
  en:{name:'English'},
  es:{name:'Español', ui:{
-  tn_g:'Guías de estudio', tn_m:'Minijuegos', tn_a:'Actividades de práctica', tn_v:'Videos', tn_p:'Laboratorios PhET', tn_q:'Cuestionarios de práctica', tn_pr:'Prueba previa', tn_po:'Prueba final',
-  vb_g:'Leer', vb_m:'Jugar', vb_a:'Practicar', vb_v:'Ver', vb_p:'Abrir laboratorio', vb_q:'Hacer cuestionario', vb_pr:'Hacer prueba previa', vb_po:'Hacer prueba final',
+  tn_L:'Lecciones', tn_g:'Guías de estudio', tn_m:'Minijuegos', tn_a:'Actividades de práctica', tn_v:'Videos', tn_p:'Laboratorios PhET', tn_q:'Cuestionarios de práctica', tn_pr:'Prueba previa', tn_po:'Prueba final',
+  vb_L:'Abrir lección', vb_g:'Leer', vb_m:'Jugar', vb_a:'Practicar', vb_v:'Ver', vb_p:'Abrir laboratorio', vb_q:'Hacer cuestionario', vb_pr:'Hacer prueba previa', vb_po:'Hacer prueba final',
   ag_g:'Releer', ag_m:'Jugar otra vez', ag_a:'Practicar otra vez', ag_q:'Repetir', ag_po:'Repetir', ag_x:'Reabrir',
   progress:'{d} de {n} completados', allDoneFlag:' — 🎉 ¡todo listo!',
   curScore:'📊 Calificación ponderada actual:', scoreNote:'(la prueba final cuenta más — mira el desglose en tu reporte impreso)',
@@ -4184,8 +4233,8 @@ const LANGS = {
   resBtn:'📋 Copiar código de resultados', resNote:'Pega este código en la página de la tarea de tu maestro — lleva tu calificación, período y progreso.', copied:'✅ ¡Copiado! Ahora pégalo en la página de la tarea.', periodShort:'Período'
  }},
  vi:{name:'Tiếng Việt', ui:{
-  tn_g:'Bài học', tn_m:'Trò chơi nhỏ', tn_a:'Hoạt động luyện tập', tn_v:'Video', tn_p:'Thí nghiệm PhET', tn_q:'Bài kiểm tra luyện tập', tn_pr:'Bài kiểm tra đầu', tn_po:'Bài kiểm tra cuối',
-  vb_g:'Đọc', vb_m:'Chơi', vb_a:'Luyện tập', vb_v:'Xem', vb_p:'Mở thí nghiệm', vb_q:'Làm bài kiểm tra', vb_pr:'Làm kiểm tra đầu', vb_po:'Làm kiểm tra cuối',
+  tn_L:'Bài học tương tác', tn_g:'Bài học', tn_m:'Trò chơi nhỏ', tn_a:'Hoạt động luyện tập', tn_v:'Video', tn_p:'Thí nghiệm PhET', tn_q:'Bài kiểm tra luyện tập', tn_pr:'Bài kiểm tra đầu', tn_po:'Bài kiểm tra cuối',
+  vb_L:'Mở bài học', vb_g:'Đọc', vb_m:'Chơi', vb_a:'Luyện tập', vb_v:'Xem', vb_p:'Mở thí nghiệm', vb_q:'Làm bài kiểm tra', vb_pr:'Làm kiểm tra đầu', vb_po:'Làm kiểm tra cuối',
   ag_g:'Đọc lại', ag_m:'Chơi lại', ag_a:'Luyện tập lại', ag_q:'Làm lại', ag_po:'Làm lại', ag_x:'Mở lại',
   progress:'Hoàn thành {d} / {n}', allDoneFlag:' — 🎉 xong hết rồi!',
   curScore:'📊 Điểm hiện tại (có trọng số):', scoreNote:'(bài kiểm tra cuối được tính nhiều nhất — xem chi tiết trong báo cáo in)',
@@ -4207,8 +4256,8 @@ const LANGS = {
   resBtn:'📋 Sao chép mã kết quả', resNote:'Dán mã này vào trang bài tập của giáo viên — mã chứa điểm, tiết học và tiến độ của bạn.', copied:'✅ Đã sao chép! Hãy dán vào trang bài tập của lớp.', periodShort:'Tiết'
  }},
  zh:{name:'中文', ui:{
-  tn_g:'学习指南', tn_m:'小游戏', tn_a:'练习活动', tn_v:'视频', tn_p:'PhET 实验', tn_q:'练习测验', tn_pr:'前测', tn_po:'后测',
-  vb_g:'阅读', vb_m:'开始游戏', vb_a:'开始练习', vb_v:'观看', vb_p:'打开实验', vb_q:'做测验', vb_pr:'做前测', vb_po:'做后测',
+  tn_L:'课程', tn_g:'学习指南', tn_m:'小游戏', tn_a:'练习活动', tn_v:'视频', tn_p:'PhET 实验', tn_q:'练习测验', tn_pr:'前测', tn_po:'后测',
+  vb_L:'打开课程', vb_g:'阅读', vb_m:'开始游戏', vb_a:'开始练习', vb_v:'观看', vb_p:'打开实验', vb_q:'做测验', vb_pr:'做前测', vb_po:'做后测',
   ag_g:'再读一遍', ag_m:'再玩一次', ag_a:'再练一次', ag_q:'重新测验', ag_po:'重新测验', ag_x:'重新打开',
   progress:'已完成 {d} / {n}', allDoneFlag:' — 🎉 全部完成！',
   curScore:'📊 当前加权分数：', scoreNote:'（后测占分最高 — 详情见打印的成绩报告）',
@@ -4230,8 +4279,8 @@ const LANGS = {
   resBtn:'📋 复制成绩代码', resNote:'把这个代码粘贴到老师的作业页面 — 它包含你的分数、节次和进度。', copied:'✅ 已复制！现在粘贴到班级作业页面。', periodShort:'第…节'
  }},
  ko:{name:'한국어', ui:{
-  tn_g:'학습 가이드', tn_m:'미니게임', tn_a:'연습 활동', tn_v:'동영상', tn_p:'PhET 실험', tn_q:'연습 퀴즈', tn_pr:'사전 평가', tn_po:'사후 평가',
-  vb_g:'읽기', vb_m:'게임하기', vb_a:'연습하기', vb_v:'시청하기', vb_p:'실험 열기', vb_q:'퀴즈 풀기', vb_pr:'사전 평가 보기', vb_po:'사후 평가 보기',
+  tn_L:'레슨', tn_g:'학습 가이드', tn_m:'미니게임', tn_a:'연습 활동', tn_v:'동영상', tn_p:'PhET 실험', tn_q:'연습 퀴즈', tn_pr:'사전 평가', tn_po:'사후 평가',
+  vb_L:'레슨 열기', vb_g:'읽기', vb_m:'게임하기', vb_a:'연습하기', vb_v:'시청하기', vb_p:'실험 열기', vb_q:'퀴즈 풀기', vb_pr:'사전 평가 보기', vb_po:'사후 평가 보기',
   ag_g:'다시 읽기', ag_m:'다시 하기', ag_a:'다시 연습', ag_q:'다시 풀기', ag_po:'다시 풀기', ag_x:'다시 열기',
   progress:'{n}개 중 {d}개 완료', allDoneFlag:' — 🎉 모두 완료!',
   curScore:'📊 현재 가중 점수:', scoreNote:'(사후 평가의 비중이 가장 큽니다 — 자세한 내용은 인쇄된 성적표 참고)',
@@ -4745,7 +4794,7 @@ function asnScore(){
     let earned=null, detail='';
     if(W.k==='opened'){
       const ext = asnLang()==='en'? [...(it.v||[]).map(i=>['v',i]), ...(it.p||[]).map(i=>['p',i])] : [];  // videos/PhET excused for non-English students
-      const ids=[...(it.g||[]).map(i=>['g',i]), ...ext];
+      const ids=[...(it.L||[]).map(i=>['L',i]), ...(it.g||[]).map(i=>['g',i]), ...ext];
       if(ids.length){ const done=ids.filter(([t,i])=>get(t,i)!=null).length;
         earned=done/ids.length; detail=`${done} of ${ids.length} opened`; }
     } else if(W.k==='m'){
@@ -5088,7 +5137,7 @@ ptrends: c => `<svg viewBox="0 0 480 200" width="480" role="img" aria-label="Per
 
 /* ============ UNIT 1 · SPS1 — Atoms, Ions & the Periodic Table ============ */
 UNITS.u1 = {
-  sym:"At", num:1, name:"Atoms, Ions & the Periodic Table", std:"SPS1",
+  sym:"At", num:1, name:"Atoms, Ions & the Periodic Table", std:"SPS1", lessonurl:"lessons/physical_hs/ch1.html",
   color:"#5B67E0", soft:"#EDEFFD", hex:"#5B67E0",
   blurb:"Build atoms, ions, and isotopes from protons, neutrons, and electrons — then read the periodic table as a prediction machine for how every element behaves.",
   lessons:[
@@ -5278,7 +5327,7 @@ crisscross: c => `<svg viewBox="0 0 480 170" width="480" role="img" aria-label="
 });
 
 UNITS.u2 = {
-  sym:"Bd", num:2, name:"Chemical Bonding & Formulas", std:"SPS2",
+  sym:"Bd", num:2, name:"Chemical Bonding & Formulas", std:"SPS2", lessonurl:"lessons/physical_hs/ch2.html",
   color:"#8E44AD", soft:"#F3EAFA", hex:"#8E44AD",
   blurb:"Atoms join to reach stability. Learn how ionic and covalent bonds form, how to write formulas for ionic compounds by balancing charges, and how to name compounds the way chemists do.",
   lessons:[
@@ -5454,7 +5503,7 @@ balanceeq: c => `<svg viewBox="0 0 480 150" width="480" role="img" aria-label="A
 });
 
 UNITS.u3 = {
-  sym:"Eq", num:3, name:"Conservation of Matter & Balancing Equations", std:"SPS3",
+  sym:"Eq", num:3, name:"Conservation of Matter & Balancing Equations", std:"SPS3", lessonurl:"lessons/physical_hs/ch3.html",
   color:"#16A085", soft:"#E6F7F3", hex:"#16A085",
   blurb:"In a chemical reaction, atoms are only rearranged — never created or destroyed. Prove that mass is conserved, then balance equations yourself by adjusting the coefficients until both sides match.",
   lessons:[
@@ -5626,7 +5675,7 @@ halflife: c => `<svg viewBox="0 0 480 200" width="480" role="img" aria-label="A 
 });
 
 UNITS.u4 = {
-  sym:"Nu", num:4, name:"Nuclear Chemistry", std:"SPS4",
+  sym:"Nu", num:4, name:"Nuclear Chemistry", std:"SPS4", lessonurl:"lessons/physical_hs/ch4.html",
   color:"#C0392B", soft:"#FBEAE8", hex:"#C0392B",
   blurb:"Reactions in the nucleus release millions of times more energy than chemical ones. Explore fission, fusion, and radioactive decay, calculate half-life, and weigh the real benefits and problems of nuclear power.",
   lessons:[
@@ -5792,7 +5841,7 @@ boyle: c => `<svg viewBox="0 0 480 170" width="480" role="img" aria-label="Boyle
 });
 
 UNITS.u5 = {
-  sym:"Gs", num:5, name:"States of Matter & Gas Behavior", std:"SPS5",
+  sym:"Gs", num:5, name:"States of Matter & Gas Behavior", std:"SPS5", lessonurl:"lessons/physical_hs/ch5.html",
   color:"#2980B9", soft:"#E8F2FB", hex:"#2980B9",
   blurb:"Matter is particles in motion. Compare how those particles are arranged in solids, liquids, gases, and plasmas — then discover how a gas's temperature, pressure, volume, and density all push and pull on one another.",
   lessons:[
@@ -5954,7 +6003,7 @@ phscale: c => `<svg viewBox="0 0 480 150" width="480" role="img" aria-label="The
 });
 
 UNITS.u6 = {
-  sym:"pH", num:6, name:"Solutions, Acids & Bases", std:"SPS6",
+  sym:"pH", num:6, name:"Solutions, Acids & Bases", std:"SPS6", lessonurl:"lessons/physical_hs/ch6.html",
   color:"#27AE60", soft:"#E8F8EF", hex:"#27AE60",
   blurb:"Most chemistry happens in solution. Learn what dissolves and why, how to speed it up, how to read a solubility curve, and how acids and bases — measured on the pH scale — show up all over your home.",
   lessons:[
@@ -6139,7 +6188,7 @@ specheat: c => `<svg viewBox="0 0 480 170" width="480" role="img" aria-label="Wa
 });
 
 UNITS.u7 = {
-  sym:"Ht", num:7, name:"Energy & Heat Transfer", std:"SPS7",
+  sym:"Ht", num:7, name:"Energy & Heat Transfer", std:"SPS7", lessonurl:"lessons/physical_hs/ch7.html",
   color:"#E67E22", soft:"#FDF0E3", hex:"#E67E22",
   blurb:"Energy is never lost — only transformed and moved. Trace energy through a system, follow heat as it travels by conduction, convection, and radiation, and learn why water and metal heat up so differently.",
   lessons:[
@@ -6308,7 +6357,7 @@ machines: c => `<svg viewBox="0 0 480 170" width="480" role="img" aria-label="A 
 });
 
 UNITS.u8 = {
-  sym:"Fm", num:8, name:"Force, Motion & Simple Machines", std:"SPS8",
+  sym:"Fm", num:8, name:"Force, Motion & Simple Machines", std:"SPS8", lessonurl:"lessons/physical_hs/ch8.html",
   color:"#34495E", soft:"#EAEDF0", hex:"#34495E",
   blurb:"Describe motion with math and graphs, master Newton's three laws, see how gravity pulls all falling objects the same way, and learn how simple machines trade force for distance to make work easier.",
   lessons:[
@@ -6497,7 +6546,7 @@ interfere: c => `<svg viewBox="0 0 480 160" width="480" role="img" aria-label="C
 });
 
 UNITS.u9 = {
-  sym:"Wv", num:9, name:"Waves, Sound & Light", std:"SPS9",
+  sym:"Wv", num:9, name:"Waves, Sound & Light", std:"SPS9", lessonurl:"lessons/physical_hs/ch9.html",
   color:"#16A0C7", soft:"#E5F6FB", hex:"#16A0C7",
   blurb:"Waves carry energy without carrying matter. Measure their parts, compare light and sound, watch them reflect, bend, interfere, and diffract, and discover why a passing siren changes pitch.",
   lessons:[
@@ -6691,7 +6740,7 @@ circuits: c => `<svg viewBox="0 0 480 180" width="480" role="img" aria-label="A 
 });
 
 UNITS.u10 = {
-  sym:"Ω", num:10, name:"Electricity & Magnetism", std:"SPS10",
+  sym:"Ω", num:10, name:"Electricity & Magnetism", std:"SPS10", lessonurl:"lessons/physical_hs/ch10.html",
   color:"#D4AC0D", soft:"#FBF6E0", hex:"#D4AC0D",
   blurb:"Electricity and magnetism are two halves of one force. Use Ohm's law to connect voltage, current, and resistance, compare series and parallel circuits, and see how moving charges and moving magnets create each other.",
   lessons:[
