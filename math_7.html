@@ -1942,6 +1942,20 @@ function actBlank(st){
   }
   draw();
 }
+function dragify(el, h){
+  el.style.touchAction='none';
+  el.addEventListener('pointerdown', e=>{
+    e.preventDefault();
+    try{ el.setPointerCapture(e.pointerId); }catch(err){}
+    const ctx={sx:e.clientX, sy:e.clientY, x:e.clientX, y:e.clientY, dx:0, dy:0};
+    h.onStart && h.onStart(e,ctx);
+    const mv=ev=>{ ctx.x=ev.clientX; ctx.y=ev.clientY; ctx.dx=ctx.x-ctx.sx; ctx.dy=ctx.y-ctx.sy; h.onMove && h.onMove(ev,ctx); };
+    const up=ev=>{ el.removeEventListener('pointermove',mv); el.removeEventListener('pointerup',up); el.removeEventListener('pointercancel',up); h.onEnd && h.onEnd(ev,ctx); };
+    el.addEventListener('pointermove',mv);
+    el.addEventListener('pointerup',up);
+    el.addEventListener('pointercancel',up);
+  });
+}
 /* round 3 — drag cards into buckets */
 function actSort(st){
   if(!actAlive(st)) return;
