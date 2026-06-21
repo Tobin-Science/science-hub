@@ -4136,12 +4136,12 @@ function buildStore(){
   }
   let trialBlock;
   if(trialActive()){
-    trialBlock = `<div class="trialnote ok">✅ Your free week is active through <b>${fmtDate(ENT.trialEnds)}</b> — full access to all three subjects' tools. <b>Printables aren't part of the free week</b>; subscribe below to unlock them and keep going after your week ends.</div>`;
+    trialBlock = `<div class="trialnote ok">✅ Your free week is active through <b>${fmtDate(ENT.trialEnds)}</b> — full access to all three grades' tools. <b>Printables aren't part of the free week</b>; subscribe below to unlock them and keep going after your week ends.</div>`;
   } else if(ENT.trialStarted){
     trialBlock = `<div class="trialnote">Your free week has ended — but your work is saved. Choose a plan below to pick right back up.</div>`;
   } else {
     trialBlock = `<div class="trialcta">
-      <button class="genbtn trialbtn" onclick="startFreeWeek()">🎁 Start your free week — all three subjects</button>
+      <button class="genbtn trialbtn" onclick="startFreeWeek()">🎁 Start your free week — all three grades</button>
       <p class="trialfine">No credit card needed. Printables aren't included in the free week. After 7 days it simply locks — you're never charged automatically.</p>
     </div>`;
   }
