@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+    @keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FFF4E0;background-image:radial-gradient(#FFE0B8 2px,transparent 2px);background-size:34px 34px;font-family:Nunito,sans-serif;color:#2A1C5A;padding:40px 24px 72px;">
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:8px;">
+      <div style="display:inline-flex;align-items:center;gap:10px;background:#2A1C5A;color:#FFD23F;border:3px solid #2A1C5A;border-radius:999px;padding:8px 20px;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;letter-spacing:.5px;box-shadow:5px 5px 0 #C9A24B;">
+        <span style="width:12px;height:12px;background:#FF5E8A;border-radius:50%;display:inline-block;"></span>
+        GRADE 7 MATH &middot; GEORGIA STANDARDS
+      </div>
+    </div>
+
+    <h1 style="font-family:Fredoka,sans-serif;font-weight:700;font-size:64px;text-align:center;margin:18px 0 6px;line-height:1;letter-spacing:-1px;">
+      Math <span style="color:#7C5CFC;">Arcade</span>
+    </h1>
+    <p style="text-align:center;font-size:19px;font-weight:600;color:#6B5B9A;margin:0 auto 40px;max-width:560px;">
+      Six fast, hands-on mini-games. Move it, drag it, spin it &mdash; one game for every big idea in 7th-grade math.
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <sc-for list="{{ games }}" as="g" hint-placeholder-count="6">
+        <a href="{{ g.href }}" style="text-decoration:none;color:inherit;display:block;animation:pop .4s ease both;">
+          <div class="card" style="background:#fff;border:3px solid #2A1C5A;border-radius:24px;padding:22px 20px 24px;box-shadow:7px 7px 0 #2A1C5A;height:100%;transition:transform .12s ease,box-shadow .12s ease;cursor:pointer;" style-hover="transform:translate(-3px,-3px);box-shadow:10px 10px 0 #2A1C5A;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+              <div style="width:64px;height:64px;border-radius:18px;border:3px solid #2A1C5A;display:flex;align-items:center;justify-content:center;font-size:30px;background:{{ g.tint }};">{{ g.icon }}</div>
+              <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:{{ g.color }};color:#fff;border:2px solid #2A1C5A;border-radius:999px;padding:4px 11px;">{{ g.code }}</span>
+            </div>
+            <h3 style="font-family:Fredoka,sans-serif;font-weight:600;font-size:24px;margin:0 0 6px;">{{ g.title }}</h3>
+            <p style="font-size:15px;font-weight:600;color:#6B5B9A;margin:0 0 14px;line-height:1.35;">{{ g.blurb }}</p>
+            <div style="display:inline-flex;align-items:center;gap:7px;font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;color:{{ g.color }};">
+              <span style="background:{{ g.tint }};border:2px solid #2A1C5A;border-radius:999px;padding:3px 10px;color:#2A1C5A;">{{ g.tag }}</span>
+              Play &rarr;
+            </div>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+
+    <p style="text-align:center;font-size:14px;font-weight:600;color:#9A8BC2;margin-top:40px;">
+      Best on a Chromebook or laptop &middot; Use your mouse &amp; keyboard
+    </p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      games: [
+        { code: "7.NR.1", title: "Number Line Hop", icon: "🐸", tag: "Number line", color: "#18C29C", tint: "#D6F7EE",
+          blurb: "Hop the frog to the right spot to add & subtract positive and negative numbers.", href: "Number Line Hop.dc.html" },
+        { code: "7.PAR.2", title: "Expression Match", icon: "🧩", tag: "Drag & drop", color: "#FF5E8A", tint: "#FFE0EA",
+          blurb: "Drag each expression onto its matching simplified form. Combine like terms to win.", href: "Expression Match.dc.html" },
+        { code: "7.PAR.3", title: "Balance Builder", icon: "⚖️", tag: "Balance", color: "#7C5CFC", tint: "#EAE3FF",
+          blurb: "Slide x until the scale is perfectly level and the equation balances.", href: "Balance Builder.dc.html" },
+        { code: "7.PAR.4", title: "Slope Slider", icon: "📈", tag: "Graph", color: "#2BA6FF", tint: "#DCEFFF",
+          blurb: "Tilt the line to the right unit rate so it runs straight through the points.", href: "Slope Slider.dc.html" },
+        { code: "7.GSR.5", title: "Angle Aim", icon: "📐", tag: "Rotate", color: "#FF8A3D", tint: "#FFE6D2",
+          blurb: "Spin the ray to build the exact angle. Use complementary & supplementary clues.", href: "Angle Aim.dc.html" },
+        { code: "7.PR.6", title: "Probability Spinner", icon: "🎯", tag: "Spin", color: "#E0B400", tint: "#FFF1C2",
+          blurb: "Predict the odds, then spin to watch experimental results chase the theory.", href: "Probability Spinner.dc.html" },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

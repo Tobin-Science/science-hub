@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    input[type=range]{-webkit-appearance:none;appearance:none;height:18px;border-radius:999px;background:#FFF1C2;border:3px solid #6B4E00;outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:38px;height:38px;border-radius:50%;background:#E0B400;border:3px solid #6B4E00;cursor:grab;box-shadow:2px 2px 0 #6B4E00;}
+    input[type=range]::-moz-range-thumb{width:38px;height:38px;border-radius:50%;background:#E0B400;border:3px solid #6B4E00;cursor:grab;}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FFFBEA;background-image:radial-gradient(#FBEAB0 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#6B4E00;padding:22px 24px 60px;">
+  <div style="max-width:960px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Math Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#6B4E00;background:#fff;border:3px solid #6B4E00;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #6B4E00;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #6B4E00;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #6B4E00;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#B89A4A;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #6B4E00;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #6B4E00;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">SPINS</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ trials }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:8px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#E0B400;color:#fff;border:2px solid #6B4E00;border-radius:999px;padding:4px 12px;">7.PR.6 &middot; Probability Spinner</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start;background:#fff;border:3px solid #6B4E00;border-radius:22px;box-shadow:6px 6px 0 #6B4E00;padding:24px;">
+
+      <div style="position:relative;width:240px;height:260px;flex:none;">
+        <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:30px solid #6B4E00;z-index:3;"></div>
+        <svg width="220" height="220" viewBox="0 0 220 220" style="position:absolute;top:24px;left:10px;transform:rotate({{ rotation }}deg);transition:transform 1.1s cubic-bezier(.2,.8,.25,1);">
+          <sc-for list="{{ sectors }}" as="s" hint-placeholder-count="8">
+            <path d="{{ s.path }}" fill="{{ s.color }}" stroke="#6B4E00" stroke-width="2"></path>
+          </sc-for>
+          <circle cx="110" cy="110" r="16" fill="#fff" stroke="#6B4E00" stroke-width="3"></circle>
+        </svg>
+      </div>
+
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <span style="font-family:Fredoka,sans-serif;font-weight:700;font-size:23px;">Land on</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;background:{{ targetColor }};color:#fff;border:3px solid #6B4E00;border-radius:999px;padding:4px 16px;font-family:Fredoka,sans-serif;font-weight:700;font-size:20px;text-shadow:0 1px 1px rgba(0,0,0,.25);">{{ targetName }}</span>
+        </div>
+
+        <sc-if value="{{ predicting }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <p style="font-weight:700;color:#B89A4A;margin:6px 0 14px;font-size:15px;">8 equal slices. What is the probability the arrow stops on {{ targetName }}? Slide to your prediction.</p>
+            <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:30px;margin-bottom:8px;">{{ guessNum }}/8 <span style="font-size:20px;color:#B89A4A;">= {{ guessDec }}</span></div>
+            <input type="range" min="0" max="8" step="1" value="{{ guessNum }}" onInput="{{ onGuess }}" style="width:100%;max-width:360px;" />
+            <div style="margin-top:18px;">
+              <button onClick="{{ submitGuess }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:19px;background:#E0B400;color:#fff;border:3px solid #6B4E00;border-radius:14px;padding:12px 30px;box-shadow:4px 4px 0 #6B4E00;cursor:pointer;">Lock prediction ✓</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ spinning_phase }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <div style="display:flex;gap:10px;margin:10px 0 16px;">
+              <button onClick="{{ spin1 }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#E0B400;color:#fff;border:3px solid #6B4E00;border-radius:12px;padding:10px 22px;box-shadow:3px 3px 0 #6B4E00;cursor:pointer;">Spin 🎯</button>
+              <button onClick="{{ spin25 }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#fff;color:#6B4E00;border:3px solid #6B4E00;border-radius:12px;padding:10px 22px;box-shadow:3px 3px 0 #6B4E00;cursor:pointer;">Spin &times;25 ⚡</button>
+            </div>
+
+            <div style="background:#FFF8E0;border:3px solid #6B4E00;border-radius:14px;padding:14px 16px;">
+              <div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;margin-bottom:4px;"><span>Theoretical</span><span>{{ theoNum }}/8 = {{ theoDec }}</span></div>
+              <div style="height:18px;background:#fff;border:2px solid #6B4E00;border-radius:999px;overflow:hidden;margin-bottom:14px;"><div style="height:100%;width:{{ theoPct }}%;background:#18C29C;"></div></div>
+              <div style="display:flex;justify-content:space-between;font-weight:800;font-size:14px;margin-bottom:4px;"><span>Experimental</span><span>{{ hits }}/{{ trials }} = {{ expDec }}</span></div>
+              <div style="height:18px;background:#fff;border:2px solid #6B4E00;border-radius:999px;overflow:hidden;"><div style="height:100%;width:{{ expPct }}%;background:#E0B400;transition:width .4s ease;"></div></div>
+              <p style="font-weight:700;color:#B89A4A;font-size:13px;margin:12px 0 0;">{{ convergeMsg }}</p>
+            </div>
+
+            <button onClick="{{ newRound }}" style="margin-top:16px;font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#FFD23F;color:#6B4E00;border:3px solid #6B4E00;border-radius:12px;padding:10px 22px;box-shadow:3px 3px 0 #6B4E00;cursor:pointer;">New wheel &rarr;</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:18px;min-height:30px;">
+      <sc-if value="{{ showGuessResult }}" hint-placeholder-val="{{ false }}">
+        <div style="display:inline-block;animation:bannerin .3s ease both;font-family:Fredoka,sans-serif;font-weight:700;font-size:19px;color:{{ grCol }};background:{{ grBg }};border:3px solid #6B4E00;border-radius:12px;padding:9px 20px;box-shadow:3px 3px 0 #6B4E00;">{{ guessResult }}</div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.PAL=[
+      {c:"#FF5E8A",n:"Pink"},{c:"#2BA6FF",n:"Blue"},{c:"#18C29C",n:"Green"},
+      {c:"#7C5CFC",n:"Purple"},{c:"#FF8A3D",n:"Orange"},{c:"#FFD23F",n:"Gold"},
+    ];
+    this.rot=0;
+    this.state = { score:0, ...this.makeRound(), guess:4, phase:"predict", guessResult:null, grOk:false, hits:0, trials:0, rotation:0, busy:false };
+  }
+  makeRound(){
+    const N=8;
+    const shuffled=[...this.PAL].sort(()=>Math.random()-0.5);
+    const target=shuffled[0];
+    const k=2+Math.floor(Math.random()*4); // 2..5
+    const others=shuffled.slice(1);
+    const cells=[];
+    for(let i=0;i<k;i++) cells.push(target);
+    let oi=0;
+    while(cells.length<N){ cells.push(others[oi%others.length]); oi++; }
+    // shuffle cell order
+    const order=cells.sort(()=>Math.random()-0.5);
+    return { cells:order, target, k };
+  }
+  arc(cx,cy,r,a0,a1){
+    const pt=(deg)=>{ const rad=(deg-90)*Math.PI/180; return [cx+r*Math.cos(rad), cy+r*Math.sin(rad)]; };
+    const [x0,y0]=pt(a0), [x1,y1]=pt(a1);
+    return "M "+cx+" "+cy+" L "+x0.toFixed(2)+" "+y0.toFixed(2)+" A "+r+" "+r+" 0 0 1 "+x1.toFixed(2)+" "+y1.toFixed(2)+" Z";
+  }
+  onGuess=(e)=>{ this.setState({ guess:parseInt(e.target.value,10) }); };
+  submitGuess=()=>{
+    const ok=this.state.guess===this.state.k;
+    this.setState(s=>({
+      phase:"spin", grOk:ok,
+      guessResult: ok? ("Spot on! P = "+s.k+"/8") : ("Theory is "+s.k+"/8 \u2014 spin to see for yourself"),
+      score: s.score + (ok?30:0),
+    }));
+  };
+  animateTo(idx){
+    const center=idx*45+22.5;
+    const desiredMod=(360-center)%360;
+    const cur=((this.rot%360)+360)%360;
+    let delta=(desiredMod-cur+360)%360 + 360*4;
+    this.rot+=delta;
+    this.setState({ rotation:this.rot, busy:true });
+  }
+  spin1=()=>{
+    if(this.state.busy) return;
+    const idx=Math.floor(Math.random()*8);
+    const hit=this.state.cells[idx]===this.state.target?1:0;
+    this.animateTo(idx);
+    setTimeout(()=>{ this.setState(s=>({ trials:s.trials+1, hits:s.hits+hit, busy:false, score:s.score+ (hit?2:0) })); },1150);
+  };
+  spin25=()=>{
+    if(this.state.busy) return;
+    let h=0, last=0;
+    for(let i=0;i<25;i++){ const idx=Math.floor(Math.random()*8); if(this.state.cells[idx]===this.state.target) h++; last=idx; }
+    this.animateTo(last);
+    setTimeout(()=>{ this.setState(s=>({ trials:s.trials+25, hits:s.hits+h, busy:false })); },1150);
+  };
+  newRound=()=>{ this.setState({ ...this.makeRound(), phase:"predict", guess:4, guessResult:null, hits:0, trials:0 }); };
+  renderVals(){
+    const { cells, target, k, guess, phase, score, hits, trials, rotation, guessResult, grOk }=this.state;
+    const sectors=cells.map((cell,i)=>({ path:this.arc(110,110,100,i*45,(i+1)*45), color:cell.c }));
+    const theoPct=k/8*100;
+    const expDecNum= trials? hits/trials : 0;
+    const expPct= trials? expDecNum*100 : 0;
+    const diff= trials? Math.abs(expDecNum - k/8) : 1;
+    let convergeMsg="Spin a few times, then spin \u00d725 \u2014 watch the gold bar drift toward the green one.";
+    if(trials>=1) convergeMsg = trials<15
+      ? "Small samples bounce around. Keep spinning for a steadier estimate."
+      : (diff<0.06 ? "The experimental rate is closing in on the theoretical probability! \uD83C\uDFAF"
+                   : "Getting closer \u2014 more spins shrink the gap (Law of Large Numbers).");
+    return {
+      score, trials,
+      sectors, rotation,
+      targetColor:target.c, targetName:target.n,
+      guessNum:guess, guessDec:(guess/8).toFixed(3),
+      onGuess:this.onGuess, submitGuess:this.submitGuess,
+      predicting: phase==="predict",
+      spinning_phase: phase==="spin",
+      spin1:this.spin1, spin25:this.spin25, newRound:this.newRound,
+      theoNum:k, theoDec:(k/8).toFixed(3), theoPct,
+      hits, expDec: trials? expDecNum.toFixed(3):"\u2014", expPct,
+      convergeMsg,
+      showGuessResult: !!guessResult,
+      guessResult: guessResult||"",
+      grCol: grOk? "#10463A":"#8A5A00",
+      grBg: grOk? "#D6F7E2":"#FFF1C2",
+    };
+  }
+}
+</script>
+</body>
+</html>

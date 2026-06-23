@@ -2020,15 +2020,14 @@ function actDone(st){
    ARCADE PAGE
    ========================================================= */
 function buildArcade(){
-  document.getElementById('arcadegrid').innerHTML = Object.entries(GAMES).map(([gid,g])=>{
-    const uid = g.unit||gid, u = UNITS[uid], best = store.get('game_'+gid);
-    return `<div class="arcadecard" style="--gc:${u.hex}">
-      <div class="icon">${g.icon}</div><h3 style="color:#fff">${g.title}</h3>
-      <p style="font-size:.92rem;opacity:.93">${g.desc}</p>
-      <p style="font-family:var(--mono);font-size:.78rem;opacity:.85">UNIT ${u.num} · ${u.std}${best? ' · BEST '+best : ''}</p>
-      <button onclick="go('${uid}');setTimeout(()=>{openPane('${uid}','game');renderGamePicker('${uid}','${gid}');},50)">▶ Play</button>
-    </div>`;
-  }).join('');
+  const grid = document.getElementById('arcadegrid');
+  if(!grid) return;
+  /* Six standards-aligned mini-games (Claude Design). Their self-contained arcade
+     hub handles the game grid, play, and back-navigation inside one iframe. */
+  grid.style.display = 'block';
+  grid.innerHTML = `<iframe src="games/math7/Math%20Arcade%20Hub.dc.html" title="Grade 7 Math Arcade — mini-games"
+    style="width:100%;height:78vh;min-height:560px;border:0;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.12);background:#fff"
+    allow="fullscreen"></iframe>`;
 }
 function launchQuest(){
   const w = window.open('science_quest.html','_blank');

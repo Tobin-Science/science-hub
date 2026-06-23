@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    @keyframes glow{0%,100%{box-shadow:6px 6px 0 #3B1A8A}50%{box-shadow:6px 6px 0 #3B1A8A,0 0 0 6px rgba(124,92,252,.4)}}
+    input[type=range]{-webkit-appearance:none;appearance:none;height:18px;border-radius:999px;background:#EAE3FF;border:3px solid #3B1A8A;outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:38px;height:38px;border-radius:50%;background:#7C5CFC;border:3px solid #3B1A8A;cursor:grab;box-shadow:2px 2px 0 #3B1A8A;margin-top:-1px;}
+    input[type=range]::-moz-range-thumb{width:38px;height:38px;border-radius:50%;background:#7C5CFC;border:3px solid #3B1A8A;cursor:grab;}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#F1ECFF;background-image:radial-gradient(#DACFFB 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#3B1A8A;padding:22px 24px 60px;">
+  <div style="max-width:920px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Math Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#3B1A8A;background:#fff;border:3px solid #3B1A8A;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #3B1A8A;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #3B1A8A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #3B1A8A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8E79D6;">SOLVED</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ solved }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #3B1A8A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #3B1A8A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:6px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#7C5CFC;color:#fff;border:2px solid #3B1A8A;border-radius:999px;padding:4px 12px;">7.PAR.3 &middot; Balance Builder</span>
+    </div>
+    <div style="text-align:center;font-family:Fredoka,sans-serif;font-weight:700;font-size:40px;margin:6px 0 4px;">{{ equation }}</div>
+    <p style="text-align:center;font-weight:700;color:#8E79D6;margin:0 0 8px;font-size:15px;">Slide <b>x</b> until both pans weigh the same and the beam is level.</p>
+
+    <div style="background:#fff;border:3px solid #3B1A8A;border-radius:22px;box-shadow:6px 6px 0 #3B1A8A;padding:20px 26px 30px;">
+      <div style="position:relative;height:300px;">
+        <div style="position:absolute;left:50%;top:118px;width:440px;height:16px;margin-left:-220px;background:#3B1A8A;border-radius:8px;transform-origin:center;transform:rotate({{ angle }}deg);transition:transform .45s cubic-bezier(.34,1.4,.5,1);">
+          <div style="position:absolute;left:0;top:8px;">
+            <div style="transform:rotate({{ negAngle }}deg);transform-origin:top center;transition:transform .45s cubic-bezier(.34,1.4,.5,1);">
+              <div style="width:3px;height:54px;background:#3B1A8A;margin:0 auto;"></div>
+              <div style="width:150px;height:84px;margin-left:-75px;background:#EAE3FF;border:3px solid #3B1A8A;border-radius:0 0 70px 70px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:3px 3px 0 rgba(59,26,138,.3);">
+                <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:26px;">{{ exprLeft }}</div>
+                <div style="font-weight:800;font-size:14px;color:#7C5CFC;">weighs {{ leftVal }}</div>
+              </div>
+            </div>
+          </div>
+          <div style="position:absolute;right:0;top:8px;">
+            <div style="transform:rotate({{ negAngle }}deg);transform-origin:top center;transition:transform .45s cubic-bezier(.34,1.4,.5,1);">
+              <div style="width:3px;height:54px;background:#3B1A8A;margin:0 auto;"></div>
+              <div style="width:150px;height:84px;margin-left:-75px;background:#FFE9B3;border:3px solid #3B1A8A;border-radius:0 0 70px 70px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:3px 3px 0 rgba(59,26,138,.3);">
+                <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:30px;">{{ rightVal }}</div>
+                <div style="font-weight:800;font-size:14px;color:#C79A00;">weighs {{ rightVal }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="position:absolute;left:50%;top:118px;width:14px;height:14px;margin-left:-7px;background:#FFD23F;border:3px solid #3B1A8A;border-radius:50%;z-index:2;"></div>
+        <div style="position:absolute;left:50%;top:126px;margin-left:-30px;width:0;height:0;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:120px solid #3B1A8A;"></div>
+        <div style="position:absolute;left:50%;bottom:0;margin-left:-90px;width:180px;height:18px;background:#3B1A8A;border-radius:8px;"></div>
+      </div>
+
+      <div style="margin-top:18px;display:flex;align-items:center;gap:18px;">
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:24px;background:#7C5CFC;color:#fff;border:3px solid #3B1A8A;border-radius:12px;padding:6px 16px;box-shadow:3px 3px 0 #3B1A8A;white-space:nowrap;">x = {{ x }}</div>
+        <input type="range" min="{{ min }}" max="{{ max }}" step="1" value="{{ x }}" onInput="{{ onSlide }}" style="flex:1;" />
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px;min-height:56px;">
+      <sc-if value="{{ balanced }}" hint-placeholder-val="{{ false }}">
+        <div style="display:inline-flex;align-items:center;gap:16px;animation:bannerin .35s ease both;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;color:#3B1A8A;background:#D6F7E2;border:3px solid #3B1A8A;border-radius:14px;padding:11px 22px;box-shadow:4px 4px 0 #15803D;">Balanced! x = {{ x }} ✓</div>
+          <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#7C5CFC;color:#fff;border:3px solid #3B1A8A;border-radius:14px;padding:12px 28px;box-shadow:4px 4px 0 #3B1A8A;cursor:pointer;">Next &rarr;</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ notBalanced }}" hint-placeholder-val="{{ true }}">
+        <div style="font-weight:800;font-size:17px;color:{{ hintCol }};">{{ hint }}</div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { score:0, solved:0, prob:this.makeProb(), x:0, locked:false };
+  }
+  makeProb(){
+    const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+    const p=rnd(2,5);
+    let xa=rnd(-6,6); if(xa===0) xa=2;
+    const q=rnd(-9,9);
+    const r=p*xa+q;
+    const exprLeft = (p+"x") + (q>=0 ? " + "+q : " \u2212 "+Math.abs(q));
+    const equation = exprLeft + " = " + r;
+    return { p, q, r, xa, exprLeft, equation };
+  }
+  onSlide=(e)=>{ if(this.state.locked) return; const x=parseInt(e.target.value,10); this.setState({ x }); };
+  next=()=>{ this.setState({ prob:this.makeProb(), x:0, locked:false }); };
+  renderVals(){
+    const { prob, x, score, solved, locked }=this.state;
+    const leftVal = prob.p*x + prob.q;
+    const diff = leftVal - prob.r;
+    const balanced = diff===0;
+    if(balanced && !locked){
+      // lock + award once
+      setTimeout(()=>{ this.setState(s=> s.locked?null:({ locked:true, score:s.score+20, solved:s.solved+1 })); },0);
+    }
+    const angle = Math.max(-20, Math.min(20, -diff*1.3));
+    let hint, hintCol;
+    if(diff>0){ hint = "Left pan is too heavy \u2014 slide x down"; hintCol="#B0234A"; }
+    else if(diff<0){ hint = "Right pan is heavier \u2014 slide x up"; hintCol="#B0234A"; }
+    else { hint=""; hintCol="#15803D"; }
+    return {
+      score, solved,
+      equation: prob.equation, exprLeft: prob.exprLeft,
+      leftVal, rightVal: prob.r,
+      x, min:-10, max:10,
+      angle, negAngle:-angle,
+      balanced: balanced,
+      notBalanced: !balanced,
+      hint, hintCol,
+      onSlide:this.onSlide, next:this.next,
+    };
+  }
+}
+</script>
+</body>
+</html>

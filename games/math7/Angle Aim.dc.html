@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    @keyframes shakex{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FFF1E6;background-image:radial-gradient(#FFD9BC 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#8A3B0A;padding:22px 24px 60px;">
+  <div style="max-width:920px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Math Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#8A3B0A;background:#fff;border:3px solid #8A3B0A;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #8A3B0A;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #8A3B0A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #8A3B0A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#C28055;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #8A3B0A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #8A3B0A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:6px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#FF8A3D;color:#fff;border:2px solid #8A3B0A;border-radius:999px;padding:4px 12px;">7.GSR.5 &middot; Angle Aim</span>
+    </div>
+
+    <div style="background:#fff;border:3px solid #8A3B0A;border-radius:22px;box-shadow:6px 6px 0 #8A3B0A;padding:18px 22px;text-align:center;margin-bottom:16px;{{ promptAnim }}">
+      <div style="font-weight:800;font-size:13px;letter-spacing:1px;color:#C28055;text-transform:uppercase;">{{ kind }}</div>
+      <div style="font-family:Fredoka,sans-serif;font-weight:600;font-size:24px;margin-top:2px;">{{ prompt }}</div>
+    </div>
+
+    <div style="background:#fff;border:3px solid #8A3B0A;border-radius:22px;box-shadow:6px 6px 0 #8A3B0A;padding:14px;">
+      <svg ref="{{ svgRef }}" width="100%" viewBox="0 0 460 300" style="display:block;touch-action:none;cursor:grab;" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}">
+        <path d="{{ wedge }}" fill="rgba(255,138,61,.28)" stroke="none"></path>
+        <sc-for list="{{ ticks }}" as="t" hint-placeholder-count="19">
+          <line x1="{{ t.x1 }}" y1="{{ t.y1 }}" x2="{{ t.x2 }}" y2="{{ t.y2 }}" stroke="#E2B48C" stroke-width="2"></line>
+        </sc-for>
+        <sc-for list="{{ tickLabels }}" as="t" hint-placeholder-count="7">
+          <text x="{{ t.x }}" y="{{ t.y }}" font-family="Fredoka" font-size="12" font-weight="600" fill="#C28055" text-anchor="middle">{{ t.t }}</text>
+        </sc-for>
+        <line x1="230" y1="250" x2="420" y2="250" stroke="#8A3B0A" stroke-width="6" stroke-linecap="round"></line>
+        <line x1="230" y1="250" x2="{{ rayX }}" y2="{{ rayY }}" stroke="{{ rayColor }}" stroke-width="6" stroke-linecap="round"></line>
+        <circle cx="{{ rayX }}" cy="{{ rayY }}" r="11" fill="{{ rayColor }}" stroke="#8A3B0A" stroke-width="3"></circle>
+        <circle cx="230" cy="250" r="8" fill="#FFD23F" stroke="#8A3B0A" stroke-width="3"></circle>
+        <text x="230" y="285" font-family="Fredoka" font-size="26" font-weight="700" fill="#8A3B0A" text-anchor="middle">{{ angle }}&deg;</text>
+      </svg>
+    </div>
+
+    <div style="display:flex;gap:14px;justify-content:center;align-items:center;margin-top:22px;min-height:56px;">
+      <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ nudgeDown }}" style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;background:#fff;color:#8A3B0A;border:3px solid #8A3B0A;border-radius:12px;padding:8px 18px;box-shadow:3px 3px 0 #8A3B0A;cursor:pointer;">&minus;1&deg;</button>
+        <button onClick="{{ lock }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;background:#FF8A3D;color:#fff;border:3px solid #8A3B0A;border-radius:14px;padding:12px 34px;box-shadow:4px 4px 0 #8A3B0A;cursor:pointer;">Lock In ✓</button>
+        <button onClick="{{ nudgeUp }}" style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;background:#fff;color:#8A3B0A;border:3px solid #8A3B0A;border-radius:12px;padding:8px 18px;box-shadow:3px 3px 0 #8A3B0A;cursor:pointer;">+1&deg;</button>
+      </sc-if>
+      <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:14px;animation:bannerin .35s ease both;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:20px;color:{{ resCol }};background:{{ resBg }};border:3px solid #8A3B0A;border-radius:12px;padding:10px 18px;box-shadow:3px 3px 0 #8A3B0A;">{{ resMsg }}</div>
+          <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#FFD23F;color:#8A3B0A;border:3px solid #8A3B0A;border-radius:12px;padding:11px 24px;box-shadow:3px 3px 0 #8A3B0A;cursor:pointer;">Next &rarr;</button>
+        </div>
+      </sc-if>
+    </div>
+    <p style="text-align:center;font-size:14px;font-weight:700;color:#C28055;margin-top:14px;">Drag the orange dot to swing the ray &middot; or use the &minus;1&deg; / +1&deg; buttons</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.svgRef = React.createRef();
+    this.VX=230; this.VY=250; this.R=190;
+    this.state = { score:0, streak:0, prob:this.makeProb(), angle:90, status:"play", dragging:false };
+  }
+  makeProb(){
+    const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+    const t=rnd(0,3);
+    if(t===0){ const tg=rnd(20,160); return { kind:"Build the angle", prompt:"Make a "+tg+"\u00b0 angle.", target:tg }; }
+    if(t===1){ const g=rnd(15,75); return { kind:"Complementary angles", prompt:"\u2220A and \u2220B are complementary. \u2220A = "+g+"\u00b0. Build \u2220B.", target:90-g }; }
+    if(t===2){ const g=rnd(25,155); return { kind:"Supplementary angles", prompt:"\u2220A and \u2220B are supplementary. \u2220A = "+g+"\u00b0. Build \u2220B.", target:180-g }; }
+    const g=rnd(20,160); return { kind:"Vertical angles", prompt:"Two vertical angles are equal. One is "+g+"\u00b0. Build the other.", target:g };
+  }
+  angleFromPt(clientX, clientY){
+    const el=this.svgRef.current; if(!el) return this.state.angle;
+    const r=el.getBoundingClientRect();
+    const sx=460/r.width, sy=300/r.height;
+    const px=(clientX-r.left)*sx, py=(clientY-r.top)*sy;
+    let a=Math.atan2(this.VY-py, px-this.VX)*180/Math.PI;
+    a=Math.round(a);
+    return Math.max(0, Math.min(180, a));
+  }
+  onDown=(e)=>{ if(this.state.status!=="play") return; try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){} this.setState({ dragging:true, angle:this.angleFromPt(e.clientX,e.clientY) }); };
+  onMove=(e)=>{ if(!this.state.dragging) return; this.setState({ angle:this.angleFromPt(e.clientX,e.clientY) }); };
+  onUp=()=>{ if(this.state.dragging) this.setState({dragging:false}); };
+  nudgeUp=()=>{ if(this.state.status==="play") this.setState(s=>({angle:Math.min(180,s.angle+1)})); };
+  nudgeDown=()=>{ if(this.state.status==="play") this.setState(s=>({angle:Math.max(0,s.angle-1)})); };
+  lock=()=>{
+    if(this.state.status!=="play") return;
+    if(this.state.angle===this.state.prob.target) this.setState(s=>({status:"right", score:s.score+20, streak:s.streak+1}));
+    else this.setState({status:"wrong", streak:0});
+  };
+  next=()=>{ this.setState({ prob:this.makeProb(), angle:90, status:"play" }); };
+  renderVals(){
+    const { angle, prob, score, streak, status }=this.state;
+    const { VX, VY, R }=this;
+    const rad=angle*Math.PI/180;
+    const rayX=VX+R*Math.cos(rad), rayY=VY-R*Math.sin(rad);
+    // wedge points
+    const ar=58; let w="M "+VX+" "+VY;
+    for(let d=0; d<=angle; d+=3){ const rr=d*Math.PI/180; w+=" L "+(VX+ar*Math.cos(rr)).toFixed(1)+" "+(VY-ar*Math.sin(rr)).toFixed(1); }
+    w+=" L "+(VX+ar*Math.cos(rad)).toFixed(1)+" "+(VY-ar*Math.sin(rad)).toFixed(1)+" Z";
+    const ticks=[], tickLabels=[];
+    for(let d=0; d<=180; d+=10){
+      const rr=d*Math.PI/180;
+      ticks.push({ x1:VX+(R-10)*Math.cos(rr), y1:VY-(R-10)*Math.sin(rr), x2:VX+R*Math.cos(rr), y2:VY-R*Math.sin(rr) });
+      if(d%30===0) tickLabels.push({ x:VX+(R+15)*Math.cos(rr), y:VY-(R+15)*Math.sin(rr)+4, t:String(d) });
+    }
+    const right=status==="right", wrong=status==="wrong";
+    const off=Math.abs(angle-prob.target);
+    return {
+      score, streak,
+      kind:prob.kind, prompt:prob.prompt,
+      promptAnim: wrong? "animation:shakex .4s ease;":"",
+      angle, rayX, rayY,
+      rayColor: right? "#18C29C" : (wrong? "#E0533F" : "#FF8A3D"),
+      wedge:w, ticks, tickLabels,
+      svgRef:this.svgRef,
+      onDown:this.onDown, onMove:this.onMove, onUp:this.onUp,
+      nudgeUp:this.nudgeUp, nudgeDown:this.nudgeDown, lock:this.lock, next:this.next,
+      playing: status==="play",
+      showResult: right||wrong,
+      resMsg: right? ("Perfect "+prob.target+"\u00b0! +20") : ("Off by "+off+"\u00b0 \u2014 answer was "+prob.target+"\u00b0"),
+      resCol: right? "#10463A":"#B0234A",
+      resBg: right? "#D6F7E2":"#FFE0D6",
+      next:this.next,
+    };
+  }
+}
+</script>
+</body>
+</html>

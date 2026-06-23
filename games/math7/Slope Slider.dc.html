@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    input[type=range]{-webkit-appearance:none;appearance:none;height:18px;border-radius:999px;background:#DCEFFF;border:3px solid #0A3D6B;outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:38px;height:38px;border-radius:50%;background:#2BA6FF;border:3px solid #0A3D6B;cursor:grab;box-shadow:2px 2px 0 #0A3D6B;}
+    input[type=range]::-moz-range-thumb{width:38px;height:38px;border-radius:50%;background:#2BA6FF;border:3px solid #0A3D6B;cursor:grab;}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#E6F3FF;background-image:radial-gradient(#C2E2FF 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#0A3D6B;padding:22px 24px 60px;">
+  <div style="max-width:940px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Math Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#0A3D6B;background:#fff;border:3px solid #0A3D6B;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #0A3D6B;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #0A3D6B;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #0A3D6B;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#5B86AE;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #0A3D6B;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #0A3D6B;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:8px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#2BA6FF;color:#fff;border:2px solid #0A3D6B;border-radius:999px;padding:4px 12px;">7.PAR.4 &middot; Slope Slider</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;background:#fff;border:3px solid #0A3D6B;border-radius:22px;box-shadow:6px 6px 0 #0A3D6B;padding:24px;">
+      <svg width="420" height="400" style="flex:none;">
+        <sc-for list="{{ grid }}" as="l" hint-placeholder-count="22">
+          <line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" stroke="#CDE6FA" stroke-width="2"></line>
+        </sc-for>
+        <line x1="40" y1="20" x2="40" y2="380" stroke="#0A3D6B" stroke-width="3"></line>
+        <line x1="40" y1="380" x2="400" y2="380" stroke="#0A3D6B" stroke-width="3"></line>
+        <sc-for list="{{ axisLabels }}" as="a" hint-placeholder-count="10">
+          <text x="{{ a.x }}" y="{{ a.y }}" font-family="Fredoka" font-size="13" font-weight="600" fill="#5B86AE" text-anchor="{{ a.anchor }}">{{ a.t }}</text>
+        </sc-for>
+        <line x1="40" y1="380" x2="{{ lineX }}" y2="{{ lineY }}" stroke="{{ lineColor }}" stroke-width="6" stroke-linecap="round"></line>
+        <sc-for list="{{ points }}" as="p" hint-placeholder-count="2">
+          <circle cx="{{ p.cx }}" cy="{{ p.cy }}" r="9" fill="{{ p.fill }}" stroke="#0A3D6B" stroke-width="3"></circle>
+        </sc-for>
+        <circle cx="{{ unitX }}" cy="{{ unitY }}" r="6" fill="#FFD23F" stroke="#0A3D6B" stroke-width="3"></circle>
+        <text x="{{ unitLabelX }}" y="{{ unitLabelY }}" font-family="Fredoka" font-size="12" font-weight="700" fill="#C79A00">(1, r)</text>
+      </svg>
+
+      <div>
+        <h2 style="font-family:Fredoka,sans-serif;font-weight:700;font-size:25px;margin:0 0 4px;">{{ scenario }}</h2>
+        <p style="font-weight:700;color:#5B86AE;margin:0 0 14px;font-size:15px;">Slide the slope so the blue line runs straight through both dots.</p>
+
+        <div style="display:flex;gap:10px;margin-bottom:18px;">
+          <sc-for list="{{ table }}" as="row" hint-placeholder-count="2">
+            <div style="flex:1;background:#DCEFFF;border:3px solid #0A3D6B;border-radius:12px;padding:8px;text-align:center;">
+              <div style="font-weight:800;font-size:13px;color:#5B86AE;">{{ row.label }}</div>
+              <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:20px;">{{ row.val }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;margin-bottom:8px;">slope (unit rate) = <span style="color:#2BA6FF;">{{ m }}</span></div>
+        <input type="range" min="0" max="5" step="0.25" value="{{ m }}" onInput="{{ onSlide }}" style="width:100%;" />
+        <div style="display:flex;justify-content:space-between;font-weight:800;color:#5B86AE;font-size:13px;margin-top:4px;"><span>0</span><span>flatter &mdash; steeper</span><span>5</span></div>
+
+        <div style="margin-top:18px;min-height:52px;">
+          <sc-if value="{{ won }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:14px;animation:bannerin .35s ease both;">
+              <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:19px;color:#0A3D6B;background:#D6F7E2;border:3px solid #0A3D6B;border-radius:12px;padding:10px 16px;box-shadow:3px 3px 0 #15803D;">Through the dots! ✓</div>
+              <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#2BA6FF;color:#fff;border:3px solid #0A3D6B;border-radius:12px;padding:10px 22px;box-shadow:3px 3px 0 #0A3D6B;cursor:pointer;">Next &rarr;</button>
+            </div>
+          </sc-if>
+          <sc-if value="{{ notWon }}" hint-placeholder-val="{{ true }}">
+            <div style="font-weight:800;font-size:16px;color:#5B86AE;">{{ hint }}</div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.OX=40; this.OY=380; this.U=34; // px per unit, grid 0..10
+    this.state = { score:0, streak:0, prob:this.makeProb(), m:1, locked:false };
+  }
+  makeProb(){
+    const rates=[0.5,1,1.5,2,2.5,3];
+    const themes=[
+      {n:"Road Trip",x:"hours",y:"miles"},
+      {n:"Muffin Batch",x:"batches",y:"muffins"},
+      {n:"Sticker Shop",x:"packs",y:"stickers"},
+      {n:"Lap Tracker",x:"minutes",y:"laps"},
+    ];
+    const r=rates[Math.floor(Math.random()*rates.length)];
+    const th=themes[Math.floor(Math.random()*themes.length)];
+    const cands=[];
+    for(let x=1;x<=10;x++){ const y=r*x; if(Number.isInteger(y)&&y<=10) cands.push(x); }
+    // pick two distinct, spread
+    const a=cands[0], b=cands[cands.length-1]!==a?cands[cands.length-1]:cands[1];
+    const xs=[a,b].filter((v,i,arr)=>arr.indexOf(v)===i).slice(0,2);
+    const pts=xs.map(x=>({x, y:r*x}));
+    return { r, th, pts };
+  }
+  onSlide=(e)=>{ if(this.state.locked) return; this.setState({ m:parseFloat(e.target.value) }); };
+  next=()=>{ this.setState({ prob:this.makeProb(), m:1, locked:false }); };
+  renderVals(){
+    const { prob, m, score, streak, locked }=this.state;
+    const { OX, OY, U }=this;
+    const won = Math.abs(m - prob.r) < 1e-9;
+    if(won && !locked){ setTimeout(()=>{ this.setState(s=> s.locked?null:({locked:true, score:s.score+25, streak:s.streak+1})); },0); }
+    // gridlines
+    const grid=[];
+    for(let i=0;i<=10;i++){
+      grid.push({ x1:OX+i*U, y1:20, x2:OX+i*U, y2:OY });
+      grid.push({ x1:OX, y1:OY-i*U, x2:OX+10*U, y2:OY-i*U });
+    }
+    const axisLabels=[];
+    for(let i=2;i<=10;i+=2){
+      axisLabels.push({ x:OX+i*U, y:OY+18, t:String(i), anchor:"middle" });
+      axisLabels.push({ x:OX-10, y:OY-i*U+5, t:String(i), anchor:"end" });
+    }
+    // line to edge
+    let ex,ey;
+    if(prob.r*10<=10 && m<=1){ ex=10; ey=m*10; }
+    if(m<=1){ ex=10; ey=m*10; } else { ey=10; ex=10/m; }
+    const lineX=OX+ex*U, lineY=OY-ey*U;
+    const points=prob.pts.map(p=>({ cx:OX+p.x*U, cy:OY-p.y*U, fill: won? "#18C29C" : "#FF5E8A" }));
+    const onLine = won;
+    let hint;
+    const need=prob.pts[prob.pts.length-1];
+    const cur=m*need.x;
+    if(won) hint="";
+    else if(cur<need.y) hint="Too flat \u2014 steepen the line";
+    else hint="Too steep \u2014 flatten the line";
+    return {
+      score, streak,
+      grid, axisLabels,
+      lineX, lineY, lineColor: won? "#18C29C":"#2BA6FF",
+      points,
+      unitX:OX+1*U, unitY:OY-prob.r*U, unitLabelX:OX+1*U+8, unitLabelY:OY-prob.r*U-8,
+      scenario: prob.th.n,
+      table: prob.pts.map(p=>({ label:p.x+" "+prob.th.x, val:p.y+" "+prob.th.y })),
+      m, onSlide:this.onSlide, next:this.next,
+      won, notWon:!won, hint,
+    };
+  }
+}
+</script>
+</body>
+</html>

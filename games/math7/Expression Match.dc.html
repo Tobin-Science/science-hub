@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes shakex{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+    @keyframes popin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FFEFF4;background-image:radial-gradient(#FFD2E0 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#7A1538;padding:22px 24px 60px;">
+  <div style="max-width:980px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <a href="Math Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#7A1538;background:#fff;border:3px solid #7A1538;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #7A1538;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #7A1538;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #7A1538;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#B86A85;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #7A1538;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #7A1538;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">ROUND</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ round }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:14px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#FF5E8A;color:#fff;border:2px solid #7A1538;border-radius:999px;padding:4px 12px;">7.PAR.2 &middot; Expression Match</span>
+      <h2 style="font-family:Fredoka,sans-serif;font-weight:700;font-size:30px;margin:10px 0 2px;">Drag each expression to its simplified twin</h2>
+      <p style="font-weight:700;color:#B86A85;margin:0;font-size:15px;">Combine like terms &amp; expand to find the match</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:30px;align-items:start;margin-top:18px;">
+
+      <div>
+        <div style="font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#B86A85;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;text-align:center;">Expressions</div>
+        <div style="display:flex;flex-direction:column;gap:14px;min-height:60px;">
+          <sc-for list="{{ tray }}" as="c" hint-placeholder-count="4">
+            <div draggable="true" onDragStart="{{ c.onStart }}" onDragEnd="{{ c.onEnd }}" style="animation:popin .25s ease both;background:#fff;border:3px solid #7A1538;border-radius:16px;box-shadow:4px 4px 0 #7A1538;padding:16px;font-family:Fredoka,sans-serif;font-weight:600;font-size:26px;text-align:center;cursor:grab;{{ c.dim }}">{{ c.expr }}</div>
+          </sc-for>
+          <sc-if value="{{ trayEmpty }}" hint-placeholder-val="{{ false }}">
+            <div style="text-align:center;color:#D49CB0;font-weight:700;padding:18px;">All matched! 🎉</div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#B86A85;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;text-align:center;">Simplified</div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <sc-for list="{{ slots }}" as="s" hint-placeholder-count="4">
+            <div onDragOver="{{ s.onOver }}" onDrop="{{ s.onDrop }}" style="display:flex;align-items:center;gap:14px;background:{{ s.bg }};border:3px {{ s.borderStyle }} {{ s.border }};border-radius:16px;padding:14px 16px;box-shadow:{{ s.shadow }};{{ s.anim }}min-height:70px;">
+              <div style="flex:none;width:40px;height:40px;border-radius:10px;border:3px solid {{ s.border }};display:flex;align-items:center;justify-content:center;font-size:20px;background:{{ s.chipBg }};">{{ s.chip }}</div>
+              <div style="flex:1;font-family:Fredoka,sans-serif;font-weight:600;font-size:26px;text-align:center;">{{ s.simp }}</div>
+              <div style="flex:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;min-width:64px;text-align:center;color:#7A1538;opacity:{{ s.matchOpacity }};">{{ s.matchedExpr }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:26px;min-height:56px;">
+      <sc-if value="{{ won }}" hint-placeholder-val="{{ false }}">
+        <div style="display:inline-flex;align-items:center;gap:16px;animation:bannerin .35s ease both;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;color:#7A1538;background:#FFD2E0;border:3px solid #7A1538;border-radius:14px;padding:11px 22px;box-shadow:4px 4px 0 #7A1538;">Round clear! 🎉</div>
+          <button onClick="{{ nextRound }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#FF5E8A;color:#fff;border:3px solid #7A1538;border-radius:14px;padding:12px 28px;box-shadow:4px 4px 0 #7A1538;cursor:pointer;">Next round &rarr;</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.dragId = null;
+    this.state = { score:0, round:1, pairs:this.makeSet(), placed:{}, shake:null };
+  }
+  fmt(n){ return n < 0 ? "\u2212 " + Math.abs(n) : "+ " + n; }
+  xterm(c){ return c===1 ? "x" : (c===-1 ? "\u2212x" : c+"x"); }
+  makeSet(){
+    const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+    const builders=[
+      ()=>{ const k=rnd(2,6), b=rnd(2,6); return {expr:k+"(x + "+b+")", simp:k+"x + "+(k*b)}; },
+      ()=>{ const k=rnd(2,6), b=rnd(2,5); return {expr:k+"(x \u2212 "+b+")", simp:k+"x \u2212 "+(k*b)}; },
+      ()=>{ const a=rnd(2,5), b=rnd(2,5); return {expr:a+"x + "+b+"x", simp:(a+b)+"x"}; },
+      ()=>{ const a=rnd(2,5), c=rnd(2,6), d=rnd(1,4); return {expr:a+"x + "+c+" + "+d+"x", simp:(a+d)+"x + "+c}; },
+      ()=>{ const a=rnd(4,7), b=rnd(1,3), c=rnd(2,5); return {expr:a+"x \u2212 "+c+" \u2212 "+b+"x", simp:(a-b)+"x \u2212 "+c}; },
+    ];
+    const set=[]; const seenSimp=new Set(); const seenExpr=new Set(); let guard=0;
+    while(set.length<4 && guard++<200){
+      const p=builders[rnd(0,builders.length-1)]();
+      if(seenSimp.has(p.simp)||seenExpr.has(p.expr)) continue;
+      seenSimp.add(p.simp); seenExpr.add(p.expr);
+      set.push({ id:"p"+set.length+"_"+guard, expr:p.expr, simp:p.simp });
+    }
+    const shuffle=(arr)=>arr.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
+    return { trayOrder:shuffle(set.map(p=>p.id)), slotOrder:shuffle(set.map(p=>p.id)), byId:Object.fromEntries(set.map(p=>[p.id,p])) };
+  }
+  onStart=(id)=>(e)=>{ this.dragId=id; try{ e.dataTransfer.setData("text/plain",id); e.dataTransfer.effectAllowed="move"; }catch(_){ } };
+  onEnd=()=>{ this.dragId=null; };
+  onOver=(e)=>{ e.preventDefault(); };
+  onDrop=(slotId)=>(e)=>{
+    e.preventDefault();
+    const dragId=this.dragId||(e.dataTransfer&&e.dataTransfer.getData("text/plain"));
+    if(!dragId||this.state.placed[slotId]) return;
+    const { byId }=this.state.pairs;
+    if(byId[dragId] && byId[dragId].simp===byId[slotId].simp){
+      this.setState(s=>{ const placed={...s.placed, [slotId]:dragId}; const score=s.score+15; return {placed,score}; });
+    } else {
+      this.setState({shake:slotId});
+      setTimeout(()=>{ this.setState(s=> s.shake===slotId?{shake:null}:null); },420);
+    }
+    this.dragId=null;
+  };
+  nextRound=()=>{ this.setState(s=>({ round:s.round+1, pairs:this.makeSet(), placed:{} })); };
+  renderVals(){
+    const { pairs, placed, score, round, shake }=this.state;
+    const { byId, trayOrder, slotOrder }=pairs;
+    const placedExprIds=new Set(Object.values(placed));
+    const tray=trayOrder.filter(id=>!placedExprIds.has(id)).map(id=>({
+      expr:byId[id].expr, onStart:this.onStart(id), onEnd:this.onEnd, dim:""
+    }));
+    const slots=slotOrder.map(id=>{
+      const done=!!placed[id];
+      return {
+        simp:byId[id].simp,
+        onOver:this.onOver, onDrop:this.onDrop(id),
+        bg: done? "#D6F7E2":"#fff",
+        border: done? "#15803D":"#7A1538",
+        borderStyle: done? "solid":"dashed",
+        shadow: done? "4px 4px 0 #15803D":"4px 4px 0 rgba(122,21,56,.25)",
+        anim: shake===id? "animation:shakex .4s ease;":"",
+        chip: done? "\u2713":"?",
+        chipBg: done? "#15803D":"#FFEFF4",
+        matchedExpr: done? byId[placed[id]].expr : "",
+        matchOpacity: done? "0.55":"0",
+      };
+    });
+    return {
+      score, round, tray, slots,
+      trayEmpty: tray.length===0,
+      won: Object.keys(placed).length===4,
+      nextRound:this.nextRound,
+    };
+  }
+}
+</script>
+</body>
+</html>
