@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    input[type=range]{-webkit-appearance:none;appearance:none;height:18px;border-radius:999px;background:#EAE3FF;border:3px solid #3B1A8A;outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:38px;height:38px;border-radius:50%;background:#7C5CFC;border:3px solid #3B1A8A;cursor:grab;box-shadow:2px 2px 0 #3B1A8A;}
+    input[type=range]::-moz-range-thumb{width:38px;height:38px;border-radius:50%;background:#7C5CFC;border:3px solid #3B1A8A;cursor:grab;}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#F1ECFF;background-image:radial-gradient(#DACFFB 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#3B1A8A;padding:22px 24px 60px;">
+  <div style="max-width:880px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Grade 8 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#3B1A8A;background:#fff;border:3px solid #3B1A8A;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #3B1A8A;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #3B1A8A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #3B1A8A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8E79D6;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #3B1A8A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #3B1A8A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:6px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#7C5CFC;color:#fff;border:2px solid #3B1A8A;border-radius:999px;padding:4px 12px;">8.NR.2 &middot; Sci-Fi Notation</span>
+    </div>
+
+    <div style="background:#fff;border:3px solid #3B1A8A;border-radius:22px;box-shadow:6px 6px 0 #3B1A8A;padding:22px;text-align:center;margin-bottom:20px;">
+      <div style="font-size:15px;font-weight:700;color:#8E79D6;">Write this number in scientific notation</div>
+      <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:50px;line-height:1.05;margin-top:4px;">{{ targetStr }}</div>
+    </div>
+
+    <div style="background:#fff;border:3px solid #3B1A8A;border-radius:22px;box-shadow:6px 6px 0 #3B1A8A;padding:26px 28px;">
+      <div style="text-align:center;font-family:Fredoka,sans-serif;font-weight:700;font-size:46px;margin-bottom:6px;">
+        <span style="color:#7C5CFC;">{{ coef }}</span> &times; 10<sup style="font-size:26px;color:#FF8A3D;">{{ exp }}</sup>
+      </div>
+      <div style="text-align:center;font-weight:800;font-size:20px;color:{{ valCol }};margin-bottom:22px;">= {{ liveStr }}</div>
+
+      <div style="margin-bottom:18px;">
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:16px;margin-bottom:6px;">Coefficient: {{ coef }} <span style="font-weight:600;color:#8E79D6;font-size:13px;">(must be 1 to 9.9)</span></div>
+        <input type="range" min="10" max="99" step="1" value="{{ coefInt }}" onInput="{{ onCoef }}" style="width:100%;" />
+      </div>
+      <div>
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:16px;margin-bottom:6px;">Exponent: {{ exp }}</div>
+        <input type="range" min="-5" max="8" step="1" value="{{ exp }}" onInput="{{ onExp }}" style="width:100%;" />
+      </div>
+    </div>
+
+    <div style="display:flex;gap:14px;justify-content:center;align-items:center;margin-top:22px;min-height:58px;">
+      <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ skip }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#fff;color:#3B1A8A;border:3px solid #3B1A8A;border-radius:14px;padding:13px 22px;box-shadow:4px 4px 0 #3B1A8A;cursor:pointer;">Skip</button>
+        <button onClick="{{ check }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;background:#7C5CFC;color:#fff;border:3px solid #3B1A8A;border-radius:14px;padding:13px 40px;box-shadow:4px 4px 0 #3B1A8A;cursor:pointer;">Launch 🚀</button>
+      </sc-if>
+      <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:16px;animation:bannerin .3s ease both;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:19px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #3B1A8A;border-radius:14px;padding:11px 20px;box-shadow:4px 4px 0 #3B1A8A;">{{ resultMsg }}</div>
+          <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#FFD23F;color:#3B1A8A;border:3px solid #3B1A8A;border-radius:14px;padding:12px 26px;box-shadow:4px 4px 0 #3B1A8A;cursor:pointer;">Next &rarr;</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state={ score:0, streak:0, prob:this.makeProb(), coefInt:30, exp:0, status:"play" };
+  }
+  rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  fmt(coefInt, exp){
+    const A10=coefInt;                 // 10..99 represents 1.0..9.9
+    if(exp>=1){ const val=A10*Math.pow(10,exp-1); return Math.round(val).toLocaleString('en-US'); }
+    const a=coefInt/10; const val=a*Math.pow(10,exp);
+    return val.toFixed(1-exp);
+  }
+  makeProb(){
+    const coefInt=this.rnd(10,99);
+    const exp=this.rnd(-5,8);
+    return { coefInt, exp, targetStr:this.fmt(coefInt,exp) };
+  }
+  onCoef=(e)=>{ if(this.state.status!=="play") return; this.setState({coefInt:parseInt(e.target.value,10)}); };
+  onExp=(e)=>{ if(this.state.status!=="play") return; this.setState({exp:parseInt(e.target.value,10)}); };
+  check=()=>{ if(this.state.status!=="play") return;
+    const ok=this.state.coefInt===this.state.prob.coefInt && this.state.exp===this.state.prob.exp;
+    if(ok) this.setState(s=>({status:"right",score:s.score+20+Math.min(s.streak,5)*2,streak:s.streak+1}));
+    else this.setState({status:"wrong",streak:0});
+  };
+  next=()=>{ this.setState({prob:this.makeProb(),coefInt:30,exp:0,status:"play"}); };
+  skip=()=>{ this.setState({prob:this.makeProb(),coefInt:30,exp:0,status:"play",streak:0}); };
+  renderVals(){
+    const { prob, coefInt, exp, score, streak, status }=this.state;
+    const right=status==="right", wrong=status==="wrong";
+    const liveStr=this.fmt(coefInt,exp);
+    const match=liveStr===prob.targetStr;
+    return {
+      score, streak,
+      targetStr: prob.targetStr,
+      coef:(coefInt/10).toFixed(1), coefInt, exp,
+      liveStr,
+      valCol: right? "#15803D" : (match? "#15803D" : "#8E79D6"),
+      onCoef:this.onCoef, onExp:this.onExp,
+      check:this.check, next:this.next, skip:this.skip,
+      playing:status==="play", showResult:right||wrong,
+      resultMsg: right? "Liftoff! +20" : ("It was "+(prob.coefInt/10).toFixed(1)+" \u00d7 10^"+prob.exp),
+      resultCol: right?"#10463A":"#B0234A", resultBg: right?"#D6F7E2":"#FFE0EA",
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FFFBEA;background-image:radial-gradient(#FBEAB0 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#6B4E00;padding:22px 24px 60px;">
+  <div style="max-width:940px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Grade 8 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#6B4E00;background:#fff;border:3px solid #6B4E00;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #6B4E00;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #6B4E00;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #6B4E00;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#B89A4A;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #6B4E00;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #6B4E00;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">FITS</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ fits }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:8px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#E0B400;color:#fff;border:2px solid #6B4E00;border-radius:999px;padding:4px 12px;">8.FGR.6 &middot; Best Fit</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;background:#fff;border:3px solid #6B4E00;border-radius:22px;box-shadow:6px 6px 0 #6B4E00;padding:22px;">
+      <svg ref="{{ svgRef }}" viewBox="0 0 360 360" width="360" style="display:block;flex:none;max-width:46vw;touch-action:none;">
+        <sc-for list="{{ grid }}" as="l" hint-placeholder-count="42">
+          <line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" stroke="{{ l.col }}" stroke-width="{{ l.w }}"></line>
+        </sc-for>
+        <sc-for list="{{ resid }}" as="r" hint-placeholder-count="8">
+          <line x1="{{ r.x1 }}" y1="{{ r.y1 }}" x2="{{ r.x2 }}" y2="{{ r.y2 }}" stroke="#E0533F" stroke-width="2" stroke-dasharray="3 3" opacity="0.6"></line>
+        </sc-for>
+        <line x1="{{ lineX1 }}" y1="{{ lineY1 }}" x2="{{ lineX2 }}" y2="{{ lineY2 }}" stroke="#E0B400" stroke-width="6" stroke-linecap="round"></line>
+        <sc-for list="{{ points }}" as="p" hint-placeholder-count="8">
+          <circle cx="{{ p.cx }}" cy="{{ p.cy }}" r="7" fill="#7C5CFC" stroke="#3B1A8A" stroke-width="2"></circle>
+        </sc-for>
+        <circle cx="{{ hLx }}" cy="{{ hLy }}" r="13" fill="#fff" stroke="#6B4E00" stroke-width="4" onPointerDown="{{ downL }}" onPointerMove="{{ moveH }}" onPointerUp="{{ upH }}" style="cursor:ns-resize;"></circle>
+        <circle cx="{{ hRx }}" cy="{{ hRy }}" r="13" fill="#fff" stroke="#6B4E00" stroke-width="4" onPointerDown="{{ downR }}" onPointerMove="{{ moveH }}" onPointerUp="{{ upH }}" style="cursor:ns-resize;"></circle>
+      </svg>
+
+      <div>
+        <h2 style="font-family:Fredoka,sans-serif;font-weight:700;font-size:24px;margin:0 0 4px;">Drag the line of best fit</h2>
+        <p style="font-weight:700;color:#B89A4A;margin:0 0 16px;font-size:15px;">Grab the white handles. Get the line as close to all the dots as you can.</p>
+
+        <div style="background:#FFF8E0;border:3px solid #6B4E00;border-radius:14px;padding:16px;text-align:center;margin-bottom:18px;">
+          <div style="font-weight:800;color:#B89A4A;font-size:13px;letter-spacing:1px;">FIT QUALITY</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:30px;color:{{ tierCol }};">{{ tierLabel }}</div>
+          <div style="height:16px;background:#fff;border:2px solid #6B4E00;border-radius:999px;overflow:hidden;margin-top:8px;"><div style="height:100%;width:{{ qualityPct }}%;background:{{ tierCol }};transition:width .15s ease;"></div></div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center;min-height:56px;">
+          <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ lock }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;background:#E0B400;color:#fff;border:3px solid #6B4E00;border-radius:14px;padding:13px 34px;box-shadow:4px 4px 0 #6B4E00;cursor:pointer;">Lock in fit 📊</button>
+          </sc-if>
+          <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:14px;animation:bannerin .35s ease both;">
+              <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:18px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #6B4E00;border-radius:12px;padding:10px 16px;box-shadow:3px 3px 0 #6B4E00;">{{ resultMsg }}</div>
+              <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#FFD23F;color:#6B4E00;border:3px solid #6B4E00;border-radius:12px;padding:10px 22px;box-shadow:3px 3px 0 #6B4E00;cursor:pointer;">Next &rarr;</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.svgRef=React.createRef();
+    this.O=180; this.U=15; this.LIM=11; this.HX=9;
+    this.state={ score:0, fits:0, prob:this.makeProb(), yL:0, yR:0, active:null, status:"play" };
+  }
+  rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  makeProb(){
+    const m=(this.rnd(-3,3)||1)/2 + (Math.random()<0.5?0:0);
+    const slope=(this.rnd(2,9))/ (this.rnd(2,5)); // positive-ish slope
+    const sgn=Math.random()<0.5?-1:1;
+    const realM=sgn*(this.rnd(3,9)/6); // gentle slope
+    const b=this.rnd(-3,3);
+    const pts=[];
+    const xs=[-8,-6,-4,-2,1,3,5,7];
+    for(const x of xs){ let y=realM*x+b + (Math.random()*3-1.5); y=Math.max(-9,Math.min(9,y)); pts.push({x, y:Math.round(y*2)/2}); }
+    return { pts, realM, b };
+  }
+  dataYFromPt(clientY){
+    const el=this.svgRef.current; if(!el) return 0;
+    const r=el.getBoundingClientRect();
+    const sy=360/r.height; const py=(clientY-r.top)*sy;
+    let y=(this.O-py)/this.U; y=Math.round(y*2)/2;
+    return Math.max(-10,Math.min(10,y));
+  }
+  downL=(e)=>{ if(this.state.status!=="play") return; e.stopPropagation(); try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){} this.setState({active:"L"}); };
+  downR=(e)=>{ if(this.state.status!=="play") return; e.stopPropagation(); try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){} this.setState({active:"R"}); };
+  moveH=(e)=>{ if(!this.state.active) return; const y=this.dataYFromPt(e.clientY); this.setState(s=> s.active==="L"?{yL:y}:{yR:y}); };
+  upH=()=>{ if(this.state.active) this.setState({active:null}); };
+  metrics(){
+    const { yL, yR }=this.state;
+    const m=(yR-yL)/(2*this.HX); const b=(yR+yL)/2;
+    let sum=0; const res=this.state.prob.pts.map(p=>{ const pred=m*p.x+b; sum+=Math.abs(pred-p.y); return {p,pred}; });
+    return { m, b, mean:sum/this.state.prob.pts.length, res };
+  }
+  lock=()=>{ if(this.state.status!=="play") return;
+    const { mean }=this.metrics();
+    let pts=0; if(mean<0.7) pts=25; else if(mean<1.4) pts=12;
+    this.setState(s=>({status:"done", score:s.score+pts, fits:s.fits+1, lockMean:mean, lockPts:pts}));
+  };
+  next=()=>{ this.setState({prob:this.makeProb(),yL:0,yR:0,status:"play"}); };
+  toScreen(x,y){ return [ this.O+x*this.U, this.O-y*this.U ]; }
+  renderVals(){
+    const { prob, yL, yR, score, fits, status, lockMean, lockPts }=this.state;
+    const grid=[];
+    for(let i=-10;i<=10;i++){
+      const major=i===0; const [px]=this.toScreen(i,0);
+      grid.push({ x1:px,y1:15,x2:px,y2:345, col:major?"#6B4E00":"#F2E6BE", w:major?2:1 });
+      const [,py]=this.toScreen(0,i);
+      grid.push({ x1:15,y1:py,x2:345,y2:py, col:major?"#6B4E00":"#F2E6BE", w:major?2:1 });
+    }
+    const { m, b, mean, res }=this.metrics();
+    const [lx1,ly1]=this.toScreen(-this.HX, m*-this.HX+b);
+    const [lx2,ly2]=this.toScreen(this.HX, m*this.HX+b);
+    const points=prob.pts.map(p=>{ const [cx,cy]=this.toScreen(p.x,p.y); return {cx,cy}; });
+    const resid=res.map(r=>{ const [x1,y1]=this.toScreen(r.p.x,r.p.y); const [,y2]=this.toScreen(r.p.x,r.pred); return {x1,y1,x2:x1,y2}; });
+    const [hLx,hLy]=this.toScreen(-this.HX,yL);
+    const [hRx,hRy]=this.toScreen(this.HX,yR);
+    const tier = mean<0.7? "Great fit! ⭐⭐⭐" : (mean<1.4? "Good fit ⭐⭐" : "Keep adjusting");
+    const tierCol = mean<0.7? "#15803D" : (mean<1.4? "#E0B400" : "#C28055");
+    const qualityPct = Math.max(4, Math.min(100, 100 - mean*38));
+    const done=status==="done";
+    return {
+      score, fits,
+      grid, points, resid,
+      lineX1:lx1, lineY1:ly1, lineX2:lx2, lineY2:ly2,
+      hLx,hLy,hRx,hRy,
+      tierLabel:tier, tierCol, qualityPct,
+      svgRef:this.svgRef, downL:this.downL, downR:this.downR, moveH:this.moveH, upH:this.upH,
+      lock:this.lock, next:this.next,
+      playing:status==="play", showResult:done,
+      resultMsg: done? (lockPts>0? ("Nice fit! +"+lockPts) : "Too loose \u2014 try the next one") : "",
+      resultCol: lockPts>0? "#10463A":"#B0234A", resultBg: lockPts>0? "#D6F7E2":"#FFE9E0",
+    };
+  }
+}
+</script>
+</body>
+</html>

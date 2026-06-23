@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes hop{0%{transform:translate(-50%,0)}50%{transform:translate(-50%,-34px)}100%{transform:translate(-50%,0)}}
+    @keyframes shake{0%,100%{transform:translate(-50%,0)}20%{transform:translate(calc(-50% - 6px),0)}60%{transform:translate(calc(-50% + 6px),0)}}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#E6F3FF;background-image:radial-gradient(#C2E2FF 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#0A3D6B;padding:22px 24px 60px;">
+  <div style="max-width:980px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <a href="Grade 8 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#0A3D6B;background:#fff;border:3px solid #0A3D6B;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #0A3D6B;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #0A3D6B;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #0A3D6B;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#5B86AE;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #0A3D6B;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #0A3D6B;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:6px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#2BA6FF;color:#fff;border:2px solid #0A3D6B;border-radius:999px;padding:4px 12px;">8.NR.1 &middot; Root Ranger</span>
+    </div>
+
+    <div style="background:#fff;border:3px solid #0A3D6B;border-radius:22px;box-shadow:6px 6px 0 #0A3D6B;padding:22px 26px;margin-bottom:24px;text-align:center;">
+      <div style="font-size:14px;font-weight:800;letter-spacing:1px;color:#5B86AE;text-transform:uppercase;margin-bottom:4px;">{{ kind }}</div>
+      <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:40px;line-height:1.1;">{{ prompt }}</div>
+    </div>
+
+    <sc-if value="{{ isLocate }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="background:#fff;border:3px solid #0A3D6B;border-radius:22px;box-shadow:6px 6px 0 #0A3D6B;padding:50px 30px 30px;position:relative;">
+          <div ref="{{ trackRef }}" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" tabindex="0" onKeyDown="{{ onKey }}" style="position:relative;height:72px;margin:0 14px;cursor:pointer;outline:none;touch-action:none;">
+            <div style="position:absolute;top:36px;left:0;right:0;height:6px;background:#0A3D6B;border-radius:3px;"></div>
+            <sc-for list="{{ ticks }}" as="t" hint-placeholder-count="11">
+              <div style="position:absolute;top:{{ t.top }};left:{{ t.leftPct }}%;transform:translateX(-50%);">
+                <div style="width:{{ t.w }};height:{{ t.h }};background:#0A3D6B;margin:0 auto;border-radius:2px;"></div>
+                <div style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;color:#5B86AE;text-align:center;margin-top:5px;{{ t.labelDisp }}">{{ t.label }}</div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ showGhost }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;top:8px;left:{{ ghostLeft }}%;transform:translateX(-50%);pointer-events:none;font-size:20px;opacity:.45;">⬇️</div>
+            </sc-if>
+            <div style="position:absolute;top:6px;left:{{ markerLeft }}%;{{ markerAnim }};pointer-events:none;">
+              <div style="font-size:30px;line-height:1;text-align:center;filter:drop-shadow(2px 3px 0 rgba(10,61,107,.4));">🧭</div>
+              <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:14px;color:#fff;background:#2BA6FF;border:2px solid #0A3D6B;border-radius:9px;padding:1px 8px;text-align:center;margin-top:-2px;white-space:nowrap;box-shadow:2px 2px 0 #0A3D6B;">{{ posLabel }}</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:14px;justify-content:center;align-items:center;margin-top:24px;min-height:58px;">
+          <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ skip }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#fff;color:#0A3D6B;border:3px solid #0A3D6B;border-radius:14px;padding:13px 22px;box-shadow:4px 4px 0 #0A3D6B;cursor:pointer;">Skip</button>
+            <button onClick="{{ check }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;background:#2BA6FF;color:#fff;border:3px solid #0A3D6B;border-radius:14px;padding:13px 40px;box-shadow:4px 4px 0 #0A3D6B;cursor:pointer;">Pin it 🧭</button>
+          </sc-if>
+          <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:16px;animation:bannerin .3s ease both;">
+              <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:19px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #0A3D6B;border-radius:14px;padding:11px 20px;box-shadow:4px 4px 0 #0A3D6B;">{{ resultMsg }}</div>
+              <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#FFD23F;color:#0A3D6B;border:3px solid #0A3D6B;border-radius:14px;padding:12px 26px;box-shadow:4px 4px 0 #0A3D6B;cursor:pointer;">Next &rarr;</button>
+            </div>
+          </sc-if>
+        </div>
+        <p style="text-align:center;font-size:14px;font-weight:700;color:#5B86AE;margin-top:16px;">Drag the compass to the nearest tenth &middot; or use &larr; &rarr; keys</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSort }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;">
+        <div style="display:flex;gap:18px;justify-content:center;margin-top:6px;">
+          <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ pickRational }}" style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;background:#18C29C;color:#fff;border:3px solid #0A3D6B;border-radius:16px;padding:20px 40px;box-shadow:5px 5px 0 #0A3D6B;cursor:pointer;">Rational</button>
+            <button onClick="{{ pickIrrational }}" style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;background:#FF5E8A;color:#fff;border:3px solid #0A3D6B;border-radius:16px;padding:20px 40px;box-shadow:5px 5px 0 #0A3D6B;cursor:pointer;">Irrational</button>
+          </sc-if>
+        </div>
+        <div style="margin-top:22px;min-height:58px;">
+          <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+            <div style="display:inline-flex;align-items:center;gap:16px;animation:bannerin .3s ease both;">
+              <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:19px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #0A3D6B;border-radius:14px;padding:11px 20px;box-shadow:4px 4px 0 #0A3D6B;">{{ resultMsg }}</div>
+              <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#FFD23F;color:#0A3D6B;border:3px solid #0A3D6B;border-radius:14px;padding:12px 26px;box-shadow:4px 4px 0 #0A3D6B;cursor:pointer;">Next &rarr;</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.trackRef=React.createRef();
+    this.state={ score:0, streak:0, prob:this.makeProb(), pos:0, status:"play", dragging:false };
+  }
+  rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  makeProb(){
+    if(Math.random()<0.6){
+      const nonsq=[2,3,5,6,7,8,10,11,12,13,14,15,17,18,19,20,21,22,23,24];
+      const n=nonsq[this.rnd(0,nonsq.length-1)];
+      const v=Math.sqrt(n); const k=Math.floor(v);
+      return { mode:"locate", n, lo:k, hi:k+1, answer:Math.round(v*10)/10,
+        kind:"Locate the square root", prompt:"\u221A"+n };
+    }
+    const items=[
+      {t:"\u221A49", r:true}, {t:"\u221A2", r:false}, {t:"\u221A16", r:true}, {t:"\u221A10", r:false},
+      {t:"0.75", r:true}, {t:"\u03c0", r:false}, {t:"\u221A36", r:true}, {t:"\u221A7", r:false},
+      {t:"0.333\u2026 (repeating)", r:true}, {t:"\u221A5", r:false}, {t:"\u00b9\u2081\u2044\u2084", r:true}, {t:"\u221A81", r:true},
+      {t:"0.1010010001\u2026 (no pattern)", r:false}, {t:"\u221A3", r:false},
+    ];
+    const it=items[this.rnd(0,items.length-1)];
+    return { mode:"sort", kind:"Rational or irrational?", prompt:it.t, rational:it.r };
+  }
+  valFromX(clientX){
+    const el=this.trackRef.current; if(!el) return this.state.pos;
+    const r=el.getBoundingClientRect();
+    let frac=(clientX-r.left)/r.width; frac=Math.max(0,Math.min(1,frac));
+    const { lo, hi }=this.state.prob;
+    let v=lo+frac*(hi-lo); v=Math.round(v*10)/10;
+    return Math.max(lo,Math.min(hi,v));
+  }
+  onDown=(e)=>{ if(this.state.status!=="play"||this.state.prob.mode!=="locate") return; try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){} this.setState({dragging:true,pos:this.valFromX(e.clientX)}); };
+  onMove=(e)=>{ if(!this.state.dragging) return; this.setState({pos:this.valFromX(e.clientX)}); };
+  onUp=()=>{ if(this.state.dragging) this.setState({dragging:false}); };
+  onKey=(e)=>{ if(this.state.status!=="play") return;
+    if(e.key==="ArrowLeft"){ e.preventDefault(); this.setState(s=>({pos:Math.max(s.prob.lo,Math.round((s.pos-0.1)*10)/10)})); }
+    else if(e.key==="ArrowRight"){ e.preventDefault(); this.setState(s=>({pos:Math.min(s.prob.hi,Math.round((s.pos+0.1)*10)/10)})); }
+  };
+  check=()=>{ if(this.state.status!=="play") return;
+    const ok=Math.abs(this.state.pos-this.state.prob.answer)<0.001;
+    this.award(ok);
+  };
+  pickRational=()=>{ if(this.state.status!=="play") return; this.award(this.state.prob.rational===true); };
+  pickIrrational=()=>{ if(this.state.status!=="play") return; this.award(this.state.prob.rational===false); };
+  award(ok){ if(ok) this.setState(s=>({status:"right",score:s.score+15+Math.min(s.streak,5)*2,streak:s.streak+1})); else this.setState({status:"wrong",streak:0}); }
+  next=()=>{ const p=this.makeProb(); this.setState({prob:p,pos:p.lo||0,status:"play"}); };
+  skip=()=>{ const p=this.makeProb(); this.setState({prob:p,pos:p.lo||0,status:"play",streak:0}); };
+  renderVals(){
+    const { prob, pos, score, streak, status }=this.state;
+    const right=status==="right", wrong=status==="wrong";
+    let ticks=[];
+    if(prob.mode==="locate"){
+      for(let i=0;i<=10;i++){
+        const v=Math.round((prob.lo+i*0.1)*10)/10;
+        const major=i===0||i===10||i===5;
+        ticks.push({ leftPct:i*10, top:major?"28px":"32px", w:major?"4px":"2px", h:major?"26px":"16px",
+          label: (i===0||i===10)? String(v) : (i===5? v.toFixed(1):""), labelDisp:(i===0||i===5||i===10)?"":"visibility:hidden;" });
+      }
+    }
+    const span=(prob.hi||1)-(prob.lo||0);
+    const pct=(v)=> span? (v-prob.lo)/span*100 : 0;
+    const dispVal=right&&prob.mode==="locate"?prob.answer:pos;
+    let markerAnim="transition:left .1s ease;transform:translateX(-50%);";
+    if(right) markerAnim="transition:left .25s cubic-bezier(.3,1.6,.5,1);transform:translateX(-50%);animation:hop .45s ease;";
+    if(wrong) markerAnim="transform:translateX(-50%);animation:shake .4s ease;";
+    let resultMsg;
+    if(prob.mode==="locate") resultMsg = right? ("Spot on! \u221A"+prob.n+" \u2248 "+prob.answer) : ("\u221A"+prob.n+" \u2248 "+prob.answer);
+    else resultMsg = right? "Correct!" : ("That's "+(prob.rational?"rational":"irrational"));
+    return {
+      score, streak,
+      kind:prob.kind, prompt:prob.prompt,
+      isLocate: prob.mode==="locate", isSort: prob.mode==="sort",
+      ticks, markerLeft:pct(dispVal), posLabel:(dispVal).toFixed(1), markerAnim,
+      showGhost: wrong && prob.mode==="locate", ghostLeft:pct(prob.answer),
+      trackRef:this.trackRef, onDown:this.onDown, onMove:this.onMove, onUp:this.onUp, onKey:this.onKey,
+      check:this.check, pickRational:this.pickRational, pickIrrational:this.pickIrrational,
+      next:this.next, skip:this.skip,
+      playing:status==="play", showResult:right||wrong,
+      resultMsg, resultCol: right?"#0A3D6B":"#B0234A", resultBg: right?"#DCEFFF":"#FFE0EA",
+    };
+  }
+}
+</script>
+</body>
+</html>

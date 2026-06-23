@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FBEFFE;background-image:radial-gradient(#F0D2FB 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#5A1A6B;padding:22px 24px 60px;">
+  <div style="max-width:920px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Grade 6 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#5A1A6B;background:#fff;border:3px solid #5A1A6B;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #5A1A6B;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #5A1A6B;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #5A1A6B;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#A06BB8;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #5A1A6B;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #5A1A6B;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:6px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#C44AE0;color:#fff;border:2px solid #5A1A6B;border-radius:999px;padding:4px 12px;">6.PAR.8 &middot; Grid Quest</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;background:#fff;border:3px solid #5A1A6B;border-radius:22px;box-shadow:6px 6px 0 #5A1A6B;padding:22px;">
+      <svg ref="{{ svgRef }}" viewBox="0 0 360 360" width="360" style="display:block;flex:none;touch-action:none;cursor:crosshair;max-width:46vw;" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}">
+        <sc-for list="{{ grid }}" as="l" hint-placeholder-count="42">
+          <line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" stroke="{{ l.col }}" stroke-width="{{ l.w }}"></line>
+        </sc-for>
+        <sc-for list="{{ axisNums }}" as="a" hint-placeholder-count="10">
+          <text x="{{ a.x }}" y="{{ a.y }}" font-family="Fredoka" font-size="10" font-weight="600" fill="#A06BB8" text-anchor="middle">{{ a.t }}</text>
+        </sc-for>
+        <sc-if value="{{ showSource }}" hint-placeholder-val="{{ false }}">
+          <circle cx="{{ srcX }}" cy="{{ srcY }}" r="7" fill="#fff" stroke="#A06BB8" stroke-width="3"></circle>
+          <text x="{{ srcLabelX }}" y="{{ srcLabelY }}" font-family="Fredoka" font-size="12" font-weight="700" fill="#A06BB8">{{ srcLabel }}</text>
+        </sc-if>
+        <sc-if value="{{ showGhost }}" hint-placeholder-val="{{ false }}">
+          <circle cx="{{ ansX }}" cy="{{ ansY }}" r="9" fill="none" stroke="#C44AE0" stroke-width="3" stroke-dasharray="4 3"></circle>
+        </sc-if>
+        <circle cx="{{ markX }}" cy="{{ markY }}" r="10" fill="{{ markColor }}" stroke="#5A1A6B" stroke-width="3"></circle>
+      </svg>
+
+      <div>
+        <div style="font-size:14px;font-weight:800;letter-spacing:1px;color:#A06BB8;text-transform:uppercase;">{{ kind }}</div>
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:27px;line-height:1.2;margin:4px 0 16px;">{{ prompt }}</div>
+
+        <div style="background:#FBEFFE;border:3px solid #5A1A6B;border-radius:14px;padding:14px;text-align:center;margin-bottom:18px;">
+          <div style="font-weight:800;color:#A06BB8;font-size:13px;letter-spacing:1px;">YOUR POINT</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:34px;color:#C44AE0;">({{ cx }}, {{ cy }})</div>
+        </div>
+
+        <div style="display:flex;gap:12px;justify-content:center;align-items:center;min-height:56px;">
+          <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ skip }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:16px;background:#fff;color:#5A1A6B;border:3px solid #5A1A6B;border-radius:12px;padding:11px 18px;box-shadow:3px 3px 0 #5A1A6B;cursor:pointer;">Skip</button>
+            <button onClick="{{ check }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;background:#C44AE0;color:#fff;border:3px solid #5A1A6B;border-radius:12px;padding:11px 30px;box-shadow:3px 3px 0 #5A1A6B;cursor:pointer;">Plant flag 🚩</button>
+          </sc-if>
+          <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:12px;animation:bannerin .3s ease both;">
+              <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:18px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #5A1A6B;border-radius:12px;padding:10px 16px;box-shadow:3px 3px 0 #5A1A6B;">{{ resultMsg }}</div>
+              <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#FFD23F;color:#5A1A6B;border:3px solid #5A1A6B;border-radius:12px;padding:10px 20px;box-shadow:3px 3px 0 #5A1A6B;cursor:pointer;">Next &rarr;</button>
+            </div>
+          </sc-if>
+        </div>
+        <p style="text-align:center;font-size:13px;font-weight:700;color:#A06BB8;margin-top:14px;">Click or drag on the grid to move your point</p>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.svgRef=React.createRef();
+    this.O=180; this.U=16; this.LIM=10;
+    this.state={ score:0, streak:0, prob:this.makeProb(), cx:0, cy:0, status:"play", dragging:false };
+  }
+  rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  nz(){ let v=this.rnd(-9,9); if(v===0) v=this.rnd(1,9); return v; }
+  makeProb(){
+    const t=this.rnd(0,2);
+    if(t===0){ const x=this.nz(), y=this.nz(); return { kind:"Plot the point", prompt:"Plot ("+x+", "+y+").", ax:x, ay:y, src:null }; }
+    if(t===1){ const x=this.nz(), y=this.nz(); return { kind:"Reflect across the x-axis", prompt:"Reflect ("+x+", "+y+") over the x-axis. Plot the image.", ax:x, ay:-y, src:{x,y} }; }
+    const x=this.nz(), y=this.nz(); return { kind:"Reflect across the y-axis", prompt:"Reflect ("+x+", "+y+") over the y-axis. Plot the image.", ax:-x, ay:y, src:{x,y} };
+  }
+  toScreen(x,y){ return [ this.O+x*this.U, this.O-y*this.U ]; }
+  fromPt(clientX, clientY){
+    const el=this.svgRef.current; if(!el) return [this.state.cx,this.state.cy];
+    const r=el.getBoundingClientRect();
+    const sx=360/r.width, sy=360/r.height;
+    const px=(clientX-r.left)*sx, py=(clientY-r.top)*sy;
+    let x=Math.round((px-this.O)/this.U), y=Math.round((this.O-py)/this.U);
+    x=Math.max(-this.LIM,Math.min(this.LIM,x)); y=Math.max(-this.LIM,Math.min(this.LIM,y));
+    return [x,y];
+  }
+  onDown=(e)=>{ if(this.state.status!=="play") return; try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){} const [x,y]=this.fromPt(e.clientX,e.clientY); this.setState({dragging:true,cx:x,cy:y}); };
+  onMove=(e)=>{ if(!this.state.dragging) return; const [x,y]=this.fromPt(e.clientX,e.clientY); this.setState({cx:x,cy:y}); };
+  onUp=()=>{ if(this.state.dragging) this.setState({dragging:false}); };
+  check=()=>{ if(this.state.status!=="play") return;
+    const ok=this.state.cx===this.state.prob.ax && this.state.cy===this.state.prob.ay;
+    if(ok) this.setState(s=>({status:"right",score:s.score+15+Math.min(s.streak,5)*2,streak:s.streak+1}));
+    else this.setState({status:"wrong",streak:0});
+  };
+  next=()=>{ this.setState({prob:this.makeProb(),cx:0,cy:0,status:"play"}); };
+  skip=()=>{ this.setState({prob:this.makeProb(),cx:0,cy:0,status:"play",streak:0}); };
+  renderVals(){
+    const { prob, cx, cy, score, streak, status }=this.state;
+    const grid=[];
+    for(let i=-this.LIM;i<=this.LIM;i++){
+      const major=i===0;
+      const [px]=this.toScreen(i,0);
+      grid.push({ x1:px, y1:20, x2:px, y2:340, col:major?"#5A1A6B":"#EEDAF6", w:major?2.5:1 });
+      const [,py]=this.toScreen(0,i);
+      grid.push({ x1:20, y1:py, x2:340, y2:py, col:major?"#5A1A6B":"#EEDAF6", w:major?2.5:1 });
+    }
+    const axisNums=[];
+    for(let i=-8;i<=8;i+=2){ if(i===0) continue;
+      const [px]=this.toScreen(i,0); axisNums.push({x:px, y:this.O+13, t:String(i)});
+      const [,py]=this.toScreen(0,i); axisNums.push({x:this.O-11, y:py+4, t:String(i)});
+    }
+    const right=status==="right", wrong=status==="wrong";
+    const mv = right? [prob.ax,prob.ay] : [cx,cy];
+    const [markX,markY]=this.toScreen(mv[0],mv[1]);
+    const [ansX,ansY]=this.toScreen(prob.ax,prob.ay);
+    let srcX=0,srcY=0,srcLabelX=0,srcLabelY=0,srcLabel="";
+    if(prob.src){ [srcX,srcY]=this.toScreen(prob.src.x,prob.src.y); srcLabelX=srcX+9; srcLabelY=srcY-7; srcLabel="("+prob.src.x+", "+prob.src.y+")"; }
+    return {
+      score, streak,
+      kind:prob.kind, prompt:prob.prompt,
+      grid, axisNums,
+      cx:mv[0], cy:mv[1],
+      markX, markY, markColor: right?"#15803D":"#C44AE0",
+      showSource: !!prob.src, srcX, srcY, srcLabelX, srcLabelY, srcLabel,
+      showGhost: wrong, ansX, ansY,
+      svgRef:this.svgRef, onDown:this.onDown, onMove:this.onMove, onUp:this.onUp,
+      check:this.check, next:this.next, skip:this.skip,
+      playing:status==="play", showResult:right||wrong,
+      resultMsg: right? "Bullseye! +15" : ("It was ("+prob.ax+", "+prob.ay+")"),
+      resultCol: right?"#0C4A30":"#B0234A",
+      resultBg: right?"#D6F7E2":"#F6DEFB",
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FFF1E6;background-image:radial-gradient(#FFD9BC 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#8A3B0A;padding:22px 24px 60px;">
+  <div style="max-width:920px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Grade 8 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#8A3B0A;background:#fff;border:3px solid #8A3B0A;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #8A3B0A;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #8A3B0A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #8A3B0A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#C28055;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #8A3B0A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #8A3B0A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:8px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#FF8A3D;color:#fff;border:2px solid #8A3B0A;border-radius:999px;padding:4px 12px;">8.FGR.5 &middot; Function or Not</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;background:#fff;border:3px solid #8A3B0A;border-radius:22px;box-shadow:6px 6px 0 #8A3B0A;padding:22px;">
+      <svg ref="{{ svgRef }}" viewBox="0 0 360 360" width="360" style="display:block;flex:none;max-width:46vw;touch-action:none;cursor:ew-resize;" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}">
+        <sc-for list="{{ grid }}" as="l" hint-placeholder-count="42">
+          <line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" stroke="{{ l.col }}" stroke-width="{{ l.w }}"></line>
+        </sc-for>
+        <line x1="{{ scanPx }}" y1="20" x2="{{ scanPx }}" y2="340" stroke="{{ scanCol }}" stroke-width="4" stroke-dasharray="6 5"></line>
+        <sc-for list="{{ points }}" as="p" hint-placeholder-count="6">
+          <circle cx="{{ p.cx }}" cy="{{ p.cy }}" r="9" fill="{{ p.fill }}" stroke="#8A3B0A" stroke-width="3"></circle>
+        </sc-for>
+      </svg>
+
+      <div>
+        <h2 style="font-family:Fredoka,sans-serif;font-weight:700;font-size:24px;margin:0 0 4px;">Is this relation a function?</h2>
+        <p style="font-weight:700;color:#C28055;margin:0 0 6px;font-size:15px;">Drag the dashed scanner left and right. If it ever touches <b>two dots at once</b>, an input has two outputs &mdash; not a function.</p>
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:18px;color:{{ touchCol }};margin-bottom:18px;">Scanner is touching {{ touching }} dot(s)</div>
+
+        <div style="display:flex;gap:12px;">
+          <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ sayFn }}" style="flex:1;font-family:Fredoka,sans-serif;font-weight:700;font-size:20px;background:#18C29C;color:#fff;border:3px solid #8A3B0A;border-radius:14px;padding:16px;box-shadow:4px 4px 0 #8A3B0A;cursor:pointer;">Function ✓</button>
+            <button onClick="{{ sayNot }}" style="flex:1;font-family:Fredoka,sans-serif;font-weight:700;font-size:20px;background:#FF5E8A;color:#fff;border:3px solid #8A3B0A;border-radius:14px;padding:16px;box-shadow:4px 4px 0 #8A3B0A;cursor:pointer;">Not a function ✗</button>
+          </sc-if>
+        </div>
+
+        <div style="margin-top:18px;min-height:52px;">
+          <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:14px;animation:bannerin .35s ease both;">
+              <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:18px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #8A3B0A;border-radius:12px;padding:10px 16px;box-shadow:3px 3px 0 #8A3B0A;">{{ resultMsg }}</div>
+              <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#FFD23F;color:#8A3B0A;border:3px solid #8A3B0A;border-radius:12px;padding:10px 22px;box-shadow:3px 3px 0 #8A3B0A;cursor:pointer;">Next &rarr;</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.svgRef=React.createRef();
+    this.O=180; this.U=16; this.LIM=10;
+    this.state={ score:0, streak:0, prob:this.makeProb(), scanX:-6, status:"play", dragging:false };
+  }
+  rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  makeProb(){
+    const isFn=Math.random()<0.5;
+    const xsPool=[-8,-6,-4,-2,0,2,4,6,8];
+    const shuffled=[...xsPool].sort(()=>Math.random()-0.5);
+    const n=this.rnd(5,6);
+    const pts=[];
+    if(isFn){
+      const xs=shuffled.slice(0,n);
+      for(const x of xs) pts.push({x, y:this.rnd(-8,8)});
+    } else {
+      const xs=shuffled.slice(0,n-1);
+      for(const x of xs) pts.push({x, y:this.rnd(-8,8)});
+      // duplicate one x with a different y
+      const dupX=xs[this.rnd(0,xs.length-1)];
+      let y2=this.rnd(-8,8); const ex=pts.find(p=>p.x===dupX).y; while(y2===ex) y2=this.rnd(-8,8);
+      pts.push({x:dupX, y:y2});
+    }
+    return { pts, isFn };
+  }
+  dataXFromPt(clientX){
+    const el=this.svgRef.current; if(!el) return this.state.scanX;
+    const r=el.getBoundingClientRect();
+    const sx=360/r.width; const px=(clientX-r.left)*sx;
+    let x=(px-this.O)/this.U;
+    return Math.max(-this.LIM,Math.min(this.LIM,x));
+  }
+  onDown=(e)=>{ if(this.state.status!=="play") return; try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){} this.setState({dragging:true,scanX:this.dataXFromPt(e.clientX)}); };
+  onMove=(e)=>{ if(!this.state.dragging) return; this.setState({scanX:this.dataXFromPt(e.clientX)}); };
+  onUp=()=>{ if(this.state.dragging) this.setState({dragging:false}); };
+  sayFn=()=>{ this.answer(true); };
+  sayNot=()=>{ this.answer(false); };
+  answer(claimFn){ if(this.state.status!=="play") return;
+    const ok=claimFn===this.state.prob.isFn;
+    if(ok) this.setState(s=>({status:"right",score:s.score+15+Math.min(s.streak,5)*2,streak:s.streak+1}));
+    else this.setState({status:"wrong",streak:0});
+  }
+  next=()=>{ this.setState({prob:this.makeProb(),scanX:-6,status:"play"}); };
+  toScreen(x,y){ return [ this.O+x*this.U, this.O-y*this.U ]; }
+  renderVals(){
+    const { prob, scanX, score, streak, status }=this.state;
+    const grid=[];
+    for(let i=-this.LIM;i<=this.LIM;i++){
+      const major=i===0; const [px]=this.toScreen(i,0);
+      grid.push({ x1:px,y1:20,x2:px,y2:340, col:major?"#8A3B0A":"#F2D9C5", w:major?2.5:1 });
+      const [,py]=this.toScreen(0,i);
+      grid.push({ x1:20,y1:py,x2:340,y2:py, col:major?"#8A3B0A":"#F2D9C5", w:major?2.5:1 });
+    }
+    const right=status==="right", wrong=status==="wrong";
+    let touching=0;
+    const points=prob.pts.map(p=>{ const [cx,cy]=this.toScreen(p.x,p.y); const near=Math.abs(p.x-scanX)<0.45; if(near) touching++; 
+      let fill="#FF8A3D"; if(near) fill="#FF5E8A"; if(right||wrong) fill="#9A6A40";
+      return { cx,cy, fill }; });
+    return {
+      score, streak,
+      grid, points,
+      scanPx: this.O+scanX*this.U,
+      scanCol: touching>=2? "#E0533F":"#8A3B0A",
+      touching, touchCol: touching>=2? "#E0533F":"#C28055",
+      svgRef:this.svgRef, onDown:this.onDown, onMove:this.onMove, onUp:this.onUp,
+      sayFn:this.sayFn, sayNot:this.sayNot, next:this.next,
+      playing:status==="play", showResult:right||wrong,
+      resultMsg: right? "Correct! +15" : (prob.isFn? "It IS a function \u2014 every x was unique" : "Not a function \u2014 one x had two y's"),
+      resultCol: right?"#10463A":"#B0234A", resultBg: right?"#D6F7E2":"#FFE0D6",
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes hop{0%{transform:translate(-50%,0)}50%{transform:translate(-50%,-40px)}100%{transform:translate(-50%,0)}}
+    @keyframes shake{0%,100%{transform:translate(-50%,0)}20%{transform:translate(calc(-50% - 7px),0)}60%{transform:translate(calc(-50% + 7px),0)}}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#E6F3FF;background-image:radial-gradient(#C2E2FF 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#0A3D6B;padding:22px 24px 60px;">
+  <div style="max-width:980px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <a href="Grade 6 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#0A3D6B;background:#fff;border:3px solid #0A3D6B;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #0A3D6B;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #0A3D6B;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #0A3D6B;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#5B86AE;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #0A3D6B;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #0A3D6B;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:6px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#2BA6FF;color:#fff;border:2px solid #0A3D6B;border-radius:999px;padding:4px 12px;">6.NR.3 &middot; Integer Island</span>
+    </div>
+
+    <div style="background:#fff;border:3px solid #0A3D6B;border-radius:22px;box-shadow:6px 6px 0 #0A3D6B;padding:22px 26px;margin-bottom:26px;text-align:center;">
+      <div style="font-size:14px;font-weight:800;letter-spacing:1px;color:#5B86AE;text-transform:uppercase;margin-bottom:4px;">{{ kind }}</div>
+      <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:34px;line-height:1.15;">{{ prompt }}</div>
+    </div>
+
+    <div style="background:#fff;border:3px solid #0A3D6B;border-radius:22px;box-shadow:6px 6px 0 #0A3D6B;padding:54px 30px 30px;position:relative;">
+      <div ref="{{ trackRef }}" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" tabindex="0" onKeyDown="{{ onKey }}" style="position:relative;height:78px;margin:0 14px;cursor:pointer;outline:none;touch-action:none;">
+        <div style="position:absolute;top:38px;left:0;right:0;height:6px;background:#0A3D6B;border-radius:3px;"></div>
+        <sc-if value="{{ showDist }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:35px;left:{{ distLeft }}%;width:{{ distW }}%;height:12px;background:rgba(43,166,255,.35);border-radius:6px;"></div>
+        </sc-if>
+        <sc-for list="{{ ticks }}" as="t" hint-placeholder-count="21">
+          <div style="position:absolute;top:{{ t.top }};left:{{ t.leftPct }}%;transform:translateX(-50%);">
+            <div style="width:{{ t.w }};height:{{ t.h }};background:{{ t.col }};margin:0 auto;border-radius:2px;"></div>
+            <div style="font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;color:{{ t.labelCol }};text-align:center;margin-top:6px;{{ t.labelDisp }}">{{ t.label }}</div>
+          </div>
+        </sc-for>
+        <sc-if value="{{ showGhost }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:4px;left:{{ ghostLeft }}%;transform:translateX(-50%);pointer-events:none;">
+            <div style="font-size:26px;opacity:.4;">📍</div>
+            <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:12px;color:#FF5E8A;text-align:center;background:#FFE0EA;border:2px solid #FF5E8A;border-radius:8px;padding:1px 6px;margin-top:0;white-space:nowrap;">{{ answer }}</div>
+          </div>
+        </sc-if>
+        <div style="position:absolute;top:0;left:{{ markerLeft }}%;{{ markerAnim }};will-change:transform;pointer-events:none;">
+          <div style="font-size:34px;line-height:1;text-align:center;filter:drop-shadow(2px 3px 0 rgba(10,61,107,.4));">📍</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:14px;color:#fff;background:#2BA6FF;border:2px solid #0A3D6B;border-radius:9px;padding:1px 8px;text-align:center;margin-top:-2px;white-space:nowrap;box-shadow:2px 2px 0 #0A3D6B;">{{ pos }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:14px;justify-content:center;align-items:center;margin-top:24px;min-height:58px;">
+      <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ skip }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#fff;color:#0A3D6B;border:3px solid #0A3D6B;border-radius:14px;padding:13px 22px;box-shadow:4px 4px 0 #0A3D6B;cursor:pointer;">Skip</button>
+        <button onClick="{{ check }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;background:#2BA6FF;color:#fff;border:3px solid #0A3D6B;border-radius:14px;padding:13px 40px;box-shadow:4px 4px 0 #0A3D6B;cursor:pointer;">Drop pin 📍</button>
+      </sc-if>
+      <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:16px;animation:bannerin .3s ease both;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #0A3D6B;border-radius:14px;padding:11px 22px;box-shadow:4px 4px 0 #0A3D6B;">{{ resultMsg }}</div>
+          <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#FFD23F;color:#0A3D6B;border:3px solid #0A3D6B;border-radius:14px;padding:12px 28px;box-shadow:4px 4px 0 #0A3D6B;cursor:pointer;">Next &rarr;</button>
+        </div>
+      </sc-if>
+    </div>
+    <p style="text-align:center;font-size:14px;font-weight:700;color:#5B86AE;margin-top:18px;">Click the line or drag the pin &middot; or use &larr; &rarr; arrow keys</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.trackRef = React.createRef();
+    this.MIN=-10; this.MAX=10;
+    this.state = { pos:0, score:0, streak:0, status:"play", prob:this.makeProb(), dragging:false };
+  }
+  makeProb(){
+    const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+    const t=rnd(0,3);
+    if(t===0){ const v=rnd(-9,9); return { kind:"Plot the integer", prompt:"Plot "+v+" on the number line.", answer:v, dist:false }; }
+    if(t===1){ let v=rnd(-9,9); if(v===0) v=4; return { kind:"Opposites", prompt:"Plot the opposite of "+v+".", answer:-v, dist:false }; }
+    if(t===2){ let v=rnd(-9,9); if(v===0) v=-5; return { kind:"Absolute value", prompt:"Plot the value of |"+v+"|.", answer:Math.abs(v), dist:true }; }
+    let a=rnd(-9,9), b=rnd(-9,9); while(b===a) b=rnd(-9,9);
+    const greater=Math.max(a,b);
+    return { kind:"Compare", prompt:"Which is greater, "+a+" or "+b+"? Plot it.", answer:greater, dist:false };
+  }
+  valFromX(clientX){
+    const el=this.trackRef.current; if(!el) return this.state.pos;
+    const r=el.getBoundingClientRect();
+    let frac=(clientX-r.left)/r.width; frac=Math.max(0,Math.min(1,frac));
+    let v=Math.round(this.MIN+frac*(this.MAX-this.MIN));
+    return Math.max(this.MIN,Math.min(this.MAX,v));
+  }
+  onDown=(e)=>{ if(this.state.status!=="play") return; try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){} this.setState({dragging:true,pos:this.valFromX(e.clientX)}); };
+  onMove=(e)=>{ if(!this.state.dragging) return; this.setState({pos:this.valFromX(e.clientX)}); };
+  onUp=()=>{ if(this.state.dragging) this.setState({dragging:false}); };
+  onKey=(e)=>{ if(this.state.status!=="play") return;
+    if(e.key==="ArrowLeft"){ e.preventDefault(); this.setState(s=>({pos:Math.max(this.MIN,s.pos-1)})); }
+    else if(e.key==="ArrowRight"){ e.preventDefault(); this.setState(s=>({pos:Math.min(this.MAX,s.pos+1)})); }
+    else if(e.key==="Enter"){ e.preventDefault(); this.check(); }
+  };
+  check=()=>{ if(this.state.status!=="play") return;
+    const ok=this.state.pos===this.state.prob.answer;
+    if(ok) this.setState(s=>({status:"right",score:s.score+10+Math.min(s.streak,5)*2,streak:s.streak+1}));
+    else this.setState({status:"wrong",streak:0});
+  };
+  next=()=>{ this.setState({status:"play",prob:this.makeProb(),pos:0}); };
+  skip=()=>{ this.setState({status:"play",prob:this.makeProb(),pos:0,streak:0}); };
+  renderVals(){
+    const { pos, score, streak, status, prob }=this.state;
+    const span=this.MAX-this.MIN;
+    const pct=(v)=>(v-this.MIN)/span*100;
+    const ticks=[];
+    for(let v=this.MIN; v<=this.MAX; v++){
+      const showLabel=(v%2===0)||v===0;
+      ticks.push({ leftPct:pct(v), top:"26px", w:"4px", h:"30px",
+        col:v===0?"#FF5E8A":"#0A3D6B", label:String(v),
+        labelCol:v===0?"#FF5E8A":"#5B86AE", labelDisp:showLabel?"":"visibility:hidden;" });
+    }
+    const right=status==="right", wrong=status==="wrong";
+    let markerAnim="transition:left .12s ease;transform:translateX(-50%);";
+    if(right) markerAnim="transition:left .3s cubic-bezier(.3,1.6,.5,1);transform:translateX(-50%);animation:hop .5s ease;";
+    if(wrong) markerAnim="transform:translateX(-50%);animation:shake .4s ease;";
+    const dispVal=right?prob.answer:pos;
+    const distLeftV=Math.min(0,prob.answer), distRightV=Math.max(0,prob.answer);
+    return {
+      score, streak,
+      kind:prob.kind, prompt:prob.prompt,
+      ticks, markerLeft:pct(dispVal), pos:dispVal, markerAnim,
+      trackRef:this.trackRef,
+      onDown:this.onDown, onMove:this.onMove, onUp:this.onUp, onKey:this.onKey,
+      check:this.check, next:this.next, skip:this.skip,
+      playing:status==="play", showResult:right||wrong, showGhost:wrong,
+      ghostLeft:pct(prob.answer), answer:prob.answer,
+      showDist: prob.dist && right,
+      distLeft:pct(distLeftV), distW:(distRightV-distLeftV)/span*100,
+      resultMsg: right? (streak>=3?"🔥 "+streak+" in a row!":"Yes! +"+(10+Math.min(streak-1,5)*2)) : "It was "+prob.answer,
+      resultCol: right?"#0A3D6B":"#B0234A",
+      resultBg: right?"#DCEFFF":"#FFE0EA",
+    };
+  }
+}
+</script>
+</body>
+</html>

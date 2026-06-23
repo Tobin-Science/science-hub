@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    @keyframes shakex{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FFEFF4;background-image:radial-gradient(#FFD2E0 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#7A1538;padding:22px 24px 60px;">
+  <div style="max-width:860px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Grade 6 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#7A1538;background:#fff;border:3px solid #7A1538;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #7A1538;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #7A1538;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #7A1538;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#B86A85;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #7A1538;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #7A1538;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:8px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#FF5E8A;color:#fff;border:2px solid #7A1538;border-radius:999px;padding:4px 12px;">6.NR.1 &middot; Fraction Fill</span>
+    </div>
+
+    <div style="background:#fff;border:3px solid #7A1538;border-radius:22px;box-shadow:6px 6px 0 #7A1538;padding:22px;margin-bottom:22px;text-align:center;">
+      <div style="font-size:15px;font-weight:700;color:#B86A85;margin-bottom:8px;">Shade the answer bar to show this sum</div>
+      <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:46px;line-height:1;">{{ expr }} <span style="color:#FF5E8A;">= ?</span></div>
+
+      <div style="display:flex;gap:22px;justify-content:center;margin-top:18px;">
+        <div style="text-align:center;">
+          <div style="display:flex;gap:3px;justify-content:center;">
+            <sc-for list="{{ barA }}" as="c" hint-placeholder-count="4">
+              <div style="width:26px;height:34px;border:2px solid #7A1538;border-radius:4px;background:{{ c.bg }};"></div>
+            </sc-for>
+          </div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:18px;margin-top:5px;">{{ fracA }}</div>
+        </div>
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:30px;align-self:center;">{{ opSign }}</div>
+        <div style="text-align:center;">
+          <div style="display:flex;gap:3px;justify-content:center;">
+            <sc-for list="{{ barB }}" as="c" hint-placeholder-count="4">
+              <div style="width:26px;height:34px;border:2px solid #7A1538;border-radius:4px;background:{{ c.bg }};"></div>
+            </sc-for>
+          </div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:18px;margin-top:5px;">{{ fracB }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:3px solid #7A1538;border-radius:22px;box-shadow:6px 6px 0 #7A1538;padding:26px 24px;{{ wrongAnim }}">
+      <div style="font-family:Fredoka,sans-serif;font-weight:600;font-size:16px;color:#B86A85;text-align:center;margin-bottom:12px;">Your answer &mdash; click cells to fill (each cell = 1/{{ denom }})</div>
+      <div style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap;">
+        <sc-for list="{{ cells }}" as="c" hint-placeholder-count="8">
+          <div onClick="{{ c.onClick }}" style="width:54px;height:64px;border:3px solid #7A1538;border-radius:8px;background:{{ c.bg }};cursor:pointer;transition:background .12s ease;box-shadow:2px 2px 0 rgba(122,21,56,.2);"></div>
+        </sc-for>
+      </div>
+      <div style="text-align:center;font-family:Fredoka,sans-serif;font-weight:700;font-size:24px;margin-top:16px;">Filled: {{ filled }}/{{ denom }}</div>
+    </div>
+
+    <div style="display:flex;gap:14px;justify-content:center;align-items:center;margin-top:24px;min-height:58px;">
+      <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ skip }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#fff;color:#7A1538;border:3px solid #7A1538;border-radius:14px;padding:13px 22px;box-shadow:4px 4px 0 #7A1538;cursor:pointer;">Skip</button>
+        <button onClick="{{ check }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;background:#FF5E8A;color:#fff;border:3px solid #7A1538;border-radius:14px;padding:13px 40px;box-shadow:4px 4px 0 #7A1538;cursor:pointer;">Check ✓</button>
+      </sc-if>
+      <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:16px;animation:bannerin .3s ease both;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:20px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #7A1538;border-radius:14px;padding:11px 22px;box-shadow:4px 4px 0 #7A1538;">{{ resultMsg }}</div>
+          <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#FFD23F;color:#7A1538;border:3px solid #7A1538;border-radius:14px;padding:12px 28px;box-shadow:4px 4px 0 #7A1538;cursor:pointer;">Next &rarr;</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { score:0, streak:0, prob:this.makeProb(), filled:0, status:"play" };
+  }
+  gcd(a,b){ return b? this.gcd(b,a%b):a; }
+  lcm(a,b){ return a*b/this.gcd(a,b); }
+  makeProb(){
+    const dens=[2,3,4,5,6,8];
+    const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+    for(let i=0;i<200;i++){
+      const d1=dens[rnd(0,dens.length-1)], d2=dens[rnd(0,dens.length-1)];
+      const n1=rnd(1,d1-1), n2=rnd(1,d2-1);
+      const op=Math.random()<0.5?"+":"\u2212";
+      const L=this.lcm(d1,d2);
+      const a=n1*(L/d1), b=n2*(L/d2);
+      const sum = op==="+"? a+b : a-b;
+      if(sum<=0 || sum>L) continue;       // keep result in (0,1]
+      if(L>12) continue;                   // keep bar reasonable
+      return { d1,n1,d2,n2,op, denom:L, answer:sum,
+        fracA:n1+"/"+d1, fracB:n2+"/"+d2, partsA:a, partsB:b };
+    }
+    return { d1:4,n1:1,d2:4,n2:2,op:"+",denom:4,answer:3,fracA:"1/4",fracB:"2/4",partsA:1,partsB:2 };
+  }
+  toggle=(i)=>()=>{ if(this.state.status!=="play") return; this.setState(s=>{ const f=i+1; return { filled: s.filled===f? i : f }; }); };
+  check=()=>{ if(this.state.status!=="play") return;
+    const ok=this.state.filled===this.state.prob.answer;
+    if(ok) this.setState(s=>({status:"right",score:s.score+15+Math.min(s.streak,5)*2,streak:s.streak+1}));
+    else this.setState({status:"wrong",streak:0});
+  };
+  next=()=>{ this.setState({prob:this.makeProb(),filled:0,status:"play"}); };
+  skip=()=>{ this.setState({prob:this.makeProb(),filled:0,status:"play",streak:0}); };
+  reduced(){ const p=this.state.prob; const g=this.gcd(p.answer,p.denom); return (p.answer/g)+"/"+(p.denom/g); }
+  renderVals(){
+    const { prob, filled, score, streak, status }=this.state;
+    const right=status==="right", wrong=status==="wrong";
+    const cells=[];
+    const showAns = right? prob.answer : filled;
+    for(let i=0;i<prob.denom;i++){
+      cells.push({ onClick:this.toggle(i), bg: i<showAns ? (right?"#18C29C":"#FF8AB0") : "#FFEFF4" });
+    }
+    const mk=(parts,den,col)=>{ const arr=[]; for(let i=0;i<den;i++) arr.push({bg:i<parts?col:"#fff"}); return arr; };
+    return {
+      score, streak,
+      expr: prob.fracA+" "+prob.op+" "+prob.fracB,
+      opSign: prob.op,
+      fracA:prob.fracA, fracB:prob.fracB,
+      barA: mk(prob.n1, prob.d1, "#FFB020"),
+      barB: mk(prob.n2, prob.d2, "#7C5CFC"),
+      denom:prob.denom, cells, filled: showAns,
+      check:this.check, next:this.next, skip:this.skip,
+      playing:status==="play", showResult:right||wrong,
+      wrongAnim: wrong? "animation:shakex .4s ease;":"",
+      resultMsg: right? ("Correct! = "+this.reduced()) : ("Answer: "+prob.answer+"/"+prob.denom),
+      resultCol: right?"#10463A":"#B0234A",
+      resultBg: right?"#D6F7E2":"#FFE0EA",
+    };
+  }
+}
+</script>
+</body>
+</html>

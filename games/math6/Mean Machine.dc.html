@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#E9FBF5;background-image:radial-gradient(#C4F0E2 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#10463A;padding:22px 24px 60px;">
+  <div style="max-width:980px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+      <a href="Grade 6 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#10463A;background:#fff;border:3px solid #10463A;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #10463A;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #10463A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #10463A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#5C8C7E;">SOLVED</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ solved }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #10463A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #10463A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:6px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#18C29C;color:#fff;border:2px solid #10463A;border-radius:999px;padding:4px 12px;">6.NR.2 &middot; Mean Machine</span>
+    </div>
+    <div style="text-align:center;font-family:Fredoka,sans-serif;font-weight:700;font-size:30px;margin:6px 0 2px;">Balance the seesaw on a mean of <span style="color:#18C29C;">{{ target }}</span></div>
+    <p style="text-align:center;font-weight:700;color:#5C8C7E;margin:0 0 6px;font-size:15px;">Drag the 4 dots. The orange arrow is the current mean (balance point). Land it on the flag.</p>
+
+    <div style="background:#fff;border:3px solid #10463A;border-radius:22px;box-shadow:6px 6px 0 #10463A;padding:30px 30px 26px;position:relative;">
+      <div style="text-align:center;font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;margin-bottom:8px;">mean = ({{ sumLabel }}) &divide; 4 = <span style="color:{{ meanCol }};">{{ meanLabel }}</span></div>
+
+      <div ref="{{ trackRef }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" style="position:relative;height:150px;margin:0 16px;touch-action:none;">
+        <div style="position:absolute;top:96px;left:0;right:0;height:8px;background:#10463A;border-radius:4px;"></div>
+        <sc-for list="{{ ticks }}" as="t" hint-placeholder-count="11">
+          <div style="position:absolute;top:88px;left:{{ t.leftPct }}%;transform:translateX(-50%);">
+            <div style="width:3px;height:22px;background:#10463A;margin:0 auto;"></div>
+            <div style="font-family:Fredoka,sans-serif;font-weight:600;font-size:14px;color:#5C8C7E;text-align:center;margin-top:4px;">{{ t.label }}</div>
+          </div>
+        </sc-for>
+
+        <div style="position:absolute;top:14px;left:{{ targetLeft }}%;transform:translateX(-50%);text-align:center;pointer-events:none;">
+          <div style="font-size:24px;">🚩</div>
+          <div style="width:3px;height:64px;background:#18C29C;margin:0 auto;opacity:.5;"></div>
+        </div>
+
+        <sc-for list="{{ dots }}" as="d" hint-placeholder-count="4">
+          <div onPointerDown="{{ d.onDown }}" style="position:absolute;top:{{ d.top }}px;left:{{ d.leftPct }}%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#18C29C;border:3px solid #10463A;box-shadow:2px 2px 0 #10463A;cursor:grab;display:flex;align-items:center;justify-content:center;font-family:Fredoka,sans-serif;font-weight:700;color:#fff;font-size:16px;touch-action:none;z-index:3;">{{ d.val }}</div>
+        </sc-for>
+
+        <div style="position:absolute;top:104px;left:{{ meanLeft }}%;transform:translateX(-50%);transition:left .15s ease;pointer-events:none;z-index:2;">
+          <div style="width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-bottom:20px solid {{ meanCol }};margin:0 auto;"></div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:13px;color:#fff;background:{{ meanCol }};border:2px solid #10463A;border-radius:8px;padding:1px 7px;margin-top:2px;white-space:nowrap;">mean</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:14px;justify-content:center;align-items:center;margin-top:24px;min-height:56px;">
+      <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ skip }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#fff;color:#10463A;border:3px solid #10463A;border-radius:14px;padding:12px 22px;box-shadow:4px 4px 0 #10463A;cursor:pointer;">New puzzle</button>
+        <div style="font-weight:800;font-size:17px;color:#5C8C7E;">{{ hint }}</div>
+      </sc-if>
+      <sc-if value="{{ won }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:16px;animation:bannerin .35s ease both;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;color:#10463A;background:#C4F0E2;border:3px solid #10463A;border-radius:14px;padding:11px 22px;box-shadow:4px 4px 0 #15803D;">Balanced! mean = {{ target }} ✓</div>
+          <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#18C29C;color:#fff;border:3px solid #10463A;border-radius:14px;padding:12px 28px;box-shadow:4px 4px 0 #10463A;cursor:pointer;">Next &rarr;</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.trackRef=React.createRef();
+    this.MIN=0; this.MAX=10;
+    this.state={ score:0, solved:0, ...this.newPuzzle(), active:null, status:"play" };
+  }
+  newPuzzle(){
+    const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+    const target=rnd(3,7);
+    let dots;
+    do { dots=[rnd(0,10),rnd(0,10),rnd(0,10),rnd(0,10)]; }
+    while(dots.reduce((a,b)=>a+b,0)===target*4);
+    return { target, dots };
+  }
+  valFromX(clientX){
+    const el=this.trackRef.current; if(!el) return 0;
+    const r=el.getBoundingClientRect();
+    let frac=(clientX-r.left)/r.width; frac=Math.max(0,Math.min(1,frac));
+    return Math.max(this.MIN,Math.min(this.MAX,Math.round(this.MIN+frac*(this.MAX-this.MIN))));
+  }
+  onDown=(i)=>(e)=>{ if(this.state.status!=="play") return; try{ this.trackRef.current.setPointerCapture(e.pointerId); }catch(_){} this.setState({active:i}); };
+  onMove=(e)=>{ if(this.state.active===null) return; const v=this.valFromX(e.clientX); this.setState(s=>{ const dots=[...s.dots]; dots[s.active]=v; return {dots}; }); };
+  onUp=()=>{
+    if(this.state.active===null) return;
+    const sum=this.state.dots.reduce((a,b)=>a+b,0);
+    if(sum===this.state.target*4) this.setState(s=>({active:null,status:"won",score:s.score+25,solved:s.solved+1}));
+    else this.setState({active:null});
+  };
+  next=()=>{ this.setState({...this.newPuzzle(),status:"play",active:null}); };
+  skip=()=>{ this.setState({...this.newPuzzle(),status:"play",active:null}); };
+  renderVals(){
+    const { dots, target, score, solved, status }=this.state;
+    const span=this.MAX-this.MIN;
+    const pct=(v)=>(v-this.MIN)/span*100;
+    const sum=dots.reduce((a,b)=>a+b,0);
+    const mean=sum/4;
+    const ticks=[]; for(let v=0;v<=10;v++) ticks.push({leftPct:pct(v),label:String(v)});
+    // stack offset for dots sharing a value
+    const seen={};
+    const dotEls=dots.map((v,i)=>{ const c=seen[v]||0; seen[v]=c+1; return { val:v, leftPct:pct(v), top:78-c*30, onDown:this.onDown(i) }; });
+    const won=status==="won";
+    const diff=mean-target;
+    let hint;
+    if(Math.abs(diff)<1e-9) hint="Release to lock it in!";
+    else if(diff<0) hint="Mean is too low \u2014 slide dots right";
+    else hint="Mean is too high \u2014 slide dots left";
+    return {
+      score, solved, target,
+      ticks, dots:dotEls,
+      sumLabel: dots.join(" + "),
+      meanLabel: Number.isInteger(mean)? String(mean) : mean.toFixed(2),
+      meanCol: Math.abs(diff)<1e-9? "#15803D":"#FF8A3D",
+      meanLeft: pct(mean), targetLeft: pct(target),
+      trackRef:this.trackRef, onMove:this.onMove, onUp:this.onUp,
+      playing: status==="play", won, hint,
+      next:this.next, skip:this.skip,
+    };
+  }
+}
+</script>
+</body>
+</html>

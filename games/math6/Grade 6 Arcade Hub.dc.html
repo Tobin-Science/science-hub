@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes pop{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#EAF2FF;background-image:radial-gradient(#C9DCFB 2px,transparent 2px);background-size:34px 34px;font-family:Nunito,sans-serif;color:#1C2A5A;padding:40px 24px 72px;">
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:8px;">
+      <div style="display:inline-flex;align-items:center;gap:10px;background:#1C2A5A;color:#FFD23F;border:3px solid #1C2A5A;border-radius:999px;padding:8px 20px;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;letter-spacing:.5px;box-shadow:5px 5px 0 #94A6CF;">
+        <span style="width:12px;height:12px;background:#2BA6FF;border-radius:50%;display:inline-block;"></span>
+        GRADE 6 MATH &middot; GEORGIA STANDARDS
+      </div>
+    </div>
+
+    <h1 style="font-family:Fredoka,sans-serif;font-weight:700;font-size:64px;text-align:center;margin:18px 0 6px;line-height:1;letter-spacing:-1px;">
+      Math <span style="color:#2BA6FF;">Arcade</span>
+    </h1>
+    <p style="text-align:center;font-size:19px;font-weight:600;color:#5A6B9A;margin:0 auto 40px;max-width:560px;">
+      Eight hands-on mini-games &mdash; one for every big idea in 6th-grade math. Fill it, mix it, stack it, plot it.
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:22px;">
+      <sc-for list="{{ games }}" as="g" hint-placeholder-count="8">
+        <a href="{{ g.href }}" style="text-decoration:none;color:inherit;display:block;animation:pop .4s ease both;">
+          <div style="background:#fff;border:3px solid #1C2A5A;border-radius:22px;padding:20px 18px 22px;box-shadow:6px 6px 0 #1C2A5A;height:100%;transition:transform .12s ease,box-shadow .12s ease;cursor:pointer;" style-hover="transform:translate(-3px,-3px);box-shadow:9px 9px 0 #1C2A5A;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+              <div style="width:56px;height:56px;border-radius:16px;border:3px solid #1C2A5A;display:flex;align-items:center;justify-content:center;font-size:27px;background:{{ g.tint }};">{{ g.icon }}</div>
+              <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:12px;background:{{ g.color }};color:#fff;border:2px solid #1C2A5A;border-radius:999px;padding:3px 9px;">{{ g.code }}</span>
+            </div>
+            <h3 style="font-family:Fredoka,sans-serif;font-weight:600;font-size:21px;margin:0 0 5px;line-height:1.05;">{{ g.title }}</h3>
+            <p style="font-size:14px;font-weight:600;color:#5A6B9A;margin:0 0 12px;line-height:1.35;">{{ g.blurb }}</p>
+            <div style="display:inline-flex;align-items:center;gap:6px;font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;color:{{ g.color }};">
+              <span style="background:{{ g.tint }};border:2px solid #1C2A5A;border-radius:999px;padding:2px 9px;color:#1C2A5A;">{{ g.tag }}</span>
+              Play &rarr;
+            </div>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+
+    <p style="text-align:center;font-size:14px;font-weight:600;color:#8295C2;margin-top:40px;">
+      Best on a Chromebook or laptop &middot; Use your mouse &amp; keyboard
+    </p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      games: [
+        { code:"6.NR.1", title:"Fraction Fill", icon:"🍕", tag:"Fill", color:"#FF5E8A", tint:"#FFE0EA",
+          blurb:"Shade the bar to add and subtract fractions with unlike denominators.", href:"Fraction Fill.dc.html" },
+        { code:"6.NR.2", title:"Mean Machine", icon:"⚖️", tag:"Balance", color:"#18C29C", tint:"#D6F7EE",
+          blurb:"Slide the data dots until the seesaw balances on the target mean.", href:"Mean Machine.dc.html" },
+        { code:"6.NR.3", title:"Integer Island", icon:"🌡️", tag:"Number line", color:"#2BA6FF", tint:"#DCEFFF",
+          blurb:"Plot integers, opposites and absolute values on the number line.", href:"Integer Island.dc.html" },
+        { code:"6.NR.4", title:"Ratio Mixer", icon:"🥤", tag:"Mix", color:"#FF8A3D", tint:"#FFE6D2",
+          blurb:"Pour the right amount so the mix keeps the same ratio. Don't ruin the recipe!", href:"Ratio Mixer.dc.html" },
+        { code:"6.GSR.5", title:"Cube Stacker", icon:"📦", tag:"Stack", color:"#7C5CFC", tint:"#EAE3FF",
+          blurb:"Stack unit-cube layers until the prism holds the target volume.", href:"Cube Stacker.dc.html" },
+        { code:"6.PAR.6", title:"Factor Frenzy", icon:"⚡", tag:"Timed", color:"#E0B400", tint:"#FFF1C2",
+          blurb:"Beat the clock: tap the GCF, LCM, or value of the expression.", href:"Factor Frenzy.dc.html" },
+        { code:"6.PAR.7", title:"Solve-It Scale", icon:"🟰", tag:"Solve", color:"#15A36B", tint:"#D6F7E2",
+          blurb:"Solve one-step equations and shade inequality solutions on a line.", href:"Solve-It Scale.dc.html" },
+        { code:"6.PAR.8", title:"Grid Quest", icon:"🗺️", tag:"Plot", color:"#C44AE0", tint:"#F6DEFB",
+          blurb:"Plot ordered pairs and reflections across all four quadrants.", href:"Grid Quest.dc.html" },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

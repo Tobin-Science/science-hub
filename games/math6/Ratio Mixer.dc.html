@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    input[type=range]{-webkit-appearance:none;appearance:none;height:18px;border-radius:999px;background:#FFE6D2;border:3px solid #8A3B0A;outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:38px;height:38px;border-radius:50%;background:#FF8A3D;border:3px solid #8A3B0A;cursor:grab;box-shadow:2px 2px 0 #8A3B0A;}
+    input[type=range]::-moz-range-thumb{width:38px;height:38px;border-radius:50%;background:#FF8A3D;border:3px solid #8A3B0A;cursor:grab;}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FFF1E6;background-image:radial-gradient(#FFD9BC 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#8A3B0A;padding:22px 24px 60px;">
+  <div style="max-width:880px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Grade 6 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#8A3B0A;background:#fff;border:3px solid #8A3B0A;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #8A3B0A;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #8A3B0A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #8A3B0A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#C28055;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #8A3B0A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #8A3B0A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:8px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#FF8A3D;color:#fff;border:2px solid #8A3B0A;border-radius:999px;padding:4px 12px;">6.NR.4 &middot; Ratio Mixer</span>
+    </div>
+
+    <div style="background:#fff;border:3px solid #8A3B0A;border-radius:22px;box-shadow:6px 6px 0 #8A3B0A;padding:20px 24px;text-align:center;margin-bottom:20px;">
+      <div style="font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;">{{ prompt }}</div>
+      <div style="margin-top:8px;font-weight:700;font-size:16px;color:#C28055;">Target ratio &nbsp;<span style="font-family:Fredoka,sans-serif;color:#8A3B0A;font-size:22px;">{{ targetA }} {{ iconA }} : {{ targetB }} {{ iconB }}</span></div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;background:#fff;border:3px solid #8A3B0A;border-radius:22px;box-shadow:6px 6px 0 #8A3B0A;padding:24px;">
+      <div style="text-align:center;">
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:20px;margin-bottom:10px;">{{ iconA }} {{ amountA }}</div>
+        <div style="height:230px;border:3px solid #8A3B0A;border-radius:14px;background:#FFF6EE;display:flex;flex-direction:column-reverse;align-items:center;justify-content:flex-start;padding:8px;gap:4px;overflow:hidden;">
+          <sc-for list="{{ stackA }}" as="x" hint-placeholder-count="6">
+            <div style="font-size:24px;line-height:1;">{{ x.icon }}</div>
+          </sc-for>
+        </div>
+        <div style="margin-top:8px;font-weight:800;color:#C28055;">locked</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:20px;margin-bottom:10px;">{{ iconB }} {{ amountB }}</div>
+        <div style="height:230px;border:3px solid #8A3B0A;border-radius:14px;background:#EAF6FF;display:flex;flex-direction:column-reverse;align-items:center;justify-content:flex-start;padding:8px;gap:4px;overflow:hidden;">
+          <sc-for list="{{ stackB }}" as="x" hint-placeholder-count="6">
+            <div style="font-size:24px;line-height:1;">{{ x.icon }}</div>
+          </sc-for>
+        </div>
+        <input type="range" min="0" max="{{ maxB }}" step="1" value="{{ amountB }}" onInput="{{ onSlide }}" style="width:100%;margin-top:14px;" />
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:20px;">
+      <div style="display:inline-block;font-family:Fredoka,sans-serif;font-weight:700;font-size:24px;background:{{ meterBg }};border:3px solid #8A3B0A;border-radius:14px;padding:10px 24px;box-shadow:4px 4px 0 #8A3B0A;">
+        Current mix: {{ amountA }} : {{ amountB }} &nbsp;<span style="color:#C28055;font-size:18px;">simplifies to</span>&nbsp; {{ simpleRatio }}
+      </div>
+    </div>
+
+    <div style="display:flex;gap:14px;justify-content:center;align-items:center;margin-top:22px;min-height:58px;">
+      <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ skip }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#fff;color:#8A3B0A;border:3px solid #8A3B0A;border-radius:14px;padding:13px 22px;box-shadow:4px 4px 0 #8A3B0A;cursor:pointer;">Skip</button>
+        <button onClick="{{ check }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;background:#FF8A3D;color:#fff;border:3px solid #8A3B0A;border-radius:14px;padding:13px 36px;box-shadow:4px 4px 0 #8A3B0A;cursor:pointer;">Serve it! 🥤</button>
+      </sc-if>
+      <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:16px;animation:bannerin .3s ease both;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:20px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #8A3B0A;border-radius:14px;padding:11px 22px;box-shadow:4px 4px 0 #8A3B0A;">{{ resultMsg }}</div>
+          <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#FFD23F;color:#8A3B0A;border:3px solid #8A3B0A;border-radius:14px;padding:12px 28px;box-shadow:4px 4px 0 #8A3B0A;cursor:pointer;">Next &rarr;</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { score:0, streak:0, prob:this.makeProb(), amountB:0, status:"play" };
+  }
+  gcd(a,b){ return b? this.gcd(b,a%b):a; }
+  makeProb(){
+    const recipes=[
+      {name:"Lemonade", a:"🍋", b:"💧", an:"lemons", bn:"cups of water"},
+      {name:"Trail Mix", a:"🥜", b:"🍫", an:"scoops of nuts", bn:"scoops of chocolate"},
+      {name:"Paint", a:"🔵", b:"🟡", an:"parts blue", bn:"parts yellow"},
+    ];
+    const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+    const r=recipes[rnd(0,recipes.length-1)];
+    let ta=rnd(1,4), tb=rnd(1,4); while(ta===tb && Math.random()<0.6) tb=rnd(1,4);
+    const g=this.gcd(ta,tb); ta/=g; tb/=g;
+    const k=rnd(2,4);                  // scale factor for the fixed side
+    const amountA=ta*k;                // fixed lemons
+    const answerB=tb*k;                // correct water
+    return { r, ta, tb, amountA, answerB, maxB: Math.max(answerB+4, tb*5) };
+  }
+  onSlide=(e)=>{ if(this.state.status!=="play") return; this.setState({amountB:parseInt(e.target.value,10)}); };
+  check=()=>{ if(this.state.status!=="play") return;
+    const ok=this.state.amountB===this.state.prob.answerB;
+    if(ok) this.setState(s=>({status:"right",score:s.score+20+Math.min(s.streak,5)*2,streak:s.streak+1}));
+    else this.setState({status:"wrong",streak:0});
+  };
+  next=()=>{ this.setState({prob:this.makeProb(),amountB:0,status:"play"}); };
+  skip=()=>{ this.setState({prob:this.makeProb(),amountB:0,status:"play",streak:0}); };
+  renderVals(){
+    const { prob, amountB, score, streak, status }=this.state;
+    const { amountA, ta, tb, r, answerB }=prob;
+    const g=this.gcd(amountA, amountB||1);
+    const simpleRatio = amountB===0? (amountA+" : 0") : ((amountA/this.gcd(amountA,amountB))+" : "+(amountB/this.gcd(amountA,amountB)));
+    const right=status==="right", wrong=status==="wrong";
+    const stk=(n,icon)=>{ const a=[]; for(let i=0;i<Math.min(n,8);i++) a.push({icon}); return a; };
+    const matched = amountB!==0 && (amountA/this.gcd(amountA,amountB))===ta && (amountB/this.gcd(amountA,amountB))===tb;
+    return {
+      score, streak,
+      prompt: "Make "+r.name+": the pitcher has "+amountA+" "+r.an+". Add "+r.bn+" to keep the ratio.",
+      targetA:ta, targetB:tb, iconA:r.a, iconB:r.b,
+      amountA, amountB, maxB:prob.maxB,
+      stackA: stk(amountA, r.a), stackB: stk(amountB, r.b),
+      simpleRatio,
+      meterBg: right? "#D6F7E2" : (matched && status==="play" ? "#FFF7C2" : "#fff"),
+      onSlide:this.onSlide, check:this.check, next:this.next, skip:this.skip,
+      playing:status==="play", showResult:right||wrong,
+      resultMsg: right? "Perfect mix! 🥤 +20" : ("Off recipe \u2014 you needed "+answerB),
+      resultCol: right?"#10463A":"#B0234A",
+      resultBg: right?"#D6F7E2":"#FFE0D6",
+    };
+  }
+}
+</script>
+</body>
+</html>

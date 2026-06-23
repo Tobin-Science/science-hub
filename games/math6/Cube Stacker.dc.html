@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    input[type=range]{-webkit-appearance:none;appearance:none;height:18px;border-radius:999px;background:#EAE3FF;border:3px solid #3B1A8A;outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:38px;height:38px;border-radius:50%;background:#7C5CFC;border:3px solid #3B1A8A;cursor:grab;box-shadow:2px 2px 0 #3B1A8A;}
+    input[type=range]::-moz-range-thumb{width:38px;height:38px;border-radius:50%;background:#7C5CFC;border:3px solid #3B1A8A;cursor:grab;}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#F1ECFF;background-image:radial-gradient(#DACFFB 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#3B1A8A;padding:22px 24px 60px;">
+  <div style="max-width:900px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Grade 6 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#3B1A8A;background:#fff;border:3px solid #3B1A8A;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #3B1A8A;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #3B1A8A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #3B1A8A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8E79D6;">BUILT</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ built }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #3B1A8A;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #3B1A8A;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:6px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#7C5CFC;color:#fff;border:2px solid #3B1A8A;border-radius:999px;padding:4px 12px;">6.GSR.5 &middot; Cube Stacker</span>
+    </div>
+    <div style="text-align:center;font-family:Fredoka,sans-serif;font-weight:700;font-size:30px;margin:6px 0 2px;">Build a prism that holds <span style="color:#7C5CFC;">{{ target }}</span> unit cubes</div>
+    <p style="text-align:center;font-weight:700;color:#8E79D6;margin:0 0 6px;font-size:15px;">The base is {{ L }} &times; {{ W }}. Stack layers until the volume is right.</p>
+
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:center;background:#fff;border:3px solid #3B1A8A;border-radius:22px;box-shadow:6px 6px 0 #3B1A8A;padding:24px;">
+      <svg viewBox="0 0 360 340" width="100%" style="display:block;">
+        <polygon points="{{ leftPts }}" fill="#5B3BD6" stroke="#3B1A8A" stroke-width="2"></polygon>
+        <polygon points="{{ rightPts }}" fill="#7C5CFC" stroke="#3B1A8A" stroke-width="2"></polygon>
+        <polygon points="{{ topPts }}" fill="#B9A7FB" stroke="#3B1A8A" stroke-width="2"></polygon>
+        <sc-for list="{{ gridLines }}" as="g" hint-placeholder-count="20">
+          <line x1="{{ g.x1 }}" y1="{{ g.y1 }}" x2="{{ g.x2 }}" y2="{{ g.y2 }}" stroke="rgba(59,26,138,.4)" stroke-width="1.5"></line>
+        </sc-for>
+      </svg>
+
+      <div>
+        <div style="background:#F4F0FF;border:3px solid #3B1A8A;border-radius:14px;padding:16px;text-align:center;margin-bottom:18px;">
+          <div style="font-weight:800;color:#8E79D6;font-size:13px;letter-spacing:1px;">VOLUME SO FAR</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;margin-top:4px;">{{ L }} &times; {{ W }} &times; {{ h }}</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:40px;color:{{ countCol }};line-height:1;">{{ count }}</div>
+          <div style="font-weight:700;color:#8E79D6;font-size:13px;">unit cubes</div>
+        </div>
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;">Height: {{ h }} layers</div>
+        <input type="range" min="0" max="6" step="1" value="{{ h }}" onInput="{{ onSlide }}" style="width:100%;" />
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:24px;min-height:56px;">
+      <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+        <div style="font-weight:800;font-size:17px;color:#8E79D6;">{{ hint }}</div>
+      </sc-if>
+      <sc-if value="{{ won }}" hint-placeholder-val="{{ false }}">
+        <div style="display:inline-flex;align-items:center;gap:16px;animation:bannerin .35s ease both;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;color:#3B1A8A;background:#D6F7E2;border:3px solid #3B1A8A;border-radius:14px;padding:11px 22px;box-shadow:4px 4px 0 #15803D;">Volume = {{ target }} ✓</div>
+          <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#7C5CFC;color:#fff;border:3px solid #3B1A8A;border-radius:14px;padding:12px 28px;box-shadow:4px 4px 0 #3B1A8A;cursor:pointer;">Next &rarr;</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state={ score:0, built:0, prob:this.makeProb(), h:0, locked:false };
+  }
+  makeProb(){
+    const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+    const L=rnd(2,4), W=rnd(2,4), H=rnd(2,5);
+    return { L, W, H, target:L*W*H };
+  }
+  onSlide=(e)=>{ if(this.state.locked) return; this.setState({h:parseInt(e.target.value,10)}); };
+  next=()=>{ this.setState({prob:this.makeProb(),h:0,locked:false}); };
+  P(x,y,z){ return [ (180 + x*22 - y*22).toFixed(1), (210 + x*12 + y*12 - z*22).toFixed(1) ]; }
+  renderVals(){
+    const { prob, h, score, built, locked }=this.state;
+    const { L, W, H, target }=prob;
+    const count=L*W*h;
+    const won = count===target;
+    if(won && !locked){ setTimeout(()=>{ this.setState(s=> s.locked?null:({locked:true,score:s.score+20,built:s.built+1})); },0); }
+    const z=Math.max(h,0.0001);
+    const top=[this.P(0,0,h),this.P(L,0,h),this.P(L,W,h),this.P(0,W,h)];
+    const right=[this.P(L,0,0),this.P(L,W,0),this.P(L,W,h),this.P(L,0,h)];
+    const left=[this.P(0,W,0),this.P(L,W,0),this.P(L,W,h),this.P(0,W,h)];
+    const str=(a)=>a.map(p=>p.join(",")).join(" ");
+    const lines=[];
+    const L2=(p,q)=>lines.push({x1:p[0],y1:p[1],x2:q[0],y2:q[1]});
+    // top grid
+    for(let i=0;i<=L;i++) L2(this.P(i,0,h),this.P(i,W,h));
+    for(let j=0;j<=W;j++) L2(this.P(0,j,h),this.P(L,j,h));
+    if(h>0){
+      // right face (x=L): layer lines + cube lines
+      for(let k=0;k<=h;k++) L2(this.P(L,0,k),this.P(L,W,k));
+      for(let j=0;j<=W;j++) L2(this.P(L,j,0),this.P(L,j,h));
+      // left face (y=W)
+      for(let k=0;k<=h;k++) L2(this.P(0,W,k),this.P(L,W,k));
+      for(let i=0;i<=L;i++) L2(this.P(i,W,0),this.P(i,W,h));
+    }
+    let hint;
+    if(won) hint="";
+    else if(count<target) hint="Keep stacking \u2014 need "+(target-count)+" more cubes";
+    else hint="Too tall! That's "+(count-target)+" cubes over";
+    return {
+      score, built, target, L, W, h, count,
+      countCol: won? "#15803D":"#7C5CFC",
+      topPts:str(top), rightPts: h>0?str(right):"", leftPts: h>0?str(left):"",
+      gridLines:lines,
+      onSlide:this.onSlide, next:this.next,
+      playing:!won, won, hint,
+    };
+  }
+}
+</script>
+</body>
+</html>

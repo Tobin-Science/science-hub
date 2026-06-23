@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    @keyframes shakex{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    input[type=range]{-webkit-appearance:none;appearance:none;height:18px;border-radius:999px;background:#D6F7E2;border:3px solid #0C4A30;outline:none;}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:38px;height:38px;border-radius:50%;background:#15A36B;border:3px solid #0C4A30;cursor:grab;box-shadow:2px 2px 0 #0C4A30;}
+    input[type=range]::-moz-range-thumb{width:38px;height:38px;border-radius:50%;background:#15A36B;border:3px solid #0C4A30;cursor:grab;}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#E7FBF1;background-image:radial-gradient(#C2EFD8 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#0C4A30;padding:22px 24px 60px;">
+  <div style="max-width:920px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Grade 8 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#0C4A30;background:#fff;border:3px solid #0C4A30;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #0C4A30;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #0C4A30;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #0C4A30;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#5C9C7E;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #0C4A30;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #0C4A30;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:8px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#15A36B;color:#fff;border:2px solid #0C4A30;border-radius:999px;padding:4px 12px;">8.GSR.8 &middot; Pythagoras &amp; Volume</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;background:#fff;border:3px solid #0C4A30;border-radius:22px;box-shadow:6px 6px 0 #0C4A30;padding:24px;{{ wrongAnim }}">
+      <svg viewBox="0 0 260 240" width="260" style="display:block;flex:none;max-width:40vw;">
+        <sc-if value="{{ isPyth }}" hint-placeholder-val="{{ true }}">
+          <polygon points="{{ triPts }}" fill="#D6F7E2" stroke="#0C4A30" stroke-width="3"></polygon>
+          <rect x="{{ raX }}" y="{{ raY }}" width="16" height="16" fill="none" stroke="#0C4A30" stroke-width="2"></rect>
+          <text x="{{ aLx }}" y="{{ aLy }}" font-family="Fredoka" font-size="20" font-weight="700" fill="{{ aCol }}" text-anchor="middle">{{ aLabel }}</text>
+          <text x="{{ bLx }}" y="{{ bLy }}" font-family="Fredoka" font-size="20" font-weight="700" fill="{{ bCol }}" text-anchor="middle">{{ bLabel }}</text>
+          <text x="{{ cLx }}" y="{{ cLy }}" font-family="Fredoka" font-size="20" font-weight="700" fill="{{ cCol }}" text-anchor="middle">{{ cLabel }}</text>
+        </sc-if>
+        <sc-if value="{{ isVol }}" hint-placeholder-val="{{ false }}">
+          <g>{{ volSvg }}</g>
+        </sc-if>
+      </svg>
+
+      <div>
+        <div style="font-size:14px;font-weight:800;letter-spacing:1px;color:#5C9C7E;text-transform:uppercase;">{{ kind }}</div>
+        <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:25px;line-height:1.2;margin:4px 0 14px;">{{ prompt }}</div>
+        <div style="font-weight:700;color:#5C9C7E;font-size:15px;margin-bottom:14px;">{{ formula }}</div>
+
+        <sc-if value="{{ isPyth }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:26px;text-align:center;background:#E7FBF1;border:3px solid #0C4A30;border-radius:12px;padding:8px;margin-bottom:14px;">? = {{ guess }}</div>
+            <input type="range" min="1" max="30" step="1" value="{{ guess }}" onInput="{{ onSlide }}" style="width:100%;" />
+            <div style="display:flex;gap:12px;justify-content:center;margin-top:18px;min-height:56px;">
+              <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ skip }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:16px;background:#fff;color:#0C4A30;border:3px solid #0C4A30;border-radius:12px;padding:11px 18px;box-shadow:3px 3px 0 #0C4A30;cursor:pointer;">Skip</button>
+                <button onClick="{{ checkPyth }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;background:#15A36B;color:#fff;border:3px solid #0C4A30;border-radius:12px;padding:11px 30px;box-shadow:3px 3px 0 #0C4A30;cursor:pointer;">Check ✓</button>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isVol }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+                <sc-for list="{{ options }}" as="o" hint-placeholder-count="4">
+                  <button onClick="{{ o.onClick }}" style="font-family:Fredoka,sans-serif;font-weight:700;font-size:24px;background:#E7FBF1;color:#0C4A30;border:3px solid #0C4A30;border-radius:12px;padding:14px;box-shadow:4px 4px 0 #0C4A30;cursor:pointer;">{{ o.label }}</button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <div style="margin-top:16px;min-height:52px;">
+          <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:14px;animation:bannerin .3s ease both;">
+              <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:18px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #0C4A30;border-radius:12px;padding:10px 16px;box-shadow:3px 3px 0 #0C4A30;">{{ resultMsg }}</div>
+              <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#FFD23F;color:#0C4A30;border:3px solid #0C4A30;border-radius:12px;padding:10px 22px;box-shadow:3px 3px 0 #0C4A30;cursor:pointer;">Next &rarr;</button>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state={ score:0, streak:0, prob:this.makeProb(), guess:1, status:"play" };
+  }
+  rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  makeProb(){
+    if(Math.random()<0.5){
+      const triples=[[3,4,5],[6,8,10],[5,12,13],[8,15,17],[9,12,15],[7,24,25],[12,16,20],[20,21,29]];
+      const [a,b,c]=triples[this.rnd(0,triples.length-1)];
+      const hide=this.rnd(0,2);
+      const answer=[a,b,c][hide];
+      return { mode:"pyth", a,b,c, hide, answer };
+    }
+    const shape=["cyl","cone","sphere"][this.rnd(0,2)];
+    if(shape==="cyl"){ const r=this.rnd(2,6), h=this.rnd(2,8); return this.vol("cyl",r,h,r*r*h, "Cylinder", "V = \u03c0r\u00b2h", {r,h}); }
+    if(shape==="cone"){ let r,h; do{ r=this.rnd(2,6); h=this.rnd(2,9); }while((r*r*h)%3!==0); return this.vol("cone",r,h,(r*r*h)/3, "Cone", "V = \u2153\u03c0r\u00b2h", {r,h}); }
+    const r=[3,6][this.rnd(0,1)]; return this.vol("sphere",r,null,(4*r*r*r)/3, "Sphere", "V = \u2074\u2044\u2083\u03c0r\u00b3", {r});
+  }
+  vol(shape,r,h,coeff,name,formula,dims){
+    const opts=new Set([coeff]);
+    while(opts.size<4){ let d=coeff + this.rnd(-Math.max(4,Math.round(coeff*0.3)),Math.max(4,Math.round(coeff*0.3))); if(d>0&&d!==coeff) opts.add(d); }
+    return { mode:"vol", shape, r, h, coeff, name, formula, dims, opts:[...opts].sort((a,b)=>a-b) };
+  }
+  onSlide=(e)=>{ if(this.state.status!=="play") return; this.setState({guess:parseInt(e.target.value,10)}); };
+  checkPyth=()=>{ if(this.state.status!=="play") return; this.award(this.state.guess===this.state.prob.answer); };
+  pickVol=(v)=>()=>{ if(this.state.status!=="play") return; this.award(v===this.state.prob.coeff); };
+  award(ok){ if(ok) this.setState(s=>({status:"right",score:s.score+20+Math.min(s.streak,5)*2,streak:s.streak+1})); else this.setState({status:"wrong",streak:0}); }
+  next=()=>{ this.setState({prob:this.makeProb(),guess:1,status:"play"}); };
+  skip=()=>{ this.setState({prob:this.makeProb(),guess:1,status:"play",streak:0}); };
+  renderVals(){
+    const { prob, guess, score, streak, status }=this.state;
+    const right=status==="right", wrong=status==="wrong";
+    const base={ score, streak,
+      onSlide:this.onSlide, checkPyth:this.checkPyth, next:this.next, skip:this.skip,
+      playing:status==="play", showResult:right||wrong,
+      wrongAnim: wrong? "animation:shakex .35s ease;":"",
+      resultCol: right?"#0C4A30":"#B0234A", resultBg: right?"#D6F7E2":"#FFE0EA",
+    };
+    if(prob.mode==="pyth"){
+      const { a,b,c,hide,answer }=prob;
+      const scale=170/Math.max(a,b);
+      const ox=50, oy=210;
+      const P0=[ox,oy], P1=[ox+a*scale,oy], P2=[ox,oy-b*scale];
+      const triPts=[P0,P1,P2].map(p=>p.map(v=>v.toFixed(1)).join(",")).join(" ");
+      const lbl=(i,val)=> hide===i? "?" : String(val);
+      const lblCol=(i)=> hide===i? "#E0533F":"#0C4A30";
+      const missLabel = hide===0?"leg a":hide===1?"leg b":"hypotenuse c";
+      return { ...base,
+        isPyth:true, isVol:false,
+        kind:"Pythagorean Theorem", prompt:"Find the missing "+missLabel+".", formula:"a\u00b2 + b\u00b2 = c\u00b2",
+        triPts,
+        raX:ox, raY:oy-16,
+        aLabel:lbl(0,a), aLx:ox+a*scale/2, aLy:oy+22, aCol:lblCol(0),
+        bLabel:lbl(1,b), bLx:ox-20, bLy:oy-b*scale/2, bCol:lblCol(1),
+        cLabel:lbl(2,c), cLx:ox+a*scale/2+14, cLy:oy-b*scale/2-6, cCol:lblCol(2),
+        guess,
+        resultMsg: right? ("Correct! ? = "+answer) : ("It was "+answer+" \u2014 use a\u00b2+b\u00b2=c\u00b2"),
+      };
+    }
+    // volume
+    const d=prob.dims;
+    let svg="";
+    if(prob.shape==="cyl"){
+      svg='<ellipse cx="130" cy="60" rx="60" ry="18" fill="#B6ECD0" stroke="#0C4A30" stroke-width="3"/>'+
+          '<path d="M70 60 V180 A60 18 0 0 0 190 180 V60" fill="#D6F7E2" stroke="#0C4A30" stroke-width="3"/>'+
+          '<ellipse cx="130" cy="60" rx="60" ry="18" fill="#B6ECD0" stroke="#0C4A30" stroke-width="3"/>'+
+          '<line x1="130" y1="60" x2="190" y2="60" stroke="#15A36B" stroke-width="2"/>'+
+          '<text x="158" y="54" font-family="Fredoka" font-size="16" font-weight="700" fill="#15A36B">r='+d.r+'</text>'+
+          '<text x="198" y="125" font-family="Fredoka" font-size="16" font-weight="700" fill="#0C4A30">h='+d.h+'</text>';
+    } else if(prob.shape==="cone"){
+      svg='<path d="M130 30 L70 180 A60 18 0 0 0 190 180 Z" fill="#D6F7E2" stroke="#0C4A30" stroke-width="3"/>'+
+          '<ellipse cx="130" cy="180" rx="60" ry="18" fill="#B6ECD0" stroke="#0C4A30" stroke-width="3"/>'+
+          '<line x1="130" y1="180" x2="190" y2="180" stroke="#15A36B" stroke-width="2"/>'+
+          '<text x="158" y="174" font-family="Fredoka" font-size="16" font-weight="700" fill="#15A36B">r='+d.r+'</text>'+
+          '<text x="136" y="110" font-family="Fredoka" font-size="16" font-weight="700" fill="#0C4A30">h='+d.h+'</text>';
+    } else {
+      svg='<circle cx="130" cy="120" r="80" fill="#D6F7E2" stroke="#0C4A30" stroke-width="3"/>'+
+          '<ellipse cx="130" cy="120" rx="80" ry="22" fill="none" stroke="#15A36B" stroke-width="2" stroke-dasharray="4 3"/>'+
+          '<line x1="130" y1="120" x2="210" y2="120" stroke="#15A36B" stroke-width="3"/>'+
+          '<text x="150" y="112" font-family="Fredoka" font-size="16" font-weight="700" fill="#15A36B">r='+d.r+'</text>';
+    }
+    const options=prob.opts.map(v=>({ label:v+"\u03c0", onClick:this.pickVol(v) }));
+    return { ...base,
+      isPyth:false, isVol:true,
+      kind:prob.name+" volume", prompt:"What is the volume?", formula:prob.formula+"  (leave answer in terms of \u03c0)",
+      volSvg: React.createElement('g', { dangerouslySetInnerHTML:{ __html:svg } }),
+      options,
+      resultMsg: right? ("Correct! "+prob.coeff+"\u03c0") : ("It was "+prob.coeff+"\u03c0"),
+    };
+  }
+}
+</script>
+</body>
+</html>

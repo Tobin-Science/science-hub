@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes shakex{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+    @keyframes popin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FFEFF4;background-image:radial-gradient(#FFD2E0 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#7A1538;padding:22px 24px 60px;">
+  <div style="max-width:1000px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Grade 8 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#7A1538;background:#fff;border:3px solid #7A1538;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #7A1538;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #7A1538;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #7A1538;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#B86A85;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #7A1538;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #7A1538;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">ROUND</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ round }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:12px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#FF5E8A;color:#fff;border:2px solid #7A1538;border-radius:999px;padding:4px 12px;">8.PAR.3 &middot; Solution Sorter</span>
+      <h2 style="font-family:Fredoka,sans-serif;font-weight:700;font-size:26px;margin:8px 0 2px;">How many solutions does each equation have?</h2>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;min-height:64px;margin-bottom:22px;">
+      <sc-for list="{{ tray }}" as="c" hint-placeholder-count="6">
+        <div draggable="true" onDragStart="{{ c.onStart }}" onDragEnd="{{ c.onEnd }}" style="animation:popin .25s ease both;background:#fff;border:3px solid #7A1538;border-radius:14px;box-shadow:4px 4px 0 #7A1538;padding:14px 18px;font-family:Fredoka,sans-serif;font-weight:600;font-size:22px;cursor:grab;">{{ c.eq }}</div>
+      </sc-for>
+      <sc-if value="{{ trayEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="color:#D49CB0;font-weight:700;padding:18px;">All sorted! 🎉</div>
+      </sc-if>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <sc-for list="{{ buckets }}" as="b" hint-placeholder-count="3">
+        <div onDragOver="{{ b.onOver }}" onDrop="{{ b.onDrop }}" style="background:{{ b.bg }};border:3px {{ b.borderStyle }} {{ b.color }};border-radius:18px;padding:16px 14px;min-height:200px;{{ b.anim }}">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:18px;color:{{ b.color }};text-align:center;margin-bottom:4px;">{{ b.title }}</div>
+          <div style="font-weight:700;font-size:12px;color:#B86A85;text-align:center;margin-bottom:12px;">{{ b.hint }}</div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <sc-for list="{{ b.items }}" as="it" hint-placeholder-count="0">
+              <div style="animation:popin .2s ease both;background:#fff;border:2px solid {{ b.color }};border-radius:10px;padding:8px;font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;text-align:center;">{{ it }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="text-align:center;margin-top:24px;min-height:56px;">
+      <sc-if value="{{ won }}" hint-placeholder-val="{{ false }}">
+        <div style="display:inline-flex;align-items:center;gap:16px;animation:bannerin .35s ease both;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;color:#7A1538;background:#FFD2E0;border:3px solid #7A1538;border-radius:14px;padding:11px 22px;box-shadow:4px 4px 0 #7A1538;">Round clear! 🎉</div>
+          <button onClick="{{ nextRound }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:18px;background:#FF5E8A;color:#fff;border:3px solid #7A1538;border-radius:14px;padding:12px 28px;box-shadow:4px 4px 0 #7A1538;cursor:pointer;">Next round &rarr;</button>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.dragId=null;
+    this.state={ score:0, round:1, cards:this.makeSet(), placed:{}, shake:null };
+  }
+  rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  makeSet(){
+    const cards=[]; let id=0;
+    const mk=(eq,cat)=>cards.push({id:"c"+(id++), eq, cat});
+    // 2 one-solution
+    for(let i=0;i<2;i++){ let a=this.rnd(2,6),c=this.rnd(1,5); while(a===c) c=this.rnd(1,5); mk(a+"x + "+this.rnd(1,9)+" = "+c+"x + "+this.rnd(1,9),"one"); }
+    // 2 infinite
+    { const k=this.rnd(2,5), m=this.rnd(1,6); mk(k+"(x + "+m+") = "+k+"x + "+(k*m),"inf"); }
+    { const a=this.rnd(2,7), b=this.rnd(1,9); mk(a+"x + "+b+" = "+b+" + "+a+"x","inf"); }
+    // 2 none
+    for(let i=0;i<2;i++){ const a=this.rnd(2,6),b=this.rnd(1,8); let c=this.rnd(1,9); while(c===b) c=this.rnd(1,9); mk(a+"x + "+b+" = "+a+"x + "+c,"none"); }
+    const order=cards.map(c=>c.id).sort(()=>Math.random()-0.5);
+    return { byId:Object.fromEntries(cards.map(c=>[c.id,c])), order };
+  }
+  onStart=(id)=>(e)=>{ this.dragId=id; try{ e.dataTransfer.setData("text/plain",id); }catch(_){} };
+  onEnd=()=>{ this.dragId=null; };
+  onOver=(e)=>{ e.preventDefault(); };
+  onDrop=(bucket)=>(e)=>{
+    e.preventDefault();
+    const id=this.dragId||(e.dataTransfer&&e.dataTransfer.getData("text/plain"));
+    if(!id||this.state.placed[id]) return;
+    const card=this.state.cards.byId[id];
+    if(card.cat===bucket){ this.setState(s=>({ placed:{...s.placed,[id]:bucket}, score:s.score+15 })); }
+    else { this.setState({shake:bucket}); setTimeout(()=>{ this.setState(s=> s.shake===bucket?{shake:null}:null); },420); }
+    this.dragId=null;
+  };
+  nextRound=()=>{ this.setState(s=>({ round:s.round+1, cards:this.makeSet(), placed:{} })); };
+  renderVals(){
+    const { cards, placed, score, round, shake }=this.state;
+    const { byId, order }=cards;
+    const tray=order.filter(id=>!placed[id]).map(id=>({ eq:byId[id].eq, onStart:this.onStart(id), onEnd:this.onEnd }));
+    const defs=[
+      {key:"one", title:"One solution", hint:"x = a", color:"#15803D", bg:"#E7F8EE"},
+      {key:"inf", title:"Infinitely many", hint:"a = a", color:"#7C5CFC", bg:"#EFEAFF"},
+      {key:"none", title:"No solution", hint:"a = b", color:"#E0533F", bg:"#FFEEEA"},
+    ];
+    const buckets=defs.map(d=>({
+      title:d.title, hint:d.hint, color:d.color,
+      bg: d.bg, borderStyle:"dashed",
+      anim: shake===d.key? "animation:shakex .4s ease;":"",
+      onOver:this.onOver, onDrop:this.onDrop(d.key),
+      items: order.filter(id=>placed[id]===d.key).map(id=>byId[id].eq),
+    }));
+    return {
+      score, round, tray, buckets,
+      trayEmpty: tray.length===0,
+      won: Object.keys(placed).length===order.length,
+      nextRound:this.nextRound,
+    };
+  }
+}
+</script>
+</body>
+</html>

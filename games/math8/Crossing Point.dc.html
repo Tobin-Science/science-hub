@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./react.production.min.js"></script><script src="./react-dom.production.min.js"></script><script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;}
+    body{margin:0;}
+    @keyframes bannerin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#FBEFFE;background-image:radial-gradient(#F0D2FB 2px,transparent 2px);background-size:32px 32px;font-family:Nunito,sans-serif;color:#5A1A6B;padding:22px 24px 60px;">
+  <div style="max-width:920px;margin:0 auto;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <a href="Grade 8 Arcade Hub.dc.html" style="text-decoration:none;font-family:Fredoka,sans-serif;font-weight:600;font-size:15px;color:#5A1A6B;background:#fff;border:3px solid #5A1A6B;border-radius:999px;padding:8px 16px;box-shadow:3px 3px 0 #5A1A6B;">&larr; Arcade</a>
+      <div style="display:flex;gap:10px;">
+        <div style="background:#fff;border:3px solid #5A1A6B;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #5A1A6B;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#A06BB8;">SCORE</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ score }}</div>
+        </div>
+        <div style="background:#FFD23F;border:3px solid #5A1A6B;border-radius:14px;padding:6px 14px;box-shadow:3px 3px 0 #5A1A6B;text-align:center;min-width:78px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#8A6D00;">STREAK</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ streak }}🔥</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:8px;">
+      <span style="font-family:Fredoka,sans-serif;font-weight:600;font-size:13px;background:#C44AE0;color:#fff;border:2px solid #5A1A6B;border-radius:999px;padding:4px 12px;">8.FGR.7 &middot; Crossing Point</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;background:#fff;border:3px solid #5A1A6B;border-radius:22px;box-shadow:6px 6px 0 #5A1A6B;padding:22px;">
+      <svg ref="{{ svgRef }}" viewBox="0 0 360 360" width="360" style="display:block;flex:none;max-width:46vw;touch-action:none;cursor:crosshair;" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}">
+        <sc-for list="{{ grid }}" as="l" hint-placeholder-count="42">
+          <line x1="{{ l.x1 }}" y1="{{ l.y1 }}" x2="{{ l.x2 }}" y2="{{ l.y2 }}" stroke="{{ l.col }}" stroke-width="{{ l.w }}"></line>
+        </sc-for>
+        <line x1="{{ l1x1 }}" y1="{{ l1y1 }}" x2="{{ l1x2 }}" y2="{{ l1y2 }}" stroke="#2BA6FF" stroke-width="5" stroke-linecap="round"></line>
+        <line x1="{{ l2x1 }}" y1="{{ l2y1 }}" x2="{{ l2x2 }}" y2="{{ l2y2 }}" stroke="#FF5E8A" stroke-width="5" stroke-linecap="round"></line>
+        <sc-if value="{{ showGhost }}" hint-placeholder-val="{{ false }}">
+          <circle cx="{{ ansX }}" cy="{{ ansY }}" r="11" fill="none" stroke="#C44AE0" stroke-width="3" stroke-dasharray="4 3"></circle>
+        </sc-if>
+        <circle cx="{{ markX }}" cy="{{ markY }}" r="10" fill="{{ markColor }}" stroke="#5A1A6B" stroke-width="3"></circle>
+      </svg>
+
+      <div>
+        <h2 style="font-family:Fredoka,sans-serif;font-weight:700;font-size:23px;margin:0 0 10px;">Where do the lines cross?</h2>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;color:#1672C0;background:#DCEFFF;border:2px solid #2BA6FF;border-radius:10px;padding:8px 14px;">{{ eq1 }}</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:22px;color:#B0234A;background:#FFE0EA;border:2px solid #FF5E8A;border-radius:10px;padding:8px 14px;">{{ eq2 }}</div>
+        </div>
+
+        <div style="background:#FBEFFE;border:3px solid #5A1A6B;border-radius:14px;padding:12px;text-align:center;margin-bottom:16px;">
+          <div style="font-weight:800;color:#A06BB8;font-size:13px;letter-spacing:1px;">YOUR SOLUTION</div>
+          <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:30px;color:#C44AE0;">({{ cx }}, {{ cy }})</div>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center;min-height:56px;">
+          <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ skip }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:16px;background:#fff;color:#5A1A6B;border:3px solid #5A1A6B;border-radius:12px;padding:11px 18px;box-shadow:3px 3px 0 #5A1A6B;cursor:pointer;">Skip</button>
+            <button onClick="{{ check }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:20px;background:#C44AE0;color:#fff;border:3px solid #5A1A6B;border-radius:12px;padding:11px 28px;box-shadow:3px 3px 0 #5A1A6B;cursor:pointer;">Check ✕</button>
+          </sc-if>
+          <sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;align-items:center;gap:12px;animation:bannerin .3s ease both;">
+              <div style="font-family:Fredoka,sans-serif;font-weight:700;font-size:18px;color:{{ resultCol }};background:{{ resultBg }};border:3px solid #5A1A6B;border-radius:12px;padding:10px 16px;box-shadow:3px 3px 0 #5A1A6B;">{{ resultMsg }}</div>
+              <button onClick="{{ next }}" style="font-family:Fredoka,sans-serif;font-weight:600;font-size:17px;background:#FFD23F;color:#5A1A6B;border:3px solid #5A1A6B;border-radius:12px;padding:10px 20px;box-shadow:3px 3px 0 #5A1A6B;cursor:pointer;">Next &rarr;</button>
+            </div>
+          </sc-if>
+        </div>
+        <p style="text-align:center;font-size:13px;font-weight:700;color:#A06BB8;margin-top:12px;">Click or drag on the grid to place your point</p>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.svgRef=React.createRef();
+    this.O=180; this.U=16; this.LIM=10;
+    this.state={ score:0, streak:0, prob:this.makeProb(), cx:0, cy:0, status:"play", dragging:false };
+  }
+  rnd(a,b){ return a+Math.floor(Math.random()*(b-a+1)); }
+  makeProb(){
+    for(let i=0;i<200;i++){
+      const x0=this.rnd(-5,5), y0=this.rnd(-5,5);
+      let m1=this.rnd(-3,3), m2=this.rnd(-3,3);
+      if(m1===m2) continue;
+      const b1=y0-m1*x0, b2=y0-m2*x0;
+      if(Math.abs(b1)>9||Math.abs(b2)>9) continue;
+      return { x0,y0,m1,b1,m2,b2 };
+    }
+    return { x0:1,y0:2,m1:1,b1:1,m2:-1,b2:3 };
+  }
+  fmtLine(m,b){
+    let mt = m===1?"x":(m===-1?"\u2212x":m+"x");
+    let bt = b>0? " + "+b : (b<0? " \u2212 "+Math.abs(b):"");
+    return "y = "+mt+bt;
+  }
+  fromPt(clientX, clientY){
+    const el=this.svgRef.current; if(!el) return [this.state.cx,this.state.cy];
+    const r=el.getBoundingClientRect();
+    const sx=360/r.width, sy=360/r.height;
+    let x=Math.round(((clientX-r.left)*sx-this.O)/this.U);
+    let y=Math.round((this.O-(clientY-r.top)*sy)/this.U);
+    x=Math.max(-this.LIM,Math.min(this.LIM,x)); y=Math.max(-this.LIM,Math.min(this.LIM,y));
+    return [x,y];
+  }
+  onDown=(e)=>{ if(this.state.status!=="play") return; try{ e.currentTarget.setPointerCapture(e.pointerId); }catch(_){} const [x,y]=this.fromPt(e.clientX,e.clientY); this.setState({dragging:true,cx:x,cy:y}); };
+  onMove=(e)=>{ if(!this.state.dragging) return; const [x,y]=this.fromPt(e.clientX,e.clientY); this.setState({cx:x,cy:y}); };
+  onUp=()=>{ if(this.state.dragging) this.setState({dragging:false}); };
+  check=()=>{ if(this.state.status!=="play") return;
+    const ok=this.state.cx===this.state.prob.x0 && this.state.cy===this.state.prob.y0;
+    if(ok) this.setState(s=>({status:"right",score:s.score+20+Math.min(s.streak,5)*2,streak:s.streak+1}));
+    else this.setState({status:"wrong",streak:0});
+  };
+  next=()=>{ this.setState({prob:this.makeProb(),cx:0,cy:0,status:"play"}); };
+  skip=()=>{ this.setState({prob:this.makeProb(),cx:0,cy:0,status:"play",streak:0}); };
+  toScreen(x,y){ return [ this.O+x*this.U, this.O-y*this.U ]; }
+  clipLine(m,b){
+    // intersect y=mx+b with box x in [-10,10], y in [-10,10]
+    const pts=[];
+    for(const x of [-10,10]){ const y=m*x+b; if(y>=-10&&y<=10) pts.push([x,y]); }
+    for(const y of [-10,10]){ if(m!==0){ const x=(y-b)/m; if(x>=-10&&x<=10) pts.push([x,y]); } }
+    const uniq=pts.filter((p,i,a)=>a.findIndex(q=>Math.abs(q[0]-p[0])<1e-6&&Math.abs(q[1]-p[1])<1e-6)===i).slice(0,2);
+    if(uniq.length<2) return [this.toScreen(-10,m*-10+b),this.toScreen(10,m*10+b)];
+    return [this.toScreen(uniq[0][0],uniq[0][1]), this.toScreen(uniq[1][0],uniq[1][1])];
+  }
+  renderVals(){
+    const { prob, cx, cy, score, streak, status }=this.state;
+    const grid=[];
+    for(let i=-this.LIM;i<=this.LIM;i++){
+      const major=i===0; const [px]=this.toScreen(i,0);
+      grid.push({ x1:px,y1:20,x2:px,y2:340, col:major?"#5A1A6B":"#EEDAF6", w:major?2.5:1 });
+      const [,py]=this.toScreen(0,i);
+      grid.push({ x1:20,y1:py,x2:340,y2:py, col:major?"#5A1A6B":"#EEDAF6", w:major?2.5:1 });
+    }
+    const [a1,a2]=this.clipLine(prob.m1,prob.b1);
+    const [c1,c2]=this.clipLine(prob.m2,prob.b2);
+    const right=status==="right", wrong=status==="wrong";
+    const mv = right? [prob.x0,prob.y0] : [cx,cy];
+    const [markX,markY]=this.toScreen(mv[0],mv[1]);
+    const [ansX,ansY]=this.toScreen(prob.x0,prob.y0);
+    return {
+      score, streak,
+      grid,
+      l1x1:a1[0],l1y1:a1[1],l1x2:a2[0],l1y2:a2[1],
+      l2x1:c1[0],l2y1:c1[1],l2x2:c2[0],l2y2:c2[1],
+      eq1:this.fmtLine(prob.m1,prob.b1), eq2:this.fmtLine(prob.m2,prob.b2),
+      cx:mv[0], cy:mv[1],
+      markX, markY, markColor: right?"#15803D":"#C44AE0",
+      showGhost: wrong, ansX, ansY,
+      svgRef:this.svgRef, onDown:this.onDown, onMove:this.onMove, onUp:this.onUp,
+      check:this.check, next:this.next, skip:this.skip,
+      playing:status==="play", showResult:right||wrong,
+      resultMsg: right? "Solved the system! +20" : ("They cross at ("+prob.x0+", "+prob.y0+")"),
+      resultCol: right?"#0C4A30":"#B0234A", resultBg: right?"#D6F7E2":"#F6DEFB",
+    };
+  }
+}
+</script>
+</body>
+</html>

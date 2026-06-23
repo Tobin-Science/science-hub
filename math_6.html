@@ -2137,15 +2137,26 @@ function actDone(st){
    ARCADE PAGE
    ========================================================= */
 function buildArcade(){
-  document.getElementById('arcadegrid').innerHTML = Object.entries(GAMES).map(([gid,g])=>{
-    const uid = g.unit||gid, u = UNITS[uid], best = store.get('game_'+gid);
-    return `<div class="arcadecard" style="--gc:${u.hex}">
-      <div class="icon">${g.icon}</div><h3 style="color:#fff">${g.title}</h3>
-      <p style="font-size:.92rem;opacity:.93">${g.desc}</p>
-      <p style="font-family:var(--mono);font-size:.78rem;opacity:.85">UNIT ${u.num} · ${u.std}${best? ' · BEST '+best : ''}</p>
-      <button onclick="go('${uid}');setTimeout(()=>{openPane('${uid}','game');renderGamePicker('${uid}','${gid}');},50)">▶ Play</button>
+  const grid = document.getElementById('arcadegrid');
+  if(!grid) return;
+  /* Standards-aligned mini-games (Claude Design). Their self-contained arcade
+     hub handles the game grid, play, and back-navigation inside one iframe.
+     Break out of the page container so it spans the full viewport width. */
+  grid.style.display = 'block';
+  grid.innerHTML = `
+    <div style="width:100vw;margin-left:calc(-50vw + 50%)">
+      <div style="display:flex;justify-content:flex-end;padding:0 16px 8px">
+        <button class="gbtn" onclick="arcadeFull()">⛶ Play fullscreen</button>
+      </div>
+      <iframe id="arcadeframe" src="games/math6/Grade%206%20Arcade%20Hub.dc.html" title="Grade 6 Math Arcade — mini-games"
+        style="display:block;width:100%;height:90vh;min-height:600px;border:0;background:#fff"
+        allow="fullscreen"></iframe>
     </div>`;
-  }).join('');
+}
+function arcadeFull(){
+  const f = document.getElementById('arcadeframe');
+  if(f && f.requestFullscreen) f.requestFullscreen();
+  else if(f && f.webkitRequestFullscreen) f.webkitRequestFullscreen();
 }
 function launchQuest(){
   const w = window.open('science_quest.html','_blank');
