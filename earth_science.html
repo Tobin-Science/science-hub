@@ -407,6 +407,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 #pvmodal{position:fixed;inset:0;background:rgba(15,20,40,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:18px}
 #pvmodal[hidden]{display:none}
 .pvbox{background:var(--bg,#F4F6FB);border-radius:16px;max-width:860px;width:100%;max-height:88vh;overflow:auto;padding:18px 22px;box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.pvbox.pvbig{max-width:none;width:calc(100vw - 20px);height:calc(100vh - 20px);max-height:none;font-size:1.12rem}
 .pvtop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;position:sticky;top:-18px;background:inherit;padding:6px 0;z-index:5}
 .pvclose{background:var(--ink);color:#fff;border:none;border-radius:9px;padding:8px 16px;font-weight:700;cursor:pointer}
 .pvitem{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:.92rem}
@@ -3568,7 +3569,7 @@ function warmupProject(){
     <p class="eyebrow">${document.getElementById('wu-tag').textContent}</p>
     <div style="font-size:1.9rem;font-weight:600;line-height:1.5;padding:10px 0">${WU.item.q}</div>
     <div id="pvwu-a" hidden style="font-size:1.2rem;border-top:2px dashed var(--line);margin-top:14px;padding-top:14px">${WU.item.a}</div>
-    <p style="margin-top:16px"><button class="pveye" onclick="const a=document.getElementById('pvwu-a'); a.hidden=!a.hidden">👁 Reveal / hide answer</button></p>`);
+    <p style="margin-top:16px"><button class="pveye" onclick="const a=document.getElementById('pvwu-a'); a.hidden=!a.hidden">👁 Reveal / hide answer</button></p>`, true);
 }
 
 function buildTeach(){
@@ -3640,7 +3641,9 @@ function renderTeachPreview(){
 }
 
 /* ---------- teacher preview modal ---------- */
-function pvOpen(title, html){
+function pvOpen(title, html, big){
+  const box = document.querySelector('#pvmodal .pvbox');
+  if(box) box.classList.toggle('pvbig', !!big);
   document.getElementById('pvtitle').innerHTML = title;
   document.getElementById('pvbody').innerHTML = html;
   document.getElementById('pvmodal').hidden = false;
