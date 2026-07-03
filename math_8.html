@@ -244,7 +244,6 @@ tr:nth-child(even) td{background:#F7FAFD}
 .kchip.yes{background:#d8f5e3;outline:2px solid #5ad08a}
 .kchip.no{background:#fde3e3;outline:2px solid #f08c8c}
 
-
 /* ---------- PHASE 1: LANDING + EDUCATOR ---------- */
 #page-start .startwrap{max-width:880px;margin:40px auto;text-align:center;padding:0 16px}
 #page-start h1{font-size:clamp(1.9rem,5vw,3rem);margin:10px 0 6px}
@@ -259,11 +258,12 @@ tr:nth-child(even) td{background:#F7FAFD}
 body.onstart nav{display:none}
 #page-start .startnote{margin-top:26px;font-size:.85rem;opacity:.65}
 /* educator */
-.featurestrip{overflow:hidden;padding:2px 2px 14px;margin:6px 0 10px}
-.featuretrack{display:flex;gap:18px;align-items:flex-start;width:max-content;will-change:transform}
-.featuretrack > .card{flex:0 0 330px;max-width:330px!important;margin:0!important;border-radius:14px;padding:16px 18px}
-.featuretrack > .card h3{font-size:1.02rem}
-.featuretrack > .card p{font-size:.88rem}
+.featgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;align-items:stretch;margin:6px 0 30px;max-width:1150px}
+.featgrid > .card{margin:0!important;max-width:none!important;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column}
+.featgrid > .card h3{font-size:1.02rem}
+.featgrid > .card p{font-size:.88rem}
+.featgrid > .card > p:last-child{margin-top:auto;padding-top:8px}
+
 .teachacct{display:flex;align-items:center;justify-content:flex-end;gap:10px;font-size:.85rem;color:var(--ink2);margin:0 0 6px;flex-wrap:wrap}
 .teachacct b{color:var(--ink)}
 .teachacct button{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:5px 12px;font:inherit;font-size:.82rem;cursor:pointer;color:var(--ink2)}
@@ -306,7 +306,6 @@ body.onstart nav{display:none}
 .tprev ul{margin:4px 0;padding-left:20px;font-size:.88rem}
 .tprev li{margin:2px 0}
 
-
 /* ---------- PHASE 2: ASSIGNMENT BUILDER ---------- */
 .teachstep{background:#fff;color:#1B2440;border-radius:16px;padding:18px 20px;margin:22px 0;box-shadow:0 4px 16px rgba(27,36,64,.08)}
 .teachstep h3{margin:0 0 4px}
@@ -332,7 +331,6 @@ body.onstart nav{display:none}
 .genqrbox svg{width:170px;height:170px;border:8px solid #fff;border-radius:10px;box-shadow:0 3px 12px rgba(27,36,64,.12)}
 .genqrbox p{font-size:.78rem;color:#4a5375;margin:6px 0 0}
 #gensummary{width:100%;min-height:170px;padding:11px 13px;border-radius:10px;border:2px solid #cfe9da;font:inherit;font-size:.85rem;background:#fff;resize:vertical}
-
 
 /* ---------- PHASE 3: ASSIGNMENT MODE ---------- */
 #asnbanner{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:10px;background:#FFD466;color:#1B2440;padding:9px 18px;font-size:.92rem;box-shadow:0 2px 10px rgba(27,36,64,.18)}
@@ -368,7 +366,6 @@ body.onstart nav{display:none}
 .asnrow2.done .asngo{background:#fff;color:#5B67E0;border:2px solid #c9cef5}
 .asnfoot{margin-top:22px;border-top:2px dashed #e3e7f2;padding-top:16px}
 @media(max-width:560px){.asnrow2{flex-wrap:wrap}.asngo{margin-left:auto}}
-
 
 /* ---------- PHASE 4: POSTTEST + REPORT ---------- */
 .ptopts{display:grid;gap:10px}
@@ -523,27 +520,6 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
 <section class="page" id="page-teach">
   <div id="teachacct" class="teachacct"></div>
   <p class="eyebrow">Educator Mode</p>
-  <div class="featurestrip" id="featurestrip">
-  <div class="featuretrack" id="featuretrack">
-
-  <div class="card" style="border:2px solid var(--ac);background:#EDEFFD;margin:0 0 24px;max-width:780px">
-    <h3>🖨 Printable library — ready to copy</h3>
-    <p>A print-ready <b>student packet and answer key for every standard</b>, plus a complete <b>review book</b> for the whole grade — black &amp; white and ready to copy. Free for your classroom.</p>
-    <p style="margin-top:10px"><a class="pdfbtn" href="#print" onclick="go('print');return false">Open the printable library →</a></p>
-  </div>
-
-  <div class="card" style="border:2px solid #2f7a4d;background:#EAF6EF;margin:0 0 24px;max-width:780px">
-    <h3>📘 New here? Grab the Teacher's Guide</h3>
-    <p>A plain-English walkthrough of everything: building assignments, setting posttest attempts, the paperless gradebook, Warmup of the Day, printables and more. Downloads as a Word document you can keep or print.</p>
-    <p style="margin-top:10px"><a class="pdfbtn" style="background:#2f7a4d" href="Tobin_Science_Hub_Teacher_Guide.docx" download>📥 Download the Teacher's Guide</a></p>
-    <p style="margin:12px 0 4px;font-weight:700;font-size:.92rem">🎬 Quick how-to videos:</p>
-    <p style="margin:0;display:flex;gap:8px;flex-wrap:wrap">
-      <a class="pdfbtn" style="background:#c0392b" href="https://youtu.be/k2_BB-xL2DU" target="_blank" rel="noopener">▶ Build an assignment</a>
-      <a class="pdfbtn" style="background:#c0392b" href="https://youtu.be/F23m4enJ48M" target="_blank" rel="noopener">▶ Student walkthrough</a>
-      <a class="pdfbtn" style="background:#c0392b" href="https://youtu.be/MRIzKEr4wvc" target="_blank" rel="noopener">▶ Warmup of the Day</a>
-    </p>
-  </div>
-
   <div class="card" style="border:2px solid #E08F0E;background:#FFF7E8;margin:0 0 24px;max-width:780px">
     <h3>🌅 Warmup of the Day</h3>
     <p>A bell-ringer in two clicks: pick a topic (or roll the dice), pick a question type, and project it. Questions never repeat until the whole pool has been used.</p>
@@ -570,52 +546,26 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
       </p>
     </div>
   </div>
-  </div>
+
+  <div class="featgrid" id="featurestrip">
+  <div class="card" style="border:2px solid var(--ac);background:#EDEFFD;margin:0 0 24px;max-width:780px">
+    <h3>🖨 Printable library — ready to copy</h3>
+    <p>A print-ready <b>student packet and answer key for every standard</b>, plus a complete <b>review book</b> for the whole grade — black &amp; white and ready to copy. Free for your classroom.</p>
+    <p style="margin-top:10px"><a class="pdfbtn" href="#print" onclick="go('print');return false">Open the printable library →</a></p>
   </div>
 
-  <script>
-  (function(){
-    var wrap = document.getElementById('featurestrip');
-    var track = document.getElementById('featuretrack');
-    if(!wrap || !track) return;
-    var x = 0, paused = false, userPaused = false, gap = 18, base = 0.5, hold = 0;
-    function mkBtn(txt, label){ var b = document.createElement('button'); b.type='button'; b.className='pveye'; b.textContent=txt; b.setAttribute('aria-label',label); b.style.margin='0 5px'; b.style.touchAction='none'; b.style.userSelect='none'; return b; }
-    var fsLeft  = mkBtn('⏪', 'Hold to speed up the scrolling');
-    var fsBtn   = mkBtn('⏸ Pause', 'Pause or play the scrolling features');
-    var fsRight = mkBtn('⏩', 'Hold to scroll the other way');
-    var fsBar = document.createElement('div');
-    fsBar.style.cssText = 'text-align:center;margin:0 0 12px';
-    fsBar.appendChild(fsLeft); fsBar.appendChild(fsBtn); fsBar.appendChild(fsRight);
-    wrap.insertAdjacentElement('beforebegin', fsBar);   // controls sit ABOVE the strip
-    fsBtn.addEventListener('click', function(){ userPaused = !userPaused; fsBtn.textContent = userPaused ? '▶ Play' : '⏸ Pause'; });
-    function holdStart(v){ return function(e){ e.preventDefault(); hold = v; }; }
-    function holdEnd(){ hold = 0; }
-    fsLeft.addEventListener('pointerdown', holdStart(base * 10));    // speed up (same direction)
-    fsRight.addEventListener('pointerdown', holdStart(-base * 10));  // reverse
-    fsLeft.addEventListener('pointerleave', holdEnd);
-    fsRight.addEventListener('pointerleave', holdEnd);
-    document.addEventListener('pointerup', holdEnd);
-    document.addEventListener('pointercancel', holdEnd);
-    wrap.addEventListener('mouseenter', function(){ paused = true; });
-    wrap.addEventListener('mouseleave', function(){ paused = false; });
-    wrap.addEventListener('touchstart', function(){ paused = true; }, {passive:true});
-    wrap.addEventListener('touchend', function(){ paused = false; }, {passive:true});
-    function step(){
-      if(wrap.offsetParent !== null && track.firstElementChild){
-        var sp = hold !== 0 ? hold : ((paused || userPaused) ? 0 : base);
-        if(sp !== 0){
-          x -= sp;
-          var fw = track.firstElementChild.offsetWidth + gap;
-          if(fw > gap && -x >= fw){ x += fw; track.appendChild(track.firstElementChild); }                 // scrolling left → wrap first card to the end
-          if(x > 0){ var last = track.lastElementChild; x -= (last.offsetWidth + gap); track.insertBefore(last, track.firstElementChild); }  // scrolling right → wrap last card to the front
-          track.style.transform = 'translateX(' + x + 'px)';
-        }
-      }
-      requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  })();
-  </script>
+  <div class="card" style="border:2px solid #2f7a4d;background:#EAF6EF;margin:0 0 24px;max-width:780px">
+    <h3>📘 New here? Grab the Teacher's Guide</h3>
+    <p>A plain-English walkthrough of everything: building assignments, setting posttest attempts, the paperless gradebook, Warmup of the Day, printables and more. Downloads as a Word document you can keep or print.</p>
+    <p style="margin-top:10px"><a class="pdfbtn" style="background:#2f7a4d" href="Tobin_Science_Hub_Teacher_Guide.docx" download>📥 Download the Teacher's Guide</a></p>
+    <p style="margin:12px 0 4px;font-weight:700;font-size:.92rem">🎬 Quick how-to videos:</p>
+    <p style="margin:0;display:flex;gap:8px;flex-wrap:wrap">
+      <a class="pdfbtn" style="background:#c0392b" href="https://youtu.be/k2_BB-xL2DU" target="_blank" rel="noopener">▶ Build an assignment</a>
+      <a class="pdfbtn" style="background:#c0392b" href="https://youtu.be/F23m4enJ48M" target="_blank" rel="noopener">▶ Student walkthrough</a>
+      <a class="pdfbtn" style="background:#c0392b" href="https://youtu.be/MRIzKEr4wvc" target="_blank" rel="noopener">▶ Warmup of the Day</a>
+    </p>
+  </div>
+  </div>
 
   <h1>Build an assignment for your class.</h1>
   <p class="lead">Step 1: check every standard your current unit covers. The panel on the right shows exactly which study guides, games, videos, and PhET labs match — live.</p>
@@ -680,7 +630,6 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
       </div>
     </div>
   </div>
-
 
   <div class="teachstep" style="margin-top:30px">
     <h3>📊 Gradebook — collect scores without paper</h3>
@@ -2325,7 +2274,6 @@ function renderVocab(){
   drawQ();
 }
 
-
 /* =========================================================
    PHASE 1 — STANDARDS REGISTRY, CONTENT TAGS, LANDING,
    EDUCATOR PREVIEW, ASSIGNMENT-LINK PLUMBING
@@ -2730,7 +2678,6 @@ function pvPosttest(uid){
 /* ---------- Assignment-link stub (full Assignment Mode = Phase 3) ---------- */
 /* replaced by Phase 3 below */
 
-
 /* =========================================================
    PHASE 2 — ASSIGNMENT BUILDER (resource picker + generate)
    ========================================================= */
@@ -2821,7 +2768,6 @@ function copyText(id, btn){
     navigator.clipboard.writeText(el.value).then(done).catch(()=>{ el.select(); document.execCommand('copy'); done(); });
   } else { el.select(); document.execCommand('copy'); done(); }
 }
-
 
 /* =========================================================
    PHASE 3 — ASSIGNMENT MODE (student checklist + tracking)
@@ -3418,7 +3364,6 @@ function updateAsnBanner(){
     </span>`;
   bar.style.display = document.getElementById('page-assign').classList.contains('show')? 'none':'flex';
 }
-
 
 /* =========================================================
    PHASE 4a — POSTTEST QUESTION BANKS
