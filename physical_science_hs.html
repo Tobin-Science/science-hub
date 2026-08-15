@@ -8094,6 +8094,172 @@ GAMES.u7c={title:"Heating Curve",icon:"📊",id:"u7c",unit:"u7",
 Object.assign(STD_TAGS,{ "u7c":["SPS7.d"] });
 
 
+/* ============ U2 · COUNTING ATOMS — leveled practice ============
+   Level 1: plain formulas (subscripts) · Level 2: parentheses ·
+   Level 3: coefficients · Level 4: full equations + balanced-or-not.
+   Atom counts come from caParse so answers can never drift from the data. */
+const CA_ELNAME={H:'hydrogen',C:'carbon',N:'nitrogen',O:'oxygen',Na:'sodium',Cl:'chlorine',K:'potassium',Ca:'calcium',Mg:'magnesium',S:'sulfur',Fe:'iron',Al:'aluminum',P:'phosphorus',Zn:'zinc',Cu:'copper',Ba:'barium',Br:'bromine',Li:'lithium'};
+function caParse(f){
+  const m=f.match(/^(\d+)/); const coef=m?+m[1]:1; const body=m?f.slice(m[1].length):f;
+  function walk(s){ const out={}; let i=0;
+    while(i<s.length){
+      if(s[i]==='('){ let d=1,j=i+1; while(j<s.length&&d){ if(s[j]==='(')d++; else if(s[j]===')')d--; j++; }
+        const inner=walk(s.slice(i+1,j-1)); let n=''; while(j<s.length&&/\d/.test(s[j])) n+=s[j++];
+        const mult=n?+n:1; for(const e in inner) out[e]=(out[e]||0)+inner[e]*mult; i=j; }
+      else { const mm=s.slice(i).match(/^([A-Z][a-z]?)(\d*)/); out[mm[1]]=(out[mm[1]]||0)+(mm[2]?+mm[2]:1); i+=mm[0].length; }
+    } return out; }
+  const res=walk(body); for(const e in res) res[e]*=coef; return res;
+}
+function caDisp(f){
+  const m=f.match(/^(\d+)/); const coef=m?m[1]:'';
+  const body=(m?f.slice(m[1].length):f).replace(/\d+/g,'<sub>$&</sub>');
+  return (coef?`<span style="color:#FFD466">${coef}</span>`:'')+body;
+}
+const CA_LEVELS=[
+ {tag:'🟢 LEVEL 1', name:'Formula Basics', rounds:6,
+  desc:'Subscripts only. Which elements are in the formula, and how many atoms of each?',
+  hint:'A subscript counts ONLY the atom right before it — no number means 1.',
+  pool:['H2O','CO2','NaCl','NH3','CH4','H2O2','C6H12O6','Fe2O3','MgCl2','SO2','CaCO3','Al2O3','KBr','Na2SO4']},
+ {tag:'🟡 LEVEL 2', name:'Parentheses', rounds:6,
+  desc:'Now with ( ). The subscript outside the parentheses multiplies EVERYTHING inside.',
+  hint:'Multiply every atom inside the ( ) by the subscript outside — then add any atoms outside the parentheses.',
+  pool:['Ca(OH)2','Mg(NO3)2','Al(OH)3','(NH4)2S','Cu(NO3)2','Ba(OH)2','Ca3(PO4)2','(NH4)2SO4','Fe(OH)3','Zn(NO3)2','Al2(SO4)3','Mg(HCO3)2']},
+ {tag:'🟠 LEVEL 3', name:'Coefficients', rounds:6,
+  desc:'The BIG number in front (the coefficient) multiplies the whole formula — parentheses included.',
+  hint:'Count one unit of the formula first, then multiply EVERY element by the coefficient in front.',
+  pool:['2H2O','3CO2','4NH3','2NaCl','3O2','2Fe2O3','3MgCl2','2CaCO3','2Ca(OH)2','2Al(OH)3','4H2O2','2Na2SO4','3H2SO4','2Mg(NO3)2']},
+ {tag:'🔴 LEVEL 4', name:'Full Equations', rounds:5,
+  desc:'The boss level. Count every atom on BOTH sides of the equation, then make the call: balanced or not?',
+  hint:'Add up each element across ALL substances on a side — coefficients multiply their whole formula.',
+  eqs:[
+   {L:['2H2','O2'], R:['2H2O']},
+   {L:['CH4','2O2'], R:['CO2','2H2O']},
+   {L:['2Mg','O2'], R:['2MgO']},
+   {L:['N2','3H2'], R:['2NH3']},
+   {L:['2Na','Cl2'], R:['2NaCl']},
+   {L:['C','O2'], R:['CO2']},
+   {L:['Mg','2HCl'], R:['MgCl2','H2']},
+   {L:['H2','O2'], R:['H2O']},
+   {L:['Na','Cl2'], R:['NaCl']},
+   {L:['CH4','O2'], R:['CO2','H2O']},
+   {L:['Fe','O2'], R:['Fe2O3']},
+   {L:['2KClO3'], R:['2KCl','2O2']}
+  ]}
+];
+GAMES.u2d={title:"Counting Atoms",icon:"🧮",id:"u2d",unit:"u2",
+ desc:"Pick a level and count every atom. Start with simple formulas, then parentheses, then coefficients — and finish by auditing whole equations: balanced or not?",
+ start(areaId){
+  const id=this.id;
+  kineShell(areaId,id,this.title,this.desc,`<span id="${areaId}-lv">CHOOSE A LEVEL</span>`);
+  const stage=document.getElementById(areaId+'-stage');
+  let score=0;
+  const sb=`width:34px;height:34px;border:none;border-radius:9px;background:rgba(255,255,255,.18);color:#fff;font-weight:800;font-size:1.15rem;cursor:pointer;line-height:1`;
+  const backBtn=`<div style="text-align:left;margin-bottom:2px"><button class="caback" style="background:none;border:none;color:#fff;opacity:.55;cursor:pointer;font-size:.8rem;padding:2px 4px">⬅ levels</button></div>`;
+  function hookBack(){ const b=stage.querySelector('.caback'); if(b) b.onclick=picker; }
+  function picker(){
+    kineMsg(areaId,''); document.getElementById(areaId+'-lv').innerHTML='CHOOSE A LEVEL';
+    stage.innerHTML=`<div style="display:grid;gap:10px;max-width:560px;margin:6px auto">`+CA_LEVELS.map((L,i)=>
+      `<button class="calv" data-l="${i}" style="border:none;border-radius:12px;padding:12px 16px;text-align:left;cursor:pointer;background:rgba(255,255,255,.10);color:#fff">
+        <b style="font-size:1.02rem">${L.tag} · ${L.name}</b><br><span style="opacity:.8;font-size:.87rem">${L.desc}</span></button>`).join('')+`</div>`;
+    stage.querySelectorAll('.calv').forEach(b=>b.onclick=()=>startLevel(+b.dataset.l));
+  }
+  function startLevel(li){
+    score=0; kineScore(areaId,0);
+    const L=CA_LEVELS[li];
+    const bag=shuffle([...(L.pool||L.eqs)]).slice(0,L.rounds);
+    document.getElementById(areaId+'-lv').innerHTML=`${L.tag} · ROUND <b id="${areaId}-r">1</b>/${L.rounds}`;
+    next(li,bag,0);
+  }
+  function next(li,bag,roundNo){
+    const L=CA_LEVELS[li];
+    if(roundNo>=L.rounds){ kineDone(areaId,id,score,`<div style="opacity:.8;font-size:.92rem">${L.tag} · ${L.name} complete — try the next level!</div>`); return; }
+    const r=document.getElementById(areaId+'-r'); if(r) r.textContent=roundNo+1;
+    kineMsg(areaId,'');
+    if(li<3) formulaRound(li,bag,roundNo); else eqRound(li,bag,roundNo);
+  }
+  function formulaRound(li,bag,roundNo){
+    const L=CA_LEVELS[li]; const f=bag.pop(); const truth=caParse(f);
+    const els=Object.keys(truth);
+    const rows=shuffle([...els, ...shuffle(Object.keys(CA_ELNAME).filter(e=>!truth[e])).slice(0,2)]);
+    const cnt={}; rows.forEach(e=>cnt[e]=0);
+    let checks=0, done=false;
+    stage.innerHTML=`${backBtn}<div style="text-align:center;color:#fff">
+      <div style="font-size:2rem;font-weight:700;margin:0 0 2px">${caDisp(f)}</div>
+      <p style="opacity:.75;font-size:.85rem;margin:2px 0 10px">Set how many atoms of each element are in the formula above. Elements that aren't in it stay at 0.</p>
+      <div style="display:grid;gap:8px;max-width:430px;margin:0 auto">${rows.map(e=>`
+        <div class="carow" data-el="${e}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.07);border:2px solid transparent;border-radius:11px;padding:7px 12px">
+          <span><b style="font-size:1.2rem">${e}</b> <span style="opacity:.65;font-size:.82rem">${CA_ELNAME[e]}</span></span>
+          <span style="display:flex;gap:9px;align-items:center"><button class="cab" data-el="${e}" data-d="-1" style="${sb}">−</button><b id="${areaId}-n${e}" style="font-size:1.25rem;min-width:26px">0</b><button class="cab" data-el="${e}" data-d="1" style="${sb}">＋</button></span>
+        </div>`).join('')}</div>
+      <button class="gbtn" id="${areaId}-chk" style="margin-top:12px">🔍 Check my counts</button>
+    </div>`;
+    hookBack();
+    stage.querySelectorAll('.cab').forEach(b=>b.onclick=()=>{ if(done)return; const e=b.dataset.el;
+      cnt[e]=Math.max(0,Math.min(24,cnt[e]+ +b.dataset.d)); document.getElementById(areaId+'-n'+e).textContent=cnt[e]; });
+    document.getElementById(areaId+'-chk').onclick=()=>{
+      if(done)return; checks++;
+      let all=true;
+      stage.querySelectorAll('.carow').forEach(row=>{ const e=row.dataset.el;
+        const ok=cnt[e]===(truth[e]||0); if(!ok)all=false;
+        row.style.borderColor= ok?'#5ad08a':'#f08c8c'; });
+      if(all){ done=true; const pts=Math.max(10,25-(checks-1)*5); score+=pts; kineScore(areaId,score);
+        const total=els.reduce((a,e)=>a+truth[e],0);
+        kineMsg(areaId,`✅ <b>Counted!</b> <span class="why">${caDisp(f)} = ${els.map(e=>`${truth[e]} ${CA_ELNAME[e]}`).join(' + ')} — ${total} atoms total.</span> +${pts}`);
+        setTimeout(()=>next(li,bag,roundNo+1),2100);
+      } else kineMsg(areaId,`🔁 <span class="why">The red rows are off. ${L.hint}</span>`);
+    };
+  }
+  function eqRound(li,bag,roundNo){
+    const L=CA_LEVELS[li]; const eq=bag.pop();
+    const sumSide=a=>a.reduce((o,f)=>{const p=caParse(f);for(const e in p)o[e]=(o[e]||0)+p[e];return o;},{});
+    const TL=sumSide(eq.L), TR=sumSide(eq.R);
+    const els=[...new Set([...Object.keys(TL),...Object.keys(TR)])];
+    const bal=els.every(e=>(TL[e]||0)===(TR[e]||0));
+    const tally=els.map(e=>`${e}: ${TL[e]||0} vs ${TR[e]||0}${(TL[e]||0)===(TR[e]||0)?' ✓':' ✗'}`).join(' · ');
+    const cnt={}; els.forEach(e=>cnt[e]={L:0,R:0});
+    let checks=0, phase=0;
+    stage.innerHTML=`${backBtn}<div style="text-align:center;color:#fff">
+      <div style="font-size:1.45rem;font-weight:700;margin:0 0 8px">${eq.L.map(caDisp).join(' <span style="opacity:.8">+</span> ')} <span style="margin:0 8px">→</span> ${eq.R.map(caDisp).join(' <span style="opacity:.8">+</span> ')}</div>
+      <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:7px 10px;max-width:480px;margin:0 auto;align-items:center">
+        <span></span><b style="font-size:.82rem;opacity:.85">REACTANTS (left)</b><b style="font-size:.82rem;opacity:.85">PRODUCTS (right)</b>
+        ${els.map(e=>`
+          <b style="font-size:1.15rem;text-align:right">${e}</b>
+          ${['L','R'].map(s=>`<span class="caeq" data-el="${e}" data-s="${s}" style="display:flex;gap:8px;align-items:center;justify-content:center;background:rgba(255,255,255,.07);border:2px solid transparent;border-radius:10px;padding:5px 8px">
+            <button class="cab" data-el="${e}" data-s="${s}" data-d="-1" style="${sb}">−</button><b id="${areaId}-${s}${e}" style="font-size:1.15rem;min-width:24px">0</b><button class="cab" data-el="${e}" data-s="${s}" data-d="1" style="${sb}">＋</button></span>`).join('')}`).join('')}
+      </div>
+      <div id="${areaId}-eqact" style="margin-top:12px"><button class="gbtn" id="${areaId}-chk">🔍 Check my counts</button></div>
+    </div>`;
+    hookBack();
+    stage.querySelectorAll('.cab').forEach(b=>b.onclick=()=>{ if(phase!==0)return; const e=b.dataset.el,s=b.dataset.s;
+      cnt[e][s]=Math.max(0,Math.min(24,cnt[e][s]+ +b.dataset.d)); document.getElementById(areaId+'-'+s+e).textContent=cnt[e][s]; });
+    document.getElementById(areaId+'-chk').onclick=()=>{
+      if(phase!==0)return; checks++;
+      let all=true;
+      stage.querySelectorAll('.caeq').forEach(cell=>{ const e=cell.dataset.el, s=cell.dataset.s;
+        const want=(s==='L'?TL:TR)[e]||0; const ok=cnt[e][s]===want; if(!ok)all=false;
+        cell.style.borderColor= ok?'#5ad08a':'#f08c8c'; });
+      if(all){ phase=1; const pts=Math.max(10,25-(checks-1)*5); score+=pts; kineScore(areaId,score);
+        kineMsg(areaId,`✅ <b>Counts locked in!</b> <span class="why">Now the big question…</span> +${pts}`);
+        document.getElementById(areaId+'-eqact').innerHTML=`
+          <div style="font-size:.95rem;margin-bottom:8px">Same number of every atom on both sides?</div>
+          <button class="gbtn caverd" data-v="1">⚖️ Balanced</button>
+          <button class="gbtn caverd" data-v="0">🚫 Not balanced</button>`;
+        stage.querySelectorAll('.caverd').forEach(b=>b.onclick=()=>{
+          if(phase!==1)return; phase=2;
+          const said=b.dataset.v==='1';
+          if(said===bal){ const vp=12; score+=vp; kineScore(areaId,score);
+            kineMsg(areaId,`✅ <b>${bal?'BALANCED':'NOT BALANCED'} — right call!</b> <span class="why">${tally}${bal?' — every element matches.':' — at least one element differs, so matter would be created or destroyed.'}</span> +${vp}`); }
+          else kineMsg(areaId,`❌ <b>It's ${bal?'balanced':'NOT balanced'}.</b> <span class="why">${tally}${bal?' — every element matches.':' — the ✗ elements don’t match on the two sides.'}</span>`);
+          setTimeout(()=>next(li,bag,roundNo+1), said===bal?2100:2900);
+        });
+      } else kineMsg(areaId,`🔁 <span class="why">The red boxes are off. ${L.hint}</span>`);
+    };
+  }
+  picker();
+ }};
+Object.assign(STD_TAGS,{ "u2d":["SPS2.b","SPS3.b"] });
+
+
 /* Batch 3 generated lesson images */
 Object.assign(FIG, {
  imgreaction: c=>`<img class="figimg" src="img/hs/sheet_reaction.png" alt="Two reactant molecules combine into a product, conserving atoms">`,
