@@ -3983,10 +3983,20 @@ catch(e){ console.error('Supabase init failed', e); }
 
 function teacherSignedIn(){ return !!SB_USER; }
 
+// Plain-English line for the account strip: which hub plan is live and how long it runs.
+const SUB_NAMES = { physical:'Physical Science', earth:'Earth & Space Science', life:'Life Science', bundle:'All three sciences', math:'Math Hub' };
+function subStripSummary(){
+  if(!ENT || !ENT.subs) return '';
+  const live = ENT.subs.filter(subActive);
+  if(!live.length) return '';
+  const s = live[0];
+  const when = s.current_period_end ? ' · active through ' + fmtDate(s.current_period_end) : '';
+  return ` · <b>${SUB_NAMES[s.subject]||'Hub'} subscription</b>${when}`;
+}
 function renderTeachAcct(){
   const html = SB_USER
-    ? `<span>Signed in as <b>${SB_USER.email||'teacher'}</b></span>`
-      + ((ENT && ENT.hasCustomer) ? `<button onclick="openBillingPortal()">Manage subscription</button>` : '')
+    ? `<span>Signed in as <b>${SB_USER.email||'teacher'}</b>${subStripSummary()}</span>`
+      + ((ENT && ENT.hasCustomer) ? `<button onclick="location.href='account.html'" title="See your plan, price and renewal date — then cancel, switch plans, or update your card">Manage or cancel subscription</button>` : '')
       + `<button onclick="teacherSignOut()">Sign out</button>`
     : '';
   ['teachacct','storeacct'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML = html; });

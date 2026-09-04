@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage my subscription — Tobin Science Hub</title>
+<meta name="description" content="See which Tobin Science Hub subscription you have, what it costs, when it renews, and cancel or update your card in one click.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--ink:#1B2440;--ink2:#5A6480;--line:#DDE3F0;--ac:#2f5fd0;--ok:#2f7a4d;--warn:#b45309;--bad:#b3261e}
+*{box-sizing:border-box;margin:0}
+body{font-family:Georgia,'Times New Roman',serif;background:linear-gradient(160deg,#1B2440 0%,#2A3558 55%,#3B4A7A 100%);color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:30px 18px 60px}
+.logo{display:flex;align-items:center;gap:12px;font-size:1.15rem;font-weight:800;letter-spacing:.4px;margin-bottom:6px;text-decoration:none;color:#fff}
+h1{font-size:clamp(1.6rem,4.5vw,2.3rem);text-align:center;margin:6px 0 8px}
+.sub{color:#C7D0E8;text-align:center;max-width:620px;font-size:1.02rem;line-height:1.55;margin-bottom:26px}
+.card{background:#fff;color:var(--ink);border-radius:18px;padding:26px 24px;width:100%;max-width:640px;box-shadow:0 14px 40px rgba(0,0,0,.3);margin-bottom:18px}
+.card h2{font-size:1.25rem;margin-bottom:6px}
+.card p{color:var(--ink2);font-size:.97rem;line-height:1.55}
+.card p + p{margin-top:8px}
+label{display:block;font-size:.85rem;font-weight:700;color:var(--ink2);margin:14px 0 6px}
+input{width:100%;font:inherit;font-size:1rem;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;color:var(--ink)}
+input:focus{outline:none;border-color:var(--ac)}
+.btn{display:inline-block;background:#1B2440;color:#fff;border:0;border-radius:99px;padding:13px 26px;font:inherit;font-size:1rem;font-weight:800;cursor:pointer;text-decoration:none;text-align:center}
+.btn:hover{background:#2a3660}
+.btn.big{width:100%;padding:16px 26px;font-size:1.1rem;margin-top:16px;background:var(--ac)}
+.btn.big:hover{background:#244bb0}
+.btn:disabled{opacity:.6;cursor:default}
+.link{background:none;border:0;color:var(--ac);font:inherit;font-size:.9rem;font-weight:700;cursor:pointer;text-decoration:underline;padding:0}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.msg{margin-top:12px;font-size:.92rem;min-height:1.2em}
+.msg.err{color:var(--bad)} .msg.ok{color:var(--ok)}
+.acct{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:.9rem;color:var(--ink2);margin-bottom:14px}
+.plan{border:2px solid var(--line);border-radius:14px;padding:16px 18px;margin-top:12px}
+.plan.live{border-color:var(--ac)}
+.plan .name{font-size:1.15rem;font-weight:800;color:var(--ink)}
+.plan .price{font-size:1.5rem;font-weight:800;color:var(--ink);margin:4px 0}
+.plan .price span{font-size:.95rem;font-weight:400;color:var(--ink2)}
+.pill{display:inline-block;font-size:.72rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;border-radius:99px;padding:3px 10px;color:#fff;background:var(--ok);margin-left:8px;vertical-align:middle}
+.pill.warn{background:var(--warn)} .pill.bad{background:var(--bad)} .pill.gray{background:#8a93ad}
+.when{font-size:.95rem;color:var(--ink2);margin-top:4px}
+.when b{color:var(--ink)}
+.note{background:#F4F6FB;border-radius:12px;padding:12px 14px;font-size:.92rem;color:var(--ink2);line-height:1.55;margin-top:14px}
+.note b{color:var(--ink)}
+.other{width:100%;max-width:640px;color:#C7D0E8;font-size:.92rem;line-height:1.6}
+.other h3{color:#fff;font-size:1.05rem;margin:18px 0 6px}
+.other a{color:#fff}
+.other ul{padding-left:20px}
+.other li{margin-bottom:6px}
+.foot{margin-top:30px;color:#9AA7CC;font-size:.82rem;text-align:center;line-height:1.7}
+.foot a{color:#C7D0E8}
+.hide{display:none}
+</style>
+</head>
+<body>
+<a class="logo" href="index.html"><svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="3.6" fill="#FFD166"/><ellipse cx="20" cy="20" rx="16" ry="6.5" fill="none" stroke="#7FD1C7" stroke-width="2"/><ellipse cx="20" cy="20" rx="16" ry="6.5" fill="none" stroke="#9aa7ff" stroke-width="2" transform="rotate(60 20 20)"/><ellipse cx="20" cy="20" rx="16" ry="6.5" fill="none" stroke="#f29ca0" stroke-width="2" transform="rotate(120 20 20)"/></svg> Tobin Science Hub</a>
+<h1>Manage my subscription</h1>
+<p class="sub">See exactly which hub subscription you have, what it costs, and when it renews — and cancel or update your card in one click. Canceling keeps your access through the period you've already paid for.</p>
+
+<!-- Loading -->
+<div class="card" id="c-loading"><h2>One moment…</h2><p>Checking whether you're signed in.</p></div>
+
+<!-- Signed out: sign in with the same email + password you use in the hubs -->
+<div class="card hide" id="c-signin">
+  <h2>Sign in to see your subscription</h2>
+  <p>Use the teacher email and password you created inside the hub. (This is the same sign-in as Educator Mode.)</p>
+  <label for="si-email">Email</label>
+  <input id="si-email" type="email" autocomplete="email" placeholder="you@school.org">
+  <label for="si-pass">Password</label>
+  <input id="si-pass" type="password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')signIn()">
+  <div class="row">
+    <button class="btn" id="si-btn" onclick="signIn()">Sign in</button>
+    <button class="link" onclick="forgot()">Forgot your password?</button>
+  </div>
+  <p class="msg" id="si-msg"></p>
+  <div class="note"><b>Not sure which email you used?</b> It's the address on your Stripe receipt (the email says "Tobin Science" and the plan name). Try that one first.</div>
+</div>
+
+<!-- Signed in: the subscription summary -->
+<div class="card hide" id="c-sub">
+  <div class="acct"><span>Signed in as <b id="who"></b></span><button class="link" onclick="signOut()">Sign out</button></div>
+  <div id="plans"></div>
+  <div id="portal-wrap" class="hide">
+    <button class="btn big" id="portal-btn" onclick="openPortal()">Manage or cancel my subscription →</button>
+    <p class="msg" id="portal-msg"></p>
+    <p style="font-size:.86rem;margin-top:8px;text-align:center">Opens Stripe's secure billing page. There you can <b>cancel</b>, switch monthly ↔ yearly, update your card, or download receipts.</p>
+  </div>
+  <div id="sub-note"></div>
+</div>
+
+<div class="other">
+  <h3>Not the charge you were looking for?</h3>
+  <ul>
+    <li><b>The Den ($9.99/month or $89/year)</b> is a separate classroom-game subscription and is managed from your <b>Den teacher dashboard → Manage billing</b>. Lost the dashboard link? On the <a href="https://quest.tobinscience.com/review-quest.html" target="_blank" rel="noopener">Review Quest page</a>, use <i>Email me my dashboard link</i>.</li>
+    <li><b>Science Quest, Review Quest units and bundles, and 1v1 Science games</b> are one-time purchases. They never renew and there is nothing to cancel.</li>
+    <li>Every Tobin Science subscription and where to manage it: <a href="https://www.tobinscience.com/manage-subscription.html">tobinscience.com/manage-subscription</a>.</li>
+    <li>Still stuck, or a charge you don't recognize? Email <a href="mailto:sciencehubchalkbox@gmail.com">sciencehubchalkbox@gmail.com</a> with the date and amount and we'll sort it out.</li>
+  </ul>
+</div>
+
+<p class="foot"><a href="index.html">Science Hub</a> · <a href="math.html">Math Hub</a> · <a href="legal.html">Terms &amp; Privacy</a></p>
+
+<script>
+const SB_URL = 'https://fmbdoxfkjldvpkyryqlx.supabase.co';
+const SB_KEY = 'sb_publishable_oH7IbuY19NAjSW9MKmykkw_be4aDuAw';
+const API_BASE = 'https://science-hub.vercel.app/api';
+// Password-reset links land on the Physical Science hub, which has the
+// "set a new password" screen; this page doesn't need its own.
+const RESET_LANDING = location.origin + location.pathname.replace(/account\.html$/, 'physical_science.html');
+
+const NAMES = {
+  physical: 'Physical Science Hub (8th grade + High School)',
+  earth:    'Earth &amp; Space Science Hub',
+  life:     'Life Science Hub',
+  bundle:   'All three science hubs — Physical, Earth &amp; Space, and Life',
+  math:     'Math Hub (grades 6, 7 &amp; 8)',
+};
+
+let sb = null, USER = null;
+try{ sb = window.supabase.createClient(SB_URL, SB_KEY, { auth:{ flowType:'implicit', detectSessionInUrl:true, persistSession:true, autoRefreshToken:true } }); }
+catch(e){ console.error('Supabase init failed', e); }
+
+const $ = id => document.getElementById(id);
+function show(id){ ['c-loading','c-signin','c-sub'].forEach(c => $(c).classList.toggle('hide', c !== id)); }
+function setMsg(id, text, kind){ const m = $(id); m.textContent = text || ''; m.className = 'msg' + (kind ? ' ' + kind : ''); }
+function esc(s){ return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function fmtDate(iso){ try{ return new Date(iso).toLocaleDateString(undefined, {month:'long', day:'numeric', year:'numeric'}); }catch(e){ return ''; } }
+function money(cents, cur){ if(cents == null) return ''; return (cur === 'usd' || !cur ? '$' : cur.toUpperCase() + ' ') + (cents / 100).toFixed(2); }
+
+async function signIn(){
+  if(!sb){ setMsg('si-msg', 'Account system is still loading — try again in a moment.', 'err'); return; }
+  const email = ($('si-email').value || '').trim(), pass = $('si-pass').value || '';
+  if(!email || !pass){ setMsg('si-msg', 'Please enter your email and password.', 'err'); return; }
+  $('si-btn').disabled = true; setMsg('si-msg', 'Signing in…');
+  try{
+    const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if(error) setMsg('si-msg', error.message, 'err'); else setMsg('si-msg', '');
+  }catch(e){ setMsg('si-msg', 'Something went wrong — please try again.', 'err'); }
+  $('si-btn').disabled = false;
+}
+async function forgot(){
+  const email = ($('si-email').value || '').trim();
+  if(!email){ setMsg('si-msg', 'Type your email above first, then tap Forgot your password.', 'err'); $('si-email').focus(); return; }
+  try{
+    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: RESET_LANDING });
+    setMsg('si-msg', error ? error.message : 'Done — check your email for a link to reset your password.', error ? 'err' : 'ok');
+  }catch(e){ setMsg('si-msg', 'Something went wrong — please try again.', 'err'); }
+}
+async function signOut(){ try{ await sb.auth.signOut(); }catch(e){} USER = null; show('c-signin'); }
+
+async function loadSummary(){
+  show('c-sub');
+  $('who').textContent = USER.email || 'teacher';
+  $('plans').innerHTML = '<p>Loading your subscription details from Stripe…</p>';
+  $('portal-wrap').classList.add('hide'); $('sub-note').innerHTML = '';
+  let data = null;
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    const res = await fetch(API_BASE + '/subscription-summary', {
+      method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + session.access_token }, body:'{}' });
+    data = await res.json();
+    if(!res.ok) throw new Error(data.error || 'Could not load');
+  }catch(e){
+    console.error(e);
+    $('plans').innerHTML = '<p class="msg err">Could not load your subscription details right now. You can still open the billing page below to see and manage everything.</p>';
+    $('portal-wrap').classList.remove('hide');
+    return;
+  }
+  renderPlans(data);
+}
+
+function renderPlans(d){
+  const live = d.subscriptions.filter(s => ['active','trialing','past_due','unpaid'].includes(s.status));
+  const old  = d.subscriptions.filter(s => !live.includes(s));
+  let html = '';
+  if(live.length){
+    html += '<h2>Your subscription' + (live.length > 1 ? 's' : '') + '</h2>';
+    html += live.map(s => planCard(s, true)).join('');
+  } else {
+    html += '<h2>No active subscription on this account</h2>';
+    html += '<p>' + (d.isDistrict
+      ? 'Your Cherokee County account includes everything free — there is nothing to pay and nothing to cancel.'
+      : 'Nothing on <b>' + esc(d.email) + '</b> is billing right now.') + '</p>';
+    if(!d.isDistrict) html += '<div class="note"><b>Still seeing a charge?</b> It may be under a different email (check your Stripe receipt), or it may be <b>The Den</b>, which is managed from your Den dashboard — see below.</div>';
+  }
+  if(old.length){
+    html += '<h2 style="margin-top:18px;font-size:1rem;color:var(--ink2)">Past subscriptions</h2>';
+    html += old.map(s => planCard(s, false)).join('');
+  }
+  $('plans').innerHTML = html;
+  $('portal-wrap').classList.toggle('hide', !d.hasCustomer);
+  if(live.some(s => s.cancelAtPeriodEnd)){
+    $('sub-note').innerHTML = '<div class="note"><b>Already canceled.</b> You will not be charged again. Your teacher tools stay unlocked until the end date shown above, and you can resume any time from the billing page.</div>';
+  } else if(live.length){
+    $('sub-note').innerHTML = '<div class="note"><b>How canceling works:</b> tap the button, choose <b>Cancel plan</b>, and confirm. No more charges; your tools keep working until the end of the period you already paid for. Your account and gradebook are never deleted.</div>';
+  }
+}
+
+function planCard(s, isLive){
+  const name = (s.subject && NAMES[s.subject]) || esc(s.name) || 'Hub subscription';
+  const per = s.interval === 'year' ? 'year' : s.interval === 'month' ? 'month' : (s.interval || '');
+  let pill = '<span class="pill">Active</span>', when = '';
+  if(s.status === 'trialing'){ pill = '<span class="pill">Free trial</span>'; when = 'First charge on <b>' + fmtDate(s.periodEnd) + '</b>'; }
+  else if(s.status === 'past_due' || s.status === 'unpaid'){ pill = '<span class="pill warn">Payment failed</span>'; when = 'Update your card below to keep access.'; }
+  else if(!isLive){ pill = '<span class="pill gray">' + (s.status === 'canceled' ? 'Canceled' : esc(s.status)) + '</span>'; when = s.endedAt ? 'Ended <b>' + fmtDate(s.endedAt) + '</b>' : ''; }
+  else if(s.cancelAtPeriodEnd){ pill = '<span class="pill warn">Canceled — ends soon</span>'; when = 'Access ends <b>' + fmtDate(s.periodEnd) + '</b>. No further charges.'; }
+  else if(s.periodEnd){ when = 'Renews <b>' + fmtDate(s.periodEnd) + '</b> for ' + money(s.amount, s.currency); }
+  return '<div class="plan' + (isLive ? ' live' : '') + '">' +
+    '<div class="name">' + name + pill + '</div>' +
+    (s.amount != null ? '<div class="price">' + money(s.amount, s.currency) + (per ? ' <span>/ ' + per + '</span>' : '') + '</div>' : '') +
+    (when ? '<div class="when">' + when + '</div>' : '') +
+  '</div>';
+}
+
+async function openPortal(){
+  const btn = $('portal-btn'); btn.disabled = true; setMsg('portal-msg', 'Opening the billing page…');
+  try{
+    const { data:{ session } } = await sb.auth.getSession();
+    if(!session){ show('c-signin'); return; }
+    const res = await fetch(API_BASE + '/create-portal-session', {
+      method:'POST', headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + session.access_token },
+      body: JSON.stringify({ returnTo: location.origin + location.pathname }) });
+    const data = await res.json();
+    if(data.url){ location.href = data.url; return; }
+    setMsg('portal-msg', data.error || 'Could not open the billing page.', 'err');
+  }catch(e){ setMsg('portal-msg', 'Could not open the billing page. Please try again.', 'err'); }
+  btn.disabled = false;
+}
+
+if(sb){
+  sb.auth.getSession().then(({ data }) => {
+    USER = data.session ? data.session.user : null;
+    if(USER) loadSummary(); else show('c-signin');
+  });
+  sb.auth.onAuthStateChange((ev, session) => {
+    if(ev === 'PASSWORD_RECOVERY'){ location.replace(RESET_LANDING + location.hash); return; }
+    const was = USER; USER = session ? session.user : null;
+    if(USER && !was) loadSummary();
+    else if(!USER) show('c-signin');
+  });
+} else {
+  show('c-signin'); setMsg('si-msg', 'The account system could not load. Please refresh the page.', 'err');
+}
+</script>
+</body>
+</html>
