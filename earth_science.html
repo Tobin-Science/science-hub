@@ -523,6 +523,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
       </div>
     </div>
     <a href="account.html" style="display:block;margin:16px auto 0;max-width:820px;background:#fff;border:2px solid #2f5fd0;border-radius:14px;padding:12px 18px;text-decoration:none;color:#1B2440;font-size:1rem;text-align:center;box-shadow:0 4px 14px rgba(27,36,64,.08)">💳 <b>Already subscribed?</b> See your plan and <b style="color:#2f5fd0">manage or cancel your subscription →</b></a>
+    <div style="margin:12px auto 0;max-width:820px;background:#fff;border:2px solid #2f7a4d;border-radius:14px;padding:12px 18px;color:#1B2440;font-size:1rem;text-align:center;box-shadow:0 4px 14px rgba(27,36,64,.08)">✉️ <b>Need help?</b> Email <a href="mailto:sciencehubchalkbox@gmail.com" style="font-weight:700;color:#2f7a4d;overflow-wrap:anywhere">sciencehubchalkbox@gmail.com</a> <span style="display:block;font-size:.86rem;color:#5A6480;margin-top:2px">Sign-in trouble, a billing question, or something not working? Tell us the email you signed up with and what happened.</span></div>
     <div style="background:linear-gradient(135deg,#e7c25b,#b8862b);border-radius:20px;padding:24px 28px;margin:28px auto 0;max-width:820px;box-shadow:0 8px 26px rgba(27,36,64,.12);color:#2a2008;display:flex;gap:24px;align-items:center;text-align:left;flex-wrap:wrap">
       <img src="earth-quest-cover-sm.jpg" alt="Earth Quest cover" style="width:130px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.35);flex:0 0 auto">
       <div style="flex:1;min-width:250px">
@@ -718,6 +719,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
       </p>
       <p class="agtoggle"><a href="#" id="ag-forgot" onclick="authForgot();return false">Forgot your password?</a></p>
       <p class="agtoggle">Here to <b>cancel or manage a subscription</b>? <a href="account.html" style="font-weight:700">Open my subscription page →</a></p>
+      <p class="agtoggle">Can't sign in, or need help? Email <a href="mailto:sciencehubchalkbox@gmail.com" style="font-weight:700">sciencehubchalkbox@gmail.com</a></p>
     </div>
   </div>
 
@@ -924,7 +926,7 @@ body.printing #printreport{display:block;background:#fff;color:#000;font-family:
   </div>
 </div>
 
-<div class="footer">Earth &amp; Space Science Hub · Aligned to Georgia Standards of Excellence S6E1–S6E6 · <a href="index.html">🏠 All classes</a> · <a href="physical_science.html">Physical Science</a> · <a href="life_science.html">Life Science</a></div>
+<div class="footer">Earth &amp; Space Science Hub · Aligned to Georgia Standards of Excellence S6E1–S6E6 · <a href="index.html">🏠 All classes</a> · <a href="physical_science.html">Physical Science</a> · <a href="life_science.html">Life Science</a><br>✉️ Need help? Email <a href="mailto:sciencehubchalkbox@gmail.com">sciencehubchalkbox@gmail.com</a></div>
 <div id="toast" role="status" aria-live="polite"></div>
 </div>
 
@@ -1553,6 +1555,13 @@ function renderBadges(){
     <div class="bdesc">${b.desc}</div></div>`).join('');
 }
 let toastTimer = null;
+/* Help: show + copy the support address, and open the mail app when there is one. */
+function hubHelp(){
+  const addr = 'sciencehubchalkbox@gmail.com';
+  const say = extra => toast('Need help? Email ' + addr + extra);
+  try{ navigator.clipboard.writeText(addr).then(()=>say(' (address copied)'), ()=>say('')); }catch(e){ say(''); }
+  location.href = 'mailto:' + addr + '?subject=' + encodeURIComponent(document.title + ' help');
+}
 function toast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
@@ -4891,6 +4900,7 @@ function renderTeachAcct(){
   const html = SB_USER
     ? `<span>Signed in as <b>${SB_USER.email||'teacher'}</b>${subStripSummary()}</span>`
       + (SB_USER ? `<button onclick="location.href='account.html'" title="See your plan, price and renewal date — then cancel, switch plans, or update your card">Manage or cancel subscription</button>` : '')
+      + `<button onclick="hubHelp()" title="Email sciencehubchalkbox@gmail.com">✉️ Get help</button>`
       + `<button onclick="teacherSignOut()">Sign out</button>`
     : '';
   ['teachacct','storeacct'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML = html; });
